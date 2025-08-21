@@ -1,0 +1,4 @@
+.navbar {
+  /* Your side navigation specific styles go here */
+  padding: var(--mantine-spacing-md);
+}

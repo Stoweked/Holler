@@ -22,6 +22,7 @@
     "@mantine/nprogress": "^8.2.5",
     "@mantine/spotlight": "^8.2.5",
     "@mantine/tiptap": "^8.2.5",
+    "hugeicons-react": "^0.3.0",
     "next": "15.5.0",
     "react": "19.1.0",
     "react-dom": "19.1.0"
