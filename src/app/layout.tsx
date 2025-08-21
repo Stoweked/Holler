@@ -3,11 +3,11 @@ import "@mantine/core/styles.css";
 import React from "react";
 import { MantineProvider, ColorSchemeScript } from "@mantine/core";
 import { theme } from "../theme";
-import "./globals.css"; // Import the new CSS file
+import "./globals.css";
 
 export const metadata = {
-  title: "Mantine Next.js Template",
-  description: "I am using Mantine with Next.js!",
+  title: "Holler",
+  description: "Peer to peer solutions",
 };
 
 export default function RootLayout({
@@ -19,7 +19,6 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <ColorSchemeScript />
-        <link rel="shortcut icon" href="/favicon.svg" />
         <meta
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width, user-scalable=no"
