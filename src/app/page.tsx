@@ -1,19 +1,12 @@
 "use client";
 
-import { Title, Stack, Text, Image } from "@mantine/core";
+import { Skeleton, Group } from "@mantine/core";
 
 export default function HomePage() {
   return (
-    <Stack align="center" mt="xl">
-      <Image
-        src="/images/logomark.png"
-        alt="Holler Logo"
-        w={120}
-        h={120}
-        mb="md"
-      />
-      <Title order={1}>Holler</Title>
-      <Text>Peer to peer solutions</Text>
-    </Stack>
+    <Group p="xl" gap="xl">
+      <Skeleton radius="lg" width={300} height={400} />
+      <Skeleton radius="lg" width={300} height={400} />
+    </Group>
   );
 }

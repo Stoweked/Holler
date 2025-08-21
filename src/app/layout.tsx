@@ -9,6 +9,7 @@ import {
   MantineProvider,
   ColorSchemeScript,
   Text,
+  Image,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { theme } from "../theme";
@@ -25,7 +26,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <ColorSchemeScript />
+        <ColorSchemeScript defaultColorScheme="light" />
         <meta
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width, user-scalable=no"
@@ -33,7 +34,7 @@ export default function RootLayout({
         <title>Holler</title>
       </head>
       <body>
-        <MantineProvider theme={theme}>
+        <MantineProvider theme={theme} defaultColorScheme="light">
           <AppShell
             header={{ height: 60 }}
             navbar={{
@@ -51,10 +52,16 @@ export default function RootLayout({
                   hiddenFrom="sm"
                   size="sm"
                 />
-                <Text>Holler</Text>
+                <Image
+                  src="/images/holler-logo.svg"
+                  alt="Holler Logo"
+                  maw={120}
+                  w="100%"
+                  h="auto"
+                />
               </Group>
             </AppShell.Header>
-            <AppShell.Navbar p="md">
+            <AppShell.Navbar>
               <SideNav />
             </AppShell.Navbar>
             <AppShell.Main>{children}</AppShell.Main>
