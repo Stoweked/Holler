@@ -4,22 +4,14 @@ import "@mantine/core/styles.css";
 import React from "react";
 import {
   AppShell,
-  Burger,
-  Group,
   MantineProvider,
   ColorSchemeScript,
-  Image,
   ScrollArea,
-  ActionIcon,
-  Indicator,
 } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
+import { useDisclosure, useViewportSize } from "@mantine/hooks";
 import { theme } from "../theme";
 import "./globals.css";
 import { SideNav } from "@/components/layout/SideNav";
-import { ColorSchemeToggle } from "@/components/ColorSchemeToggle";
-import AccountAvatar from "@/components/layout/TopNav/AccountAvatar";
-import { InboxIcon } from "hugeicons-react";
 import TopNav from "@/components/layout/TopNav/TopNav";
 
 export default function RootLayout({
@@ -28,6 +20,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   const [opened, { toggle }] = useDisclosure();
+
+  const { width } = useViewportSize();
+  const isMobile = width < 768;
 
   return (
     <html lang="en" suppressHydrationWarning>
@@ -48,7 +43,7 @@ export default function RootLayout({
               breakpoint: "sm",
               collapsed: { mobile: !opened },
             }}
-            padding="md"
+            padding={isMobile ? 0 : "md"}
           >
             <AppShell.Header>
               <TopNav opened={opened} toggle={toggle} />
@@ -58,7 +53,7 @@ export default function RootLayout({
                 <SideNav />
               </ScrollArea>
             </AppShell.Navbar>
-            <AppShell.Main>{children}</AppShell.Main>
+            <AppShell.Main pt={60}>{children}</AppShell.Main>
           </AppShell>
         </MantineProvider>
       </body>
