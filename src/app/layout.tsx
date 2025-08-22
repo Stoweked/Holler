@@ -8,16 +8,18 @@ import {
   Group,
   MantineProvider,
   ColorSchemeScript,
-  Text,
   Image,
   ScrollArea,
-  Avatar,
+  ActionIcon,
+  Indicator,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { theme } from "../theme";
 import "./globals.css";
 import { SideNav } from "@/components/layout/SideNav";
 import { ColorSchemeToggle } from "@/components/ColorSchemeToggle";
+import AccountAvatar from "@/components/layout/TopNav/AccountAvatar";
+import { InboxIcon } from "hugeicons-react";
 
 export default function RootLayout({
   children,
@@ -67,9 +69,22 @@ export default function RootLayout({
 
                 <Group wrap="nowrap" gap="xs">
                   <ColorSchemeToggle />
-                  <Avatar radius="xl" color="lime" variant="filled">
-                    JS
-                  </Avatar>
+                  <Indicator
+                    color="red"
+                    size={10}
+                    offset={4}
+                    position="top-end"
+                  >
+                    <ActionIcon
+                      variant="default"
+                      size={38}
+                      radius="xl"
+                      aria-label="Notifications"
+                    >
+                      <InboxIcon size={20} />
+                    </ActionIcon>
+                  </Indicator>
+                  <AccountAvatar />
                 </Group>
               </Group>
             </AppShell.Header>
