@@ -4,8 +4,10 @@ import { Logout02Icon, PencilEdit01Icon, UserIcon } from "hugeicons-react";
 import FeedbackModal from "./FeedbackModal";
 import { ColorSchemeMenuItem } from "./ColorSchemeMenuItem";
 import ProfileDrawer from "@/components/profile/ProfileDrawer";
+import { useRouter } from "next/navigation";
 
 export default function AccountAvatar() {
+  const router = useRouter();
   const [
     openedFeedbackModal,
     { open: openFeedbackModal, close: closeFeedbackModal },
@@ -47,7 +49,10 @@ export default function AccountAvatar() {
           </Menu.Item>
           <ColorSchemeMenuItem />
           <Menu.Divider />
-          <Menu.Item leftSection={<Logout02Icon size={16} />}>
+          <Menu.Item
+            leftSection={<Logout02Icon size={16} />}
+            onClick={() => router.push("/login")}
+          >
             Log out
           </Menu.Item>
         </Menu.Dropdown>

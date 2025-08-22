@@ -1,8 +1,9 @@
 // src/app/layout.tsx
 
 import type { Metadata } from "next";
-import { ColorSchemeScript } from "@mantine/core";
-import AppProvider from "./AppProvider";
+import { ColorSchemeScript, MantineProvider } from "@mantine/core";
+import { theme } from "../theme";
+import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Holler",
@@ -43,7 +44,9 @@ export default function RootLayout({
         />
       </head>
       <body>
-        <AppProvider>{children}</AppProvider>
+        <MantineProvider theme={theme} defaultColorScheme="light">
+          {children}
+        </MantineProvider>
       </body>
     </html>
   );
