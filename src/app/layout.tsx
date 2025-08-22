@@ -1,61 +1,49 @@
 // src/app/layout.tsx
-"use client";
-import "@mantine/core/styles.css";
-import React from "react";
-import {
-  AppShell,
-  MantineProvider,
-  ColorSchemeScript,
-  ScrollArea,
-} from "@mantine/core";
-import { useDisclosure, useViewportSize } from "@mantine/hooks";
-import { theme } from "../theme";
-import "./globals.css";
-import { SideNav } from "@/components/layout/SideNav";
-import TopNav from "@/components/layout/TopNav/TopNav";
+
+import type { Metadata } from "next";
+import { ColorSchemeScript } from "@mantine/core";
+import AppProvider from "./AppProvider";
+
+export const metadata: Metadata = {
+  title: "Holler",
+  description:
+    "Get paid faster on the job. Holler provides secure mobile payments designed for construction trades.",
+  metadataBase: new URL("https://holler-build.vercel.app/"),
+  openGraph: {
+    title: "Holler",
+    description:
+      "Get paid faster on the job. Holler provides secure mobile payments designed for construction trades.",
+    url: "https://holler-build.vercel.app/",
+    siteName: "Holler",
+    images: [
+      {
+        url: "/og-cover.png",
+        width: 1200,
+        height: 630,
+        alt: "Get paid faster on the job. Holler provides secure mobile payments designed for construction trades.",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+};
 
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const [opened, { toggle }] = useDisclosure();
-
-  const { width } = useViewportSize();
-  const isMobile = width < 768;
-
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en">
       <head>
         <ColorSchemeScript defaultColorScheme="light" />
         <meta
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width, user-scalable=no"
         />
-        <title>Holler</title>
       </head>
       <body>
-        <MantineProvider theme={theme} defaultColorScheme="light">
-          <AppShell
-            header={{ height: 60 }}
-            navbar={{
-              width: 380,
-              breakpoint: "sm",
-              collapsed: { mobile: !opened },
-            }}
-            padding={0}
-          >
-            <AppShell.Header>
-              <TopNav opened={opened} toggle={toggle} />
-            </AppShell.Header>
-            <AppShell.Navbar>
-              <ScrollArea type="never">
-                <SideNav />
-              </ScrollArea>
-            </AppShell.Navbar>
-            <AppShell.Main pt={60}>{children}</AppShell.Main>
-          </AppShell>
-        </MantineProvider>
+        <AppProvider>{children}</AppProvider>
       </body>
     </html>
   );
