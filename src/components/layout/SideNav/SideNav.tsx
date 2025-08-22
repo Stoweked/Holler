@@ -2,7 +2,7 @@
 
 import { Anchor, Stack, Text } from "@mantine/core";
 import SideNavLinks from "./SideNavLinks";
-import PrimaryActionsCard from "../PrimaryActionsCard/PrimaryActionsCard";
+import PrimaryActionsCard from "../../primaryActions/PrimaryActionsCard";
 
 export function SideNav() {
   return (

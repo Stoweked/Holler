@@ -7,10 +7,18 @@ import {
 } from "hugeicons-react";
 
 interface ActionButtonsProps {
-  onDepositClick: () => void;
+  onDepositClick?: () => void;
+  onRequestClick?: () => void;
+  onSendClick?: () => void;
+  onTransferClick?: () => void;
 }
 
-export default function ActionButtons({ onDepositClick }: ActionButtonsProps) {
+export default function ActionButtons({
+  onDepositClick,
+  onRequestClick,
+  onSendClick,
+  onTransferClick,
+}: ActionButtonsProps) {
   return (
     <>
       <Group wrap="nowrap" gap="xl">
@@ -37,6 +45,7 @@ export default function ActionButtons({ onDepositClick }: ActionButtonsProps) {
             size={48}
             radius="xl"
             aria-label="Request funds"
+            onClick={onRequestClick}
           >
             <ArrowDown02Icon size={24} />
           </ActionIcon>
@@ -52,6 +61,7 @@ export default function ActionButtons({ onDepositClick }: ActionButtonsProps) {
             size={48}
             radius="xl"
             aria-label="Send funds"
+            onClick={onSendClick}
           >
             <ArrowUp02Icon size={24} />
           </ActionIcon>
@@ -67,6 +77,7 @@ export default function ActionButtons({ onDepositClick }: ActionButtonsProps) {
             size={48}
             radius="xl"
             aria-label="Transfer funds"
+            onClick={onTransferClick}
           >
             <BankIcon size={24} />
           </ActionIcon>
