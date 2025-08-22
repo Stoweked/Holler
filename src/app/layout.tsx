@@ -43,7 +43,7 @@ export default function RootLayout({
               breakpoint: "sm",
               collapsed: { mobile: !opened },
             }}
-            padding={isMobile ? 0 : "md"}
+            padding={0}
           >
             <AppShell.Header>
               <TopNav opened={opened} toggle={toggle} />

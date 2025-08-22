@@ -1,4 +1,4 @@
-import { Drawer, Skeleton } from "@mantine/core";
+import { Drawer, Skeleton, Stack } from "@mantine/core";
 
 interface NotificationDrawerProps {
   opened: boolean;
@@ -19,7 +19,13 @@ export default function NotificationDrawer({
         size="md"
         position="right"
       >
-        <Skeleton radius="lg" width="100%" height={400} />
+        <Stack>
+          <Skeleton radius="lg" width="100%" height={80} />
+          <Skeleton radius="lg" width="100%" height={80} />
+          <Skeleton radius="lg" width="100%" height={80} />
+          <Skeleton radius="lg" width="100%" height={80} />
+          <Skeleton radius="lg" width="100%" height={80} />
+        </Stack>
       </Drawer>
     </div>
   );
