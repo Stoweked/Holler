@@ -1,14 +1,21 @@
-import { Avatar, Menu } from "@mantine/core";
+import { ActionIcon, Avatar, Menu } from "@mantine/core";
 import { Logout02Icon, PencilEdit01Icon, UserIcon } from "hugeicons-react";
 
 export default function AccountAvatar() {
   return (
     <div>
-      <Menu shadow="md" width={180} position="bottom-end">
+      <Menu shadow="md" width={170} position="bottom-end">
         <Menu.Target>
-          <Avatar radius="xl" color="lime" variant="filled">
-            JS
-          </Avatar>
+          <ActionIcon
+            variant="default"
+            radius="xl"
+            size={38}
+            aria-label="Profile menu"
+          >
+            <Avatar radius="xl" color="lime" variant="filled">
+              JS
+            </Avatar>
+          </ActionIcon>
         </Menu.Target>
 
         <Menu.Dropdown>

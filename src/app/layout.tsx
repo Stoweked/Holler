@@ -20,6 +20,7 @@ import { SideNav } from "@/components/layout/SideNav";
 import { ColorSchemeToggle } from "@/components/ColorSchemeToggle";
 import AccountAvatar from "@/components/layout/TopNav/AccountAvatar";
 import { InboxIcon } from "hugeicons-react";
+import TopNav from "@/components/layout/TopNav/TopNav";
 
 export default function RootLayout({
   children,
@@ -50,43 +51,7 @@ export default function RootLayout({
             padding="md"
           >
             <AppShell.Header>
-              <Group h="100%" px="md" justify="space-between">
-                <Group wrap="nowrap" gap="xs">
-                  <Burger
-                    opened={opened}
-                    onClick={toggle}
-                    hiddenFrom="sm"
-                    size="sm"
-                  />
-                  <Image
-                    src="/images/holler-grey.svg"
-                    alt="Holler Logo"
-                    maw={120}
-                    w="100%"
-                    h="auto"
-                  />
-                </Group>
-
-                <Group wrap="nowrap" gap="xs">
-                  <ColorSchemeToggle />
-                  <Indicator
-                    color="red"
-                    size={10}
-                    offset={4}
-                    position="top-end"
-                  >
-                    <ActionIcon
-                      variant="default"
-                      size={38}
-                      radius="xl"
-                      aria-label="Notifications"
-                    >
-                      <InboxIcon size={20} />
-                    </ActionIcon>
-                  </Indicator>
-                  <AccountAvatar />
-                </Group>
-              </Group>
+              <TopNav opened={opened} toggle={toggle} />
             </AppShell.Header>
             <AppShell.Navbar>
               <ScrollArea type="never">
