@@ -4,7 +4,7 @@ import { Logout02Icon, PencilEdit01Icon, UserIcon } from "hugeicons-react";
 export default function AccountAvatar() {
   return (
     <div>
-      <Menu shadow="md" width={200}>
+      <Menu shadow="md" width={180} position="bottom-end">
         <Menu.Target>
           <Avatar radius="xl" color="lime" variant="filled">
             JS

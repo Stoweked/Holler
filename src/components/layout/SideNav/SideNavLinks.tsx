@@ -14,13 +14,13 @@ import classes from "./SideNav.module.css";
 export default function SideNavLinks() {
   return (
     <div>
-      <NavLink
+      {/* <NavLink
         href="#required-for-focus"
         label="Your profile"
         leftSection={<UserIcon size={20} />}
         rightSection={<ArrowRight01Icon size={24} color="grey" />}
         className={classes.navLink}
-      />
+      /> */}
 
       <NavLink
         href="#required-for-focus"
@@ -62,7 +62,7 @@ export default function SideNavLinks() {
         rightSection={<ArrowRight01Icon size={24} color="grey" />}
         className={classes.navLink}
       />
-
+      {/* 
       <NavLink
         href="#required-for-focus"
         label="Share feedback"
@@ -77,7 +77,7 @@ export default function SideNavLinks() {
         leftSection={<Logout02Icon size={20} />}
         rightSection={<ArrowRight01Icon size={24} color="grey" />}
         className={classes.navLink}
-      />
+      /> */}
     </div>
   );
 }
