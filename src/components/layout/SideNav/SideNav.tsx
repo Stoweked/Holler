@@ -2,6 +2,7 @@
 
 import {
   Anchor,
+  Badge,
   Card,
   Center,
   Divider,
@@ -36,7 +37,7 @@ export function SideNav() {
           <Stack align="center" gap="xl">
             <Stack align="center" gap="sm">
               <Text c="dimmed" size="lg">
-                Welcome, Jonah
+                Welcome, Jwonahh
               </Text>
               <Stack align="center" gap={2}>
                 <Title order={1} size={40}>
@@ -77,7 +78,16 @@ export function SideNav() {
 
           <NavLink
             href="#required-for-focus"
-            label="Connected bank accounts"
+            label={
+              <>
+                <Group wrap="nowrap" gap="xs">
+                  Connected bank accounts{" "}
+                  <Badge variant="default" size="sm">
+                    2
+                  </Badge>
+                </Group>
+              </>
+            }
             leftSection={<BankIcon size={20} />}
             rightSection={<ArrowRight01Icon size={24} color="grey" />}
             className={classes.navLink}
