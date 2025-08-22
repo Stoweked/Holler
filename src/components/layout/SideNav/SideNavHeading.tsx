@@ -2,7 +2,13 @@ import { Card, Stack, Text, Title } from "@mantine/core";
 import classes from "./SideNav.module.css";
 import ActionButtons from "./ActionButtons";
 
-export default function SideNavHeading() {
+interface SideNavHeadingProps {
+  onDepositClick: () => void;
+}
+
+export default function SideNavHeading({
+  onDepositClick,
+}: SideNavHeadingProps) {
   return (
     <div>
       <Card w="100%" py={48} className={classes.headingCard}>
@@ -19,7 +25,7 @@ export default function SideNavHeading() {
             </Stack>
           </Stack>
 
-          <ActionButtons />
+          <ActionButtons onDepositClick={onDepositClick} />
         </Stack>
       </Card>
     </div>
