@@ -2,9 +2,9 @@ import { Badge, Group, NavLink } from "@mantine/core";
 import {
   ArrowRight01Icon,
   BankIcon,
-  Call02Icon,
   ClipboardIcon,
   Logout02Icon,
+  Message01Icon,
   PencilEdit01Icon,
   UserIcon,
   UserMultiple02Icon,
@@ -58,7 +58,7 @@ export default function SideNavLinks() {
       <NavLink
         href="#required-for-focus"
         label="Get support"
-        leftSection={<Call02Icon size={20} />}
+        leftSection={<Message01Icon size={20} />}
         rightSection={<ArrowRight01Icon size={24} color="grey" />}
         className={classes.navLink}
       />

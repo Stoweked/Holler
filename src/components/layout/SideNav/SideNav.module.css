@@ -2,8 +2,3 @@
   padding: 1rem 1rem;
   border-bottom: 1px solid var(--app-shell-border-color);
 }
-
-.headingCard {
-  background-color: light-dark(#fbf9f9, var(--mantine-color-dark-8));
-  border-bottom: 1px solid var(--app-shell-border-color);
-}
