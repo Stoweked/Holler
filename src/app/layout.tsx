@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     siteName: "Holler",
     images: [
       {
-        url: "/og-cover.png",
+        url: "/images/og-cover.png",
         width: 1200,
         height: 630,
         alt: "Get paid faster on the job. Holler provides secure mobile payments designed for construction trades.",
@@ -34,7 +34,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <ColorSchemeScript defaultColorScheme="light" />
         <meta
