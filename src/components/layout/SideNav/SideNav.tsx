@@ -32,7 +32,7 @@ export function SideNav() {
     <>
       <Stack gap={0}>
         {/* Heading */}
-        <Card w="100%" py={60} className={classes.headingCard}>
+        <Card w="100%" py={48} className={classes.headingCard}>
           <Stack align="center" gap="xl">
             <Stack align="center" gap="sm">
               <Text c="dimmed" size="lg">
@@ -51,10 +51,8 @@ export function SideNav() {
         </Card>
 
         <Stack w="100%" gap={0} p="md">
-          <Group justify="space-between">
-            <Title order={3} p="md">
-              Option menu
-            </Title>
+          <Group justify="space-between" pb="md">
+            <Title order={3}>Option menu</Title>
 
             <ColorSchemeToggle />
           </Group>
