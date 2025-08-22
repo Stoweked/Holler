@@ -1,10 +1,12 @@
 "use client";
 
 import {
-  ActionIcon,
+  Anchor,
   Card,
+  Center,
   Divider,
   Group,
+  Image,
   NavLink,
   Paper,
   Stack,
@@ -12,22 +14,26 @@ import {
   Title,
 } from "@mantine/core";
 import {
-  ArrowDown02Icon,
   ArrowRight01Icon,
-  ArrowUp02Icon,
   BankIcon,
-  PlusSignIcon,
+  Call02Icon,
+  ClipboardIcon,
+  Logout02Icon,
+  PencilEdit01Icon,
   UserIcon,
   UserMultiple02Icon,
 } from "hugeicons-react";
+import ActionButtons from "./ActionButtons";
+import classes from "./SideNav.module.css";
+import { ColorSchemeToggle } from "@/components/ColorSchemeToggle";
 
 export function SideNav() {
   return (
     <>
       <Stack gap={0}>
-        <Card w="100%" py="xl">
-          <Stack align="center">
-            {/* Heading */}
+        {/* Heading */}
+        <Card w="100%" py={60} className={classes.headingCard}>
+          <Stack align="center" gap="xl">
             <Stack align="center" gap="sm">
               <Text c="dimmed" size="lg">
                 Welcome, Jonah
@@ -40,97 +46,94 @@ export function SideNav() {
               </Stack>
             </Stack>
 
-            {/* Action buttons */}
-            <Group wrap="nowrap" gap="xl">
-              {/* Deposit button */}
-              <Stack gap={4} align="center">
-                <ActionIcon
-                  variant="default"
-                  size="xl"
-                  radius="xl"
-                  aria-label="Deposit funds"
-                >
-                  <PlusSignIcon size={20} />
-                </ActionIcon>
-                <Text size="xs" fw="bold">
-                  Deposit
-                </Text>
-              </Stack>
-
-              {/* Request button */}
-              <Stack gap={4} align="center">
-                <ActionIcon
-                  variant="default"
-                  size="xl"
-                  radius="xl"
-                  aria-label="Request funds"
-                >
-                  <ArrowDown02Icon size={20} />
-                </ActionIcon>
-                <Text size="xs" fw="bold">
-                  Request
-                </Text>
-              </Stack>
-
-              {/* Send button */}
-              <Stack gap={4} align="center">
-                <ActionIcon
-                  variant="default"
-                  size="xl"
-                  radius="xl"
-                  aria-label="Send funds"
-                >
-                  <ArrowUp02Icon size={20} />
-                </ActionIcon>
-                <Text size="xs" fw="bold">
-                  Send
-                </Text>
-              </Stack>
-
-              {/* Transfer button */}
-              <Stack gap={4} align="center">
-                <ActionIcon
-                  variant="default"
-                  size="xl"
-                  radius="xl"
-                  aria-label="Transfer funds"
-                >
-                  <BankIcon size={20} />
-                </ActionIcon>
-                <Text size="xs" fw="bold">
-                  Transfer
-                </Text>
-              </Stack>
-            </Group>
+            <ActionButtons />
           </Stack>
         </Card>
 
-        <Divider w="100%" />
+        <Stack w="100%" gap={0} p="md">
+          <Group justify="space-between">
+            <Title order={3} p="md">
+              Option menu
+            </Title>
 
-        <Stack w="100%" gap={0}>
-          <Title order={3} p="md">
-            Option menu
-          </Title>
+            <ColorSchemeToggle />
+          </Group>
+
+          <Divider />
+
           <NavLink
             href="#required-for-focus"
             label="Your profile"
-            leftSection={<UserIcon size={16} />}
-            rightSection={<ArrowRight01Icon size={12} />}
+            leftSection={<UserIcon size={20} />}
+            rightSection={<ArrowRight01Icon size={24} color="grey" />}
+            className={classes.navLink}
           />
 
           <NavLink
             href="#required-for-focus"
             label="Contacts"
-            leftSection={<UserMultiple02Icon size={16} />}
-            rightSection={<ArrowRight01Icon size={12} />}
+            leftSection={<UserMultiple02Icon size={20} />}
+            rightSection={<ArrowRight01Icon size={24} color="grey" />}
+            className={classes.navLink}
           />
 
           <NavLink
             href="#required-for-focus"
-            label="Connected bank account(s)"
-            leftSection={<BankIcon size={16} />}
-            rightSection={<ArrowRight01Icon size={12} />}
+            label="Connected bank accounts"
+            leftSection={<BankIcon size={20} />}
+            rightSection={<ArrowRight01Icon size={24} color="grey" />}
+            className={classes.navLink}
           />
+
+          <NavLink
+            href="#required-for-focus"
+            label="Lien waiver"
+            leftSection={<ClipboardIcon size={20} />}
+            rightSection={<ArrowRight01Icon size={24} color="grey" />}
+            className={classes.navLink}
+          />
+
+          <NavLink
+            href="#required-for-focus"
+            label="Get support"
+            leftSection={<Call02Icon size={20} />}
+            rightSection={<ArrowRight01Icon size={24} color="grey" />}
+            className={classes.navLink}
+          />
+
+          <NavLink
+            href="#required-for-focus"
+            label="Share feedback"
+            leftSection={<PencilEdit01Icon size={20} />}
+            rightSection={<ArrowRight01Icon size={24} color="grey" />}
+            className={classes.navLink}
+          />
+
+          <NavLink
+            href="#required-for-focus"
+            label="Log out"
+            leftSection={<Logout02Icon size={20} />}
+            rightSection={<ArrowRight01Icon size={24} color="grey" />}
+            className={classes.navLink}
+          />
+        </Stack>
+
+        <Stack p="md" gap="xs">
+          <Paper withBorder radius="md" p="md">
+            <Center>
+              <Image
+                src="/images/holler-grey.svg"
+                alt="Holler Logo"
+                maw={100}
+                w="100%"
+                h="auto"
+              />
+            </Center>
+          </Paper>
+
+          <Text c="dimmed" size="xs" p="md" ta="center">
+            All rights reserved Holler, LLC® <Anchor>Terms & Conditions</Anchor>
+          </Text>
         </Stack>
       </Stack>
     </>

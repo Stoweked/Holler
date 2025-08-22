@@ -10,11 +10,13 @@ import {
   ColorSchemeScript,
   Text,
   Image,
+  ScrollArea,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { theme } from "../theme";
 import "./globals.css";
 import { SideNav } from "@/components/layout/SideNav";
+import { ColorSchemeToggle } from "@/components/ColorSchemeToggle";
 
 export default function RootLayout({
   children,
@@ -36,33 +38,39 @@ export default function RootLayout({
       <body>
         <MantineProvider theme={theme} defaultColorScheme="light">
           <AppShell
-            header={{ height: 60 }}
+            // header={{ height: 60 }}
             navbar={{
-              width: 400,
+              width: 380,
               breakpoint: "sm",
               collapsed: { mobile: !opened },
             }}
             padding="md"
           >
-            <AppShell.Header>
-              <Group h="100%" px="md">
-                <Burger
-                  opened={opened}
-                  onClick={toggle}
-                  hiddenFrom="sm"
-                  size="sm"
-                />
-                <Image
-                  src="/images/holler-logo.svg"
-                  alt="Holler Logo"
-                  maw={120}
-                  w="100%"
-                  h="auto"
-                />
+            {/* <AppShell.Header>
+              <Group h="100%" px="md" justify="space-between">
+                <Group wrap="nowrap" gap="xs">
+                  <Burger
+                    opened={opened}
+                    onClick={toggle}
+                    hiddenFrom="sm"
+                    size="sm"
+                  />
+                  <Image
+                    src="/images/holler-logo.svg"
+                    alt="Holler Logo"
+                    maw={120}
+                    w="100%"
+                    h="auto"
+                  />
+                </Group>
+
+                <ColorSchemeToggle />
               </Group>
-            </AppShell.Header>
+            </AppShell.Header> */}
             <AppShell.Navbar>
-              <SideNav />
+              <ScrollArea type="never">
+                <SideNav />
+              </ScrollArea>
             </AppShell.Navbar>
             <AppShell.Main>{children}</AppShell.Main>
           </AppShell>
