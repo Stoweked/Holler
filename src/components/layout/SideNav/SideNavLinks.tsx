@@ -3,10 +3,7 @@ import {
   ArrowRight01Icon,
   BankIcon,
   ClipboardIcon,
-  Logout02Icon,
   Message01Icon,
-  PencilEdit01Icon,
-  UserIcon,
   UserMultiple02Icon,
 } from "hugeicons-react";
 import classes from "./SideNav.module.css";
@@ -14,14 +11,6 @@ import classes from "./SideNav.module.css";
 export default function SideNavLinks() {
   return (
     <div>
-      {/* <NavLink
-        href="#required-for-focus"
-        label="Your profile"
-        leftSection={<UserIcon size={20} />}
-        rightSection={<ArrowRight01Icon size={24} color="grey" />}
-        className={classes.navLink}
-      /> */}
-
       <NavLink
         href="#required-for-focus"
         label="Contacts"
@@ -62,22 +51,6 @@ export default function SideNavLinks() {
         rightSection={<ArrowRight01Icon size={24} color="grey" />}
         className={classes.navLink}
       />
-      {/* 
-      <NavLink
-        href="#required-for-focus"
-        label="Share feedback"
-        leftSection={<PencilEdit01Icon size={20} />}
-        rightSection={<ArrowRight01Icon size={24} color="grey" />}
-        className={classes.navLink}
-      />
-
-      <NavLink
-        href="#required-for-focus"
-        label="Log out"
-        leftSection={<Logout02Icon size={20} />}
-        rightSection={<ArrowRight01Icon size={24} color="grey" />}
-        className={classes.navLink}
-      /> */}
     </div>
   );
 }

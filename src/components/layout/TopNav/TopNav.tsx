@@ -25,7 +25,7 @@ export default function TopNav({ opened, toggle }: TopNavProps) {
 
       <Group wrap="nowrap" gap="xs">
         <ColorSchemeToggle />
-        <Indicator color="red" size={10} offset={2} position="top-end">
+        <Indicator color="red" size={10} offset={6} position="top-end">
           <ActionIcon
             variant="default"
             size={38}
