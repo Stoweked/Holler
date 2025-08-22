@@ -11,6 +11,7 @@ import {
   Text,
   Image,
   ScrollArea,
+  Avatar,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { theme } from "../theme";
@@ -38,7 +39,7 @@ export default function RootLayout({
       <body>
         <MantineProvider theme={theme} defaultColorScheme="light">
           <AppShell
-            // header={{ height: 60 }}
+            header={{ height: 60 }}
             navbar={{
               width: 380,
               breakpoint: "sm",
@@ -46,7 +47,7 @@ export default function RootLayout({
             }}
             padding="md"
           >
-            {/* <AppShell.Header>
+            <AppShell.Header>
               <Group h="100%" px="md" justify="space-between">
                 <Group wrap="nowrap" gap="xs">
                   <Burger
@@ -56,7 +57,7 @@ export default function RootLayout({
                     size="sm"
                   />
                   <Image
-                    src="/images/holler-logo.svg"
+                    src="/images/holler-grey.svg"
                     alt="Holler Logo"
                     maw={120}
                     w="100%"
@@ -64,9 +65,14 @@ export default function RootLayout({
                   />
                 </Group>
 
-                <ColorSchemeToggle />
+                <Group wrap="nowrap" gap="xs">
+                  <ColorSchemeToggle />
+                  <Avatar radius="xl" color="lime" variant="filled">
+                    JS
+                  </Avatar>
+                </Group>
               </Group>
-            </AppShell.Header> */}
+            </AppShell.Header>
             <AppShell.Navbar>
               <ScrollArea type="never">
                 <SideNav />

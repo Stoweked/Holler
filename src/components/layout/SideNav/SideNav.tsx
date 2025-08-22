@@ -23,18 +23,18 @@ export function SideNav() {
         <SideNavHeading />
 
         {/* Menu */}
-        <Stack w="100%" gap={0} p="md">
-          <Group justify="space-between" pb="md">
-            <Title order={3}>Option menu</Title>
-            <ColorSchemeToggle />
-          </Group>
-          <Divider />
+        <Stack w="100%" gap={0}>
+          {/* <Title order={3} pb="md">
+            Option menu
+          </Title>
+
+          <Divider /> */}
           <SideNavLinks />
         </Stack>
 
         {/* Footer */}
         <Stack p="md" gap="xs">
-          <Paper withBorder radius="md" p="md">
+          {/* <Paper withBorder radius="md" p="md">
             <Center>
               <Image
                 src="/images/holler-grey.svg"
@@ -44,7 +44,7 @@ export function SideNav() {
                 h="auto"
               />
             </Center>
-          </Paper>
+          </Paper> */}
           <Text c="dimmed" size="xs" p="md" ta="center">
             All rights reserved Holler, LLC® <Anchor>Terms & Conditions</Anchor>
           </Text>
