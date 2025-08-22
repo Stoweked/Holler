@@ -3,11 +3,17 @@ import { useDisclosure } from "@mantine/hooks";
 import { Logout02Icon, PencilEdit01Icon, UserIcon } from "hugeicons-react";
 import FeedbackModal from "./FeedbackModal";
 import { ColorSchemeMenuItem } from "./ColorSchemeMenuItem";
+import ProfileDrawer from "@/components/profile/ProfileDrawer";
 
 export default function AccountAvatar() {
   const [
     openedFeedbackModal,
     { open: openFeedbackModal, close: closeFeedbackModal },
+  ] = useDisclosure(false);
+
+  const [
+    openedProfileDrawer,
+    { open: openProfileDrawer, close: closeProfileDrawer },
   ] = useDisclosure(false);
 
   return (
@@ -27,7 +33,10 @@ export default function AccountAvatar() {
         </Menu.Target>
 
         <Menu.Dropdown>
-          <Menu.Item leftSection={<UserIcon size={16} />}>
+          <Menu.Item
+            leftSection={<UserIcon size={16} />}
+            onClick={openProfileDrawer}
+          >
             Your profile
           </Menu.Item>
           <Menu.Item
@@ -45,6 +54,7 @@ export default function AccountAvatar() {
       </Menu>
 
       <FeedbackModal opened={openedFeedbackModal} close={closeFeedbackModal} />
+      <ProfileDrawer opened={openedProfileDrawer} close={closeProfileDrawer} />
     </div>
   );
 }

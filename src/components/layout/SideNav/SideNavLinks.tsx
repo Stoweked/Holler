@@ -10,6 +10,7 @@ import classes from "./SideNav.module.css";
 import { useDisclosure } from "@mantine/hooks";
 import ContactsDrawer from "@/components/contacts/ContactsDrawer";
 import ConnectedBanksDrawer from "@/components/banks/ConnectedBanksDrawer";
+import LienWaiversDrawer from "@/components/waivers/LienWaiversDrawer";
 
 export default function SideNavLinks() {
   const [
@@ -20,6 +21,11 @@ export default function SideNavLinks() {
   const [
     openedConnectedBanksDrawer,
     { open: openConnectedBanksDrawer, close: closeConnectedBanksDrawer },
+  ] = useDisclosure(false);
+
+  const [
+    openedLienWaiversDrawer,
+    { open: openLienWaiversDrawer, close: closeLienWaiversDrawer },
   ] = useDisclosure(false);
   return (
     <div>
@@ -56,6 +62,7 @@ export default function SideNavLinks() {
         leftSection={<ClipboardIcon size={20} />}
         rightSection={<ArrowRight01Icon size={24} color="grey" />}
         className={classes.navLink}
+        onClick={openLienWaiversDrawer}
       />
 
       <NavLink
@@ -73,6 +80,10 @@ export default function SideNavLinks() {
       <ConnectedBanksDrawer
         opened={openedConnectedBanksDrawer}
         close={closeConnectedBanksDrawer}
+      />
+      <LienWaiversDrawer
+        opened={openedLienWaiversDrawer}
+        close={closeLienWaiversDrawer}
       />
     </div>
   );
