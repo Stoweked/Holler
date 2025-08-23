@@ -120,6 +120,7 @@ export default function EnterAmountStep({
                     c="dimmed"
                     lineClamp={1}
                     className={classes.detailsText}
+                    style={{ textDecoration: "none" }}
                   >
                     {contact.details}
                   </Text>

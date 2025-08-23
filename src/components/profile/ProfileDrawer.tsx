@@ -52,7 +52,7 @@ export default function ProfileDrawer({
             <Title order={2} ta="center">
               {contact.name}
             </Title>
-            <Text c="dimmed" ta="center">
+            <Text c="dimmed" ta="center" style={{ textDecoration: "none" }}>
               {contact.details}
             </Text>
           </Stack>
