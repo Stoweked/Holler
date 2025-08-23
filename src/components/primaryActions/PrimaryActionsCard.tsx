@@ -31,14 +31,14 @@ export default function PrimaryActionsCard() {
       <Card w="100%" py={48} className={classes.card}>
         <Stack align="center" gap="xl">
           <Stack align="center" gap="sm">
-            <Text c="dimmed" size="lg">
-              Welcome, Jwonahh
-            </Text>
-            <Stack align="center" gap={2}>
+            <Text size="lg">Welcome, Jwonahh</Text>
+            <Stack align="center" gap={0}>
               <Title order={1} size={48}>
                 $0.00
               </Title>
-              <Text size="xs">Current balance</Text>
+              <Text size="xs" c="dimmed">
+                Current balance
+              </Text>
             </Stack>
           </Stack>
 
