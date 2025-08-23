@@ -1,4 +1,12 @@
-import { Drawer, Stack, Avatar, Title, Text } from "@mantine/core";
+import {
+  Drawer,
+  Stack,
+  Avatar,
+  Title,
+  Text,
+  Button,
+  Group,
+} from "@mantine/core";
 
 interface Contact {
   name: string;
@@ -12,6 +20,7 @@ interface ProfileDrawerProps {
   close: () => void;
   contact: Contact | null;
   position?: "left" | "right";
+  showButtons?: boolean;
 }
 
 export default function ProfileDrawer({
@@ -19,6 +28,7 @@ export default function ProfileDrawer({
   close,
   contact,
   position = "right",
+  showButtons = true,
 }: ProfileDrawerProps) {
   if (!contact) {
     return null;
@@ -33,14 +43,26 @@ export default function ProfileDrawer({
       size="lg"
       position={position}
     >
-      <Stack align="center" gap="xl" mt="xl">
-        <Avatar color="lime" size={120} radius="50%">
-          <Title order={1}>{contact.avatar}</Title>
-        </Avatar>
-        <Stack align="center" gap={4}>
-          <Title order={2}>{contact.name}</Title>
-          <Text c="dimmed">{contact.details}</Text>
+      <Stack>
+        <Stack align="center" gap="sm">
+          <Avatar color="lime" size={120} radius="50%">
+            <Title order={1}>{contact.avatar}</Title>
+          </Avatar>
+          <Stack align="center" gap={4}>
+            <Title order={2}>{contact.name}</Title>
+            <Text c="dimmed">{contact.details}</Text>
+          </Stack>
         </Stack>
+        {showButtons && (
+          <Group grow wrap="nowrap">
+            <Button radius="xl" size="lg" variant="outline">
+              Request payment
+            </Button>
+            <Button radius="xl" size="lg">
+              Send payment
+            </Button>
+          </Group>
+        )}
       </Stack>
     </Drawer>
   );

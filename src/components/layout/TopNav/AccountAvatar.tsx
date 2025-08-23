@@ -72,6 +72,7 @@ export default function AccountAvatar() {
         close={closeProfileDrawer}
         contact={mockProfile}
         position="right"
+        showButtons={false}
       />
     </div>
   );
