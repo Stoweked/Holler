@@ -40,3 +40,8 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.detailsText a {
+  color: inherit;
+  text-decoration: none;
+}

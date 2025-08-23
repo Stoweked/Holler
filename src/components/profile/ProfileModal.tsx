@@ -50,7 +50,7 @@ export default function ProfileModal({
             <Title order={2} ta="center">
               {contact.name}
             </Title>
-            <Text c="dimmed" ta="center" style={{ textDecoration: "none" }}>
+            <Text c="dimmed" ta="center">
               {contact.details}
             </Text>
           </Stack>
