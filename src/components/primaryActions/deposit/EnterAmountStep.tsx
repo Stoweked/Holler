@@ -14,7 +14,7 @@ import {
 } from "@mantine/core";
 import classes from "./EnterAmount.module.css";
 import { useEffect, useRef } from "react";
-import { Recipient } from "../contacts/types";
+import { Recipient } from "../../contacts/types";
 import {
   CancelCircleIcon,
   BankIcon,
@@ -23,7 +23,7 @@ import {
   UserIcon,
 } from "hugeicons-react";
 import { useDisclosure } from "@mantine/hooks";
-import ProfileModal from "../profile/ProfileModal";
+import ProfileModal from "../../profile/ProfileModal";
 
 // Internal Template for Contact transactions (Send/Request)
 const ContactRecipientDetails = ({

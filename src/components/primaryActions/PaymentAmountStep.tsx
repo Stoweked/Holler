@@ -7,7 +7,7 @@ import {
   Tooltip,
   Textarea,
 } from "@mantine/core";
-import classes from "./EnterAmount.module.css";
+import classes from "./deposit/EnterAmount.module.css";
 import { useEffect, useRef } from "react";
 import { Recipient } from "../contacts/types";
 import { CancelCircleIcon } from "hugeicons-react";

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { ActionIcon, Drawer, Group, Text, Tooltip } from "@mantine/core";
 import { ArrowLeft02Icon } from "hugeicons-react";
 import { Recipient } from "@/components/contacts/types";
-import EnterAmountStep from "../EnterAmountStep";
+import EnterAmountStep from "./EnterAmountStep";
 import ConfirmationStep from "./ConfirmationStep";
 import SelectBankStep from "./SelectBankStep";
 
