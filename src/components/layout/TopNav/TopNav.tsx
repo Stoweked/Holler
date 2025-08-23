@@ -5,6 +5,7 @@ import {
   Group,
   Image,
   Indicator,
+  Title,
 } from "@mantine/core";
 import { InboxIcon } from "hugeicons-react";
 import React from "react";
@@ -28,19 +29,25 @@ export default function TopNav({ opened, toggle }: TopNavProps) {
   return (
     <>
       <Group h="100%" px="md" justify="space-between" wrap="nowrap">
-        <Group wrap="nowrap" gap="xs">
+        <Group wrap="nowrap">
           <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
+
+          {/* Logo */}
           <Anchor
             onClick={() => router.push("/")}
             style={{ textDecoration: "none" }}
+            c="initial"
           >
-            <Image
-              src="/images/holler-grey.svg"
-              alt="Holler Logo"
-              maw={120}
-              w="100%"
-              h="auto"
-            />
+            <Group gap={8} wrap="nowrap">
+              <Image
+                src="/images/logomark.svg"
+                alt="Holler Logo"
+                maw={24}
+                w="100%"
+                h="auto"
+              />
+              <Title order={2}>Holler</Title>
+            </Group>
           </Anchor>
         </Group>
 

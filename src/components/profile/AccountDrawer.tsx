@@ -15,7 +15,7 @@ interface Contact {
   topContact?: boolean;
 }
 
-interface ProfileDrawerProps {
+interface AccountDrawerProps {
   opened: boolean;
   close: () => void;
   contact: Contact | null;
@@ -23,13 +23,13 @@ interface ProfileDrawerProps {
   showButtons?: boolean;
 }
 
-export default function ProfileDrawer({
+export default function AccountDrawer({
   opened,
   close,
   contact,
   position = "right",
   showButtons = true,
-}: ProfileDrawerProps) {
+}: AccountDrawerProps) {
   if (!contact) {
     return null;
   }
@@ -38,7 +38,7 @@ export default function ProfileDrawer({
     <Drawer
       opened={opened}
       onClose={close}
-      title="Profile"
+      title="Your account"
       padding="lg"
       size="lg"
       position={position}

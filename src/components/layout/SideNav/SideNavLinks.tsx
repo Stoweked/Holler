@@ -12,7 +12,7 @@ import ContactsDrawer from "@/components/contacts/ContactsDrawer";
 import ConnectedBanksDrawer from "@/components/banks/ConnectedBanksDrawer";
 import LienWaiversDrawer from "@/components/waivers/LienWaiversDrawer";
 import { useState } from "react";
-import ProfileDrawer from "@/components/profile/ProfileDrawer";
+import ProfileModal from "@/components/profile/ProfileModal";
 
 interface Contact {
   name: string;
@@ -45,7 +45,6 @@ export default function SideNavLinks() {
 
   const handleContactClick = (contact: Contact) => {
     setSelectedContact(contact);
-    closeContactsDrawer();
     openProfileDrawer();
   };
 
@@ -108,11 +107,10 @@ export default function SideNavLinks() {
         opened={openedLienWaiversDrawer}
         close={closeLienWaiversDrawer}
       />
-      <ProfileDrawer
+      <ProfileModal
         opened={openedProfileDrawer}
         close={closeProfileDrawer}
         contact={selectedContact}
-        position="left"
       />
     </div>
   );

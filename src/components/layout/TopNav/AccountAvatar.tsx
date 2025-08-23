@@ -3,7 +3,7 @@ import { useDisclosure } from "@mantine/hooks";
 import { Logout02Icon, PencilEdit01Icon, UserIcon } from "hugeicons-react";
 import FeedbackModal from "./FeedbackModal";
 import { ColorSchemeMenuItem } from "./ColorSchemeMenuItem";
-import ProfileDrawer from "@/components/profile/ProfileDrawer";
+import ProfileDrawer from "@/components/profile/AccountDrawer";
 import { useRouter } from "next/navigation";
 
 export default function AccountAvatar() {
@@ -46,7 +46,7 @@ export default function AccountAvatar() {
             leftSection={<UserIcon size={16} />}
             onClick={openProfileDrawer}
           >
-            Your profile
+            Your account
           </Menu.Item>
           <Menu.Item
             leftSection={<PencilEdit01Icon size={16} />}

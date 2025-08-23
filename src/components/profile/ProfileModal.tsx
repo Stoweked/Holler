@@ -7,6 +7,7 @@ import {
   Group,
   Modal,
 } from "@mantine/core";
+import { StarIcon } from "hugeicons-react";
 
 interface Contact {
   name: string;
@@ -46,6 +47,13 @@ export default function ProfileModal({
           <Avatar color="lime" size={100} radius="50%">
             <Title order={1}>{contact.avatar}</Title>
           </Avatar>
+          <Button
+            variant="default"
+            size="compact-md"
+            leftSection={<StarIcon size={16} />}
+          >
+            Favorite
+          </Button>
           <Stack align="center" gap={4}>
             <Title order={2} ta="center">
               {contact.name}
@@ -56,7 +64,7 @@ export default function ProfileModal({
           </Stack>
         </Stack>
         {showButtons && (
-          <Group grow wrap="nowrap">
+          <Group justify="center">
             <Button radius="xl" size="lg" variant="outline">
               Request payment
             </Button>
