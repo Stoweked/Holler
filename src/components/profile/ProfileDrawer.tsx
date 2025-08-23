@@ -43,9 +43,9 @@ export default function ProfileDrawer({
       size="lg"
       position={position}
     >
-      <Stack>
+      <Stack gap="xl">
         <Stack align="center" gap="sm">
-          <Avatar color="lime" size={120} radius="50%">
+          <Avatar color="lime" size={100} radius="50%">
             <Title order={1}>{contact.avatar}</Title>
           </Avatar>
           <Stack align="center" gap={4}>
