@@ -1,28 +1,22 @@
 import {
   ActionIcon,
-  Avatar,
   Group,
   Stack,
   Text,
+  ThemeIcon,
   Title,
   UnstyledButton,
 } from "@mantine/core";
-import { ArrowRight01Icon } from "hugeicons-react";
-import classes from "./ContactItem.module.css";
+import { ArrowRight01Icon, BankIcon } from "hugeicons-react";
+import classes from "./BankItem.module.css";
 
-interface ContactItemProps {
-  avatar: string;
+interface BankItemProps {
   name: string;
   details: string;
   onClick?: () => void;
 }
 
-export default function ContactItem({
-  avatar,
-  name,
-  details,
-  onClick,
-}: ContactItemProps) {
+export default function BankItem({ name, details, onClick }: BankItemProps) {
   return (
     <UnstyledButton className={classes.item} onClick={onClick}>
       <Group justify="space-between" wrap="nowrap">
@@ -32,9 +26,9 @@ export default function ContactItem({
           className={classes.details}
           gap="xs"
         >
-          <Avatar variant="light" radius="xl" size={44}>
-            {avatar}
-          </Avatar>
+          <ThemeIcon variant="default" radius="xl" size={44}>
+            <BankIcon size={24} />
+          </ThemeIcon>
 
           <Stack gap={0} style={{ overflow: "hidden" }}>
             <Title order={5} lineClamp={2} lh={1.2}>
@@ -51,7 +45,7 @@ export default function ContactItem({
           variant="subtle"
           size="xl"
           radius="xl"
-          aria-label="Select contact"
+          aria-label="Select bank"
         >
           <ArrowRight01Icon size={32} />
         </ActionIcon>

@@ -16,3 +16,27 @@
 .amountInput::placeholder {
   color: light-dark(var(--mantine-color-gray-4), var(--mantine-color-dark-3));
 }
+
+.recipientContainer {
+  /* This ensures the container does not overflow the drawer's width */
+  max-width: 100%;
+}
+
+.recipientDetailsGroup {
+  /* Allows the group to shrink */
+  min-width: 0;
+  flex: 1;
+}
+
+.recipientTextContainer {
+  /* Allows the text container to shrink */
+  min-width: 0;
+  flex: 1;
+}
+
+.detailsText {
+  /* Ensures single-line truncation with an ellipsis */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

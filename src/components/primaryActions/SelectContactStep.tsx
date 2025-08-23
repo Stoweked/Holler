@@ -1,5 +1,5 @@
 import ContactsList from "@/components/contacts/ContactList";
-import { mockContacts } from "@/components/contacts/mockContacts";
+import { mockContacts } from "@/components/mockData/mockContacts";
 
 interface Contact {
   name: string;

@@ -2,9 +2,9 @@ import { useState } from "react";
 import { ActionIcon, Drawer, Group, Text, Tooltip } from "@mantine/core";
 import { ArrowLeft02Icon } from "hugeicons-react";
 import { Contact, Recipient } from "@/components/contacts/types";
-import ConfirmationStep from "./ConfirmationStep";
-import SelectContactStep from "./SelectContactStep";
-import EnterAmountStep from "./EnterAmountStep";
+import ConfirmationStep from "../ConfirmationStep";
+import SelectContactStep from "../SelectContactStep";
+import EnterAmountStep from "../EnterAmountStep";
 
 // 1. Define a type for the steps for type-safety and autocompletion
 type SendStep = "selectContact" | "enterAmount" | "confirm";
@@ -58,7 +58,7 @@ export default function SendDrawer({ opened, close }: SendDrawerProps) {
   // 3. Update title and rendering logic to use strings
   const drawerTitle =
     step === "selectContact" ? (
-      "Send to a contact"
+      "Send payment"
     ) : step === "confirm" ? (
       <Group gap="xs">
         <Tooltip label="Back to amount" position="right">

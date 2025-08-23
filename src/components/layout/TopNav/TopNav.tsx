@@ -27,7 +27,7 @@ export default function TopNav({ opened, toggle }: TopNavProps) {
 
   return (
     <>
-      <Group h="100%" px="md" justify="space-between">
+      <Group h="100%" px="md" justify="space-between" wrap="nowrap">
         <Group wrap="nowrap" gap="xs">
           <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
           <Anchor

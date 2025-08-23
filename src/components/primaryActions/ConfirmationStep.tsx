@@ -5,14 +5,13 @@ import {
   Stack,
   Text,
   Title,
-  Paper,
   Anchor,
   Card,
   Divider,
   Alert,
 } from "@mantine/core";
 import { Contact } from "@/components/contacts/types";
-import { PencilEdit01Icon, Time01Icon, Time02Icon } from "hugeicons-react";
+import { Time02Icon } from "hugeicons-react";
 
 interface ConfirmationStepProps {
   contact: Contact;
@@ -89,7 +88,7 @@ export default function ConfirmationStep({
         </Button>
         <Stack gap="xs">
           <Text c="dimmed" size="sm" ta="center">
-            Transactions typically take 1-3 business days to process
+            Transactions typically take 1-3 business days to process.
           </Text>
           <Group justify="center">
             <Anchor ta="center" size="xs">

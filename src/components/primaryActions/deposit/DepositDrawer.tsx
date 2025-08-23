@@ -1,16 +1,12 @@
 import { useState } from "react";
-import {
-  ActionIcon,
-  Drawer,
-  Group,
-  Skeleton,
-  Text,
-  Tooltip,
-  UnstyledButton,
-} from "@mantine/core";
+import { ActionIcon, Drawer, Group, Text, Tooltip } from "@mantine/core";
 import { ArrowLeft02Icon } from "hugeicons-react";
-import EnterAmountStep from "../send/EnterAmountStep";
-import { Recipient } from "../../contacts/types";
+import { Recipient } from "@/components/contacts/types";
+import EnterAmountStep from "../EnterAmountStep";
+import ConfirmationStep from "./ConfirmationStep";
+import SelectBankStep from "./SelectBankStep";
+
+type DepositStep = "selectBank" | "enterAmount" | "confirm";
 
 interface DepositDrawerProps {
   opened: boolean;
@@ -18,7 +14,7 @@ interface DepositDrawerProps {
 }
 
 export default function DepositDrawer({ opened, close }: DepositDrawerProps) {
-  const [step, setStep] = useState("selectBank");
+  const [step, setStep] = useState<DepositStep>("selectBank");
   const [selectedBank, setSelectedBank] = useState<Recipient | null>(null);
   const [amount, setAmount] = useState<string | number>("");
   const [note, setNote] = useState("");
@@ -28,8 +24,21 @@ export default function DepositDrawer({ opened, close }: DepositDrawerProps) {
     setStep("enterAmount");
   };
 
+  const handleAmountContinue = () => {
+    setStep("confirm");
+  };
+
   const handleBack = () => {
-    setStep("selectBank");
+    if (step === "enterAmount") {
+      setStep("selectBank");
+    } else if (step === "confirm") {
+      setStep("enterAmount");
+    }
+  };
+
+  const handleConfirmDeposit = () => {
+    console.log(`Depositing ${amount} to ${selectedBank?.name}`);
+    handleClose();
   };
 
   const handleClose = () => {
@@ -42,24 +51,36 @@ export default function DepositDrawer({ opened, close }: DepositDrawerProps) {
     }, 200);
   };
 
-  // Custom title based on the design
   const drawerTitle =
     step === "selectBank" ? (
       "Deposit to bank"
-    ) : (
-      <Group justify="space-between" w="100%">
-        <Tooltip label="Back to banks" position="right">
+    ) : step === "confirm" ? (
+      <Group gap="xs">
+        <Tooltip label="Back to amount" position="right">
           <ActionIcon
             onClick={handleBack}
-            variant="subtle"
-            color="gray"
-            radius="xl"
-            aria-label="Back"
+            variant="transparent"
+            c="gray"
+            aria-label="Go back"
           >
             <ArrowLeft02Icon size={24} />
           </ActionIcon>
         </Tooltip>
-        <Text>Deposit amount</Text>
+        <Text>Review deposit</Text>
+      </Group>
+    ) : (
+      <Group gap="xs">
+        <Tooltip label="Back to banks" position="right">
+          <ActionIcon
+            onClick={handleBack}
+            variant="transparent"
+            color="gray"
+            aria-label="Go back"
+          >
+            <ArrowLeft02Icon size={24} />
+          </ActionIcon>
+        </Tooltip>
+        <Text>Enter amount to deposit</Text>
       </Group>
     );
 
@@ -72,23 +93,7 @@ export default function DepositDrawer({ opened, close }: DepositDrawerProps) {
       size="md"
     >
       {step === "selectBank" && (
-        <>
-          {[...Array(5)].map((_, i) => (
-            <UnstyledButton
-              key={i}
-              style={{ width: "100%" }}
-              onClick={() =>
-                handleSelectBank({
-                  name: "Mock Bank",
-                  avatar: "",
-                  details: "**** 1234",
-                })
-              }
-            >
-              <Skeleton key={i} height={80} radius="lg" mb="md" />
-            </UnstyledButton>
-          ))}
-        </>
+        <SelectBankStep onSelectBank={handleSelectBank} />
       )}
       {step === "enterAmount" && selectedBank && (
         <EnterAmountStep
@@ -97,6 +102,16 @@ export default function DepositDrawer({ opened, close }: DepositDrawerProps) {
           setAmount={setAmount}
           note={note}
           setNote={setNote}
+          onContinue={handleAmountContinue}
+          recipientType="bank"
+        />
+      )}
+      {step === "confirm" && selectedBank && (
+        <ConfirmationStep
+          bank={selectedBank}
+          amount={amount}
+          note={note}
+          onConfirm={handleConfirmDeposit}
         />
       )}
     </Drawer>

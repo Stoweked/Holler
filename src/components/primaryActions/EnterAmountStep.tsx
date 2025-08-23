@@ -7,12 +7,13 @@ import {
   NumberInput,
   ActionIcon,
   Tooltip,
-  Textarea, // 1. Import ActionIcon
+  Textarea,
+  ThemeIcon,
 } from "@mantine/core";
 import classes from "./EnterAmount.module.css";
 import { useEffect, useRef } from "react";
-import { Recipient } from "../../contacts/types";
-import { CancelCircleIcon } from "hugeicons-react";
+import { Recipient } from "../contacts/types";
+import { CancelCircleIcon, BankIcon } from "hugeicons-react";
 
 interface EnterAmountStepProps {
   contact: Recipient;
@@ -21,6 +22,7 @@ interface EnterAmountStepProps {
   note: string;
   setNote: (value: string) => void;
   onContinue?: () => void;
+  recipientType?: "contact" | "bank";
 }
 
 export default function EnterAmountStep({
@@ -30,6 +32,7 @@ export default function EnterAmountStep({
   note,
   setNote,
   onContinue,
+  recipientType = "contact",
 }: EnterAmountStepProps) {
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -40,7 +43,7 @@ export default function EnterAmountStep({
   return (
     <Stack justify="space-between" gap={60} pt="lg">
       <Stack align="center" gap="md">
-        <Text c="dimmed" size="md">
+        <Text c="dimmed" size="md" ta="center">
           Available balance: $40,000.00
         </Text>
         <NumberInput
@@ -71,13 +74,35 @@ export default function EnterAmountStep({
             ) : null
           }
         />
-        <Group wrap="nowrap">
+        <Group gap="xs" className={classes.recipientContainer}>
           <Text>To:</Text>
-          <Group wrap="nowrap" gap={8}>
-            <Avatar color="lime" radius="xl" size="md">
-              {contact.avatar}
-            </Avatar>
-            <Text fw={500}>{contact.name}</Text>
+          <Group
+            wrap="nowrap"
+            gap={8}
+            className={classes.recipientDetailsGroup}
+          >
+            {recipientType === "bank" ? (
+              <ThemeIcon variant="default" radius="xl" size="lg">
+                <BankIcon size={18} />
+              </ThemeIcon>
+            ) : (
+              <Avatar variant="default" radius="xl" size={34}>
+                {contact.avatar}
+              </Avatar>
+            )}
+            <Stack gap={0} className={classes.recipientTextContainer}>
+              <Text fw={500} lineClamp={3} lh={1.2}>
+                {contact.name}
+              </Text>
+              <Text
+                size="xs"
+                c="dimmed"
+                lineClamp={1}
+                className={classes.detailsText}
+              >
+                {contact.details}
+              </Text>
+            </Stack>
           </Group>
         </Group>
       </Stack>

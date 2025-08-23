@@ -1,6 +1,6 @@
 import { Drawer, Space } from "@mantine/core";
 import ContactsList from "./ContactList";
-import { mockContacts } from "./mockContacts";
+import { mockContacts } from "../mockData/mockContacts";
 
 interface Contact {
   name: string;
