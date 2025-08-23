@@ -1,3 +1,4 @@
+// stoweked/holler/Holler-main/src/components/layout/SideNav/SideNavLinks.tsx
 import { Badge, Group, NavLink } from "@mantine/core";
 import {
   ArrowRight01Icon,
@@ -13,13 +14,9 @@ import ConnectedBanksDrawer from "@/components/banks/ConnectedBanksDrawer";
 import LienWaiversDrawer from "@/components/waivers/LienWaiversDrawer";
 import { useState } from "react";
 import ProfileModal from "@/components/profile/ProfileModal";
-
-interface Contact {
-  name: string;
-  avatar: string;
-  details: string;
-  topContact?: boolean;
-}
+import SendDrawer from "@/components/primaryActions/send/SendDrawer";
+import RequestDrawer from "@/components/primaryActions/request/RequestDrawer";
+import { Contact } from "@/components/contacts/types";
 
 export default function SideNavLinks() {
   const [
@@ -41,11 +38,32 @@ export default function SideNavLinks() {
     openedProfileDrawer,
     { open: openProfileDrawer, close: closeProfileDrawer },
   ] = useDisclosure(false);
+
+  const [openedSendDrawer, { open: openSendDrawer, close: closeSendDrawer }] =
+    useDisclosure(false);
+
+  const [
+    openedRequestDrawer,
+    { open: openRequestDrawer, close: closeRequestDrawer },
+  ] = useDisclosure(false);
+
   const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
 
   const handleContactClick = (contact: Contact) => {
     setSelectedContact(contact);
     openProfileDrawer();
+  };
+
+  const handleSendClick = (contact: Contact) => {
+    setSelectedContact(contact);
+    closeProfileDrawer();
+    openSendDrawer();
+  };
+
+  const handleRequestClick = (contact: Contact) => {
+    setSelectedContact(contact);
+    closeProfileDrawer();
+    openRequestDrawer();
   };
 
   return (
@@ -65,7 +83,7 @@ export default function SideNavLinks() {
             <Group wrap="nowrap" gap="xs">
               Connected bank accounts
               <Badge variant="default" size="sm">
-                2
+                3
               </Badge>
             </Group>
           </>
@@ -110,6 +128,18 @@ export default function SideNavLinks() {
       <ProfileModal
         opened={openedProfileDrawer}
         close={closeProfileDrawer}
+        contact={selectedContact}
+        onSendClick={handleSendClick}
+        onRequestClick={handleRequestClick}
+      />
+      <SendDrawer
+        opened={openedSendDrawer}
+        close={closeSendDrawer}
+        contact={selectedContact}
+      />
+      <RequestDrawer
+        opened={openedRequestDrawer}
+        close={closeRequestDrawer}
         contact={selectedContact}
       />
     </div>

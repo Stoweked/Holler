@@ -1,4 +1,7 @@
-import { Drawer, Skeleton } from "@mantine/core";
+import { Drawer } from "@mantine/core";
+import { useState } from "react";
+import { Recipient } from "../contacts/types";
+import SelectBankStep from "../primaryActions/deposit/SelectBankStep";
 
 interface ConnectedBanksDrawerProps {
   opened: boolean;
@@ -9,16 +12,21 @@ export default function ConnectedBanksDrawer({
   opened,
   close,
 }: ConnectedBanksDrawerProps) {
+  const [selectedBank, setSelectedBank] = useState<Recipient | null>(null);
+  const handleSelectBank = (bank: Recipient) => {
+    setSelectedBank(bank);
+  };
+
   return (
     <div>
       <Drawer
         opened={opened}
         onClose={close}
-        title="Connected Bank Accounts"
-        padding="lg"
-        size="lg"
+        title="Connected bank accounts"
+        padding="md"
+        size="md"
       >
-        <Skeleton radius="lg" width="100%" height={400} />
+        <SelectBankStep onSelectBank={handleSelectBank} />
       </Drawer>
     </div>
   );

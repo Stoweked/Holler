@@ -1,4 +1,5 @@
-import { useState } from "react";
+// stoweked/holler/Holler-main/src/components/primaryActions/request/RequestDrawer.tsx
+import { useState, useEffect } from "react";
 import { ActionIcon, Drawer, Group, Text, Tooltip } from "@mantine/core";
 import { ArrowLeft02Icon } from "hugeicons-react";
 import { Contact, Recipient } from "@/components/contacts/types";
@@ -6,16 +7,19 @@ import SelectContactStep from "../SelectContactStep";
 import EnterAmountStep from "../EnterAmountStep";
 import ConfirmationStep from "../ConfirmationStep";
 
-// 1. Define a type for the steps for type-safety and autocompletion
 type RequestStep = "selectContact" | "enterAmount" | "confirm";
 
 interface RequestDrawerProps {
   opened: boolean;
   close: () => void;
+  contact?: Contact | null;
 }
 
-export default function RequestDrawer({ opened, close }: RequestDrawerProps) {
-  // 2. Use the RequestStep type for state
+export default function RequestDrawer({
+  opened,
+  close,
+  contact,
+}: RequestDrawerProps) {
   const [step, setStep] = useState<RequestStep>("selectContact");
   const [selectedContact, setSelectedContact] = useState<Recipient | null>(
     null
@@ -23,18 +27,31 @@ export default function RequestDrawer({ opened, close }: RequestDrawerProps) {
   const [amount, setAmount] = useState<string | number>("");
   const [note, setNote] = useState("");
 
+  useEffect(() => {
+    if (contact && opened) {
+      setSelectedContact(contact);
+      setStep("enterAmount");
+    } else {
+      setStep("selectContact");
+    }
+  }, [contact, opened]);
+
   const handleSelectContact = (contact: Contact) => {
     setSelectedContact(contact);
     setStep("enterAmount");
   };
 
   const handleAmountContinue = () => {
-    setStep("confirm"); // Go to the final step
+    setStep("confirm");
   };
 
   const handleBack = () => {
     if (step === "enterAmount") {
-      setStep("selectContact");
+      if (contact) {
+        close();
+      } else {
+        setStep("selectContact");
+      }
     } else if (step === "confirm") {
       setStep("enterAmount");
     }
@@ -48,8 +65,10 @@ export default function RequestDrawer({ opened, close }: RequestDrawerProps) {
   const handleClose = () => {
     close();
     setTimeout(() => {
-      setStep("selectContact");
-      setSelectedContact(null);
+      if (!contact) {
+        setStep("selectContact");
+        setSelectedContact(null);
+      }
       setAmount("");
       setNote("");
     }, 200);
@@ -74,7 +93,10 @@ export default function RequestDrawer({ opened, close }: RequestDrawerProps) {
       </Group>
     ) : (
       <Group gap="xs">
-        <Tooltip label="Back to contacts" position="right">
+        <Tooltip
+          label={contact ? "Close" : "Back to contacts"}
+          position="right"
+        >
           <ActionIcon
             onClick={handleBack}
             variant="subtle"

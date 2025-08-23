@@ -95,7 +95,13 @@ export default function EnterAmountStep({
         </Stack>
 
         <Stack>
-          <Paper withBorder radius="xl" p="xs" w="100%">
+          <Paper
+            withBorder
+            radius="xl"
+            p="xs"
+            w="100%"
+            className={classes.recipientPaper}
+          >
             <Group gap="xs" className={classes.recipientContainer}>
               <Group
                 wrap="nowrap"

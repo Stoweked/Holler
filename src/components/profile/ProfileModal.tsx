@@ -1,3 +1,4 @@
+// stoweked/holler/Holler-main/src/components/profile/ProfileModal.tsx
 import {
   Stack,
   Avatar,
@@ -21,6 +22,8 @@ interface ProfileModalProps {
   close: () => void;
   contact: Contact | null;
   showButtons?: boolean;
+  onSendClick?: (contact: Contact) => void;
+  onRequestClick?: (contact: Contact) => void;
 }
 
 export default function ProfileModal({
@@ -28,10 +31,24 @@ export default function ProfileModal({
   close,
   contact,
   showButtons = true,
+  onSendClick,
+  onRequestClick,
 }: ProfileModalProps) {
   if (!contact) {
     return null;
   }
+
+  const handleSend = () => {
+    if (onSendClick && contact) {
+      onSendClick(contact);
+    }
+  };
+
+  const handleRequest = () => {
+    if (onRequestClick && contact) {
+      onRequestClick(contact);
+    }
+  };
 
   return (
     <Modal
@@ -65,10 +82,15 @@ export default function ProfileModal({
         </Stack>
         {showButtons && (
           <Group justify="center">
-            <Button radius="xl" size="lg" variant="outline">
+            <Button
+              radius="xl"
+              size="lg"
+              variant="outline"
+              onClick={handleRequest}
+            >
               Request payment
             </Button>
-            <Button radius="xl" size="lg">
+            <Button radius="xl" size="lg" onClick={handleSend}>
               Send payment
             </Button>
           </Group>

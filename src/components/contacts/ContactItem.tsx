@@ -32,7 +32,7 @@ export default function ContactItem({
           className={classes.details}
           gap="xs"
         >
-          <Avatar variant="light" radius="xl" size={44}>
+          <Avatar variant="light" radius="xl" size={44} color="lime">
             {avatar}
           </Avatar>
 
