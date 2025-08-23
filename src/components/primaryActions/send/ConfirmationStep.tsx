@@ -35,7 +35,7 @@ export default function ConfirmationStep({
   });
 
   return (
-    <Stack justify="space-between" gap="xl">
+    <Stack justify="space-between" gap="lg">
       <Card withBorder p="lg" radius="lg" w="100%" shadow="md">
         <Stack>
           <Group gap="xs" wrap="nowrap" justify="space-between">
@@ -83,14 +83,23 @@ export default function ConfirmationStep({
         </Stack>
       </Card>
 
-      <Stack gap="xs">
+      <Stack gap="lg">
         <Button size="xl" radius="xl" onClick={onConfirm}>
           Send payment
         </Button>
-        <Text c="dimmed" size="sm" ta="center">
-          By confirming and sending payment, you agree to our{" "}
-          <Anchor>Terms of Service</Anchor> and <Anchor>Privacy Policy</Anchor>.
-        </Text>
+        <Stack gap="xs">
+          <Text c="dimmed" size="sm" ta="center">
+            Transactions typically take 1-3 business days to process
+          </Text>
+          <Group justify="center">
+            <Anchor ta="center" size="xs">
+              Terms of Service
+            </Anchor>
+            <Anchor ta="center" size="xs">
+              Privacy Policy
+            </Anchor>
+          </Group>
+        </Stack>
       </Stack>
     </Stack>
   );
