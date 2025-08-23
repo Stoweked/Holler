@@ -47,8 +47,12 @@ export default function ProfileModal({
             <Title order={1}>{contact.avatar}</Title>
           </Avatar>
           <Stack align="center" gap={4}>
-            <Title order={2}>{contact.name}</Title>
-            <Text c="dimmed">{contact.details}</Text>
+            <Title order={2} ta="center">
+              {contact.name}
+            </Title>
+            <Text c="dimmed" ta="center">
+              {contact.details}
+            </Text>
           </Stack>
         </Stack>
         {showButtons && (
