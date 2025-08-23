@@ -1,0 +1,27 @@
+.contactItem {
+  border-radius: var(--mantine-radius-xl);
+  width: 100%;
+  transition: background-color 150ms ease-in-out;
+  padding: 8px;
+}
+
+.contactItem:hover {
+  background-color: light-dark(
+    var(--mantine-color-gray-0),
+    var(--mantine-color-dark-6)
+  );
+  cursor: pointer;
+}
+
+.contactDetails {
+  /* Allows the container to shrink and prevents it from pushing the icon */
+  min-width: 0;
+  flex: 1;
+}
+
+.detailsText {
+  /* Ensures single-line truncation with an ellipsis */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
