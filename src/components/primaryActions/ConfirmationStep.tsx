@@ -44,7 +44,13 @@ export default function ConfirmationStep({
               <Text c="dimmed">Recipient</Text>
               <Title order={4}>{contact.name}</Title>
             </Stack>
-            <Avatar src={null} alt={contact.name} variant="light" size={44}>
+            <Avatar
+              src={null}
+              alt={contact.name}
+              variant="light"
+              color="lime"
+              size={44}
+            >
               {contact.avatar}
             </Avatar>
           </Group>

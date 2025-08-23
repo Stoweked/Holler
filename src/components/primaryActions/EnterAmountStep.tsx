@@ -107,7 +107,7 @@ export default function EnterAmountStep({
                     <BankIcon size={18} />
                   </ThemeIcon>
                 ) : (
-                  <Avatar variant="default" radius="xl" size={34}>
+                  <Avatar variant="light" color="lime" radius="xl" size={34}>
                     {contact.avatar}
                   </Avatar>
                 )}
@@ -164,7 +164,7 @@ export default function EnterAmountStep({
             radius="lg"
             size="md"
             autosize
-            minRows={3}
+            minRows={2}
           />
 
           <Button
