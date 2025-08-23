@@ -108,6 +108,7 @@ export default function SendDrawer({ opened, close }: SendDrawerProps) {
           note={note}
           setNote={setNote}
           onContinue={handleAmountContinue}
+          onEdit={handleBack}
         />
       )}
       {step === "confirm" && selectedContact && (

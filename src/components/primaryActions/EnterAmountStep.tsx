@@ -9,11 +9,12 @@ import {
   Tooltip,
   Textarea,
   ThemeIcon,
+  Paper,
 } from "@mantine/core";
 import classes from "./EnterAmount.module.css";
 import { useEffect, useRef } from "react";
 import { Recipient } from "../contacts/types";
-import { CancelCircleIcon, BankIcon } from "hugeicons-react";
+import { CancelCircleIcon, BankIcon, Edit02Icon } from "hugeicons-react";
 
 interface EnterAmountStepProps {
   contact: Recipient;
@@ -22,6 +23,7 @@ interface EnterAmountStepProps {
   note: string;
   setNote: (value: string) => void;
   onContinue?: () => void;
+  onEdit?: () => void;
   recipientType?: "contact" | "bank";
 }
 
@@ -32,6 +34,7 @@ export default function EnterAmountStep({
   note,
   setNote,
   onContinue,
+  onEdit,
   recipientType = "contact",
 }: EnterAmountStepProps) {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -42,10 +45,7 @@ export default function EnterAmountStep({
 
   return (
     <Stack justify="space-between" gap={60} pt="lg">
-      <Stack align="center" gap="md">
-        <Text c="dimmed" size="md" ta="center">
-          Available balance: $40,000.00
-        </Text>
+      <Stack align="center" gap="xs">
         <NumberInput
           ref={inputRef}
           value={amount}
@@ -74,39 +74,58 @@ export default function EnterAmountStep({
             ) : null
           }
         />
-        <Group gap="xs" className={classes.recipientContainer}>
-          <Group
-            wrap="nowrap"
-            gap={8}
-            className={classes.recipientDetailsGroup}
-          >
-            {recipientType === "bank" ? (
-              <ThemeIcon variant="default" radius="xl" size="lg">
-                <BankIcon size={18} />
-              </ThemeIcon>
-            ) : (
-              <Avatar variant="default" radius="xl" size={34}>
-                {contact.avatar}
-              </Avatar>
-            )}
-            <Stack gap={0} className={classes.recipientTextContainer}>
-              <Text fw={500} lineClamp={3} lh={1.2}>
-                {contact.name}
-              </Text>
-              <Text
-                size="xs"
-                c="dimmed"
-                lineClamp={1}
-                className={classes.detailsText}
-              >
-                {contact.details}
-              </Text>
-            </Stack>
-          </Group>
-        </Group>
+
+        <Text c="dimmed" size="md" ta="center">
+          Available balance: $40,000.00
+        </Text>
       </Stack>
 
       <Stack>
+        <Paper withBorder radius="xl" p="xs" w="100%">
+          <Group gap="xs" className={classes.recipientContainer}>
+            <Group
+              wrap="nowrap"
+              gap={8}
+              className={classes.recipientDetailsGroup}
+            >
+              {recipientType === "bank" ? (
+                <ThemeIcon variant="default" radius="xl" size="lg">
+                  <BankIcon size={18} />
+                </ThemeIcon>
+              ) : (
+                <Avatar variant="default" radius="xl" size={34}>
+                  {contact.avatar}
+                </Avatar>
+              )}
+              <Stack gap={0} className={classes.recipientTextContainer}>
+                <Text fw={500} lineClamp={3} lh={1.2}>
+                  {contact.name}
+                </Text>
+                <Text
+                  size="xs"
+                  c="dimmed"
+                  lineClamp={1}
+                  className={classes.detailsText}
+                >
+                  {contact.details}
+                </Text>
+              </Stack>
+            </Group>
+            <Tooltip
+              position="left"
+              label={`Edit ${recipientType === "bank" ? "bank" : "contact"}`}
+            >
+              <ActionIcon
+                aria-label="Edit contact"
+                size="lg"
+                variant="subtle"
+                onClick={onEdit}
+              >
+                <Edit02Icon size={20} />
+              </ActionIcon>
+            </Tooltip>
+          </Group>
+        </Paper>
         <Textarea
           placeholder="Add a note or description (optional)"
           value={note}

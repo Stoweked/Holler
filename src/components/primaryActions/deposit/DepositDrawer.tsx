@@ -104,6 +104,7 @@ export default function DepositDrawer({ opened, close }: DepositDrawerProps) {
           setNote={setNote}
           onContinue={handleAmountContinue}
           recipientType="bank"
+          onEdit={handleBack}
         />
       )}
       {step === "confirm" && selectedBank && (
