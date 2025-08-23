@@ -8,9 +8,9 @@ import {
   Tooltip,
   UnstyledButton,
 } from "@mantine/core";
-import { ArrowLeft01Icon } from "hugeicons-react";
+import { ArrowLeft02Icon } from "hugeicons-react";
 import EnterAmountStep from "../send/EnterAmountStep";
-import { Recipient } from "../contacts/types";
+import { Recipient } from "../../contacts/types";
 
 interface DepositDrawerProps {
   opened: boolean;
@@ -50,16 +50,14 @@ export default function DepositDrawer({ opened, close }: DepositDrawerProps) {
           <ActionIcon
             onClick={handleBack}
             variant="subtle"
-            c="gray"
+            color="gray"
             radius="xl"
             aria-label="Back"
           >
-            <ArrowLeft01Icon size={20} />
+            <ArrowLeft02Icon size={24} />
           </ActionIcon>
         </Tooltip>
-        <Text size="sm" fw={500}>
-          Deposit amount
-        </Text>
+        <Text>Deposit amount</Text>
       </Group>
     );
 

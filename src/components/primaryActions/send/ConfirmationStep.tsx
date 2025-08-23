@@ -52,7 +52,7 @@ export default function ConfirmationStep({
         </Paper>
       </Stack>
       <Button size="xl" radius="xl" onClick={onConfirm}>
-        Send Payment
+        Send payment
       </Button>
     </Stack>
   );

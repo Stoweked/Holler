@@ -1,11 +1,11 @@
 import { Card, Stack, Text, Title } from "@mantine/core";
 import ActionButtons from "../layout/SideNav/ActionButtons";
 import { useDisclosure } from "@mantine/hooks";
-import DepositDrawer from "@/components/deposit/DepositDrawer";
 import classes from "./PrimaryActionsCard.module.css";
-import RequestDrawer from "../request/RequestDrawer";
-import SendDrawer from "../send/SendDrawer";
-import TransferDrawer from "../transfer/TransferDrawer";
+import DepositDrawer from "./deposit/DepositDrawer";
+import RequestDrawer from "./request/RequestDrawer";
+import SendDrawer from "./send/SendDrawer";
+import TransferDrawer from "./transfer/TransferDrawer";
 
 export default function PrimaryActionsCard() {
   const [

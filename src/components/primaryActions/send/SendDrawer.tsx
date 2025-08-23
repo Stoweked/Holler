@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { ActionIcon, Drawer, Group, Text, Title, Tooltip } from "@mantine/core";
-import { ArrowLeft01Icon } from "hugeicons-react";
+import { ActionIcon, Drawer, Group, Text, Tooltip } from "@mantine/core";
+import { ArrowLeft02Icon } from "hugeicons-react";
 import { Contact, Recipient } from "@/components/contacts/types";
 import ConfirmationStep from "./ConfirmationStep";
 import SelectContactStep from "./SelectContactStep";
@@ -56,20 +56,34 @@ export default function SendDrawer({ opened, close }: SendDrawerProps) {
   // 3. Update title and rendering logic to use strings
   const drawerTitle =
     step === "selectContact" ? (
-      "Select recipient"
-    ) : (
+      "Send to a contact"
+    ) : step === "confirm" ? (
       <Group gap="xs">
-        <Tooltip label="Back to recipients" position="right">
+        <Tooltip label="Back to amount" position="right">
           <ActionIcon
             onClick={handleBack}
             variant="transparent"
             c="gray"
             aria-label="Go back"
           >
-            <ArrowLeft01Icon size={20} />
+            <ArrowLeft02Icon size={24} />
           </ActionIcon>
         </Tooltip>
-        <Text>Send funds</Text>
+        <Text>Review send</Text>
+      </Group>
+    ) : (
+      <Group gap="xs">
+        <Tooltip label="Back to contacts" position="right">
+          <ActionIcon
+            onClick={handleBack}
+            variant="transparent"
+            color="gray"
+            aria-label="Go back"
+          >
+            <ArrowLeft02Icon size={24} />
+          </ActionIcon>
+        </Tooltip>
+        <Text>Enter amount to send</Text>
       </Group>
     );
 

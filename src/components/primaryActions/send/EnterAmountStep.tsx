@@ -10,7 +10,7 @@ import {
 } from "@mantine/core";
 import classes from "./EnterAmount.module.css";
 import { useEffect, useRef } from "react";
-import { Recipient } from "../contacts/types";
+import { Recipient } from "../../contacts/types";
 import { CancelCircleIcon } from "hugeicons-react";
 
 interface EnterAmountStepProps {
@@ -83,7 +83,7 @@ export default function EnterAmountStep({
         disabled={!amount || Number(amount) === 0}
         onClick={onContinue}
       >
-        Continue
+        Continue to review
       </Button>
     </Stack>
   );
