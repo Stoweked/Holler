@@ -21,6 +21,7 @@ export default function DepositDrawer({ opened, close }: DepositDrawerProps) {
   const [step, setStep] = useState("selectBank");
   const [selectedBank, setSelectedBank] = useState<Recipient | null>(null);
   const [amount, setAmount] = useState<string | number>("");
+  const [note, setNote] = useState("");
 
   const handleSelectBank = (bank: Recipient) => {
     setSelectedBank(bank);
@@ -37,6 +38,7 @@ export default function DepositDrawer({ opened, close }: DepositDrawerProps) {
       setStep("selectBank");
       setSelectedBank(null);
       setAmount("");
+      setNote("");
     }, 200);
   };
 
@@ -93,6 +95,8 @@ export default function DepositDrawer({ opened, close }: DepositDrawerProps) {
           contact={selectedBank}
           amount={amount}
           setAmount={setAmount}
+          note={note}
+          setNote={setNote}
         />
       )}
     </Drawer>

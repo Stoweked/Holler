@@ -21,6 +21,7 @@ export default function SendDrawer({ opened, close }: SendDrawerProps) {
     null
   );
   const [amount, setAmount] = useState<string | number>("");
+  const [note, setNote] = useState("");
 
   const handleSelectContact = (contact: Contact) => {
     setSelectedContact(contact);
@@ -50,6 +51,7 @@ export default function SendDrawer({ opened, close }: SendDrawerProps) {
       setStep("selectContact");
       setSelectedContact(null);
       setAmount("");
+      setNote("");
     }, 200);
   };
 
@@ -103,6 +105,8 @@ export default function SendDrawer({ opened, close }: SendDrawerProps) {
           contact={selectedContact}
           amount={amount}
           setAmount={setAmount}
+          note={note}
+          setNote={setNote}
           onContinue={handleAmountContinue}
         />
       )}
@@ -110,6 +114,7 @@ export default function SendDrawer({ opened, close }: SendDrawerProps) {
         <ConfirmationStep
           contact={selectedContact}
           amount={amount}
+          note={note}
           onConfirm={handleConfirmSend}
         />
       )}

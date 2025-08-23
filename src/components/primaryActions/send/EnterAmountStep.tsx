@@ -6,7 +6,8 @@ import {
   Text,
   NumberInput,
   ActionIcon,
-  Tooltip, // 1. Import ActionIcon
+  Tooltip,
+  Textarea, // 1. Import ActionIcon
 } from "@mantine/core";
 import classes from "./EnterAmount.module.css";
 import { useEffect, useRef } from "react";
@@ -17,6 +18,8 @@ interface EnterAmountStepProps {
   contact: Recipient;
   amount: string | number;
   setAmount: (value: string | number) => void;
+  note: string;
+  setNote: (value: string) => void;
   onContinue?: () => void;
 }
 
@@ -24,6 +27,8 @@ export default function EnterAmountStep({
   contact,
   amount,
   setAmount,
+  note,
+  setNote,
   onContinue,
 }: EnterAmountStepProps) {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -35,6 +40,9 @@ export default function EnterAmountStep({
   return (
     <Stack justify="space-between" gap={60} pt="lg">
       <Stack align="center" gap="md">
+        <Text c="dimmed" size="md">
+          Available balance: $40,000.00
+        </Text>
         <NumberInput
           ref={inputRef}
           value={amount}
@@ -72,19 +80,32 @@ export default function EnterAmountStep({
             <Text fw={500}>{contact.name}</Text>
           </Group>
         </Group>
-        <Text c="dimmed" size="md">
-          Available balance: $40,000.00
-        </Text>
       </Stack>
 
-      <Button
-        size="xl"
-        radius="xl"
-        disabled={!amount || Number(amount) === 0}
-        onClick={onContinue}
-      >
-        Continue to review
-      </Button>
+      <Stack>
+        <Textarea
+          placeholder="Add a note or description (optional)"
+          value={note}
+          onChange={(event) => setNote(event.currentTarget.value)}
+          radius="lg"
+          size="md"
+          autosize
+          minRows={3}
+        />
+
+        <Button
+          size="xl"
+          radius="xl"
+          disabled={!amount || Number(amount) === 0}
+          onClick={onContinue}
+        >
+          Continue to review
+        </Button>
+
+        <Text c="dimmed" size="sm" ta="center">
+          All transactions are secure, encrypted, and private.
+        </Text>
+      </Stack>
     </Stack>
   );
 }
