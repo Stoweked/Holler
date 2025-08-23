@@ -84,7 +84,7 @@ export default function RequestDrawer({ opened, close }: RequestDrawerProps) {
             <ArrowLeft02Icon size={24} />
           </ActionIcon>
         </Tooltip>
-        <Text>Enter requested amount</Text>
+        <Text>Request amount</Text>
       </Group>
     );
 
@@ -115,6 +115,7 @@ export default function RequestDrawer({ opened, close }: RequestDrawerProps) {
           amount={amount}
           note={note}
           onConfirm={handleConfirmRequest}
+          actionType="request"
         />
       )}
     </Drawer>

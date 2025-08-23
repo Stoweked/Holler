@@ -18,6 +18,7 @@ interface ConfirmationStepProps {
   amount: string | number;
   note?: string;
   onConfirm: () => void;
+  actionType?: "send" | "request";
 }
 
 export default function ConfirmationStep({
@@ -25,6 +26,7 @@ export default function ConfirmationStep({
   amount,
   note,
   onConfirm,
+  actionType = "send",
 }: ConfirmationStepProps) {
   const numericAmount =
     typeof amount === "string" ? parseFloat(amount) : amount;
@@ -65,26 +67,28 @@ export default function ConfirmationStep({
             <Title order={4}>{formattedAmount}</Title>
           </Stack>
 
-          <Alert title="" color="orange" variant="light" radius="lg">
-            <Stack gap="xs">
-              <Group wrap="nowrap" justify="space-between">
-                <Title order={5} c="orange">
-                  Pending lien waiver
-                </Title>
-                <Time02Icon size={24} color="orange" />
-              </Group>
-              <Text size="sm">
-                Funds will be held until the attached lien waiver is reviewed
-                and accepted by the recipient.
-              </Text>
-            </Stack>
-          </Alert>
+          {actionType === "send" && (
+            <Alert title="" color="orange" variant="light" radius="lg">
+              <Stack gap="xs">
+                <Group wrap="nowrap" justify="space-between">
+                  <Title order={5} c="orange">
+                    Pending lien waiver
+                  </Title>
+                  <Time02Icon size={24} color="orange" />
+                </Group>
+                <Text size="sm">
+                  Funds will be held until the attached lien waiver is reviewed
+                  and accepted by the recipient.
+                </Text>
+              </Stack>
+            </Alert>
+          )}
         </Stack>
       </Card>
 
       <Stack gap="lg">
         <Button size="xl" radius="xl" onClick={onConfirm}>
-          Send payment
+          {actionType === "send" ? "Send payment" : "Request payment"}
         </Button>
         <Stack gap="xs">
           <Text c="dimmed" size="sm" ta="center">

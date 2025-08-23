@@ -116,6 +116,7 @@ export default function SendDrawer({ opened, close }: SendDrawerProps) {
           amount={amount}
           note={note}
           onConfirm={handleConfirmSend}
+          actionType="send"
         />
       )}
     </Drawer>

@@ -75,7 +75,6 @@ export default function EnterAmountStep({
           }
         />
         <Group gap="xs" className={classes.recipientContainer}>
-          <Text>To:</Text>
           <Group
             wrap="nowrap"
             gap={8}
