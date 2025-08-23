@@ -18,6 +18,13 @@ export default function AccountAvatar() {
     { open: openProfileDrawer, close: closeProfileDrawer },
   ] = useDisclosure(false);
 
+  const mockProfile = {
+    name: "Jonah Stowe",
+    avatar: "JS",
+    details: "123-456-7890",
+    topContact: true,
+  };
+
   return (
     <div>
       <Menu shadow="md" width={170} position="bottom-end">
@@ -59,7 +66,13 @@ export default function AccountAvatar() {
       </Menu>
 
       <FeedbackModal opened={openedFeedbackModal} close={closeFeedbackModal} />
-      <ProfileDrawer opened={openedProfileDrawer} close={closeProfileDrawer} />
+
+      <ProfileDrawer
+        opened={openedProfileDrawer}
+        close={closeProfileDrawer}
+        contact={mockProfile}
+        position="right"
+      />
     </div>
   );
 }

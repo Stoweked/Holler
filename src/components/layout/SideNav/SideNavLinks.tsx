@@ -11,6 +11,15 @@ import { useDisclosure } from "@mantine/hooks";
 import ContactsDrawer from "@/components/contacts/ContactsDrawer";
 import ConnectedBanksDrawer from "@/components/banks/ConnectedBanksDrawer";
 import LienWaiversDrawer from "@/components/waivers/LienWaiversDrawer";
+import { useState } from "react";
+import ProfileDrawer from "@/components/profile/ProfileDrawer";
+
+interface Contact {
+  name: string;
+  avatar: string;
+  details: string;
+  topContact?: boolean;
+}
 
 export default function SideNavLinks() {
   const [
@@ -27,6 +36,19 @@ export default function SideNavLinks() {
     openedLienWaiversDrawer,
     { open: openLienWaiversDrawer, close: closeLienWaiversDrawer },
   ] = useDisclosure(false);
+
+  const [
+    openedProfileDrawer,
+    { open: openProfileDrawer, close: closeProfileDrawer },
+  ] = useDisclosure(false);
+  const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
+
+  const handleContactClick = (contact: Contact) => {
+    setSelectedContact(contact);
+    closeContactsDrawer();
+    openProfileDrawer();
+  };
+
   return (
     <div>
       <NavLink
@@ -76,6 +98,7 @@ export default function SideNavLinks() {
       <ContactsDrawer
         opened={openedContactsDrawer}
         close={closeContactsDrawer}
+        onContactClick={handleContactClick}
       />
       <ConnectedBanksDrawer
         opened={openedConnectedBanksDrawer}
@@ -84,6 +107,12 @@ export default function SideNavLinks() {
       <LienWaiversDrawer
         opened={openedLienWaiversDrawer}
         close={closeLienWaiversDrawer}
+      />
+      <ProfileDrawer
+        opened={openedProfileDrawer}
+        close={closeProfileDrawer}
+        contact={selectedContact}
+        position="left"
       />
     </div>
   );
