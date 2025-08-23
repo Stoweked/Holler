@@ -5,6 +5,7 @@ import {
   Group,
   Skeleton,
   Text,
+  Tooltip,
   UnstyledButton,
 } from "@mantine/core";
 import { ArrowLeft01Icon } from "hugeicons-react";
@@ -42,14 +43,22 @@ export default function DepositDrawer({ opened, close }: DepositDrawerProps) {
   // Custom title based on the design
   const drawerTitle =
     step === "selectBank" ? (
-      "Where to deposit?"
+      "Deposit to bank"
     ) : (
       <Group justify="space-between" w="100%">
-        <ActionIcon onClick={handleBack} variant="subtle" c="gray">
-          <ArrowLeft01Icon size={20} />
-        </ActionIcon>
+        <Tooltip label="Back to banks" position="right">
+          <ActionIcon
+            onClick={handleBack}
+            variant="subtle"
+            c="gray"
+            radius="xl"
+            aria-label="Back"
+          >
+            <ArrowLeft01Icon size={20} />
+          </ActionIcon>
+        </Tooltip>
         <Text size="sm" fw={500}>
-          Step 1 of 4
+          Deposit amount
         </Text>
       </Group>
     );
@@ -60,7 +69,7 @@ export default function DepositDrawer({ opened, close }: DepositDrawerProps) {
       onClose={handleClose}
       title={drawerTitle}
       padding="lg"
-      size="lg"
+      size="md"
     >
       {step === "selectBank" && (
         <>

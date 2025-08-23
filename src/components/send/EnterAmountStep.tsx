@@ -33,7 +33,7 @@ export default function EnterAmountStep({
   }, []);
 
   return (
-    <Stack justify="space-between" h="100%" gap={60}>
+    <Stack justify="space-between" gap={60} pt="lg">
       <Stack align="center" gap="md">
         <NumberInput
           ref={inputRef}

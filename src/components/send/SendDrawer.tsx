@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ActionIcon, Drawer, Group, Text, Title } from "@mantine/core";
+import { ActionIcon, Drawer, Group, Text, Title, Tooltip } from "@mantine/core";
 import { ArrowLeft01Icon } from "hugeicons-react";
 import { Contact, Recipient } from "@/components/contacts/types";
 import ConfirmationStep from "./ConfirmationStep";
@@ -59,14 +59,16 @@ export default function SendDrawer({ opened, close }: SendDrawerProps) {
       "Select recipient"
     ) : (
       <Group gap="xs">
-        <ActionIcon
-          onClick={handleBack}
-          variant="transparent"
-          c="gray"
-          aria-label="Go back"
-        >
-          <ArrowLeft01Icon size={20} />
-        </ActionIcon>
+        <Tooltip label="Back to recipients" position="right">
+          <ActionIcon
+            onClick={handleBack}
+            variant="transparent"
+            c="gray"
+            aria-label="Go back"
+          >
+            <ArrowLeft01Icon size={20} />
+          </ActionIcon>
+        </Tooltip>
         <Text>Send funds</Text>
       </Group>
     );
