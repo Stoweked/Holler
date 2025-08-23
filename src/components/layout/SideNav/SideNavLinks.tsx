@@ -52,7 +52,6 @@ export default function SideNavLinks() {
   return (
     <div>
       <NavLink
-        href="#required-for-focus"
         label="Contacts"
         leftSection={<UserMultiple02Icon size={20} />}
         rightSection={<ArrowRight01Icon size={24} color="grey" />}
@@ -61,7 +60,6 @@ export default function SideNavLinks() {
       />
 
       <NavLink
-        href="#required-for-focus"
         label={
           <>
             <Group wrap="nowrap" gap="xs">
@@ -79,7 +77,6 @@ export default function SideNavLinks() {
       />
 
       <NavLink
-        href="#required-for-focus"
         label="Lien waiver"
         leftSection={<ClipboardIcon size={20} />}
         rightSection={<ArrowRight01Icon size={24} color="grey" />}
@@ -88,7 +85,6 @@ export default function SideNavLinks() {
       />
 
       <NavLink
-        href="#required-for-focus"
         label="Get support"
         leftSection={<Message01Icon size={20} />}
         rightSection={<ArrowRight01Icon size={24} color="grey" />}
