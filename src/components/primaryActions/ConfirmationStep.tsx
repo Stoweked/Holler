@@ -11,11 +11,12 @@ import {
   Alert,
   ThemeIcon,
 } from "@mantine/core";
-import { Contact } from "@/components/contacts/types";
+import { Contact, Recipient } from "@/components/contacts/types";
 import { BankIcon, Time02Icon } from "hugeicons-react";
 
 interface ConfirmationStepProps {
   contact: Contact;
+  bank: Recipient;
   amount: string | number;
   note?: string;
   onConfirm: () => void;
@@ -24,6 +25,7 @@ interface ConfirmationStepProps {
 
 export default function ConfirmationStep({
   contact,
+  bank,
   amount,
   note,
   onConfirm,
@@ -81,7 +83,7 @@ export default function ConfirmationStep({
                 {actionType === "send" ? "Pay from" : "Deposit into"}
               </Text>
               <Title order={4} lineClamp={3} lh={1.2}>
-                Wells Fargo
+                {bank.name}
               </Title>
               <Text
                 size="xs"
@@ -93,7 +95,7 @@ export default function ConfirmationStep({
                   textOverflow: "ellipsis",
                 }}
               >
-                ****-1928
+                {bank.details}
               </Text>
             </Stack>
             <ThemeIcon variant="default" radius="xl" size={44}>

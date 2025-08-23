@@ -8,7 +8,7 @@ import {
   UnstyledButton,
 } from "@mantine/core";
 import { ArrowRight01Icon } from "hugeicons-react";
-import classes from "./ContactItem.module.css";
+import classes from "./Contacts.module.css";
 
 interface ContactItemProps {
   avatar: string;

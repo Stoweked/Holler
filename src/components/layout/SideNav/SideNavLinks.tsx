@@ -14,9 +14,8 @@ import ConnectedBanksDrawer from "@/components/banks/ConnectedBanksDrawer";
 import LienWaiversDrawer from "@/components/waivers/LienWaiversDrawer";
 import { useState } from "react";
 import ProfileModal from "@/components/profile/ProfileModal";
-import SendDrawer from "@/components/primaryActions/send/SendDrawer";
-import RequestDrawer from "@/components/primaryActions/request/RequestDrawer";
 import { Contact } from "@/components/contacts/types";
+import PaymentDrawer from "@/components/primaryActions/PaymentDrawer";
 
 export default function SideNavLinks() {
   const [
@@ -132,15 +131,15 @@ export default function SideNavLinks() {
         onSendClick={handleSendClick}
         onRequestClick={handleRequestClick}
       />
-      <SendDrawer
-        opened={openedSendDrawer}
-        close={closeSendDrawer}
-        contact={selectedContact}
-      />
-      <RequestDrawer
+      <PaymentDrawer
         opened={openedRequestDrawer}
         close={closeRequestDrawer}
-        contact={selectedContact}
+        actionType="request"
+      />
+      <PaymentDrawer
+        opened={openedSendDrawer}
+        close={closeSendDrawer}
+        actionType="send"
       />
     </div>
   );

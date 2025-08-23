@@ -1,11 +1,10 @@
 import { Card, Stack, Text, Title } from "@mantine/core";
 import ActionButtons from "../layout/SideNav/ActionButtons";
 import { useDisclosure } from "@mantine/hooks";
-import classes from "./PrimaryActionsCard.module.css";
+import classes from "./PrimaryActions.module.css";
 import DepositDrawer from "./deposit/DepositDrawer";
-import RequestDrawer from "./request/RequestDrawer";
-import SendDrawer from "./send/SendDrawer";
 import TransferDrawer from "./transfer/TransferDrawer";
+import PaymentDrawer from "./PaymentDrawer";
 
 export default function PrimaryActionsCard() {
   const [
@@ -52,8 +51,16 @@ export default function PrimaryActionsCard() {
       </Card>
 
       <DepositDrawer opened={openedDepositDrawer} close={closeDepositDrawer} />
-      <RequestDrawer opened={openedRequestDrawer} close={closeRequestDrawer} />
-      <SendDrawer opened={openedSendDrawer} close={closeSendDrawer} />
+      <PaymentDrawer
+        opened={openedRequestDrawer}
+        close={closeRequestDrawer}
+        actionType="request"
+      />
+      <PaymentDrawer
+        opened={openedSendDrawer}
+        close={closeSendDrawer}
+        actionType="send"
+      />
       <TransferDrawer
         opened={openedTransferDrawer}
         close={closeTransferDrawer}

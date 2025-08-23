@@ -1,31 +1,37 @@
-// stoweked/holler/Holler-main/src/components/primaryActions/request/RequestDrawer.tsx
 import { useState, useEffect } from "react";
 import { ActionIcon, Drawer, Group, Text, Tooltip } from "@mantine/core";
 import { ArrowLeft02Icon } from "hugeicons-react";
 import { Contact, Recipient } from "@/components/contacts/types";
-import SelectContactStep from "../SelectContactStep";
-import EnterAmountStep from "../EnterAmountStep";
-import ConfirmationStep from "../ConfirmationStep";
+import ConfirmationStep from "./ConfirmationStep";
+import SelectContactStep from "./SelectContactStep";
+import { mockBanks } from "@/components/mockData/mockBanks";
+import SelectBankStep from "./deposit/SelectBankStep";
+import PaymentAmountStep from "./PaymentAmountStep";
 
-type RequestStep = "selectContact" | "enterAmount" | "confirm";
+type PaymentStep = "selectContact" | "enterAmount" | "confirm" | "selectBank";
 
-interface RequestDrawerProps {
+interface PaymentDrawerProps {
   opened: boolean;
   close: () => void;
   contact?: Contact | null;
+  actionType: "send" | "request";
 }
 
-export default function RequestDrawer({
+export default function PaymentDrawer({
   opened,
   close,
   contact,
-}: RequestDrawerProps) {
-  const [step, setStep] = useState<RequestStep>("selectContact");
+  actionType,
+}: PaymentDrawerProps) {
+  const [step, setStep] = useState<PaymentStep>("selectContact");
   const [selectedContact, setSelectedContact] = useState<Recipient | null>(
     null
   );
+  const [selectedBank, setSelectedBank] = useState<Recipient>(mockBanks[0]);
   const [amount, setAmount] = useState<string | number>("");
   const [note, setNote] = useState("");
+
+  const isSend = actionType === "send";
 
   useEffect(() => {
     if (contact && opened) {
@@ -41,24 +47,26 @@ export default function RequestDrawer({
     setStep("enterAmount");
   };
 
-  const handleAmountContinue = () => {
-    setStep("confirm");
+  const handleAmountContinue = () => setStep("confirm");
+  const handleEditBank = () => setStep("selectBank");
+  const handleSelectBank = (bank: Recipient) => {
+    setSelectedBank(bank);
+    setStep("enterAmount");
   };
 
   const handleBack = () => {
-    if (step === "enterAmount") {
-      if (contact) {
-        close();
-      } else {
-        setStep("selectContact");
-      }
-    } else if (step === "confirm") {
+    if (step === "selectBank" || step === "confirm") {
       setStep("enterAmount");
+    } else if (step === "enterAmount") {
+      contact ? close() : setStep("selectContact");
     }
   };
 
-  const handleConfirmRequest = () => {
-    console.log(`Requesting ${amount} from ${selectedContact?.name}`);
+  const handleConfirm = () => {
+    const logMessage = isSend
+      ? `Sending ${amount} from ${selectedBank.name} to ${selectedContact?.name}`
+      : `Requesting ${amount} from ${selectedContact?.name} into ${selectedBank.name}`;
+    console.log(logMessage);
     handleClose();
   };
 
@@ -69,14 +77,25 @@ export default function RequestDrawer({
         setStep("selectContact");
         setSelectedContact(null);
       }
+      setSelectedBank(mockBanks[0]);
       setAmount("");
       setNote("");
     }, 200);
   };
 
+  // Dynamic titles based on actionType
+  const mainTitle = isSend ? "Send payment" : "Request payment";
+  const reviewTitle = isSend ? "Review send" : "Review request";
+  const amountTitle = isSend ? "Enter amount to send" : "Request amount";
+  const bankTitle = isSend
+    ? "Select payment account"
+    : "Select deposit account";
+
   const drawerTitle =
     step === "selectContact" ? (
-      "Request payment"
+      mainTitle
+    ) : step === "selectBank" ? (
+      bankTitle
     ) : step === "confirm" ? (
       <Group gap="xs">
         <Tooltip label="Back to amount" position="right">
@@ -89,7 +108,7 @@ export default function RequestDrawer({
             <ArrowLeft02Icon size={24} />
           </ActionIcon>
         </Tooltip>
-        <Text>Review request</Text>
+        <Text>{reviewTitle}</Text>
       </Group>
     ) : (
       <Group gap="xs">
@@ -106,7 +125,7 @@ export default function RequestDrawer({
             <ArrowLeft02Icon size={24} />
           </ActionIcon>
         </Tooltip>
-        <Text>Request amount</Text>
+        <Text>{amountTitle}</Text>
       </Group>
     );
 
@@ -121,24 +140,31 @@ export default function RequestDrawer({
       {step === "selectContact" && (
         <SelectContactStep onSelectContact={handleSelectContact} />
       )}
+      {step === "selectBank" && (
+        <SelectBankStep onSelectBank={handleSelectBank} />
+      )}
       {step === "enterAmount" && selectedContact && (
-        <EnterAmountStep
+        <PaymentAmountStep
           contact={selectedContact}
+          bank={selectedBank}
           amount={amount}
           setAmount={setAmount}
           note={note}
           setNote={setNote}
           onContinue={handleAmountContinue}
-          onEdit={handleBack}
+          onEditContact={handleBack}
+          onEditBank={handleEditBank}
+          actionType={actionType}
         />
       )}
       {step === "confirm" && selectedContact && (
         <ConfirmationStep
           contact={selectedContact}
+          bank={selectedBank}
           amount={amount}
           note={note}
-          onConfirm={handleConfirmRequest}
-          actionType="request"
+          onConfirm={handleConfirm}
+          actionType={actionType}
         />
       )}
     </Drawer>

@@ -8,7 +8,7 @@ import {
   UnstyledButton,
 } from "@mantine/core";
 import { ArrowRight01Icon, BankIcon } from "hugeicons-react";
-import classes from "./BankItem.module.css";
+import classes from "./Banks.module.css";
 
 interface BankItemProps {
   name: string;
