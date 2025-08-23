@@ -9,9 +9,10 @@ import {
   Card,
   Divider,
   Alert,
+  ThemeIcon,
 } from "@mantine/core";
 import { Contact } from "@/components/contacts/types";
-import { Time02Icon } from "hugeicons-react";
+import { BankIcon, Time02Icon } from "hugeicons-react";
 
 interface ConfirmationStepProps {
   contact: Contact;
@@ -40,10 +41,27 @@ export default function ConfirmationStep({
       <Card withBorder p="lg" radius="lg" w="100%" shadow="sm">
         <Stack>
           <Group gap="xs" wrap="nowrap" justify="space-between">
-            <Stack gap={0}>
-              <Text c="dimmed">Recipient</Text>
-              <Title order={4}>{contact.name}</Title>
+            <Stack gap={0} miw={1} style={{ flex: 1 }}>
+              <Text c="dimmed">
+                {actionType === "send" ? "Send to" : "Request from"}
+              </Text>
+              <Title order={4} lineClamp={3} lh={1.2}>
+                {contact.name}
+              </Title>
+              <Text
+                size="xs"
+                c="dimmed"
+                lineClamp={1}
+                style={{
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                }}
+              >
+                {contact.details}
+              </Text>
             </Stack>
+
             <Avatar
               src={null}
               alt={contact.name}
@@ -57,40 +75,67 @@ export default function ConfirmationStep({
 
           <Divider />
 
+          <Group gap="xs" wrap="nowrap" justify="space-between">
+            <Stack gap={0} miw={1} style={{ flex: 1 }}>
+              <Text c="dimmed">
+                {actionType === "send" ? "Pay from" : "Deposit into"}
+              </Text>
+              <Title order={4} lineClamp={3} lh={1.2}>
+                Wells Fargo
+              </Title>
+              <Text
+                size="xs"
+                c="dimmed"
+                lineClamp={1}
+                style={{
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                }}
+              >
+                ****-1928
+              </Text>
+            </Stack>
+            <ThemeIcon variant="default" radius="xl" size={44}>
+              <BankIcon size={24} />
+            </ThemeIcon>
+          </Group>
+
           {note && (
             <Stack>
+              <Divider />
               <Stack gap={0}>
                 <Text c="dimmed">Notes</Text>
                 <Text size="lg">{note}</Text>
               </Stack>
-
-              <Divider />
             </Stack>
           )}
+
+          <Divider />
 
           <Stack gap={0}>
             <Text c="dimmed">Amount</Text>
             <Title order={4}>{formattedAmount}</Title>
           </Stack>
-
-          {actionType === "send" && (
-            <Alert title="" color="orange" variant="light" radius="lg">
-              <Stack gap="xs">
-                <Group wrap="nowrap" justify="space-between">
-                  <Title order={5} c="orange">
-                    Pending lien waiver
-                  </Title>
-                  <Time02Icon size={24} color="orange" />
-                </Group>
-                <Text size="sm">
-                  Funds will be held until the attached lien waiver is reviewed
-                  and accepted by the recipient.
-                </Text>
-              </Stack>
-            </Alert>
-          )}
         </Stack>
       </Card>
+
+      {actionType === "send" && (
+        <Alert title="" color="orange" variant="light" radius="lg">
+          <Stack gap="xs">
+            <Group wrap="nowrap" justify="space-between">
+              <Title order={5} c="orange">
+                Pending lien waiver
+              </Title>
+              <Time02Icon size={24} color="orange" />
+            </Group>
+            <Text size="sm">
+              Funds will be held until the attached lien waiver is reviewed and
+              accepted by the recipient.
+            </Text>
+          </Stack>
+        </Alert>
+      )}
 
       <Stack gap="lg">
         <Button size="xl" radius="xl" onClick={onConfirm}>
