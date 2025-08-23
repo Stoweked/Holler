@@ -30,7 +30,7 @@ export default function ContactsDrawer({
     <Drawer
       opened={opened}
       onClose={close}
-      title="Contacts"
+      title="Your contacts"
       padding="lg"
       size="md"
     >

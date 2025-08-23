@@ -26,13 +26,18 @@ export default function ContactItem({
   return (
     <UnstyledButton className={classes.contactItem} onClick={onClick}>
       <Group justify="space-between" wrap="nowrap">
-        <Group wrap="nowrap" align="center" className={classes.contactDetails}>
-          <Avatar color="lime" radius="xl" size={44}>
+        <Group
+          wrap="nowrap"
+          align="center"
+          className={classes.contactDetails}
+          gap="xs"
+        >
+          <Avatar variant="light" radius="xl" size={44}>
             {avatar}
           </Avatar>
 
           <Stack gap={0} style={{ overflow: "hidden" }}>
-            <Title order={4} lineClamp={2}>
+            <Title order={5} lineClamp={2} lh={1.2}>
               {name}
             </Title>
             <Text size="sm" c="dimmed" w="100%" className={classes.detailsText}>
@@ -43,7 +48,7 @@ export default function ContactItem({
 
         <ActionIcon
           component="div"
-          variant="light"
+          variant="subtle"
           size="xl"
           radius="xl"
           aria-label="Select contact"
