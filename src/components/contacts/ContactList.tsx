@@ -87,7 +87,7 @@ export default function ContactsList({
         <>
           {topContacts.length > 0 && (
             <Stack gap={8}>
-              <Title order={3} px="xs">
+              <Title order={4} px="xs">
                 Top contacts
               </Title>
               <Stack gap={0}>
@@ -112,7 +112,7 @@ export default function ContactsList({
               .sort()
               .map((letter) => (
                 <Stack gap={8} key={letter}>
-                  <Title order={3} px="xs">
+                  <Title order={4} px="xs">
                     {letter}
                   </Title>
                   <Stack gap={0}>

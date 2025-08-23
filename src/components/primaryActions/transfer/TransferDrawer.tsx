@@ -12,8 +12,8 @@ export default function TransferDrawer({ opened, close }: TransferDrawerProps) {
         opened={opened}
         onClose={close}
         title="Transfer funds"
-        padding="lg"
-        size="lg"
+        padding="md"
+        size="md"
       >
         <Skeleton radius="lg" width="100%" height={400} />
       </Drawer>

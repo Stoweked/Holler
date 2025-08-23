@@ -37,7 +37,7 @@ export default function ConfirmationStep({
 
   return (
     <Stack justify="space-between" gap="lg">
-      <Card withBorder p="lg" radius="lg" w="100%" shadow="md">
+      <Card withBorder p="lg" radius="lg" w="100%" shadow="sm">
         <Stack>
           <Group gap="xs" wrap="nowrap" justify="space-between">
             <Stack gap={0}>

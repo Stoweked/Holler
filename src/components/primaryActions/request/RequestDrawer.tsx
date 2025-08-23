@@ -93,7 +93,7 @@ export default function RequestDrawer({ opened, close }: RequestDrawerProps) {
       opened={opened}
       onClose={handleClose}
       title={drawerTitle}
-      padding="lg"
+      padding="md"
       size="md"
     >
       {step === "selectContact" && (

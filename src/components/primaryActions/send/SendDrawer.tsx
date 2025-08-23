@@ -94,7 +94,7 @@ export default function SendDrawer({ opened, close }: SendDrawerProps) {
       opened={opened}
       onClose={handleClose}
       title={drawerTitle}
-      padding="lg"
+      padding="md"
       size="md"
     >
       {step === "selectContact" && (

@@ -56,6 +56,7 @@ export default function SideNavLinks() {
         leftSection={<UserMultiple02Icon size={20} />}
         rightSection={<ArrowRight01Icon size={24} color="grey" />}
         className={classes.navLink}
+        classNames={{ label: classes.label }}
         onClick={openContactsDrawer}
       />
 
@@ -73,6 +74,7 @@ export default function SideNavLinks() {
         leftSection={<BankIcon size={20} />}
         rightSection={<ArrowRight01Icon size={24} color="grey" />}
         className={classes.navLink}
+        classNames={{ label: classes.label }}
         onClick={openConnectedBanksDrawer}
       />
 
@@ -81,6 +83,7 @@ export default function SideNavLinks() {
         leftSection={<ClipboardIcon size={20} />}
         rightSection={<ArrowRight01Icon size={24} color="grey" />}
         className={classes.navLink}
+        classNames={{ label: classes.label }}
         onClick={openLienWaiversDrawer}
       />
 
@@ -89,6 +92,7 @@ export default function SideNavLinks() {
         leftSection={<Message01Icon size={20} />}
         rightSection={<ArrowRight01Icon size={24} color="grey" />}
         className={classes.navLink}
+        classNames={{ label: classes.label }}
       />
 
       <ContactsDrawer

@@ -64,7 +64,7 @@ export default function BankList({ banks, onBankClick }: BankListProps) {
 
       {filteredBanks.length > 0 ? (
         <Stack>
-          <Title order={3}>Connected accounts</Title>
+          <Title order={4}>Connected accounts</Title>
           <Stack gap={0}>
             {filteredBanks.map((bank) => (
               <BankItem

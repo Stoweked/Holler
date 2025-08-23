@@ -89,7 +89,7 @@ export default function DepositDrawer({ opened, close }: DepositDrawerProps) {
       opened={opened}
       onClose={handleClose}
       title={drawerTitle}
-      padding="lg"
+      padding="md"
       size="md"
     >
       {step === "selectBank" && (
