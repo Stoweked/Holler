@@ -73,7 +73,7 @@ export default function DepositDrawer({ opened, close }: DepositDrawerProps) {
         <Tooltip label="Back to banks" position="right">
           <ActionIcon
             onClick={handleBack}
-            variant="transparent"
+            variant="subtle"
             color="gray"
             aria-label="Go back"
           >

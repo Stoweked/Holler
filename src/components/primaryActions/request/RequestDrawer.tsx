@@ -77,7 +77,7 @@ export default function RequestDrawer({ opened, close }: RequestDrawerProps) {
         <Tooltip label="Back to contacts" position="right">
           <ActionIcon
             onClick={handleBack}
-            variant="transparent"
+            variant="subtle"
             color="gray"
             aria-label="Go back"
           >

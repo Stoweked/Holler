@@ -78,7 +78,7 @@ export default function SendDrawer({ opened, close }: SendDrawerProps) {
         <Tooltip label="Back to contacts" position="right">
           <ActionIcon
             onClick={handleBack}
-            variant="transparent"
+            variant="subtle"
             color="gray"
             aria-label="Go back"
           >
