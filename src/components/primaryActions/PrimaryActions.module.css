@@ -1,4 +1,4 @@
 .card {
-  background-color: light-dark(#fbf9f9, var(--mantine-color-dark-9));
+  background-color: light-dark(#ffffff, var(--mantine-color-dark-9));
   border-bottom: 1px solid var(--app-shell-border-color);
 }

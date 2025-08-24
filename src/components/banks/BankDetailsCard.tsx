@@ -9,12 +9,12 @@ import {
   Tooltip,
 } from "@mantine/core";
 import classes from "./Banks.module.css";
-import { Recipient } from "../contacts/types";
 import {
   BankIcon,
   MoreVerticalCircle01Icon,
   PencilEdit02Icon,
 } from "hugeicons-react";
+import { Recipient } from "@/types/recipient";
 
 interface BankDetailsCardProps {
   bank: Recipient;
@@ -53,9 +53,9 @@ export default function BankDetailsCard({
         </Group>
         <Menu shadow="md" width={150} position="bottom-end" radius="md">
           <Menu.Target>
-            <Tooltip position="left" label="Change bank">
+            <Tooltip position="left" label="Options">
               <ActionIcon
-                aria-label="Change bank"
+                aria-label="Options"
                 size="lg"
                 variant="subtle"
                 color="grey"

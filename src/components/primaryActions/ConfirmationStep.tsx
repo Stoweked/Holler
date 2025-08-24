@@ -1,3 +1,4 @@
+import { Contact, Recipient } from "@/types/recipient";
 import {
   Avatar,
   Button,
@@ -11,7 +12,6 @@ import {
   Alert,
   ThemeIcon,
 } from "@mantine/core";
-import { Contact, Recipient } from "@/components/contacts/types";
 import { BankIcon, Time02Icon } from "hugeicons-react";
 
 interface ConfirmationStepProps {

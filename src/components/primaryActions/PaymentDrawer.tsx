@@ -8,13 +8,13 @@ import {
   Tooltip,
 } from "@mantine/core";
 import { ArrowLeft02Icon } from "hugeicons-react";
-import { Recipient } from "@/components/contacts/types";
 import ConfirmationStep from "./ConfirmationStep";
 import SelectContactStep from "./SelectContactStep";
 import { mockBanks } from "@/components/mockData/mockBanks";
 import SelectBankStep from "./deposit/SelectBankStep";
 import PaymentAmountStep from "./PaymentAmountStep";
 import { notifications } from "@mantine/notifications";
+import { Recipient } from "@/types/recipient";
 
 type PaymentStep = "selectContact" | "enterAmount" | "confirm" | "selectBank";
 

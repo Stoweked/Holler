@@ -12,6 +12,11 @@ export const theme = createTheme({
         radius: "xl",
       },
     },
+    Badge: {
+      styles: {
+        label: { textTransform: "capitalize", letterSpacing: "0" },
+      },
+    },
     ActionIcon: {
       defaultProps: {
         radius: "xl",
@@ -21,6 +26,15 @@ export const theme = createTheme({
     Notification: {
       defaultProps: {
         radius: "lg",
+        withBorder: true,
+      },
+      styles: {
+        root: {
+          paddingLeft: "var(--mantine-spacing-sm)",
+        },
+        closeButton: {
+          borderRadius: "var(--mantine-radius-xl)",
+        },
       },
     },
     Drawer: {

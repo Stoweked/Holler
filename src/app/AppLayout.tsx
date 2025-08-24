@@ -29,7 +29,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           <SideNav />
         </ScrollArea>
       </AppShell.Navbar>
-      <AppShell.Main pt={60}>{children}</AppShell.Main>
+      <AppShell.Main pt={60} className="appShell">
+        {children}
+      </AppShell.Main>
     </AppShell>
   );
 }
