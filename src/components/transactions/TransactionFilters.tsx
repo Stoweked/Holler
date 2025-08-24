@@ -1,5 +1,5 @@
 import { TransactionFilter } from "@/types/transaction";
-import { Badge, Button, Group, Menu, ScrollArea } from "@mantine/core";
+import { Badge, Button, Group, Indicator, Menu } from "@mantine/core";
 import { useViewportSize } from "@mantine/hooks";
 import {
   Calendar02Icon,
@@ -37,39 +37,39 @@ export default function TransactionFilters({
   const isFilterActive = activeFilter !== "All";
   const mainFilters = condenseFilters ? (
     // On mobile, render a dropdown Menu
-    <Menu shadow="md" width={200} radius="md">
+    <Menu shadow="md" width={170} radius="md">
       <Menu.Target>
-        <Button
-          variant="default"
-          size={isMobile ? "sm" : "md"}
-          leftSection={smallMobile ? null : <FilterHorizontalIcon size={16} />}
-          style={{ flexShrink: 0 }}
-          rightSection={
-            isFilterActive ? (
-              <Badge color="lime" variant="filled" size="sm" circle>
-                1
-              </Badge>
-            ) : null
-          }
+        <Indicator
+          disabled={!isFilterActive}
+          color="lime"
+          position="top-end"
+          size={12}
+          offset={7}
         >
-          Filters
-        </Button>
+          <Button
+            variant="default"
+            size={isMobile ? "sm" : "md"}
+            leftSection={
+              smallMobile ? null : <FilterHorizontalIcon size={16} />
+            }
+            style={{ flexShrink: 0 }}
+          >
+            Filters
+          </Button>
+        </Indicator>
       </Menu.Target>
       <Menu.Dropdown>
         <Menu.Label>Filter by type</Menu.Label>
         {filters.map((filter) => (
-          <Menu.Item
-            key={filter}
-            onClick={() => onFilterChange(filter)}
-            // Highlight the currently active filter in the dropdown
-            style={{
-              backgroundColor:
-                activeFilter === filter
-                  ? "var(--mantine-color-lime-light-color)"
-                  : "transparent",
-            }}
-          >
-            {filter}
+          <Menu.Item key={filter} onClick={() => onFilterChange(filter)}>
+            <Group wrap="nowrap" gap="xs">
+              {filter}
+              {activeFilter === filter && (
+                <Badge variant="light" size="sm">
+                  Active
+                </Badge>
+              )}
+            </Group>
           </Menu.Item>
         ))}
       </Menu.Dropdown>
@@ -91,56 +91,54 @@ export default function TransactionFilters({
   );
 
   return (
-    <ScrollArea type="never" w="100%">
-      <Group wrap="nowrap" justify="space-between">
-        {/* Render the appropriate filter group (mobile or desktop) */}
-        {mainFilters}
+    <Group wrap="nowrap" justify="space-between">
+      {/* Render the appropriate filter group (mobile or desktop) */}
+      {mainFilters}
 
-        {/* Right side: Date and Sort dropdowns */}
-        <Group wrap="nowrap">
-          {/* --- Date Filter Dropdown --- */}
-          <Menu shadow="md" width={150} radius="md">
-            <Menu.Target>
-              <Button
-                size={isMobile ? "sm" : "md"}
-                variant="default"
-                leftSection={smallMobile ? null : <Calendar02Icon size={16} />}
-              >
-                Dates
-              </Button>
-            </Menu.Target>
-            <Menu.Dropdown>
-              <Menu.Label>Filter by date</Menu.Label>
-              <Menu.Item>Today</Menu.Item>
-              <Menu.Item>This week</Menu.Item>
-              <Menu.Item>This month</Menu.Item>
-              <Menu.Item>This year</Menu.Item>
-              <Menu.Divider />
-              <Menu.Item>Custom range</Menu.Item>
-            </Menu.Dropdown>
-          </Menu>
+      {/* Right side: Date and Sort dropdowns */}
+      <Group wrap="nowrap">
+        {/* --- Date Filter Dropdown --- */}
+        <Menu shadow="md" width={150} radius="md">
+          <Menu.Target>
+            <Button
+              size={isMobile ? "sm" : "md"}
+              variant="default"
+              leftSection={smallMobile ? null : <Calendar02Icon size={16} />}
+            >
+              Dates
+            </Button>
+          </Menu.Target>
+          <Menu.Dropdown>
+            <Menu.Label>Filter by date</Menu.Label>
+            <Menu.Item>Today</Menu.Item>
+            <Menu.Item>This week</Menu.Item>
+            <Menu.Item>This month</Menu.Item>
+            <Menu.Item>This year</Menu.Item>
+            <Menu.Divider />
+            <Menu.Item>Custom range</Menu.Item>
+          </Menu.Dropdown>
+        </Menu>
 
-          {/* --- Sort Options Dropdown --- */}
-          <Menu shadow="md" width={180} radius="md">
-            <Menu.Target>
-              <Button
-                size={isMobile ? "sm" : "md"}
-                variant="default"
-                rightSection={smallMobile ? null : <Sorting01Icon size={16} />}
-              >
-                Sort
-              </Button>
-            </Menu.Target>
-            <Menu.Dropdown>
-              <Menu.Label>Sort by</Menu.Label>
-              <Menu.Item>Newest first</Menu.Item>
-              <Menu.Item>Oldest first</Menu.Item>
-              <Menu.Item>Amount (High to Low)</Menu.Item>
-              <Menu.Item>Amount (Low to High)</Menu.Item>
-            </Menu.Dropdown>
-          </Menu>
-        </Group>
+        {/* --- Sort Options Dropdown --- */}
+        <Menu shadow="md" width={180} radius="md">
+          <Menu.Target>
+            <Button
+              size={isMobile ? "sm" : "md"}
+              variant="default"
+              rightSection={smallMobile ? null : <Sorting01Icon size={16} />}
+            >
+              Sort
+            </Button>
+          </Menu.Target>
+          <Menu.Dropdown>
+            <Menu.Label>Sort by</Menu.Label>
+            <Menu.Item>Newest first</Menu.Item>
+            <Menu.Item>Oldest first</Menu.Item>
+            <Menu.Item>Amount (High to Low)</Menu.Item>
+            <Menu.Item>Amount (Low to High)</Menu.Item>
+          </Menu.Dropdown>
+        </Menu>
       </Group>
-    </ScrollArea>
+    </Group>
   );
 }

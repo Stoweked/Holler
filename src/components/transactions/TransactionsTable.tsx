@@ -42,6 +42,12 @@ export default function TransactionsTable() {
       }
     });
 
+  const resetFilters = () => {
+    setActiveFilter("All");
+    setDateFilter("All");
+    setSortOption("Newest first");
+  };
+
   return (
     <Stack p={isMobile ? "md" : "xl"}>
       <Stack gap="lg">
@@ -69,17 +75,28 @@ export default function TransactionsTable() {
                 radius="xl"
                 variant="default"
                 fullWidth
-                onClick={() => setActiveFilter("All")}
+                onClick={resetFilters}
               >
                 Reset all filters
               </Button>
             </Stack>
           </Center>
         ) : (
-          // Map over the filtered data and render an item for each one
-          processedTransactions.map((transaction) => (
-            <TransactionItem key={transaction.id} transaction={transaction} />
-          ))
+          <Stack align="center">
+            {processedTransactions.map((transaction) => (
+              <TransactionItem key={transaction.id} transaction={transaction} />
+            ))}
+            {activeFilter !== "All" ? (
+              <Button
+                size="md"
+                radius="xl"
+                variant="default"
+                onClick={resetFilters}
+              >
+                Show all transactions
+              </Button>
+            ) : null}
+          </Stack>
         )}
       </Stack>
     </Stack>

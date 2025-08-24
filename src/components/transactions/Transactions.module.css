@@ -8,7 +8,7 @@
     var(--mantine-color-white),
     var(--mantine-color-dark-6)
   );
-  box-shadow: 0 0 0 0 transparent, inset 0 0 0 0 transparent;
+  box-shadow: 0 0 0 0 transparent;
   transition: all 200ms ease-in-out;
 }
 
@@ -17,10 +17,10 @@
     var(--mantine-color-lime-5),
     var(--mantine-color-lime-7)
   );
-  box-shadow: var(--mantine-shadow-xs), inset 0 0 0 0 transparent;
+  box-shadow: var(--mantine-shadow-xs);
 }
 
 .transactionButton:active {
   transform: scale(0.995);
-  box-shadow: 0 0 0 0 transparent, inset 0px 2px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 0 0 transparent;
 }
