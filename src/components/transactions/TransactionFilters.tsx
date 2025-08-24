@@ -29,7 +29,9 @@ export default function TransactionFilters({
   onFilterChange,
 }: TransactionFiltersProps) {
   const { width } = useViewportSize();
-  const condenseFilters = width < 1290;
+  const condenseFilters = width < 1390;
+  const isMobile = width < 800;
+  const smallMobile = width < 350;
 
   // Calculate if any filter other than "All" is active
   const isFilterActive = activeFilter !== "All";
@@ -38,9 +40,9 @@ export default function TransactionFilters({
     <Menu shadow="md" width={200} radius="md">
       <Menu.Target>
         <Button
-          size="sm"
           variant="default"
-          leftSection={<FilterHorizontalIcon size={16} />}
+          size={isMobile ? "sm" : "md"}
+          leftSection={smallMobile ? null : <FilterHorizontalIcon size={16} />}
           style={{ flexShrink: 0 }}
           rightSection={
             isFilterActive ? (
@@ -77,7 +79,7 @@ export default function TransactionFilters({
     <Group wrap="nowrap">
       {filters.map((filter) => (
         <Button
-          size="sm"
+          size={isMobile ? "sm" : "md"}
           key={filter}
           variant={activeFilter === filter ? "primary" : "default"}
           onClick={() => onFilterChange(filter)}
@@ -100,9 +102,9 @@ export default function TransactionFilters({
           <Menu shadow="md" width={150} radius="md">
             <Menu.Target>
               <Button
-                size="sm"
+                size={isMobile ? "sm" : "md"}
                 variant="default"
-                leftSection={<Calendar02Icon size={16} />}
+                leftSection={smallMobile ? null : <Calendar02Icon size={16} />}
               >
                 Dates
               </Button>
@@ -122,9 +124,9 @@ export default function TransactionFilters({
           <Menu shadow="md" width={180} radius="md">
             <Menu.Target>
               <Button
-                size="sm"
+                size={isMobile ? "sm" : "md"}
                 variant="default"
-                rightSection={<Sorting01Icon size={16} />}
+                rightSection={smallMobile ? null : <Sorting01Icon size={16} />}
               >
                 Sort
               </Button>
