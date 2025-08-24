@@ -33,11 +33,7 @@ export default function TopNav({ opened, toggle }: TopNavProps) {
           <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
 
           {/* Logo */}
-          <Anchor
-            onClick={() => router.push("/")}
-            style={{ textDecoration: "none" }}
-            c="initial"
-          >
+          <Anchor onClick={() => router.push("/")} inherit underline="never">
             <Group gap={8} wrap="nowrap">
               <Image
                 src="/images/logomark.svg"
@@ -46,7 +42,9 @@ export default function TopNav({ opened, toggle }: TopNavProps) {
                 w="100%"
                 h="auto"
               />
-              <Title order={2}>Holler</Title>
+              <Title order={2} style={{ color: "var(--mantine-color-text)" }}>
+                Holler
+              </Title>
             </Group>
           </Anchor>
         </Group>
