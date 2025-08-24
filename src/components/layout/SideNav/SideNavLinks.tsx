@@ -134,11 +134,13 @@ export default function SideNavLinks() {
       <PaymentDrawer
         opened={openedRequestDrawer}
         close={closeRequestDrawer}
+        initialContact={selectedContact}
         actionType="request"
       />
       <PaymentDrawer
         opened={openedSendDrawer}
         close={closeSendDrawer}
+        initialContact={selectedContact}
         actionType="send"
       />
     </div>

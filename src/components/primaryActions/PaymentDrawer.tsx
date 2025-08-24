@@ -8,7 +8,7 @@ import {
   Tooltip,
 } from "@mantine/core";
 import { ArrowLeft02Icon } from "hugeicons-react";
-import { Contact, Recipient } from "@/components/contacts/types";
+import { Recipient } from "@/components/contacts/types";
 import ConfirmationStep from "./ConfirmationStep";
 import SelectContactStep from "./SelectContactStep";
 import { mockBanks } from "@/components/mockData/mockBanks";
@@ -21,15 +21,15 @@ type PaymentStep = "selectContact" | "enterAmount" | "confirm" | "selectBank";
 interface PaymentDrawerProps {
   opened: boolean;
   close: () => void;
-  contact?: Contact | null;
   actionType: "send" | "request";
+  initialContact?: Recipient | null; // The only prop needed for pre-selection
 }
 
 export default function PaymentDrawer({
   opened,
   close,
-  contact,
   actionType,
+  initialContact = null,
 }: PaymentDrawerProps) {
   const [step, setStep] = useState<PaymentStep>("selectContact");
   const [selectedContact, setSelectedContact] = useState<Recipient | null>(
@@ -42,15 +42,16 @@ export default function PaymentDrawer({
   const isSend = actionType === "send";
 
   useEffect(() => {
-    if (contact && opened) {
-      setSelectedContact(contact);
+    if (opened && initialContact) {
+      setSelectedContact(initialContact);
       setStep("enterAmount");
-    } else {
+    } else if (!opened) {
       setStep("selectContact");
+      setSelectedContact(null);
     }
-  }, [contact, opened]);
+  }, [opened, initialContact]);
 
-  const handleSelectContact = (contact: Contact) => {
+  const handleSelectContact = (contact: Recipient) => {
     setSelectedContact(contact);
     setStep("enterAmount");
   };
@@ -66,7 +67,8 @@ export default function PaymentDrawer({
     if (step === "selectBank" || step === "confirm") {
       setStep("enterAmount");
     } else if (step === "enterAmount") {
-      contact ? close() : setStep("selectContact");
+      // If an initialContact was passed, close the drawer. Otherwise, go to contact list.
+      initialContact ? close() : setStep("selectContact");
     }
   };
 
@@ -77,29 +79,26 @@ export default function PaymentDrawer({
     console.log(logMessage);
     handleClose();
 
-    if (actionType === "send") {
-      notifications.show({
-        title: "Success",
-        message: "Your payment has been sent.",
-        color: "green",
-        icon: <CheckIcon size={18} />,
-        autoClose: 6000,
-      });
-    } else if (actionType === "request") {
-      notifications.show({
-        title: "Success",
-        message: "Your payment has been requested.",
-        color: "green",
-        icon: <CheckIcon size={18} />,
-        autoClose: 6000,
-      });
-    }
+    const successMessage =
+      actionType === "send"
+        ? "Your payment has been sent."
+        : "Your payment has been requested.";
+
+    notifications.show({
+      title: "Success",
+      message: successMessage,
+      color: "lime",
+      icon: <CheckIcon size={16} />,
+      autoClose: 6000,
+    });
   };
 
   const handleClose = () => {
     close();
+    // Use a timeout to prevent flicker as the drawer closes
     setTimeout(() => {
-      if (!contact) {
+      // Only reset to the first step if the drawer wasn't opened with an initial contact
+      if (!initialContact) {
         setStep("selectContact");
         setSelectedContact(null);
       }
@@ -139,7 +138,7 @@ export default function PaymentDrawer({
     ) : (
       <Group gap="xs">
         <Tooltip
-          label={contact ? "Close" : "Back to contacts"}
+          label={initialContact ? "Close" : "Back to contacts"}
           position="right"
         >
           <ActionIcon
