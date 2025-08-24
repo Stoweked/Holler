@@ -1,5 +1,12 @@
 import { useState, useEffect } from "react";
-import { ActionIcon, Drawer, Group, Text, Tooltip } from "@mantine/core";
+import {
+  ActionIcon,
+  CheckIcon,
+  Drawer,
+  Group,
+  Text,
+  Tooltip,
+} from "@mantine/core";
 import { ArrowLeft02Icon } from "hugeicons-react";
 import { Contact, Recipient } from "@/components/contacts/types";
 import ConfirmationStep from "./ConfirmationStep";
@@ -7,6 +14,7 @@ import SelectContactStep from "./SelectContactStep";
 import { mockBanks } from "@/components/mockData/mockBanks";
 import SelectBankStep from "./deposit/SelectBankStep";
 import PaymentAmountStep from "./PaymentAmountStep";
+import { notifications } from "@mantine/notifications";
 
 type PaymentStep = "selectContact" | "enterAmount" | "confirm" | "selectBank";
 
@@ -68,6 +76,24 @@ export default function PaymentDrawer({
       : `Requesting ${amount} from ${selectedContact?.name} into ${selectedBank.name}`;
     console.log(logMessage);
     handleClose();
+
+    if (actionType === "send") {
+      notifications.show({
+        title: "Success",
+        message: "Your payment has been sent.",
+        color: "green",
+        icon: <CheckIcon size={18} />,
+        autoClose: 6000,
+      });
+    } else if (actionType === "request") {
+      notifications.show({
+        title: "Success",
+        message: "Your payment has been requested.",
+        color: "green",
+        icon: <CheckIcon size={18} />,
+        autoClose: 6000,
+      });
+    }
   };
 
   const handleClose = () => {

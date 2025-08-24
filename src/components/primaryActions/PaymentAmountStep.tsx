@@ -10,11 +10,12 @@ import {
 import classes from "./deposit/EnterAmount.module.css";
 import { useEffect, useRef } from "react";
 import { Recipient } from "../contacts/types";
-import { CancelCircleIcon } from "hugeicons-react";
+import { Alert02Icon, CancelCircleIcon } from "hugeicons-react";
 import { useDisclosure } from "@mantine/hooks";
 import ProfileModal from "../profile/ProfileModal";
 import ContactDetailsCard from "../contacts/ContactDetailsCard";
 import BankDetailsCard from "../banks/BankDetailsCard";
+import { notifications } from "@mantine/notifications";
 
 interface PaymentAmountStepProps {
   contact: Recipient;
@@ -55,6 +56,27 @@ export default function PaymentAmountStep({
     actionType === "send" ? "Sending to" : "Requesting from";
   const bankLabel = actionType === "send" ? "Pay from" : "Deposit into";
 
+  // A hardcoded value for demonstration purposes
+  const availableBalance = 40000;
+
+  // 2. Create a handler to contain the notification logic
+  const handleContinue = () => {
+    // 3. Add logic to check for insufficient funds
+    if (actionType === "send" && Number(amount) > availableBalance) {
+      notifications.show({
+        title: "Insufficient funds",
+        message: "The amount you entered exceeds your available balance.",
+        color: "red",
+        icon: <Alert02Icon size={18} />,
+        autoClose: 5000,
+      });
+      return;
+    }
+
+    // If the check passes, call the original onContinue function
+    onContinue?.();
+  };
+
   return (
     <>
       <Stack justify="space-between" gap={30} pt="lg">
@@ -88,7 +110,12 @@ export default function PaymentAmountStep({
             }
           />
           <Text c="dimmed" size="md" ta="center">
-            Available balance: $40,000.00
+            {/* Display the balance dynamically */}
+            Available balance: $
+            {availableBalance.toLocaleString("en-US", {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}
           </Text>
         </Stack>
 
@@ -114,7 +141,8 @@ export default function PaymentAmountStep({
             size="xl"
             radius="xl"
             disabled={!amount || Number(amount) === 0}
-            onClick={onContinue}
+            // 4. Update the button's onClick handler
+            onClick={handleContinue}
           >
             Continue to review
           </Button>

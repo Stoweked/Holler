@@ -1,4 +1,4 @@
-import { Group, Skeleton, Stack } from "@mantine/core";
+import { Group, SegmentedControl, Skeleton, Stack } from "@mantine/core";
 import { useViewportSize } from "@mantine/hooks";
 
 export default function TransactionsTable() {
@@ -7,15 +7,12 @@ export default function TransactionsTable() {
 
   return (
     <Stack p={isMobile ? "md" : "xl"}>
-      <Stack>
-        <Group wrap="nowrap">
-          <Skeleton radius="xl" w="100%" maw={140} height={32} />
-          <Skeleton radius="xl" w="100%" maw={140} height={32} />
-          <Skeleton radius="xl" w="100%" maw={140} height={32} />
-          <Skeleton radius="xl" w="100%" maw={140} height={32} />
-          <Skeleton radius="xl" w="100%" maw={140} height={32} />
-          <Skeleton radius="xl" w="100%" maw={140} height={32} />
-        </Group>
+      <Stack gap="lg">
+        <SegmentedControl
+          size="md"
+          radius="xl"
+          data={["All", "Sent", "Received", "Deposited", "Transferred"]}
+        />
         <Skeleton radius="lg" width="100%" height={80} />
         <Skeleton radius="lg" width="100%" height={80} />
         <Skeleton radius="lg" width="100%" height={80} />

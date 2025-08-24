@@ -18,6 +18,11 @@ export const theme = createTheme({
         size: "lg",
       },
     },
+    Notification: {
+      defaultProps: {
+        radius: "lg",
+      },
+    },
     Drawer: {
       styles: {
         close: {
