@@ -1,10 +1,18 @@
 import { useState } from "react";
-import { ActionIcon, Drawer, Group, Text, Tooltip } from "@mantine/core";
+import {
+  ActionIcon,
+  CheckIcon,
+  Drawer,
+  Group,
+  Text,
+  Tooltip,
+} from "@mantine/core";
 import { ArrowLeft02Icon } from "hugeicons-react";
-import { Recipient } from "@/components/contacts/types";
 import EnterAmountStep from "./EnterAmountStep";
 import ConfirmationStep from "./ConfirmationStep";
 import SelectBankStep from "./SelectBankStep";
+import { Recipient } from "@/types/recipient";
+import { notifications } from "@mantine/notifications";
 
 type DepositStep = "selectBank" | "enterAmount" | "confirm";
 
@@ -39,6 +47,13 @@ export default function DepositDrawer({ opened, close }: DepositDrawerProps) {
   const handleConfirmDeposit = () => {
     console.log(`Depositing ${amount} to ${selectedBank?.name}`);
     handleClose();
+    notifications.show({
+      title: "Success",
+      message: "Your deposit has been started.",
+      color: "lime",
+      icon: <CheckIcon size={16} />,
+      autoClose: 6000,
+    });
   };
 
   const handleClose = () => {

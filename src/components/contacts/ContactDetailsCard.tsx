@@ -9,12 +9,12 @@ import {
   Tooltip,
 } from "@mantine/core";
 import classes from "./Contacts.module.css";
-import { Recipient } from "../contacts/types";
 import {
   MoreVerticalCircle01Icon,
   PencilEdit02Icon,
   UserIcon,
 } from "hugeicons-react";
+import { Recipient } from "@/types/recipient";
 
 interface ContactDetailsCardProps {
   contact: Recipient;

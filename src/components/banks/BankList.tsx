@@ -10,8 +10,8 @@ import {
   Center,
 } from "@mantine/core";
 import { Cancel01Icon, Search01Icon, BankIcon } from "hugeicons-react";
-import { Recipient } from "../contacts/types";
 import BankItem from "./BankItem";
+import { Recipient } from "@/types/recipient";
 
 interface BankListProps {
   banks: Recipient[];

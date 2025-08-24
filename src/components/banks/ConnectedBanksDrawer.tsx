@@ -1,7 +1,7 @@
 import { Drawer } from "@mantine/core";
 import { useState } from "react";
-import { Recipient } from "../contacts/types";
 import SelectBankStep from "../primaryActions/deposit/SelectBankStep";
+import { Recipient } from "@/types/recipient";
 
 interface ConnectedBanksDrawerProps {
   opened: boolean;

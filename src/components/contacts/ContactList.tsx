@@ -16,7 +16,7 @@ import {
   Search01Icon,
   UserMultiple02Icon,
 } from "hugeicons-react";
-import { Contact } from "./types";
+import { Contact } from "@/types/recipient";
 
 interface ContactsListProps {
   contacts: Contact[];

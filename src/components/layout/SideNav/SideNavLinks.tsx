@@ -14,8 +14,8 @@ import ConnectedBanksDrawer from "@/components/banks/ConnectedBanksDrawer";
 import LienWaiversDrawer from "@/components/waivers/LienWaiversDrawer";
 import { useState } from "react";
 import ProfileModal from "@/components/profile/ProfileModal";
-import { Contact } from "@/components/contacts/types";
 import PaymentDrawer from "@/components/primaryActions/PaymentDrawer";
+import { Contact } from "@/types/recipient";
 
 export default function SideNavLinks() {
   const [

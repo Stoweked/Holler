@@ -9,13 +9,13 @@ import {
 } from "@mantine/core";
 import classes from "./deposit/EnterAmount.module.css";
 import { useEffect, useRef } from "react";
-import { Recipient } from "../contacts/types";
 import { Alert02Icon, CancelCircleIcon } from "hugeicons-react";
 import { useDisclosure } from "@mantine/hooks";
 import ProfileModal from "../profile/ProfileModal";
 import ContactDetailsCard from "../contacts/ContactDetailsCard";
 import BankDetailsCard from "../banks/BankDetailsCard";
 import { notifications } from "@mantine/notifications";
+import { Recipient } from "@/types/recipient";
 
 interface PaymentAmountStepProps {
   contact: Recipient;

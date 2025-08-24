@@ -1,4 +1,5 @@
 // src/components/primaryActions/deposit/ConfirmationStep.tsx
+import { Recipient } from "@/types/recipient";
 import {
   Button,
   Group,
@@ -9,7 +10,6 @@ import {
   Divider,
   ThemeIcon,
 } from "@mantine/core";
-import { Recipient } from "@/components/contacts/types";
 import { BankIcon } from "hugeicons-react";
 
 interface ConfirmationStepProps {
