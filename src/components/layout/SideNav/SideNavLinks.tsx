@@ -57,12 +57,14 @@ export default function SideNavLinks() {
     setSelectedContact(contact);
     closeProfileDrawer();
     openSendDrawer();
+    closeContactsDrawer();
   };
 
   const handleRequestClick = (contact: Contact) => {
     setSelectedContact(contact);
     closeProfileDrawer();
     openRequestDrawer();
+    closeContactsDrawer();
   };
 
   return (
