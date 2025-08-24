@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, Center, Stack, Text, Title } from "@mantine/core";
+import { Button, Center, Space, Stack, Text, Title } from "@mantine/core";
 import { useViewportSize } from "@mantine/hooks";
 import TransactionFilters from "./TransactionFilters";
 import TransactionItem from "./TransactionItem"; // Import the new item component
@@ -88,6 +88,7 @@ export default function TransactionsTable() {
             ))}
             {activeFilter !== "All" ? (
               <Button
+                mt="lg"
                 size="md"
                 radius="xl"
                 variant="default"
@@ -99,6 +100,8 @@ export default function TransactionsTable() {
           </Stack>
         )}
       </Stack>
+
+      <Space h={100} />
     </Stack>
   );
 }
