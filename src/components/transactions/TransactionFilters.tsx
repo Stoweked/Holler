@@ -76,7 +76,7 @@ export default function TransactionFilters({
     </Menu>
   ) : (
     // On desktop, render the full group of buttons
-    <Group wrap="nowrap">
+    <Group wrap="nowrap" gap="sm">
       {filters.map((filter) => (
         <Button
           size={isMobile ? "sm" : "md"}
@@ -91,14 +91,14 @@ export default function TransactionFilters({
   );
 
   return (
-    <Group wrap="nowrap" justify="space-between">
+    <Group wrap="nowrap" justify="space-between" gap="sm">
       {/* Render the appropriate filter group (mobile or desktop) */}
       {mainFilters}
 
       {/* Right side: Date and Sort dropdowns */}
-      <Group wrap="nowrap">
+      <Group wrap="nowrap" gap="sm">
         {/* --- Date Filter Dropdown --- */}
-        <Menu shadow="md" width={150} radius="md">
+        <Menu shadow="md" width={150} radius="md" position="bottom-end">
           <Menu.Target>
             <Button
               size={isMobile ? "sm" : "md"}
@@ -120,7 +120,7 @@ export default function TransactionFilters({
         </Menu>
 
         {/* --- Sort Options Dropdown --- */}
-        <Menu shadow="md" width={180} radius="md">
+        <Menu shadow="md" width={180} radius="md" position="bottom-end">
           <Menu.Target>
             <Button
               size={isMobile ? "sm" : "md"}
