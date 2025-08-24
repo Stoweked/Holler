@@ -1,28 +1,46 @@
 import { useState } from "react";
-import { Stack, Text } from "@mantine/core";
+import { Button, Center, Stack, Text, Title } from "@mantine/core";
 import { useViewportSize } from "@mantine/hooks";
 import TransactionFilters from "./TransactionFilters";
 import TransactionItem from "./TransactionItem"; // Import the new item component
-import { TransactionFilter } from "@/types/transaction";
+import { DateFilter, SortOption, TransactionFilter } from "@/types/transaction";
 import { mockTransactions } from "../mockData/mockTransactions";
+import { Search01Icon } from "hugeicons-react";
 
 export default function TransactionsTable() {
   const { width } = useViewportSize();
   const isMobile = width < 768;
   const [activeFilter, setActiveFilter] = useState<TransactionFilter>("All");
+  const [sortOption, setSortOption] = useState<SortOption>("Newest first");
+  const [dateFilter, setDateFilter] = useState<DateFilter>("All");
 
   // Filter the transactions based on the active filter
-  const filteredTransactions = mockTransactions.filter((transaction) => {
-    if (activeFilter === "All") {
-      return true;
-    }
-    // Handle the 'Pending' status filter separately
-    if (activeFilter === "Pending") {
-      return transaction.status === "Pending";
-    }
-    // All other filters are based on the transaction type
-    return transaction.type === activeFilter;
-  });
+  const processedTransactions = mockTransactions
+    .filter((transaction) => {
+      // 1. Filter by type/status (your existing logic)
+      if (activeFilter === "All") return true;
+      if (activeFilter === "Pending") return transaction.status === "Pending";
+      return transaction.type === activeFilter;
+    })
+    .filter((transaction) => {
+      // 2. Filter by date (logic would go here)
+      // Example: if (dateFilter === 'Today') { ... }
+      return true; // Placeholder
+    })
+    .sort((a, b) => {
+      // 3. Sort the results
+      switch (sortOption) {
+        case "Oldest first":
+          return new Date(a.date).getTime() - new Date(b.date).getTime();
+        case "Amount (High to Low)":
+          return b.amount - a.amount;
+        case "Amount (Low to High)":
+          return a.amount - b.amount;
+        case "Newest first":
+        default:
+          return new Date(b.date).getTime() - new Date(a.date).getTime();
+      }
+    });
 
   return (
     <Stack p={isMobile ? "md" : "xl"}>
@@ -33,13 +51,33 @@ export default function TransactionsTable() {
         />
 
         {/* Display a message if no transactions match the filter */}
-        {filteredTransactions.length === 0 ? (
-          <Text c="dimmed" ta="center" pt="xl">
-            No transactions found.
-          </Text>
+        {processedTransactions.length === 0 ? (
+          <Center>
+            <Stack align="center" py={60} gap="lg">
+              <Search01Icon size={40} color="grey" />
+              <Stack gap={0} align="center">
+                <Title order={4} ta="center">
+                  No transactions found
+                </Title>
+                <Text c="dimmed" ta="center">
+                  Try adjusting your transaction filters.
+                </Text>
+              </Stack>
+
+              <Button
+                size="lg"
+                radius="xl"
+                variant="default"
+                fullWidth
+                onClick={() => setActiveFilter("All")}
+              >
+                Reset all filters
+              </Button>
+            </Stack>
+          </Center>
         ) : (
           // Map over the filtered data and render an item for each one
-          filteredTransactions.map((transaction) => (
+          processedTransactions.map((transaction) => (
             <TransactionItem key={transaction.id} transaction={transaction} />
           ))
         )}

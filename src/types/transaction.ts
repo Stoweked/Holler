@@ -6,6 +6,14 @@ export type TransactionType = "Sent" | "Received" | "Deposited" | "Transferred";
 
 export type TransactionFilter = TransactionType | "All" | "Pending";
 
+export type SortOption =
+  | "Newest first"
+  | "Oldest first"
+  | "Amount (High to Low)"
+  | "Amount (Low to High)";
+
+export type DateFilter = "All" | "Today" | "This Week" | "This Month";
+
 export interface Transaction {
   id: string;
   amount: number;
