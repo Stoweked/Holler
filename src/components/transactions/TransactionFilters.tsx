@@ -13,9 +13,11 @@ import {
 } from "@mantine/core";
 import { useDisclosure, useViewportSize } from "@mantine/hooks";
 import {
+  ArrowLeftRightIcon,
   Calendar02Icon,
-  FilterHorizontalIcon,
+  Money01Icon,
   Sorting01Icon,
+  UserMultiple02Icon,
 } from "hugeicons-react";
 import { DatePicker } from "@mantine/dates";
 import { useState } from "react";
@@ -103,8 +105,8 @@ export default function TransactionFilters({
 
   const dateFilterLabel = getDateFilterLabel();
 
-  const mainFilters = condenseFilters ? (
-    <Menu shadow="md" width={170} radius="md">
+  const mainFilters = (
+    <Menu shadow="md" width={170} radius="md" position="bottom-start">
       <Menu.Target>
         <Indicator
           disabled={!isFilterActive}
@@ -116,16 +118,16 @@ export default function TransactionFilters({
           <Button
             variant="default"
             size={isMobile ? "sm" : "md"}
-            leftSection={<FilterHorizontalIcon size={16} />}
+            leftSection={<ArrowLeftRightIcon size={16} />}
             style={{ flexShrink: 0 }}
             pr={smallMobile ? 0 : "md"}
           >
-            {!smallMobile && "Filters"}
+            {!smallMobile && "Status"}
           </Button>
         </Indicator>
       </Menu.Target>
       <Menu.Dropdown>
-        <Menu.Label>Filter by type</Menu.Label>
+        <Menu.Label>Filter by status</Menu.Label>
         {filters.map((filter) => (
           <Menu.Item key={filter} onClick={() => onFilterChange(filter)}>
             <Group wrap="nowrap" gap="xs">
@@ -140,29 +142,16 @@ export default function TransactionFilters({
         ))}
       </Menu.Dropdown>
     </Menu>
-  ) : (
-    <Group wrap="nowrap" gap="sm">
-      {filters.map((filter) => (
-        <Button
-          size={isMobile ? "sm" : "md"}
-          key={filter}
-          variant={activeFilter === filter ? "primary" : "default"}
-          onClick={() => onFilterChange(filter)}
-        >
-          {filter}
-        </Button>
-      ))}
-    </Group>
   );
 
   return (
     <>
       <ScrollArea type="never" className={classes.filterHeader}>
         <Group wrap="nowrap" justify="space-between" gap="sm" pl="sm" py="sm">
-          {mainFilters}
-          <Group wrap="nowrap" gap="sm" pr="sm">
+          <Group wrap="nowrap">
+            {mainFilters}
             {/* Dates */}
-            <Menu shadow="md" width={170} radius="md" position="bottom-end">
+            <Menu shadow="md" width={170} radius="md" position="bottom-start">
               <Menu.Target>
                 <Indicator
                   disabled={!isDateFilterActive}
@@ -265,6 +254,92 @@ export default function TransactionFilters({
               </Menu.Dropdown>
             </Menu>
 
+            {/* Amount */}
+            <Menu shadow="md" width={170} radius="md" position="bottom-start">
+              <Menu.Target>
+                <Indicator
+                  disabled={!isDateFilterActive}
+                  color="lime"
+                  position="top-end"
+                  size={12}
+                  offset={7}
+                >
+                  <Button
+                    size={isMobile ? "sm" : "md"}
+                    variant="default"
+                    pr={smallMobile ? 0 : "md"}
+                    leftSection={<Money01Icon size={16} />}
+                    rightSection={
+                      dateFilterLabel && !smallMobile ? (
+                        <Text style={{ whiteSpace: "nowrap" }} size="sm">
+                          {dateFilterLabel}
+                        </Text>
+                      ) : null
+                    }
+                  >
+                    {!smallMobile && "Amount"}
+                  </Button>
+                </Indicator>
+              </Menu.Target>
+              <Menu.Dropdown>
+                <Menu.Label>Filter by amount</Menu.Label>
+                <Menu.Item
+                  onClick={() => {
+                    onDateChange("All");
+                    setDateRange([null, null]);
+                  }}
+                >
+                  Show all
+                </Menu.Item>
+                <Menu.Divider />
+                Slider components
+              </Menu.Dropdown>
+            </Menu>
+
+            {/* Amount */}
+            <Menu shadow="md" width={170} radius="md" position="bottom-start">
+              <Menu.Target>
+                <Indicator
+                  disabled={!isDateFilterActive}
+                  color="lime"
+                  position="top-end"
+                  size={12}
+                  offset={7}
+                >
+                  <Button
+                    size={isMobile ? "sm" : "md"}
+                    variant="default"
+                    pr={smallMobile ? 0 : "md"}
+                    leftSection={<UserMultiple02Icon size={16} />}
+                    rightSection={
+                      dateFilterLabel && !smallMobile ? (
+                        <Text style={{ whiteSpace: "nowrap" }} size="sm">
+                          {dateFilterLabel}
+                        </Text>
+                      ) : null
+                    }
+                  >
+                    {!smallMobile && "Contacts"}
+                  </Button>
+                </Indicator>
+              </Menu.Target>
+              <Menu.Dropdown>
+                <Menu.Label>Filter by contact</Menu.Label>
+                <Menu.Item
+                  onClick={() => {
+                    onDateChange("All");
+                    setDateRange([null, null]);
+                  }}
+                >
+                  Show all
+                </Menu.Item>
+                <Menu.Divider />
+                Contacts list
+              </Menu.Dropdown>
+            </Menu>
+          </Group>
+
+          <Group wrap="nowrap" gap="sm" pr="sm">
             {/* Sort */}
             <Menu shadow="md" width={180} radius="md" position="bottom-end">
               <Menu.Target>
