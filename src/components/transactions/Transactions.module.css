@@ -1,26 +1,23 @@
 .transactionButton {
-  padding: var(--mantine-spacing-md);
+  padding: var(--mantine-spacing-md) var(--mantine-spacing-lg);
   width: 100%;
-  border-radius: var(--mantine-radius-lg);
-  border: 1px solid
+  border-bottom: 1px solid
     light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
   background-color: light-dark(
     var(--mantine-color-white),
-    var(--mantine-color-dark-6)
+    var(--mantine-color-dark-7)
   );
-  box-shadow: 0 0 0 0 transparent;
   transition: all 200ms ease-in-out;
 }
 
 .transactionButton:hover {
-  border-color: light-dark(
-    var(--mantine-color-lime-5),
-    var(--mantine-color-lime-7)
+  background-color: light-dark(
+    var(--mantine-color-gray-0),
+    var(--mantine-color-dark-6)
   );
-  box-shadow: var(--mantine-shadow-xs);
 }
 
-.transactionButton:active {
-  transform: scale(0.995);
-  box-shadow: 0 0 0 0 transparent;
+.transactionStack {
+  border-top: 1px solid
+    light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
 }

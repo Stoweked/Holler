@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { Button, Center, Space, Stack, Text, Title } from "@mantine/core";
+import { Box, Button, Center, Space, Stack, Text, Title } from "@mantine/core";
 import { useViewportSize } from "@mantine/hooks";
 import TransactionFilters from "./TransactionFilters";
 import TransactionItem from "./TransactionItem"; // Import the new item component
 import { DateFilter, SortOption, TransactionFilter } from "@/types/transaction";
 import { mockTransactions } from "../mockData/mockTransactions";
 import { Search01Icon } from "hugeicons-react";
+import classes from "./Transactions.module.css";
 
 export default function TransactionsTable() {
   const { width } = useViewportSize();
@@ -49,12 +50,14 @@ export default function TransactionsTable() {
   };
 
   return (
-    <Stack p={isMobile ? "md" : "xl"}>
-      <Stack gap="lg">
-        <TransactionFilters
-          activeFilter={activeFilter}
-          onFilterChange={setActiveFilter}
-        />
+    <Stack>
+      <Stack gap={0}>
+        <Box p="md">
+          <TransactionFilters
+            activeFilter={activeFilter}
+            onFilterChange={setActiveFilter}
+          />
+        </Box>
 
         {/* Display a message if no transactions match the filter */}
         {processedTransactions.length === 0 ? (
@@ -82,7 +85,7 @@ export default function TransactionsTable() {
             </Stack>
           </Center>
         ) : (
-          <Stack align="center">
+          <Stack align="center" gap={0} className={classes.transactionStack}>
             {processedTransactions.map((transaction) => (
               <TransactionItem key={transaction.id} transaction={transaction} />
             ))}
