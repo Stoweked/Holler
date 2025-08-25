@@ -91,15 +91,13 @@ export default function TransactionsTable() {
     <>
       <Stack>
         <Stack gap={0}>
-          <Box p="md">
-            <TransactionFilters
-              activeFilter={activeFilter}
-              onFilterChange={setActiveFilter}
-              onSortChange={setSortOption}
-              onDateChange={setDateFilter}
-              activeDateFilter={dateFilter}
-            />
-          </Box>
+          <TransactionFilters
+            activeFilter={activeFilter}
+            onFilterChange={setActiveFilter}
+            onSortChange={setSortOption}
+            onDateChange={setDateFilter}
+            activeDateFilter={dateFilter}
+          />
 
           {processedTransactions.length === 0 ? (
             <Center>
@@ -115,10 +113,9 @@ export default function TransactionsTable() {
                 </Stack>
 
                 <Button
-                  size="lg"
+                  size="md"
                   radius="xl"
                   variant="default"
-                  fullWidth
                   onClick={resetFilters}
                 >
                   Reset all filters
