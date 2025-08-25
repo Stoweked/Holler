@@ -7,6 +7,7 @@ import {
   Indicator,
   Menu,
   Modal,
+  Pill,
   ScrollArea,
   Stack,
   Text,
@@ -15,7 +16,7 @@ import { useDisclosure, useViewportSize } from "@mantine/hooks";
 import {
   ArrowLeftRightIcon,
   Calendar02Icon,
-  Money01Icon,
+  CoinsDollarIcon,
   Sorting01Icon,
   UserMultiple02Icon,
 } from "hugeicons-react";
@@ -147,229 +148,241 @@ export default function TransactionFilters({
   return (
     <>
       <ScrollArea type="never" className={classes.filterHeader}>
-        <Group wrap="nowrap" justify="space-between" gap="sm" pl="sm" py="sm">
-          <Group wrap="nowrap">
-            {mainFilters}
-            {/* Dates */}
-            <Menu shadow="md" width={170} radius="md" position="bottom-start">
-              <Menu.Target>
-                <Indicator
-                  disabled={!isDateFilterActive}
-                  color="lime"
-                  position="top-end"
-                  size={12}
-                  offset={7}
-                >
-                  <Button
-                    size={isMobile ? "sm" : "md"}
-                    variant="default"
-                    pr={smallMobile ? 0 : "md"}
-                    leftSection={<Calendar02Icon size={16} />}
-                    rightSection={
-                      dateFilterLabel && !smallMobile ? (
-                        <Text style={{ whiteSpace: "nowrap" }} size="sm">
-                          {dateFilterLabel}
-                        </Text>
-                      ) : null
-                    }
+        <Stack gap={0}>
+          <Group wrap="nowrap" justify="space-between" gap="sm" pl="sm" pt="sm">
+            <Group wrap="nowrap">
+              {mainFilters}
+              {/* Dates */}
+              <Menu shadow="md" width={170} radius="md" position="bottom-start">
+                <Menu.Target>
+                  <Indicator
+                    disabled={!isDateFilterActive}
+                    color="lime"
+                    position="top-end"
+                    size={12}
+                    offset={7}
                   >
-                    {!smallMobile && "Dates"}
-                  </Button>
-                </Indicator>
-              </Menu.Target>
-              <Menu.Dropdown>
-                <Menu.Label>Filter by date</Menu.Label>
-                <Menu.Item
-                  onClick={() => {
-                    onDateChange("All");
-                    setDateRange([null, null]);
-                  }}
-                >
-                  Show all
-                </Menu.Item>
-                <Menu.Divider />
-                <Menu.Item
-                  onClick={() => {
-                    onDateChange("Today");
-                    setDateRange([null, null]);
-                  }}
-                >
-                  <Group gap="xs">
-                    Today
-                    {activeDateFilter === "Today" && (
-                      <Badge variant="light" size="sm">
-                        Active
-                      </Badge>
-                    )}
-                  </Group>
-                </Menu.Item>
-                <Menu.Item
-                  onClick={() => {
-                    onDateChange("This Week");
-                    setDateRange([null, null]);
-                  }}
-                >
-                  <Group gap="xs">
-                    This week
-                    {activeDateFilter === "This Week" && (
-                      <Badge variant="light" size="sm">
-                        Active
-                      </Badge>
-                    )}
-                  </Group>
-                </Menu.Item>
-                <Menu.Item
-                  onClick={() => {
-                    onDateChange("This Month");
-                    setDateRange([null, null]);
-                  }}
-                >
-                  <Group gap="xs">
-                    This month
-                    {activeDateFilter === "This Month" && (
-                      <Badge variant="light" size="sm">
-                        Active
-                      </Badge>
-                    )}
-                  </Group>
-                </Menu.Item>
-                <Menu.Divider />
-                <Menu.Item onClick={openDatePicker}>
-                  <Stack gap={4}>
+                    <Button
+                      size={isMobile ? "sm" : "md"}
+                      variant="default"
+                      pr={smallMobile ? 0 : "md"}
+                      leftSection={<Calendar02Icon size={16} />}
+                      rightSection={
+                        dateFilterLabel && !smallMobile ? (
+                          <Text style={{ whiteSpace: "nowrap" }} size="sm">
+                            {dateFilterLabel}
+                          </Text>
+                        ) : null
+                      }
+                    >
+                      {!smallMobile && "Dates"}
+                    </Button>
+                  </Indicator>
+                </Menu.Target>
+                <Menu.Dropdown>
+                  <Menu.Label>Filter by date</Menu.Label>
+                  <Menu.Item
+                    onClick={() => {
+                      onDateChange("All");
+                      setDateRange([null, null]);
+                    }}
+                  >
+                    Show all
+                  </Menu.Item>
+                  <Menu.Divider />
+                  <Menu.Item
+                    onClick={() => {
+                      onDateChange("Today");
+                      setDateRange([null, null]);
+                    }}
+                  >
                     <Group gap="xs">
-                      Custom
-                      {Array.isArray(activeDateFilter) && (
+                      Today
+                      {activeDateFilter === "Today" && (
                         <Badge variant="light" size="sm">
                           Active
                         </Badge>
                       )}
                     </Group>
-                    {Array.isArray(activeDateFilter) && dateFilterLabel && (
-                      <Text size="sm" c="dimmed">
-                        {dateFilterLabel}
-                      </Text>
-                    )}
-                  </Stack>
-                </Menu.Item>
-              </Menu.Dropdown>
-            </Menu>
+                  </Menu.Item>
+                  <Menu.Item
+                    onClick={() => {
+                      onDateChange("This Week");
+                      setDateRange([null, null]);
+                    }}
+                  >
+                    <Group gap="xs">
+                      This week
+                      {activeDateFilter === "This Week" && (
+                        <Badge variant="light" size="sm">
+                          Active
+                        </Badge>
+                      )}
+                    </Group>
+                  </Menu.Item>
+                  <Menu.Item
+                    onClick={() => {
+                      onDateChange("This Month");
+                      setDateRange([null, null]);
+                    }}
+                  >
+                    <Group gap="xs">
+                      This month
+                      {activeDateFilter === "This Month" && (
+                        <Badge variant="light" size="sm">
+                          Active
+                        </Badge>
+                      )}
+                    </Group>
+                  </Menu.Item>
+                  <Menu.Divider />
+                  <Menu.Item onClick={openDatePicker}>
+                    <Stack gap={4}>
+                      <Group gap="xs">
+                        Custom
+                        {Array.isArray(activeDateFilter) && (
+                          <Badge variant="light" size="sm">
+                            Active
+                          </Badge>
+                        )}
+                      </Group>
+                      {Array.isArray(activeDateFilter) && dateFilterLabel && (
+                        <Text size="sm" c="dimmed">
+                          {dateFilterLabel}
+                        </Text>
+                      )}
+                    </Stack>
+                  </Menu.Item>
+                </Menu.Dropdown>
+              </Menu>
 
-            {/* Amount */}
-            <Menu shadow="md" width={170} radius="md" position="bottom-start">
-              <Menu.Target>
-                <Indicator
-                  disabled={!isDateFilterActive}
-                  color="lime"
-                  position="top-end"
-                  size={12}
-                  offset={7}
-                >
+              {/* Amount */}
+              <Menu shadow="md" width={170} radius="md" position="bottom-start">
+                <Menu.Target>
+                  <Indicator
+                    disabled={!isDateFilterActive}
+                    color="lime"
+                    position="top-end"
+                    size={12}
+                    offset={7}
+                  >
+                    <Button
+                      size={isMobile ? "sm" : "md"}
+                      variant="default"
+                      pr={smallMobile ? 0 : "md"}
+                      leftSection={<CoinsDollarIcon size={16} />}
+                      rightSection={
+                        dateFilterLabel && !smallMobile ? (
+                          <Text style={{ whiteSpace: "nowrap" }} size="sm">
+                            {dateFilterLabel}
+                          </Text>
+                        ) : null
+                      }
+                    >
+                      {!smallMobile && "Amount"}
+                    </Button>
+                  </Indicator>
+                </Menu.Target>
+                <Menu.Dropdown>
+                  <Menu.Label>Filter by amount</Menu.Label>
+                  <Menu.Item
+                    onClick={() => {
+                      onDateChange("All");
+                      setDateRange([null, null]);
+                    }}
+                  >
+                    Show all
+                  </Menu.Item>
+                  <Menu.Divider />
+                  Slider components
+                </Menu.Dropdown>
+              </Menu>
+
+              {/* Amount */}
+              <Menu shadow="md" width={170} radius="md" position="bottom-start">
+                <Menu.Target>
+                  <Indicator
+                    disabled={!isDateFilterActive}
+                    color="lime"
+                    position="top-end"
+                    size={12}
+                    offset={7}
+                  >
+                    <Button
+                      size={isMobile ? "sm" : "md"}
+                      variant="default"
+                      pr={smallMobile ? 0 : "md"}
+                      leftSection={<UserMultiple02Icon size={16} />}
+                      rightSection={
+                        dateFilterLabel && !smallMobile ? (
+                          <Text style={{ whiteSpace: "nowrap" }} size="sm">
+                            {dateFilterLabel}
+                          </Text>
+                        ) : null
+                      }
+                    >
+                      {!smallMobile && "Contacts"}
+                    </Button>
+                  </Indicator>
+                </Menu.Target>
+                <Menu.Dropdown>
+                  <Menu.Label>Filter by contact</Menu.Label>
+                  <Menu.Item
+                    onClick={() => {
+                      onDateChange("All");
+                      setDateRange([null, null]);
+                    }}
+                  >
+                    Show all
+                  </Menu.Item>
+                  <Menu.Divider />
+                  Contacts list
+                </Menu.Dropdown>
+              </Menu>
+            </Group>
+
+            <Group wrap="nowrap" gap="sm" pr="sm">
+              {/* Sort */}
+              <Menu shadow="md" width={180} radius="md" position="bottom-end">
+                <Menu.Target>
                   <Button
                     size={isMobile ? "sm" : "md"}
                     variant="default"
-                    pr={smallMobile ? 0 : "md"}
-                    leftSection={<Money01Icon size={16} />}
-                    rightSection={
-                      dateFilterLabel && !smallMobile ? (
-                        <Text style={{ whiteSpace: "nowrap" }} size="sm">
-                          {dateFilterLabel}
-                        </Text>
-                      ) : null
-                    }
+                    pl={smallMobile ? 0 : "md"}
+                    rightSection={<Sorting01Icon size={16} />}
                   >
-                    {!smallMobile && "Amount"}
+                    {!smallMobile && "Sort"}
                   </Button>
-                </Indicator>
-              </Menu.Target>
-              <Menu.Dropdown>
-                <Menu.Label>Filter by amount</Menu.Label>
-                <Menu.Item
-                  onClick={() => {
-                    onDateChange("All");
-                    setDateRange([null, null]);
-                  }}
-                >
-                  Show all
-                </Menu.Item>
-                <Menu.Divider />
-                Slider components
-              </Menu.Dropdown>
-            </Menu>
-
-            {/* Amount */}
-            <Menu shadow="md" width={170} radius="md" position="bottom-start">
-              <Menu.Target>
-                <Indicator
-                  disabled={!isDateFilterActive}
-                  color="lime"
-                  position="top-end"
-                  size={12}
-                  offset={7}
-                >
-                  <Button
-                    size={isMobile ? "sm" : "md"}
-                    variant="default"
-                    pr={smallMobile ? 0 : "md"}
-                    leftSection={<UserMultiple02Icon size={16} />}
-                    rightSection={
-                      dateFilterLabel && !smallMobile ? (
-                        <Text style={{ whiteSpace: "nowrap" }} size="sm">
-                          {dateFilterLabel}
-                        </Text>
-                      ) : null
-                    }
+                </Menu.Target>
+                <Menu.Dropdown>
+                  <Menu.Label>Sort by</Menu.Label>
+                  <Menu.Item onClick={() => onSortChange("Newest first")}>
+                    Newest first
+                  </Menu.Item>
+                  <Menu.Item onClick={() => onSortChange("Oldest first")}>
+                    Oldest first
+                  </Menu.Item>
+                  <Menu.Item
+                    onClick={() => onSortChange("Amount (High to Low)")}
                   >
-                    {!smallMobile && "Contacts"}
-                  </Button>
-                </Indicator>
-              </Menu.Target>
-              <Menu.Dropdown>
-                <Menu.Label>Filter by contact</Menu.Label>
-                <Menu.Item
-                  onClick={() => {
-                    onDateChange("All");
-                    setDateRange([null, null]);
-                  }}
-                >
-                  Show all
-                </Menu.Item>
-                <Menu.Divider />
-                Contacts list
-              </Menu.Dropdown>
-            </Menu>
+                    Amount (High to Low)
+                  </Menu.Item>
+                  <Menu.Item
+                    onClick={() => onSortChange("Amount (Low to High)")}
+                  >
+                    Amount (Low to High)
+                  </Menu.Item>
+                </Menu.Dropdown>
+              </Menu>
+            </Group>
           </Group>
 
-          <Group wrap="nowrap" gap="sm" pr="sm">
-            {/* Sort */}
-            <Menu shadow="md" width={180} radius="md" position="bottom-end">
-              <Menu.Target>
-                <Button
-                  size={isMobile ? "sm" : "md"}
-                  variant="default"
-                  pl={smallMobile ? 0 : "md"}
-                  rightSection={<Sorting01Icon size={16} />}
-                >
-                  {!smallMobile && "Sort"}
-                </Button>
-              </Menu.Target>
-              <Menu.Dropdown>
-                <Menu.Label>Sort by</Menu.Label>
-                <Menu.Item onClick={() => onSortChange("Newest first")}>
-                  Newest first
-                </Menu.Item>
-                <Menu.Item onClick={() => onSortChange("Oldest first")}>
-                  Oldest first
-                </Menu.Item>
-                <Menu.Item onClick={() => onSortChange("Amount (High to Low)")}>
-                  Amount (High to Low)
-                </Menu.Item>
-                <Menu.Item onClick={() => onSortChange("Amount (Low to High)")}>
-                  Amount (Low to High)
-                </Menu.Item>
-              </Menu.Dropdown>
-            </Menu>
+          <Group p="md">
+            <Pill withRemoveButton>Sent</Pill>
+            <Pill withRemoveButton>Jonah Stowe</Pill>
+            <Pill withRemoveButton>$200-$400</Pill>
           </Group>
-        </Group>
+        </Stack>
       </ScrollArea>
 
       <Modal
