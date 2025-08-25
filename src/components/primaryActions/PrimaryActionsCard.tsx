@@ -33,7 +33,7 @@ export default function PrimaryActionsCard() {
             <Text size="lg">Welcome, Jwonahh</Text>
             <Stack align="center" gap={0}>
               <Title order={1} size={48}>
-                $0.00
+                $3,260.00
               </Title>
               <Text size="xs" c="dimmed">
                 Current balance

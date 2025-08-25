@@ -13,13 +13,19 @@ import { mockTransactions } from "../mockData/mockTransactions";
 import { Search01Icon } from "hugeicons-react";
 import classes from "./Transactions.module.css";
 import TransactionDetailsDrawer from "./TransactionDetailsDrawer";
+import dayjs from "dayjs";
+import isBetween from "dayjs/plugin/isBetween";
+
+dayjs.extend(isBetween);
 
 export default function TransactionsTable() {
   const { width } = useViewportSize();
   const isMobile = width < 768;
   const [activeFilter, setActiveFilter] = useState<TransactionFilter>("All");
   const [sortOption, setSortOption] = useState<SortOption>("Newest first");
-  const [dateFilter, setDateFilter] = useState<DateFilter>("All");
+  const [dateFilter, setDateFilter] = useState<DateFilter | [Date, Date]>(
+    "All"
+  );
   const [drawerOpened, { open: openDrawer, close: closeDrawer }] =
     useDisclosure(false);
   const [selectedTransaction, setSelectedTransaction] =
@@ -30,21 +36,38 @@ export default function TransactionsTable() {
     openDrawer();
   };
 
-  // Filter the transactions based on the active filter
   const processedTransactions = mockTransactions
     .filter((transaction) => {
-      // 1. Filter by type/status (your existing logic)
       if (activeFilter === "All") return true;
       if (activeFilter === "Pending") return transaction.status === "Pending";
       return transaction.type === activeFilter;
     })
     .filter((transaction) => {
-      // 2. Filter by date (logic would go here)
-      // Example: if (dateFilter === 'Today') { ... }
-      return true; // Placeholder
+      const transactionDate = dayjs(transaction.date);
+      if (dateFilter === "All") return true;
+      if (dateFilter === "Today") {
+        return transactionDate.isSame(dayjs(), "day");
+      }
+      if (dateFilter === "This Week") {
+        return transactionDate.isBetween(
+          dayjs().startOf("week"),
+          dayjs().endOf("week")
+        );
+      }
+      if (dateFilter === "This Month") {
+        return transactionDate.isSame(dayjs(), "month");
+      }
+      if (Array.isArray(dateFilter)) {
+        return transactionDate.isBetween(
+          dateFilter[0],
+          dateFilter[1],
+          "day",
+          "[]"
+        );
+      }
+      return true;
     })
     .sort((a, b) => {
-      // 3. Sort the results
       switch (sortOption) {
         case "Oldest first":
           return new Date(a.date).getTime() - new Date(b.date).getTime();
@@ -72,10 +95,12 @@ export default function TransactionsTable() {
             <TransactionFilters
               activeFilter={activeFilter}
               onFilterChange={setActiveFilter}
+              onSortChange={setSortOption}
+              onDateChange={setDateFilter}
+              activeDateFilter={dateFilter}
             />
           </Box>
 
-          {/* Display a message if no transactions match the filter */}
           {processedTransactions.length === 0 ? (
             <Center>
               <Stack align="center" py={60} gap="lg">
@@ -109,7 +134,7 @@ export default function TransactionsTable() {
                   onClick={() => handleTransactionClick(transaction)}
                 />
               ))}
-              {activeFilter !== "All" ? (
+              {activeFilter !== "All" || dateFilter !== "All" ? (
                 <Button
                   mt="lg"
                   size="md"
