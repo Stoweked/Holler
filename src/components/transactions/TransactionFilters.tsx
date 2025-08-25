@@ -177,7 +177,7 @@ export default function TransactionFilters({
                     leftSection={<Calendar02Icon size={16} />}
                     rightSection={
                       dateFilterLabel && !smallMobile ? (
-                        <Text style={{ whiteSpace: "nowrap" }}>
+                        <Text style={{ whiteSpace: "nowrap" }} size="sm">
                           {dateFilterLabel}
                         </Text>
                       ) : null
