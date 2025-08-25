@@ -4,6 +4,7 @@ import {
   CheckIcon,
   Drawer,
   Group,
+  Space,
   Text,
   Tooltip,
 } from "@mantine/core";
@@ -192,6 +193,7 @@ export default function PaymentDrawer({
           actionType={actionType}
         />
       )}
+      <Space h={100} />
     </Drawer>
   );
 }

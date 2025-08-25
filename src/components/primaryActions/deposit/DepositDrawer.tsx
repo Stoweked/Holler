@@ -4,6 +4,7 @@ import {
   CheckIcon,
   Drawer,
   Group,
+  Space,
   Text,
   Tooltip,
 } from "@mantine/core";
@@ -130,6 +131,7 @@ export default function DepositDrawer({ opened, close }: DepositDrawerProps) {
           onConfirm={handleConfirmDeposit}
         />
       )}
+      <Space h={100} />
     </Drawer>
   );
 }
