@@ -109,23 +109,15 @@ export default function TransactionFilters({
   const mainFilters = (
     <Menu shadow="md" width={170} radius="md" position="bottom-start">
       <Menu.Target>
-        <Indicator
-          disabled={!isFilterActive}
-          color="lime"
-          position="top-end"
-          size={12}
-          offset={7}
+        <Button
+          variant="default"
+          size="sm"
+          leftSection={<ArrowLeftRightIcon size={16} />}
+          style={{ flexShrink: 0 }}
+          pr={smallMobile ? 0 : "md"}
         >
-          <Button
-            variant="default"
-            size={isMobile ? "sm" : "md"}
-            leftSection={<ArrowLeftRightIcon size={16} />}
-            style={{ flexShrink: 0 }}
-            pr={smallMobile ? 0 : "md"}
-          >
-            {!smallMobile && "Status"}
-          </Button>
-        </Indicator>
+          {!smallMobile && "Status"}
+        </Button>
       </Menu.Target>
       <Menu.Dropdown>
         <Menu.Label>Filter by status</Menu.Label>
@@ -150,34 +142,26 @@ export default function TransactionFilters({
       <ScrollArea type="never" className={classes.filterHeader}>
         <Stack gap={0}>
           <Group wrap="nowrap" justify="space-between" gap="sm" pl="sm" pt="sm">
-            <Group wrap="nowrap">
+            <Group wrap="nowrap" gap="sm">
               {mainFilters}
               {/* Dates */}
               <Menu shadow="md" width={170} radius="md" position="bottom-start">
                 <Menu.Target>
-                  <Indicator
-                    disabled={!isDateFilterActive}
-                    color="lime"
-                    position="top-end"
-                    size={12}
-                    offset={7}
+                  <Button
+                    size="sm"
+                    variant="default"
+                    pr={smallMobile ? 0 : "md"}
+                    leftSection={<Calendar02Icon size={16} />}
+                    rightSection={
+                      dateFilterLabel && !smallMobile ? (
+                        <Text style={{ whiteSpace: "nowrap" }} size="sm">
+                          {dateFilterLabel}
+                        </Text>
+                      ) : null
+                    }
                   >
-                    <Button
-                      size={isMobile ? "sm" : "md"}
-                      variant="default"
-                      pr={smallMobile ? 0 : "md"}
-                      leftSection={<Calendar02Icon size={16} />}
-                      rightSection={
-                        dateFilterLabel && !smallMobile ? (
-                          <Text style={{ whiteSpace: "nowrap" }} size="sm">
-                            {dateFilterLabel}
-                          </Text>
-                        ) : null
-                      }
-                    >
-                      {!smallMobile && "Dates"}
-                    </Button>
-                  </Indicator>
+                    {!smallMobile && "Dates"}
+                  </Button>
                 </Menu.Target>
                 <Menu.Dropdown>
                   <Menu.Label>Filter by date</Menu.Label>
@@ -259,29 +243,21 @@ export default function TransactionFilters({
               {/* Amount */}
               <Menu shadow="md" width={170} radius="md" position="bottom-start">
                 <Menu.Target>
-                  <Indicator
-                    disabled={!isDateFilterActive}
-                    color="lime"
-                    position="top-end"
-                    size={12}
-                    offset={7}
+                  <Button
+                    size="sm"
+                    variant="default"
+                    pr={smallMobile ? 0 : "md"}
+                    leftSection={<CoinsDollarIcon size={16} />}
+                    rightSection={
+                      dateFilterLabel && !smallMobile ? (
+                        <Text style={{ whiteSpace: "nowrap" }} size="sm">
+                          {dateFilterLabel}
+                        </Text>
+                      ) : null
+                    }
                   >
-                    <Button
-                      size={isMobile ? "sm" : "md"}
-                      variant="default"
-                      pr={smallMobile ? 0 : "md"}
-                      leftSection={<CoinsDollarIcon size={16} />}
-                      rightSection={
-                        dateFilterLabel && !smallMobile ? (
-                          <Text style={{ whiteSpace: "nowrap" }} size="sm">
-                            {dateFilterLabel}
-                          </Text>
-                        ) : null
-                      }
-                    >
-                      {!smallMobile && "Amount"}
-                    </Button>
-                  </Indicator>
+                    {!smallMobile && "Amount"}
+                  </Button>
                 </Menu.Target>
                 <Menu.Dropdown>
                   <Menu.Label>Filter by amount</Menu.Label>
@@ -298,32 +274,24 @@ export default function TransactionFilters({
                 </Menu.Dropdown>
               </Menu>
 
-              {/* Amount */}
+              {/* Contacts */}
               <Menu shadow="md" width={170} radius="md" position="bottom-start">
                 <Menu.Target>
-                  <Indicator
-                    disabled={!isDateFilterActive}
-                    color="lime"
-                    position="top-end"
-                    size={12}
-                    offset={7}
+                  <Button
+                    size="sm"
+                    variant="default"
+                    pr={smallMobile ? 0 : "md"}
+                    leftSection={<UserMultiple02Icon size={16} />}
+                    rightSection={
+                      dateFilterLabel && !smallMobile ? (
+                        <Text style={{ whiteSpace: "nowrap" }} size="sm">
+                          {dateFilterLabel}
+                        </Text>
+                      ) : null
+                    }
                   >
-                    <Button
-                      size={isMobile ? "sm" : "md"}
-                      variant="default"
-                      pr={smallMobile ? 0 : "md"}
-                      leftSection={<UserMultiple02Icon size={16} />}
-                      rightSection={
-                        dateFilterLabel && !smallMobile ? (
-                          <Text style={{ whiteSpace: "nowrap" }} size="sm">
-                            {dateFilterLabel}
-                          </Text>
-                        ) : null
-                      }
-                    >
-                      {!smallMobile && "Contacts"}
-                    </Button>
-                  </Indicator>
+                    {!smallMobile && "Contacts"}
+                  </Button>
                 </Menu.Target>
                 <Menu.Dropdown>
                   <Menu.Label>Filter by contact</Menu.Label>
@@ -346,7 +314,7 @@ export default function TransactionFilters({
               <Menu shadow="md" width={180} radius="md" position="bottom-end">
                 <Menu.Target>
                   <Button
-                    size={isMobile ? "sm" : "md"}
+                    size="sm"
                     variant="default"
                     pl={smallMobile ? 0 : "md"}
                     rightSection={<Sorting01Icon size={16} />}
@@ -377,7 +345,7 @@ export default function TransactionFilters({
             </Group>
           </Group>
 
-          <Group p="md">
+          <Group p="sm" gap="sm">
             <Pill className={classes.filterPill} withRemoveButton>
               Sent
             </Pill>
