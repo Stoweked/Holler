@@ -12,9 +12,13 @@ import classes from "./Transactions.module.css";
 
 interface TransactionItemProps {
   transaction: Transaction;
+  onClick: () => void;
 }
 
-export default function TransactionItem({ transaction }: TransactionItemProps) {
+export default function TransactionItem({
+  transaction,
+  onClick,
+}: TransactionItemProps) {
   const { amount, date, status, type, sender, receiver, avatar } = transaction;
 
   // --- Dynamic Values for Display ---
@@ -42,7 +46,7 @@ export default function TransactionItem({ transaction }: TransactionItemProps) {
   });
 
   return (
-    <UnstyledButton className={classes.transactionButton}>
+    <UnstyledButton className={classes.transactionButton} onClick={onClick}>
       <Group justify="space-between">
         <Stack gap={4}>
           <Badge variant="default" style={{ cursor: "pointer" }}>

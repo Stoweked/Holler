@@ -1,12 +1,18 @@
 import { useState } from "react";
 import { Box, Button, Center, Space, Stack, Text, Title } from "@mantine/core";
-import { useViewportSize } from "@mantine/hooks";
+import { useDisclosure, useViewportSize } from "@mantine/hooks";
 import TransactionFilters from "./TransactionFilters";
 import TransactionItem from "./TransactionItem"; // Import the new item component
-import { DateFilter, SortOption, TransactionFilter } from "@/types/transaction";
+import {
+  DateFilter,
+  SortOption,
+  Transaction,
+  TransactionFilter,
+} from "@/types/transaction";
 import { mockTransactions } from "../mockData/mockTransactions";
 import { Search01Icon } from "hugeicons-react";
 import classes from "./Transactions.module.css";
+import TransactionDetailsDrawer from "./TransactionDetailsDrawer";
 
 export default function TransactionsTable() {
   const { width } = useViewportSize();
@@ -14,6 +20,15 @@ export default function TransactionsTable() {
   const [activeFilter, setActiveFilter] = useState<TransactionFilter>("All");
   const [sortOption, setSortOption] = useState<SortOption>("Newest first");
   const [dateFilter, setDateFilter] = useState<DateFilter>("All");
+  const [drawerOpened, { open: openDrawer, close: closeDrawer }] =
+    useDisclosure(false);
+  const [selectedTransaction, setSelectedTransaction] =
+    useState<Transaction | null>(null);
+
+  const handleTransactionClick = (transaction: Transaction) => {
+    setSelectedTransaction(transaction);
+    openDrawer();
+  };
 
   // Filter the transactions based on the active filter
   const processedTransactions = mockTransactions
@@ -50,61 +65,73 @@ export default function TransactionsTable() {
   };
 
   return (
-    <Stack>
-      <Stack gap={0}>
-        <Box p="md">
-          <TransactionFilters
-            activeFilter={activeFilter}
-            onFilterChange={setActiveFilter}
-          />
-        </Box>
+    <>
+      <Stack>
+        <Stack gap={0}>
+          <Box p="md">
+            <TransactionFilters
+              activeFilter={activeFilter}
+              onFilterChange={setActiveFilter}
+            />
+          </Box>
 
-        {/* Display a message if no transactions match the filter */}
-        {processedTransactions.length === 0 ? (
-          <Center>
-            <Stack align="center" py={60} gap="lg">
-              <Search01Icon size={40} color="grey" />
-              <Stack gap={0} align="center">
-                <Title order={4} ta="center">
-                  No transactions found
-                </Title>
-                <Text c="dimmed" ta="center">
-                  Try adjusting your transaction filters.
-                </Text>
+          {/* Display a message if no transactions match the filter */}
+          {processedTransactions.length === 0 ? (
+            <Center>
+              <Stack align="center" py={60} gap="lg">
+                <Search01Icon size={40} color="grey" />
+                <Stack gap={0} align="center">
+                  <Title order={4} ta="center">
+                    No transactions found
+                  </Title>
+                  <Text c="dimmed" ta="center">
+                    Try adjusting your transaction filters.
+                  </Text>
+                </Stack>
+
+                <Button
+                  size="lg"
+                  radius="xl"
+                  variant="default"
+                  fullWidth
+                  onClick={resetFilters}
+                >
+                  Reset all filters
+                </Button>
               </Stack>
-
-              <Button
-                size="lg"
-                radius="xl"
-                variant="default"
-                fullWidth
-                onClick={resetFilters}
-              >
-                Reset all filters
-              </Button>
+            </Center>
+          ) : (
+            <Stack align="center" gap={0} className={classes.transactionStack}>
+              {processedTransactions.map((transaction) => (
+                <TransactionItem
+                  key={transaction.id}
+                  transaction={transaction}
+                  onClick={() => handleTransactionClick(transaction)}
+                />
+              ))}
+              {activeFilter !== "All" ? (
+                <Button
+                  mt="lg"
+                  size="md"
+                  radius="xl"
+                  variant="default"
+                  onClick={resetFilters}
+                >
+                  Show all transactions
+                </Button>
+              ) : null}
             </Stack>
-          </Center>
-        ) : (
-          <Stack align="center" gap={0} className={classes.transactionStack}>
-            {processedTransactions.map((transaction) => (
-              <TransactionItem key={transaction.id} transaction={transaction} />
-            ))}
-            {activeFilter !== "All" ? (
-              <Button
-                mt="lg"
-                size="md"
-                radius="xl"
-                variant="default"
-                onClick={resetFilters}
-              >
-                Show all transactions
-              </Button>
-            ) : null}
-          </Stack>
-        )}
+          )}
+        </Stack>
+
+        <Space h={100} />
       </Stack>
 
-      <Space h={100} />
-    </Stack>
+      <TransactionDetailsDrawer
+        opened={drawerOpened}
+        close={closeDrawer}
+        transaction={selectedTransaction}
+      />
+    </>
   );
 }
