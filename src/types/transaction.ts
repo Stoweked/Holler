@@ -4,7 +4,9 @@ export type TransactionStatus = "Completed" | "Pending" | "Failed";
 
 export type TransactionType = "Sent" | "Received" | "Deposited" | "Transferred";
 
-export type TransactionFilter = TransactionType | "All" | "Pending";
+export type TransactionStatusFilter = TransactionStatus | "All";
+
+export type TransactionTypeFilter = TransactionType | "All";
 
 export type SortOption =
   | "Newest first"
@@ -12,7 +14,7 @@ export type SortOption =
   | "Amount (High to Low)"
   | "Amount (Low to High)";
 
-export type DateFilter = "All" | "Today" | "This Week" | "This Month";
+export type DateFilter = "All" | "Today" | "This week" | "This month";
 
 export interface Transaction {
   id: string;

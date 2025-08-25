@@ -7,7 +7,8 @@ import {
   DateFilter,
   SortOption,
   Transaction,
-  TransactionFilter,
+  TransactionStatusFilter,
+  TransactionTypeFilter,
 } from "@/types/transaction";
 import { mockTransactions } from "../mockData/mockTransactions";
 import { Search01Icon } from "hugeicons-react";
@@ -20,7 +21,10 @@ dayjs.extend(isBetween);
 export default function TransactionsTable() {
   const { width } = useViewportSize();
   const isMobile = width < 768;
-  const [activeFilter, setActiveFilter] = useState<TransactionFilter>("All");
+  const [activeStatusFilter, setActiveStatusFilter] =
+    useState<TransactionStatusFilter>("All");
+  const [activeTypeFilter, setActiveTypeFilter] =
+    useState<TransactionTypeFilter>("All");
   const [sortOption, setSortOption] = useState<SortOption>("Newest first");
   const [dateFilter, setDateFilter] = useState<DateFilter | [Date, Date]>(
     "All"
@@ -37,9 +41,12 @@ export default function TransactionsTable() {
 
   const processedTransactions = mockTransactions
     .filter((transaction) => {
-      if (activeFilter === "All") return true;
-      if (activeFilter === "Pending") return transaction.status === "Pending";
-      return transaction.type === activeFilter;
+      if (activeStatusFilter === "All") return true;
+      return transaction.status === activeStatusFilter;
+    })
+    .filter((transaction) => {
+      if (activeTypeFilter === "All") return true;
+      return transaction.type === activeTypeFilter;
     })
     .filter((transaction) => {
       const transactionDate = dayjs(transaction.date);
@@ -47,13 +54,13 @@ export default function TransactionsTable() {
       if (dateFilter === "Today") {
         return transactionDate.isSame(dayjs(), "day");
       }
-      if (dateFilter === "This Week") {
+      if (dateFilter === "This week") {
         return transactionDate.isBetween(
           dayjs().startOf("week"),
           dayjs().endOf("week")
         );
       }
-      if (dateFilter === "This Month") {
+      if (dateFilter === "This month") {
         return transactionDate.isSame(dayjs(), "month");
       }
       if (Array.isArray(dateFilter)) {
@@ -81,7 +88,8 @@ export default function TransactionsTable() {
     });
 
   const resetFilters = () => {
-    setActiveFilter("All");
+    setActiveStatusFilter("All");
+    setActiveTypeFilter("All");
     setDateFilter("All");
     setSortOption("Newest first");
   };
@@ -91,11 +99,15 @@ export default function TransactionsTable() {
       <Stack>
         <Stack gap={0}>
           <TransactionFilters
-            activeFilter={activeFilter}
-            onFilterChange={setActiveFilter}
+            activeStatusFilter={activeStatusFilter}
+            onStatusFilterChange={setActiveStatusFilter}
+            activeTypeFilter={activeTypeFilter}
+            onTypeFilterChange={setActiveTypeFilter}
             onSortChange={setSortOption}
             onDateChange={setDateFilter}
             activeDateFilter={dateFilter}
+            activeSortOption={sortOption}
+            resetFilters={resetFilters}
           />
 
           {processedTransactions.length === 0 ? (
@@ -130,7 +142,9 @@ export default function TransactionsTable() {
                   onClick={() => handleTransactionClick(transaction)}
                 />
               ))}
-              {activeFilter !== "All" || dateFilter !== "All" ? (
+              {activeStatusFilter !== "All" ||
+              activeTypeFilter !== "All" ||
+              dateFilter !== "All" ? (
                 <Button
                   mt="lg"
                   size="md"

@@ -1,5 +1,11 @@
-import { TransactionFilter, DateFilter, SortOption } from "@/types/transaction";
 import {
+  TransactionStatusFilter,
+  TransactionTypeFilter,
+  DateFilter,
+  SortOption,
+} from "@/types/transaction";
+import {
+  ActionIcon,
   Badge,
   Button,
   Center,
@@ -9,15 +15,22 @@ import {
   Modal,
   Pill,
   ScrollArea,
+  Space,
   Stack,
   Text,
+  Tooltip,
 } from "@mantine/core";
-import { useDisclosure, useViewportSize } from "@mantine/hooks";
+import { useDisclosure } from "@mantine/hooks";
 import {
   ArrowLeftRightIcon,
   Calendar02Icon,
+  CheckmarkCircle02Icon,
   CoinsDollarIcon,
-  Sorting01Icon,
+  FileExportIcon,
+  MoreVerticalCircle01Icon,
+  SearchRemoveIcon,
+  SortByDown01Icon,
+  SortByUp01Icon,
   UserMultiple02Icon,
 } from "hugeicons-react";
 import { DatePicker } from "@mantine/dates";
@@ -28,35 +41,43 @@ import classes from "./Transactions.module.css";
 
 dayjs.extend(isBetween);
 
-const filters: TransactionFilter[] = [
+const statusFilters: TransactionStatusFilter[] = [
+  "All",
+  "Pending",
+  "Completed",
+  "Failed",
+];
+const typeFilters: TransactionTypeFilter[] = [
   "All",
   "Sent",
-  "Pending",
   "Received",
   "Deposited",
   "Transferred",
 ];
 
 interface TransactionFiltersProps {
-  activeFilter: TransactionFilter;
+  activeStatusFilter: TransactionStatusFilter;
+  activeTypeFilter: TransactionTypeFilter;
   activeDateFilter: DateFilter | [Date, Date];
-  onFilterChange: (filter: TransactionFilter) => void;
+  onStatusFilterChange: (filter: TransactionStatusFilter) => void;
+  onTypeFilterChange: (filter: TransactionTypeFilter) => void;
   onSortChange: (sort: SortOption) => void;
   onDateChange: (date: DateFilter | [Date, Date]) => void;
+  activeSortOption: SortOption;
+  resetFilters: () => void;
 }
 
 export default function TransactionFilters({
-  activeFilter,
+  activeStatusFilter,
+  activeTypeFilter,
   activeDateFilter,
-  onFilterChange,
+  onStatusFilterChange,
+  onTypeFilterChange,
   onSortChange,
   onDateChange,
+  activeSortOption,
+  resetFilters,
 }: TransactionFiltersProps) {
-  const { width } = useViewportSize();
-  const condenseFilters = width < 1390;
-  const isMobile = width < 800;
-  const smallMobile = width < 350;
-
   const [datePickerOpened, { open: openDatePicker, close: closeDatePicker }] =
     useDisclosure(false);
 
@@ -77,12 +98,16 @@ export default function TransactionFilters({
     }
   };
 
-  const isFilterActive = activeFilter !== "All";
+  const isStatusFilterActive = activeStatusFilter !== "All";
+  const isTypeFilterActive = activeTypeFilter !== "All";
   const isDateFilterActive = Array.isArray(activeDateFilter)
     ? activeDateFilter[0] !== null && activeDateFilter[1] !== null
     : activeDateFilter !== "All";
+  const isSortActive = activeSortOption !== "Newest first";
+  const isSortAscending =
+    activeSortOption === "Oldest first" ||
+    activeSortOption === "Amount (Low to High)";
 
-  // Create a readable label for the active date filter
   const getDateFilterLabel = () => {
     if (!isDateFilterActive) {
       return null;
@@ -91,11 +116,11 @@ export default function TransactionFilters({
     if (Array.isArray(activeDateFilter)) {
       const [start, end] = activeDateFilter;
       if (start && end) {
-        const format = "M/D";
+        const format = "MMM D";
         if (dayjs(start).isSame(end, "day")) {
           return dayjs(start).format(format);
         }
-        return `${dayjs(start).format(format)}-${dayjs(end).format(format)}`;
+        return `${dayjs(start).format(format)} - ${dayjs(end).format(format)}`;
       }
     } else if (activeDateFilter !== "All") {
       return activeDateFilter;
@@ -106,62 +131,112 @@ export default function TransactionFilters({
 
   const dateFilterLabel = getDateFilterLabel();
 
-  const mainFilters = (
-    <Menu shadow="md" width={170} radius="md" position="bottom-start">
-      <Menu.Target>
-        <Button
-          variant="default"
-          size="sm"
-          leftSection={<ArrowLeftRightIcon size={16} />}
-          style={{ flexShrink: 0 }}
-          pr={smallMobile ? 0 : "md"}
-        >
-          {!smallMobile && "Status"}
-        </Button>
-      </Menu.Target>
-      <Menu.Dropdown>
-        <Menu.Label>Filter by status</Menu.Label>
-        {filters.map((filter) => (
-          <Menu.Item key={filter} onClick={() => onFilterChange(filter)}>
-            <Group wrap="nowrap" gap="xs">
-              {filter}
-              {activeFilter === filter && (
-                <Badge variant="light" size="sm">
-                  Active
-                </Badge>
-              )}
-            </Group>
-          </Menu.Item>
-        ))}
-      </Menu.Dropdown>
-    </Menu>
-  );
-
   return (
     <>
-      <ScrollArea type="never" className={classes.filterHeader}>
-        <Stack gap={0}>
-          <Group wrap="nowrap" justify="space-between" gap="sm" pl="sm" pt="sm">
+      <Stack gap={0} className={classes.filterHeader}>
+        {/* Filter buttons */}
+        <ScrollArea type="never">
+          <Group wrap="nowrap" justify="space-between" gap="sm" pl="sm" py="sm">
+            {/* Left side */}
             <Group wrap="nowrap" gap="sm">
-              {mainFilters}
+              {/* Type */}
+              <Menu shadow="md" width={170} radius="md" position="bottom-start">
+                <Menu.Target>
+                  <Indicator
+                    disabled={!isTypeFilterActive}
+                    color="lime"
+                    position="top-end"
+                    size={10}
+                    offset={6}
+                  >
+                    <Button
+                      variant="default"
+                      size="sm"
+                      leftSection={<ArrowLeftRightIcon size={16} />}
+                      style={{ flexShrink: 0 }}
+                    >
+                      Type
+                    </Button>
+                  </Indicator>
+                </Menu.Target>
+                <Menu.Dropdown>
+                  <Menu.Label>Filter by type</Menu.Label>
+                  {typeFilters.map((filter) => (
+                    <Menu.Item
+                      key={filter}
+                      onClick={() => onTypeFilterChange(filter)}
+                    >
+                      <Group wrap="nowrap" gap="xs">
+                        {filter}
+                        {activeTypeFilter === filter && (
+                          <Badge variant="light" size="sm">
+                            Active
+                          </Badge>
+                        )}
+                      </Group>
+                    </Menu.Item>
+                  ))}
+                </Menu.Dropdown>
+              </Menu>
+
+              {/* Status */}
+              <Menu shadow="md" width={170} radius="md" position="bottom-start">
+                <Menu.Target>
+                  <Indicator
+                    disabled={!isStatusFilterActive}
+                    color="lime"
+                    position="top-end"
+                    size={10}
+                    offset={6}
+                  >
+                    <Button
+                      variant="default"
+                      size="sm"
+                      leftSection={<CheckmarkCircle02Icon size={16} />}
+                      style={{ flexShrink: 0 }}
+                    >
+                      Status
+                    </Button>
+                  </Indicator>
+                </Menu.Target>
+                <Menu.Dropdown>
+                  <Menu.Label>Filter by status</Menu.Label>
+                  {statusFilters.map((filter) => (
+                    <Menu.Item
+                      key={filter}
+                      onClick={() => onStatusFilterChange(filter)}
+                    >
+                      <Group wrap="nowrap" gap="xs">
+                        {filter}
+                        {activeStatusFilter === filter && (
+                          <Badge variant="light" size="sm">
+                            Active
+                          </Badge>
+                        )}
+                      </Group>
+                    </Menu.Item>
+                  ))}
+                </Menu.Dropdown>
+              </Menu>
+
               {/* Dates */}
               <Menu shadow="md" width={170} radius="md" position="bottom-start">
                 <Menu.Target>
-                  <Button
-                    size="sm"
-                    variant="default"
-                    pr={smallMobile ? 0 : "md"}
-                    leftSection={<Calendar02Icon size={16} />}
-                    rightSection={
-                      dateFilterLabel && !smallMobile ? (
-                        <Text style={{ whiteSpace: "nowrap" }} size="sm">
-                          {dateFilterLabel}
-                        </Text>
-                      ) : null
-                    }
+                  <Indicator
+                    disabled={!isDateFilterActive}
+                    color="lime"
+                    position="top-end"
+                    size={10}
+                    offset={6}
                   >
-                    {!smallMobile && "Dates"}
-                  </Button>
+                    <Button
+                      size="sm"
+                      variant="default"
+                      leftSection={<Calendar02Icon size={16} />}
+                    >
+                      Dates
+                    </Button>
+                  </Indicator>
                 </Menu.Target>
                 <Menu.Dropdown>
                   <Menu.Label>Filter by date</Menu.Label>
@@ -191,13 +266,13 @@ export default function TransactionFilters({
                   </Menu.Item>
                   <Menu.Item
                     onClick={() => {
-                      onDateChange("This Week");
+                      onDateChange("This week");
                       setDateRange([null, null]);
                     }}
                   >
                     <Group gap="xs">
                       This week
-                      {activeDateFilter === "This Week" && (
+                      {activeDateFilter === "This week" && (
                         <Badge variant="light" size="sm">
                           Active
                         </Badge>
@@ -206,13 +281,13 @@ export default function TransactionFilters({
                   </Menu.Item>
                   <Menu.Item
                     onClick={() => {
-                      onDateChange("This Month");
+                      onDateChange("This month");
                       setDateRange([null, null]);
                     }}
                   >
                     <Group gap="xs">
                       This month
-                      {activeDateFilter === "This Month" && (
+                      {activeDateFilter === "This month" && (
                         <Badge variant="light" size="sm">
                           Active
                         </Badge>
@@ -243,32 +318,25 @@ export default function TransactionFilters({
               {/* Amount */}
               <Menu shadow="md" width={170} radius="md" position="bottom-start">
                 <Menu.Target>
-                  <Button
-                    size="sm"
-                    variant="default"
-                    pr={smallMobile ? 0 : "md"}
-                    leftSection={<CoinsDollarIcon size={16} />}
-                    rightSection={
-                      dateFilterLabel && !smallMobile ? (
-                        <Text style={{ whiteSpace: "nowrap" }} size="sm">
-                          {dateFilterLabel}
-                        </Text>
-                      ) : null
-                    }
+                  <Indicator
+                    disabled
+                    color="lime"
+                    position="top-end"
+                    size={10}
+                    offset={6}
                   >
-                    {!smallMobile && "Amount"}
-                  </Button>
+                    <Button
+                      size="sm"
+                      variant="default"
+                      leftSection={<CoinsDollarIcon size={16} />}
+                    >
+                      Amount
+                    </Button>
+                  </Indicator>
                 </Menu.Target>
                 <Menu.Dropdown>
                   <Menu.Label>Filter by amount</Menu.Label>
-                  <Menu.Item
-                    onClick={() => {
-                      onDateChange("All");
-                      setDateRange([null, null]);
-                    }}
-                  >
-                    Show all
-                  </Menu.Item>
+                  <Menu.Item>Show all</Menu.Item>
                   <Menu.Divider />
                   Slider components
                 </Menu.Dropdown>
@@ -277,50 +345,57 @@ export default function TransactionFilters({
               {/* Contacts */}
               <Menu shadow="md" width={170} radius="md" position="bottom-start">
                 <Menu.Target>
-                  <Button
-                    size="sm"
-                    variant="default"
-                    pr={smallMobile ? 0 : "md"}
-                    leftSection={<UserMultiple02Icon size={16} />}
-                    rightSection={
-                      dateFilterLabel && !smallMobile ? (
-                        <Text style={{ whiteSpace: "nowrap" }} size="sm">
-                          {dateFilterLabel}
-                        </Text>
-                      ) : null
-                    }
+                  <Indicator
+                    disabled
+                    color="lime"
+                    position="top-end"
+                    size={10}
+                    offset={6}
                   >
-                    {!smallMobile && "Contacts"}
-                  </Button>
+                    <Button
+                      size="sm"
+                      variant="default"
+                      leftSection={<UserMultiple02Icon size={16} />}
+                    >
+                      Contacts
+                    </Button>
+                  </Indicator>
                 </Menu.Target>
                 <Menu.Dropdown>
                   <Menu.Label>Filter by contact</Menu.Label>
-                  <Menu.Item
-                    onClick={() => {
-                      onDateChange("All");
-                      setDateRange([null, null]);
-                    }}
-                  >
-                    Show all
-                  </Menu.Item>
+                  <Menu.Item>Show all</Menu.Item>
                   <Menu.Divider />
                   Contacts list
                 </Menu.Dropdown>
               </Menu>
             </Group>
 
+            {/* Right side */}
             <Group wrap="nowrap" gap="sm" pr="sm">
               {/* Sort */}
               <Menu shadow="md" width={180} radius="md" position="bottom-end">
                 <Menu.Target>
-                  <Button
-                    size="sm"
-                    variant="default"
-                    pl={smallMobile ? 0 : "md"}
-                    rightSection={<Sorting01Icon size={16} />}
+                  <Indicator
+                    disabled={!isSortActive}
+                    color="lime"
+                    position="top-end"
+                    size={10}
+                    offset={6}
                   >
-                    {!smallMobile && "Sort"}
-                  </Button>
+                    <Button
+                      size="sm"
+                      variant="default"
+                      rightSection={
+                        isSortAscending ? (
+                          <SortByUp01Icon size={16} />
+                        ) : (
+                          <SortByDown01Icon size={16} />
+                        )
+                      }
+                    >
+                      Sort
+                    </Button>
+                  </Indicator>
                 </Menu.Target>
                 <Menu.Dropdown>
                   <Menu.Label>Sort by</Menu.Label>
@@ -342,22 +417,88 @@ export default function TransactionFilters({
                   </Menu.Item>
                 </Menu.Dropdown>
               </Menu>
+
+              {/* Options */}
+              <Menu shadow="md" width={170} radius="md" position="bottom-end">
+                <Menu.Target>
+                  <Tooltip position="left" label="Options">
+                    <ActionIcon
+                      aria-label="Options"
+                      variant="subtle"
+                      color="gray"
+                      size="lg"
+                    >
+                      <MoreVerticalCircle01Icon size={24} />
+                    </ActionIcon>
+                  </Tooltip>
+                </Menu.Target>
+                <Menu.Dropdown>
+                  <Menu.Label>Options</Menu.Label>
+                  <Menu.Item leftSection={<FileExportIcon size={16} />}>
+                    Export as PDF
+                  </Menu.Item>
+                  <Menu.Divider />
+                  <Menu.Item
+                    leftSection={<SearchRemoveIcon size={16} />}
+                    onClick={resetFilters}
+                  >
+                    Clear all filters
+                  </Menu.Item>
+                </Menu.Dropdown>
+              </Menu>
             </Group>
           </Group>
+        </ScrollArea>
 
-          <Group p="sm" gap="sm">
-            <Pill className={classes.filterPill} withRemoveButton>
-              Sent
-            </Pill>
-            <Pill className={classes.filterPill} withRemoveButton>
-              Jonah Stowe
-            </Pill>
-            <Pill className={classes.filterPill} withRemoveButton>
-              $200-$400
-            </Pill>
-          </Group>
-        </Stack>
-      </ScrollArea>
+        {/* Filter pills */}
+        <ScrollArea type="never">
+          {(isStatusFilterActive ||
+            isTypeFilterActive ||
+            isDateFilterActive ||
+            isSortActive) && (
+            <Group p="sm" pt={0} gap="sm" wrap="nowrap">
+              {isTypeFilterActive && (
+                <Pill
+                  className={classes.filterPill}
+                  withRemoveButton
+                  onRemove={() => onTypeFilterChange("All")}
+                >
+                  {activeTypeFilter}
+                </Pill>
+              )}
+              {isStatusFilterActive && (
+                <Pill
+                  className={classes.filterPill}
+                  withRemoveButton
+                  onRemove={() => onStatusFilterChange("All")}
+                >
+                  {activeStatusFilter}
+                </Pill>
+              )}
+              {isDateFilterActive && (
+                <Pill
+                  className={classes.filterPill}
+                  withRemoveButton
+                  onRemove={() => onDateChange("All")}
+                >
+                  {dateFilterLabel}
+                </Pill>
+              )}
+              {isSortActive && (
+                <Pill
+                  className={classes.filterPill}
+                  withRemoveButton
+                  onRemove={() => onSortChange("Newest first")}
+                >
+                  {activeSortOption}
+                </Pill>
+              )}
+
+              <Space w={4} h={8} />
+            </Group>
+          )}
+        </ScrollArea>
+      </Stack>
 
       <Modal
         opened={datePickerOpened}
