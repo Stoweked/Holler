@@ -378,9 +378,15 @@ export default function TransactionFilters({
           </Group>
 
           <Group p="md">
-            <Pill withRemoveButton>Sent</Pill>
-            <Pill withRemoveButton>Jonah Stowe</Pill>
-            <Pill withRemoveButton>$200-$400</Pill>
+            <Pill className={classes.filterPill} withRemoveButton>
+              Sent
+            </Pill>
+            <Pill className={classes.filterPill} withRemoveButton>
+              Jonah Stowe
+            </Pill>
+            <Pill className={classes.filterPill} withRemoveButton>
+              $200-$400
+            </Pill>
           </Group>
         </Stack>
       </ScrollArea>

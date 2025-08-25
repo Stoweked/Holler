@@ -30,6 +30,12 @@
     light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
 }
 
+.filterPill {
+  color: light-dark(var(--mantine-color-lime-8), var(--mantine-color-lime-5));
+  background-color: var(--mantine-color-lime-light);
+  font-weight: 600;
+}
+
 @media (max-width: 799px) {
   .filterHeader {
     /* height: 60px; */

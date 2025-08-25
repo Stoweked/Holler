@@ -1,10 +1,11 @@
-import { Card, Skeleton, Stack, Text, Title } from "@mantine/core";
+import { Card, Menu, Skeleton, Stack, Text, Title } from "@mantine/core";
 import ActionButtons from "../layout/SideNav/ActionButtons";
 import { useDisclosure } from "@mantine/hooks";
 import classes from "./PrimaryActions.module.css";
 import DepositDrawer from "./deposit/DepositDrawer";
 import TransferDrawer from "./transfer/TransferDrawer";
 import PaymentDrawer from "./PaymentDrawer";
+import AccountToggle from "./AccountToggle/AccountToggle";
 
 export default function PrimaryActionsCard() {
   const [
@@ -29,9 +30,9 @@ export default function PrimaryActionsCard() {
     <div>
       <Card w="100%" py={48} className={classes.card}>
         <Stack align="center" gap="xl">
-          <Stack align="center" gap="sm">
-            {/* <Text size="lg">Welcome, Jwonahh</Text> */}
-            <Skeleton h={40} radius="xl" />
+          <Stack align="center" gap="lg">
+            <AccountToggle />
+
             <Stack align="center" gap={0}>
               <Title order={1} size={48}>
                 $3,260.00

@@ -46,7 +46,11 @@ export default function TransactionItem({
   });
 
   return (
-    <UnstyledButton className={classes.transactionButton} onClick={onClick}>
+    <UnstyledButton
+      className={classes.transactionButton}
+      onClick={onClick}
+      aria-label="View transactions details"
+    >
       <Group gap="xs" justify="space-between">
         <Stack gap="xs">
           {/* Badges */}
@@ -57,7 +61,7 @@ export default function TransactionItem({
             <Badge
               color={statusColors[status]}
               style={{ cursor: "pointer" }}
-              variant="light"
+              variant="outline"
               size="lg"
             >
               {status}
