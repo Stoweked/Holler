@@ -21,6 +21,7 @@ import { DatePicker } from "@mantine/dates";
 import { useState } from "react";
 import dayjs from "dayjs";
 import isBetween from "dayjs/plugin/isBetween";
+import classes from "./Transactions.module.css";
 
 dayjs.extend(isBetween);
 
@@ -156,7 +157,7 @@ export default function TransactionFilters({
 
   return (
     <>
-      <ScrollArea type="never">
+      <ScrollArea type="never" className={classes.filterHeader}>
         <Group wrap="nowrap" justify="space-between" gap="sm" pl="sm" py="sm">
           {mainFilters}
           <Group wrap="nowrap" gap="sm" pr="sm">

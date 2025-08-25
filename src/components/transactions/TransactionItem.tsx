@@ -47,30 +47,33 @@ export default function TransactionItem({
 
   return (
     <UnstyledButton className={classes.transactionButton} onClick={onClick}>
-      <Group justify="space-between">
-        <Stack gap={4}>
-          <Badge variant="default" style={{ cursor: "pointer" }}>
-            {formattedDate}
-          </Badge>
+      <Group gap="xs" justify="space-between">
+        <Stack gap="xs">
+          {/* Badges */}
+          <Group gap="xs">
+            <Badge variant="default" size="lg" style={{ cursor: "pointer" }}>
+              {formattedDate}
+            </Badge>
+            <Badge
+              color={statusColors[status]}
+              style={{ cursor: "pointer" }}
+              variant="light"
+              size="lg"
+            >
+              {status}
+            </Badge>
+          </Group>
+
+          {/* Primary info */}
           <Stack gap={0}>
-            <Group>
-              <Title order={3} c={amountColor}>
-                {formattedAmount}
-              </Title>
-              <Badge
-                color={statusColors[status]}
-                style={{ cursor: "pointer" }}
-                variant="light"
-                size="lg"
-              >
-                {status}
-              </Badge>
-            </Group>
+            <Title order={3} c={amountColor}>
+              {formattedAmount}
+            </Title>
             <Text c="dimmed">{description}</Text>
           </Stack>
         </Stack>
 
-        <Avatar color="lime" radius="50%" size="lg">
+        <Avatar variant="light" color="gray" radius="50%" size="lg">
           {avatar}
         </Avatar>
       </Group>

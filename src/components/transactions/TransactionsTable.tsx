@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Box, Button, Center, Space, Stack, Text, Title } from "@mantine/core";
+import { Button, Center, Space, Stack, Text, Title } from "@mantine/core";
 import { useDisclosure, useViewportSize } from "@mantine/hooks";
 import TransactionFilters from "./TransactionFilters";
 import TransactionItem from "./TransactionItem"; // Import the new item component
@@ -11,7 +11,6 @@ import {
 } from "@/types/transaction";
 import { mockTransactions } from "../mockData/mockTransactions";
 import { Search01Icon } from "hugeicons-react";
-import classes from "./Transactions.module.css";
 import TransactionDetailsDrawer from "./TransactionDetailsDrawer";
 import dayjs from "dayjs";
 import isBetween from "dayjs/plugin/isBetween";
@@ -123,7 +122,7 @@ export default function TransactionsTable() {
               </Stack>
             </Center>
           ) : (
-            <Stack align="center" gap={0} className={classes.transactionStack}>
+            <Stack align="center" gap={0}>
               {processedTransactions.map((transaction) => (
                 <TransactionItem
                   key={transaction.id}
