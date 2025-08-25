@@ -4,6 +4,7 @@ import {
   Divider,
   Drawer,
   Group,
+  Space,
   Stack,
   Text,
   Title,
@@ -106,6 +107,7 @@ export default function TransactionDetailsDrawer({
             <Title order={4}>{transaction.id}</Title>
           </Stack>
         </Stack>
+        <Space h={100} />
       </Stack>
     </Drawer>
   );
