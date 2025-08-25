@@ -1,4 +1,4 @@
-import { Card, Stack, Text, Title } from "@mantine/core";
+import { Card, Skeleton, Stack, Text, Title } from "@mantine/core";
 import ActionButtons from "../layout/SideNav/ActionButtons";
 import { useDisclosure } from "@mantine/hooks";
 import classes from "./PrimaryActions.module.css";
@@ -30,7 +30,8 @@ export default function PrimaryActionsCard() {
       <Card w="100%" py={48} className={classes.card}>
         <Stack align="center" gap="xl">
           <Stack align="center" gap="sm">
-            <Text size="lg">Welcome, Jwonahh</Text>
+            {/* <Text size="lg">Welcome, Jwonahh</Text> */}
+            <Skeleton h={40} radius="xl" />
             <Stack align="center" gap={0}>
               <Title order={1} size={48}>
                 $3,260.00
