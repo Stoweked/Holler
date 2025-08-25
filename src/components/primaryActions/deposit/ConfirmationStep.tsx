@@ -38,7 +38,7 @@ export default function ConfirmationStep({
         <Stack>
           <Group gap="xs" wrap="nowrap" justify="space-between">
             <Stack gap={0}>
-              <Text c="dimmed">Bank account</Text>
+              <Text c="dimmed">From bank account</Text>
               <Title order={4}>{bank.name}</Title>
               <Text c="dimmed">{bank.details}</Text>
             </Stack>
@@ -68,8 +68,9 @@ export default function ConfirmationStep({
 
       <Stack gap="lg">
         <Button size="xl" radius="xl" onClick={onConfirm}>
-          Confirm deposit
+          {`Deposit ${formattedAmount}`}
         </Button>
+
         <Text c="dimmed" size="sm" ta="center">
           Transactions typically take 1-3 business days to process.
         </Text>

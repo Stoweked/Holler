@@ -104,7 +104,7 @@ export default function TransactionsTable() {
               <Stack align="center" py={60} gap="lg">
                 <Search01Icon size={40} color="grey" />
                 <Stack gap={0} align="center">
-                  <Title order={4} ta="center">
+                  <Title order={3} ta="center">
                     No transactions found
                   </Title>
                   <Text c="dimmed" ta="center">

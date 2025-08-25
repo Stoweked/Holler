@@ -68,7 +68,7 @@ export default function DepositDrawer({ opened, close }: DepositDrawerProps) {
 
   const drawerTitle =
     step === "selectBank" ? (
-      "Add money from bank"
+      "Add money to Holler"
     ) : step === "confirm" ? (
       <Group gap="xs">
         <Tooltip label="Back to amount" position="right">

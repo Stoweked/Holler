@@ -178,7 +178,7 @@ const BankRecipientDetails = ({
         </ThemeIcon>
         <Stack gap={0} className={classes.recipientTextContainer}>
           <Text size="sm" c="dimmed">
-            Deposit to
+            Deposit from
           </Text>
           <Text fw={500} lineClamp={2} lh={1.2}>
             {bank.name}

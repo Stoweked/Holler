@@ -141,7 +141,9 @@ export default function ConfirmationStep({
 
       <Stack gap="lg">
         <Button size="xl" radius="xl" onClick={onConfirm}>
-          {actionType === "send" ? "Send payment" : "Request payment"}
+          {actionType === "send"
+            ? `Send ${formattedAmount}`
+            : `Request ${formattedAmount}`}
         </Button>
         <Stack gap="xs">
           <Text c="dimmed" size="sm" ta="center">
