@@ -82,7 +82,7 @@ export default function SideNavLinks() {
         label={
           <>
             <Group wrap="nowrap" gap="xs">
-              Connected bank accounts
+              Bank accounts
               <Badge variant="default" size="sm">
                 3
               </Badge>
@@ -97,7 +97,7 @@ export default function SideNavLinks() {
       />
 
       <NavLink
-        label="Lien waiver"
+        label="Lien waivers"
         leftSection={<ClipboardIcon size={20} />}
         rightSection={<ArrowRight01Icon size={24} color="grey" />}
         className={classes.navLink}

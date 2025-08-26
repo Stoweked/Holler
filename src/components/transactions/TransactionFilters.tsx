@@ -26,6 +26,7 @@ import {
   Calendar02Icon,
   CheckmarkCircle02Icon,
   CoinsDollarIcon,
+  FileDownloadIcon,
   FileExportIcon,
   FilterHorizontalIcon,
   MoreVerticalCircle01Icon,
@@ -466,7 +467,7 @@ export default function TransactionFilters({
               </Menu>
 
               {/* Options */}
-              <Menu shadow="md" width={170} radius="md" position="bottom-end">
+              <Menu shadow="md" width={180} radius="md" position="bottom-end">
                 <Menu.Target>
                   <Tooltip position="left" label="Options">
                     <ActionIcon
@@ -483,6 +484,9 @@ export default function TransactionFilters({
                   <Menu.Label>Options</Menu.Label>
                   <Menu.Item leftSection={<FileExportIcon size={16} />}>
                     Export as PDF
+                  </Menu.Item>
+                  <Menu.Item leftSection={<FileDownloadIcon size={16} />}>
+                    Download as CSV
                   </Menu.Item>
                   <Menu.Divider />
                   <Menu.Item

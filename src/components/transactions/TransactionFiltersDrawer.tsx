@@ -171,7 +171,7 @@ export default function TransactionFiltersDrawer({
           <Stack>
             <Button size="lg" onClick={onClose} disabled={total === 0}>
               {total > 0
-                ? `Show ${total} transactions`
+                ? `Show ${total} transaction${total > 1 ? "s" : ""}`
                 : "No matching transactions"}
             </Button>
 
