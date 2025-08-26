@@ -51,15 +51,16 @@ export default function TransactionItem({
       onClick={onClick}
       aria-label="View transactions details"
     >
-      <Group justify="space-between" gap="xs">
-        <Group gap="xs" wrap="nowrap">
-          <Avatar variant="light" color="gray" radius="50%" size="lg">
-            {avatar}
-          </Avatar>
-          {/* Primary info */}
-          <Stack gap={0}>
-            <Group gap="xs">
-              <Title order={3} c={amountColor}>
+      <Group gap="xs" wrap="nowrap">
+        <Avatar variant="light" color="gray" radius="100%" size={48}>
+          {avatar}
+        </Avatar>
+
+        {/* Primary info */}
+        <Stack gap={4} w="100%">
+          <Group justify="space-between" gap={4} w="100%">
+            <Group gap={8}>
+              <Title order={3} c={amountColor} lh={1.2}>
                 {formattedAmount}
               </Title>
 
@@ -75,17 +76,16 @@ export default function TransactionItem({
               )}
             </Group>
 
-            <Text size="md" c="dimmed" fw={500}>
-              {description}
-            </Text>
-          </Stack>
-        </Group>
+            {/* Date */}
+            <Badge variant="default" style={{ cursor: "pointer" }}>
+              {formattedDate}
+            </Badge>
+          </Group>
 
-        {/* Date */}
-
-        <Badge variant="default" style={{ cursor: "pointer" }} size="lg">
-          {formattedDate}
-        </Badge>
+          <Text size="md" c="dimmed" fw={500} lh={1.2}>
+            {description}
+          </Text>
+        </Stack>
       </Group>
     </UnstyledButton>
   );
