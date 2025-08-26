@@ -25,7 +25,13 @@ export default function TransactionItem({
   // Determine if the transaction is a credit (money in) or debit (money out)
   const isCredit = type === "Received" || type === "Deposited";
   // Format the amount with a +/- sign and currency symbol
-  const formattedAmount = `${isCredit ? "+" : "-"} $${amount.toFixed(2)}`;
+  const formattedAmount = `${isCredit ? "+" : "-"} $${amount.toLocaleString(
+    "en-US",
+    {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }
+  )}`;
   // Set the color based on credit or debit
   const amountColor = isCredit ? "lime" : "inherit";
 
