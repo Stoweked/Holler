@@ -1,6 +1,5 @@
 "use client";
 
-import { createClient } from "@/utils/supabase/client";
 import {
   Anchor,
   Button,
@@ -12,6 +11,7 @@ import {
   Title,
 } from "@mantine/core";
 import { useState } from "react";
+import { signup } from "../auth/signup/actions";
 
 export default function SignUpPage() {
   // Manage form state with useState
@@ -48,24 +48,6 @@ export default function SignUpPage() {
     return isValid;
   };
 
-  // Handle form submission
-  const handleSignUp = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (validate()) {
-      const supabase = createClient();
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-      });
-      if (error) {
-        console.error("Error signing up:", error.message);
-      } else {
-        // Handle successful signup, e.g., show a message to check email for confirmation
-        console.log("User signed up:", data);
-      }
-    }
-  };
-
   return (
     <Stack
       align="center"
@@ -85,7 +67,7 @@ export default function SignUpPage() {
             </Text>
           </Stack>
 
-          <form onSubmit={handleSignUp}>
+          <form action={signup}>
             <Stack>
               <TextInput
                 required
