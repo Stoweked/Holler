@@ -1,0 +1,38 @@
+.search {
+  border: 1px solid
+    light-dark(var(--mantine-color-gray-4), var(--mantine-color-dark-4));
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px 8px 12px;
+  max-width: 420px;
+  width: 100%;
+  color: light-dark(var(--mantine-color-gray-6), var(--mantine-color-dark-2));
+  background-color: light-dark(
+    var(--mantine-color-gray-0),
+    var(--mantine-color-dark-6)
+  );
+  transition: border-color 300ms;
+  height: 40px;
+}
+
+.search:hover {
+  border-color: light-dark(
+    var(--mantine-color-lime-5),
+    var(--mantine-color-lime-8)
+  );
+}
+@media (max-width: 768px) {
+  .search {
+    max-width: initial;
+  }
+}
+@media (max-width: 575px) {
+  .lsLogo {
+    display: none;
+  }
+  .search {
+    max-width: initial;
+  }
+}

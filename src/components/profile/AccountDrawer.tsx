@@ -1,3 +1,4 @@
+import { Profile } from "@/types/profile";
 import {
   Drawer,
   Stack,
@@ -18,7 +19,7 @@ interface Contact {
 interface AccountDrawerProps {
   opened: boolean;
   close: () => void;
-  contact: Contact | null;
+  profile: Profile | null;
   position?: "left" | "right";
   showButtons?: boolean;
 }
@@ -26,13 +27,21 @@ interface AccountDrawerProps {
 export default function AccountDrawer({
   opened,
   close,
-  contact,
+  profile,
   position = "right",
   showButtons = true,
 }: AccountDrawerProps) {
-  if (!contact) {
+  if (!profile) {
     return null;
   }
+
+  const getInitials = (name: string | undefined) => {
+    if (!name) return "";
+    return name
+      .split(" ")
+      .map((n) => n[0])
+      .join("");
+  };
 
   return (
     <Drawer
@@ -46,14 +55,14 @@ export default function AccountDrawer({
       <Stack gap="xl">
         <Stack align="center" gap="sm">
           <Avatar color="lime" size={100} radius="50%">
-            <Title order={1}>{contact.avatar}</Title>
+            <Title order={1}>{getInitials(profile.full_name)}</Title>
           </Avatar>
           <Stack align="center" gap={4}>
             <Title order={2} ta="center">
-              {contact.name}
+              {profile.full_name}
             </Title>
             <Text c="dimmed" ta="center">
-              {contact.details}
+              {profile.email}
             </Text>
           </Stack>
         </Stack>

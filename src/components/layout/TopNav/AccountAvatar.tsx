@@ -6,9 +6,11 @@ import { ColorSchemeMenuItem } from "./ColorSchemeMenuItem";
 import ProfileDrawer from "@/components/profile/AccountDrawer";
 import { useRouter } from "next/navigation";
 import { logout } from "@/app/auth/logout/actions";
+import { useProfile } from "@/contexts/ProfileContext";
 
 export default function AccountAvatar() {
   const router = useRouter();
+  const { profile, loading } = useProfile();
   const [
     openedFeedbackModal,
     { open: openFeedbackModal, close: closeFeedbackModal },
@@ -19,11 +21,12 @@ export default function AccountAvatar() {
     { open: openProfileDrawer, close: closeProfileDrawer },
   ] = useDisclosure(false);
 
-  const mockProfile = {
-    name: "Jonah Stowe",
-    avatar: "JS",
-    details: "123-456-7890",
-    topContact: true,
+  const getInitials = (name: string | undefined) => {
+    if (!name) return "";
+    return name
+      .split(" ")
+      .map((n) => n[0])
+      .join("");
   };
 
   return (
@@ -37,7 +40,7 @@ export default function AccountAvatar() {
             aria-label="Profile menu"
           >
             <Avatar radius="xl" color="lime" variant="filled">
-              JS
+              {!loading && profile ? getInitials(profile.full_name) : null}
             </Avatar>
           </ActionIcon>
         </Menu.Target>
@@ -69,7 +72,7 @@ export default function AccountAvatar() {
       <ProfileDrawer
         opened={openedProfileDrawer}
         close={closeProfileDrawer}
-        contact={mockProfile}
+        profile={profile}
         position="right"
         showButtons={false}
       />
