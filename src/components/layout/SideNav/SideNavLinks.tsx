@@ -17,7 +17,11 @@ import ProfileModal from "@/components/profile/ProfileModal";
 import PaymentDrawer from "@/components/primaryActions/PaymentDrawer";
 import { Contact } from "@/types/recipient";
 
-export default function SideNavLinks() {
+interface SideNavLinksProps {
+  closeMobileNav: () => void;
+}
+
+export default function SideNavLinks({ closeMobileNav }: SideNavLinksProps) {
   const [
     openedContactsDrawer,
     { open: openContactsDrawer, close: closeContactsDrawer },
@@ -64,6 +68,7 @@ export default function SideNavLinks() {
   const handleContactClick = (contact: Contact) => {
     setSelectedContact(contact);
     openProfileDrawer();
+    closeMobileNav();
   };
 
   const handleSendClick = (contact: Contact) => {
