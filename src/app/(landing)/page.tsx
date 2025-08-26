@@ -16,10 +16,10 @@ export default function LandingPage() {
       className="pageBackground"
     >
       <Stack align="center" gap="lg">
-        <Image src="/images/logomark.svg" alt="Holler Logo" w={60} h="auto" />
+        <Image src="/images/logomark.svg" alt="Holler Logo" w={56} h="auto" />
         <Stack align="center" gap="xs">
           <Title order={1} ta="center" lh={1.2} c="white">
-            Welcome to Holler
+            Holler
           </Title>
           <Text c="dimmed" ta="center" maw={480}>
             Get paid faster on the job. Holler provides secure payments designed
