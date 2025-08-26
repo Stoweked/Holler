@@ -12,6 +12,7 @@ import {
   Title,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
+import { login } from "../auth/login/actions";
 
 export default function LoginPage() {
   const form = useForm({
@@ -25,21 +26,6 @@ export default function LoginPage() {
         value.length < 6 ? "Password must have at least 6 characters" : null,
     },
   });
-
-  const handleLogin = async (values: { email: string; password: string }) => {
-    const supabase = createClient();
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email: values.email,
-      password: values.password,
-    });
-
-    if (error) {
-      console.error("Error logging in:", error.message);
-    } else {
-      // Handle successful login, e.g., redirect to a protected route
-      console.log("User logged in:", data);
-    }
-  };
 
   return (
     <Stack
@@ -60,7 +46,7 @@ export default function LoginPage() {
             </Text>
           </Stack>
 
-          <form onSubmit={form.onSubmit(handleLogin)}>
+          <form action={login}>
             <Stack>
               <TextInput
                 size="lg"

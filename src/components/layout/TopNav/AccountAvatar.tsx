@@ -5,6 +5,7 @@ import FeedbackModal from "./FeedbackModal";
 import { ColorSchemeMenuItem } from "./ColorSchemeMenuItem";
 import ProfileDrawer from "@/components/profile/AccountDrawer";
 import { useRouter } from "next/navigation";
+import { logout } from "@/app/auth/logout/actions";
 
 export default function AccountAvatar() {
   const router = useRouter();
@@ -56,12 +57,14 @@ export default function AccountAvatar() {
           </Menu.Item>
           <ColorSchemeMenuItem />
           <Menu.Divider />
-          <Menu.Item
-            leftSection={<Logout02Icon size={16} />}
-            onClick={() => router.push("/login")}
-          >
-            Log out
-          </Menu.Item>
+          <form action={logout}>
+            <Menu.Item
+              leftSection={<Logout02Icon size={16} />}
+              onClick={() => router.push("/login")}
+            >
+              Log out
+            </Menu.Item>
+          </form>
         </Menu.Dropdown>
       </Menu>
 
