@@ -1,4 +1,4 @@
-// stoweked/holler/Holler-main/middleware.ts
+///middleware.ts
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
@@ -26,6 +26,9 @@ export async function middleware(request: NextRequest) {
       },
     }
   );
+
+  // **New:** Refresh the session before checking for a user
+  await supabase.auth.getSession();
 
   const {
     data: { user },

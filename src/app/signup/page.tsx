@@ -15,10 +15,12 @@ import { signup } from "../auth/signup/actions";
 
 export default function SignUpPage() {
   // Manage form state with useState
+  const [fullName, setFullName] = useState(""); // Add state for full name
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errors, setErrors] = useState({
+    fullName: "", // Add error state for full name
     email: "",
     password: "",
     confirmPassword: "",
@@ -26,8 +28,19 @@ export default function SignUpPage() {
 
   // Manual validation function
   const validate = () => {
-    const newErrors = { email: "", password: "", confirmPassword: "" };
+    const newErrors = {
+      fullName: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+    };
     let isValid = true;
+
+    if (!fullName) {
+      // Add validation for full name
+      newErrors.fullName = "Full name is required";
+      isValid = false;
+    }
 
     if (!/^\S+@\S+$/.test(email)) {
       newErrors.email = "Invalid email";
@@ -73,7 +86,19 @@ export default function SignUpPage() {
                 required
                 size="lg"
                 radius="md"
+                label="Full name"
+                name="full_name" // Add name attribute
+                placeholder="Your full name"
+                value={fullName}
+                onChange={(event) => setFullName(event.currentTarget.value)}
+                error={errors.fullName}
+              />
+              <TextInput
+                required
+                size="lg"
+                radius="md"
                 label="Email"
+                name="email"
                 placeholder="Your email address"
                 value={email}
                 onChange={(event) => setEmail(event.currentTarget.value)}
@@ -84,6 +109,7 @@ export default function SignUpPage() {
                 size="lg"
                 radius="md"
                 label="Password"
+                name="password"
                 placeholder="Your password"
                 value={password}
                 onChange={(event) => setPassword(event.currentTarget.value)}
