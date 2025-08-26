@@ -48,12 +48,12 @@ export default function LoginPage() {
       console.error("Login failed:", error);
       // In case of an error, stop the loading state
       setIsLoading(false);
-      notifications.show({
-        title: "Login failed",
-        message: "Please check your credentials and try again.",
-        color: "red",
-        icon: <AlertCircleIcon size={18} />,
-      });
+      // notifications.show({
+      //   title: "Login failed",
+      //   message: "Please check your credentials and try again.",
+      //   color: "red",
+      //   icon: <AlertCircleIcon size={18} />,
+      // });
     }
   };
 
