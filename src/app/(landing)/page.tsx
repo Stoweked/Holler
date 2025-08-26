@@ -18,7 +18,7 @@ export default function LandingPage() {
       <Stack align="center" gap="lg">
         <Image src="/images/logomark.svg" alt="Holler Logo" w={60} h="auto" />
         <Stack align="center" gap="xs">
-          <Title order={1} ta="center" lh={1.2}>
+          <Title order={1} ta="center" lh={1.2} c="white">
             Welcome to Holler
           </Title>
           <Text c="dimmed" ta="center" maw={480}>
@@ -26,7 +26,7 @@ export default function LandingPage() {
             for construction trades.
           </Text>
         </Stack>
-        <Group>
+        <Group gap="lg">
           <Button
             size="lg"
             variant="outline"
