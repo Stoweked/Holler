@@ -32,6 +32,8 @@
     "@mantine/nprogress": "^8.2.5",
     "@mantine/spotlight": "^8.2.5",
     "@mantine/tiptap": "^8.2.5",
+    "@supabase/ssr": "^0.7.0",
+    "@supabase/supabase-js": "^2.56.0",
     "hugeicons-react": "^0.3.0",
     "next": "15.5.0",
     "react": "19.1.0",

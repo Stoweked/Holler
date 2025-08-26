@@ -12,3 +12,9 @@
 .appShell {
   background: light-dark(#fbf9f9, var(--mantine-color-dark-8));
 }
+
+.pageBackground {
+  background-image: url("/images/background.svg");
+  background-repeat: no-repeat;
+  background-size: cover;
+}

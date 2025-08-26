@@ -1,5 +1,6 @@
 "use client";
 
+import { createClient } from "@/utils/supabase/client";
 import {
   Anchor,
   Button,
@@ -25,25 +26,34 @@ export default function LoginPage() {
     },
   });
 
-  const handleLogin = (values: { email: string; password: string }) => {
-    // Replace with your actual login logic
-    console.log("Logging in with:", values);
-    // For example, you might call an API here:
-    // loginUser(values.email, values.password);
+  const handleLogin = async (values: { email: string; password: string }) => {
+    const supabase = createClient();
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: values.email,
+      password: values.password,
+    });
+
+    if (error) {
+      console.error("Error logging in:", error.message);
+    } else {
+      // Handle successful login, e.g., redirect to a protected route
+      console.log("User logged in:", data);
+    }
   };
 
   return (
     <Stack
       align="center"
       justify="center"
-      style={{ minHeight: "calc(100vh - 60px)" }} // Adjust 60px to match your header height
+      mih="100vh"
       p="md"
+      className="pageBackground"
     >
-      <Paper withBorder shadow="md" p={30} radius="lg" w={420}>
+      <Paper withBorder shadow="md" p="xl" radius="lg" maw={420} w="100%">
         <Stack gap="lg">
-          <Stack gap="xs" align="center">
+          <Stack gap={0} align="center">
             <Title order={2} ta="center">
-              Welcome back!
+              Welcome back
             </Title>
             <Text c="dimmed" size="sm" ta="center">
               Enter your credentials to continue
@@ -53,12 +63,16 @@ export default function LoginPage() {
           <form onSubmit={form.onSubmit(handleLogin)}>
             <Stack>
               <TextInput
+                size="lg"
+                radius="md"
                 required
                 label="Email"
-                placeholder="you@mantine.dev"
+                placeholder="Your email address"
                 {...form.getInputProps("email")}
               />
               <PasswordInput
+                size="lg"
+                radius="md"
                 required
                 label="Password"
                 placeholder="Your password"
@@ -67,13 +81,13 @@ export default function LoginPage() {
               <Anchor href="#" size="sm" ta="right">
                 Forgot password?
               </Anchor>
-              <Button type="submit" fullWidth mt="md">
-                Log In
+              <Button type="submit" fullWidth mt="md" size="lg">
+                Log in
               </Button>
             </Stack>
           </form>
 
-          <Text c="dimmed" size="sm" ta="center" mt="sm">
+          <Text c="dimmed" size="sm" ta="center">
             Don&apos;t have an account?{" "}
             <Anchor href="/signup" size="sm">
               Sign up

@@ -1,5 +1,6 @@
 "use client";
 
+import { createClient } from "@/utils/supabase/client";
 import {
   Anchor,
   Button,
@@ -48,13 +49,20 @@ export default function SignUpPage() {
   };
 
   // Handle form submission
-  const handleSignUp = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault(); // Prevent default form submission behavior
+  const handleSignUp = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     if (validate()) {
-      // Replace with your actual sign-up logic
-      console.log("Signing up with:", { email, password });
-      // For example, you might call an API here:
-      // createUser(email, password);
+      const supabase = createClient();
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+      });
+      if (error) {
+        console.error("Error signing up:", error.message);
+      } else {
+        // Handle successful signup, e.g., show a message to check email for confirmation
+        console.log("User signed up:", data);
+      }
     }
   };
 
@@ -62,12 +70,13 @@ export default function SignUpPage() {
     <Stack
       align="center"
       justify="center"
-      style={{ minHeight: "calc(100vh - 60px)" }} // Adjust 60px to match your header height
+      mih="100vh"
       p="md"
+      className="pageBackground"
     >
-      <Paper withBorder shadow="md" p={30} radius="md" w={420}>
+      <Paper withBorder shadow="md" p="xl" radius="lg" maw={420} w="100%">
         <Stack gap="lg">
-          <Stack gap="xs" align="center">
+          <Stack gap={0} align="center">
             <Title order={2} ta="center">
               Create an account
             </Title>
@@ -80,14 +89,18 @@ export default function SignUpPage() {
             <Stack>
               <TextInput
                 required
+                size="lg"
+                radius="md"
                 label="Email"
-                placeholder="you@mantine.dev"
+                placeholder="Your email address"
                 value={email}
                 onChange={(event) => setEmail(event.currentTarget.value)}
                 error={errors.email}
               />
               <PasswordInput
                 required
+                size="lg"
+                radius="md"
                 label="Password"
                 placeholder="Your password"
                 value={password}
@@ -96,7 +109,9 @@ export default function SignUpPage() {
               />
               <PasswordInput
                 required
-                label="Confirm Password"
+                size="lg"
+                radius="md"
+                label="Confirm password"
                 placeholder="Confirm your password"
                 value={confirmPassword}
                 onChange={(event) =>
@@ -104,13 +119,13 @@ export default function SignUpPage() {
                 }
                 error={errors.confirmPassword}
               />
-              <Button type="submit" fullWidth mt="md">
-                Sign Up
+              <Button type="submit" fullWidth mt="md" size="lg">
+                Sign up
               </Button>
             </Stack>
           </form>
 
-          <Text c="dimmed" size="sm" ta="center" mt="sm">
+          <Text c="dimmed" size="sm" ta="center">
             Already have an account?{" "}
             <Anchor href="/login" size="sm">
               Log in
