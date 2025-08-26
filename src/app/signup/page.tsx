@@ -56,7 +56,7 @@ export default function SignUpPage() {
       p="md"
       className="pageBackground"
     >
-      <Paper withBorder shadow="md" p="xl" radius="lg" maw={420} w="100%">
+      <Paper withBorder shadow="lg" p="xl" radius="lg" maw={420} w="100%">
         <Stack gap="lg">
           <Stack gap={0} align="center">
             <Title order={2} ta="center">

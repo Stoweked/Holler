@@ -1,4 +1,4 @@
-// stoweked/holler/Holler-main/src/app/auth/signup/actions.ts
+//src/app/auth/signup/actions.ts
 "use server";
 
 import { createClient } from "@/utils/supabase/server";
@@ -15,8 +15,11 @@ export async function signup(formData: FormData) {
   });
 
   if (error) {
+    // Log the specific error to your server console for debugging
+    console.error("Supabase signup error:", error.message);
     return redirect("/signup?message=Could not authenticate user");
   }
 
+  // Redirect to a page that tells the user to check their email.
   return redirect("/signup?message=Check email to continue sign in process");
 }
