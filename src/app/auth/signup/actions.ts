@@ -25,9 +25,9 @@ export async function signup(formData: FormData) {
   if (error) {
     // Log the specific error to your server console for debugging
     console.error("Supabase signup error:", error.message);
-    return redirect("/signup?message=Could not authenticate user");
+    return redirect(`/signup?error=${error.message}`);
   }
 
-  // Redirect to a page that tells the user to check their email.
+  // Redirect to a page that tells the user to check their email but for now is the dashboard...
   return redirect("/dashboard");
 }

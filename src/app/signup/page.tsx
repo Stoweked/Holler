@@ -13,8 +13,9 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { signup } from "../auth/signup/actions";
-import { UserIcon } from "hugeicons-react";
+import { AlertCircleIcon, UserIcon } from "hugeicons-react";
 import { useState } from "react";
+import { notifications } from "@mantine/notifications";
 
 export default function SignUpPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -53,6 +54,12 @@ export default function SignUpPage() {
       console.error("Login failed:", error);
       // In case of an error, stop the loading state
       setIsLoading(false);
+      // notifications.show({
+      //   title: "Sign up failed",
+      //   message: "Please try again.",
+      //   color: "red",
+      //   icon: <AlertCircleIcon size={18} />,
+      // });
     }
   };
 

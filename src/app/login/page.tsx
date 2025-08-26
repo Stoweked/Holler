@@ -13,8 +13,9 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { login } from "../auth/login/actions";
-import { UserLove01Icon } from "hugeicons-react";
+import { AlertCircleIcon, UserLove01Icon } from "hugeicons-react";
 import { useState } from "react";
+import { notifications } from "@mantine/notifications";
 
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -47,6 +48,12 @@ export default function LoginPage() {
       console.error("Login failed:", error);
       // In case of an error, stop the loading state
       setIsLoading(false);
+      notifications.show({
+        title: "Login failed",
+        message: "Please check your credentials and try again.",
+        color: "red",
+        icon: <AlertCircleIcon size={18} />,
+      });
     }
   };
 
