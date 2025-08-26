@@ -51,40 +51,41 @@ export default function TransactionItem({
       onClick={onClick}
       aria-label="View transactions details"
     >
-      <Group gap="xs" wrap="nowrap">
-        <Avatar variant="light" color="gray" radius="50%" size="lg">
-          {avatar}
-        </Avatar>
-        <Stack gap={4} w="100%">
-          {/* Top line */}
-          <Group justify="space-between" gap={4}>
-            {/* Primary info */}
-            <Stack gap={0}>
+      <Group justify="space-between" gap="xs">
+        <Group gap="xs" wrap="nowrap">
+          <Avatar variant="light" color="gray" radius="50%" size="lg">
+            {avatar}
+          </Avatar>
+          {/* Primary info */}
+          <Stack gap={0}>
+            <Group gap="xs">
               <Title order={3} c={amountColor}>
                 {formattedAmount}
               </Title>
 
-              <Text size="md" c="dimmed" fw={500}>
-                {description}
-              </Text>
-            </Stack>
-
-            {/* Badges */}
-            <Group gap="xs">
-              <Badge
-                color={statusColors[status]}
-                style={{ cursor: "pointer" }}
-                variant="dot"
-                size="lg"
-              >
-                {status}
-              </Badge>
-              <Badge variant="default" style={{ cursor: "pointer" }} size="lg">
-                {formattedDate}
-              </Badge>
+              {status !== "Completed" && (
+                <Badge
+                  color={statusColors[status]}
+                  style={{ cursor: "pointer" }}
+                  variant="dot"
+                  size="md"
+                >
+                  {status}
+                </Badge>
+              )}
             </Group>
-          </Group>
-        </Stack>
+
+            <Text size="md" c="dimmed" fw={500}>
+              {description}
+            </Text>
+          </Stack>
+        </Group>
+
+        {/* Date */}
+
+        <Badge variant="default" style={{ cursor: "pointer" }} size="lg">
+          {formattedDate}
+        </Badge>
       </Group>
     </UnstyledButton>
   );
