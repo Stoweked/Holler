@@ -29,5 +29,5 @@ export async function signup(formData: FormData) {
   }
 
   // Redirect to a page that tells the user to check their email.
-  return redirect("/signup?message=Check email to continue sign in process");
+  return redirect("/dashboard");
 }

@@ -3,6 +3,7 @@
 
 import {
   Anchor,
+  Avatar,
   Button,
   Paper,
   Stack,
@@ -11,6 +12,7 @@ import {
   Title,
 } from "@mantine/core";
 import { requestPasswordReset } from "../auth/forgot-password/actions";
+import { Shield01Icon } from "hugeicons-react";
 
 export default function ForgotPasswordPage() {
   return (
@@ -21,15 +23,14 @@ export default function ForgotPasswordPage() {
       p="md"
       className="pageBackground"
     >
-      <Paper withBorder shadow="lg" p="xl" radius="lg" maw={420} w="100%">
+      <Paper withBorder shadow="lg" p="lg" radius="lg" maw={420} w="100%">
         <Stack gap="lg">
-          <Stack gap={0} align="center">
-            <Title order={2} ta="center">
-              Forgot your password?
-            </Title>
-            <Text c="dimmed" size="sm" ta="center">
-              Enter your email to get a reset link
-            </Text>
+          <Avatar variant="default" size="md">
+            <Shield01Icon size={20} />
+          </Avatar>
+          <Stack gap={0}>
+            <Title order={2}>Forgot your password?</Title>
+            <Text c="dimmed">Enter your email to get a reset link.</Text>
           </Stack>
 
           <form action={requestPasswordReset}>

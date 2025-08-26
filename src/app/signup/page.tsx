@@ -2,6 +2,7 @@
 
 import {
   Anchor,
+  Avatar,
   Button,
   Paper,
   PasswordInput,
@@ -10,55 +11,49 @@ import {
   TextInput,
   Title,
 } from "@mantine/core";
-import { useState } from "react";
+import { useForm } from "@mantine/form";
 import { signup } from "../auth/signup/actions";
+import { UserIcon } from "hugeicons-react";
+import { useState } from "react";
 
 export default function SignUpPage() {
-  // Manage form state with useState
-  const [fullName, setFullName] = useState(""); // Add state for full name
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [errors, setErrors] = useState({
-    fullName: "", // Add error state for full name
-    email: "",
-    password: "",
-    confirmPassword: "",
-  });
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Manual validation function
-  const validate = () => {
-    const newErrors = {
-      fullName: "",
+  // Mantine form hook for state management and validation
+  const form = useForm({
+    initialValues: {
+      full_name: "",
       email: "",
       password: "",
       confirmPassword: "",
-    };
-    let isValid = true;
+    },
 
-    if (!fullName) {
-      // Add validation for full name
-      newErrors.fullName = "Full name is required";
-      isValid = false;
+    // Validation rules for each field
+    validate: {
+      full_name: (value) =>
+        value.trim().length < 2 ? "Full name is required" : null,
+      email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
+      password: (value) =>
+        value.length < 6 ? "Password must have at least 6 characters" : null,
+      confirmPassword: (value, values) =>
+        value !== values.password ? "Passwords do not match" : null,
+    },
+  });
+
+  // Handle form submission
+  const handleSubmit = async (values: typeof form.values) => {
+    setIsLoading(true);
+    const formData = new FormData();
+    formData.append("full_name", values.full_name);
+    formData.append("email", values.email);
+    formData.append("password", values.password);
+    try {
+      await signup(formData);
+    } catch (error) {
+      console.error("Login failed:", error);
+      // In case of an error, stop the loading state
+      setIsLoading(false);
     }
-
-    if (!/^\S+@\S+$/.test(email)) {
-      newErrors.email = "Invalid email";
-      isValid = false;
-    }
-
-    if (password.length < 6) {
-      newErrors.password = "Password must have at least 6 characters";
-      isValid = false;
-    }
-
-    if (password !== confirmPassword) {
-      newErrors.confirmPassword = "Passwords do not match";
-      isValid = false;
-    }
-
-    setErrors(newErrors);
-    return isValid;
   };
 
   return (
@@ -69,29 +64,26 @@ export default function SignUpPage() {
       p="md"
       className="pageBackground"
     >
-      <Paper withBorder shadow="lg" p="xl" radius="lg" maw={420} w="100%">
+      <Paper withBorder shadow="lg" p="lg" radius="lg" maw={420} w="100%">
         <Stack gap="lg">
-          <Stack gap={0} align="center">
-            <Title order={2} ta="center">
-              Create an account
-            </Title>
-            <Text c="dimmed" size="sm" ta="center">
-              Enter your details to get started
-            </Text>
+          <Avatar variant="default" size="md">
+            <UserIcon size={20} />
+          </Avatar>
+          <Stack gap={0}>
+            <Title order={2}>Create an account</Title>
+            <Text c="dimmed">Enter your details to get started.</Text>
           </Stack>
 
-          <form action={signup}>
+          <form onSubmit={form.onSubmit(handleSubmit)}>
             <Stack>
               <TextInput
                 required
                 size="lg"
                 radius="md"
                 label="Full name"
-                name="full_name" // Add name attribute
+                name="full_name"
                 placeholder="Your full name"
-                value={fullName}
-                onChange={(event) => setFullName(event.currentTarget.value)}
-                error={errors.fullName}
+                {...form.getInputProps("full_name")}
               />
               <TextInput
                 required
@@ -100,9 +92,7 @@ export default function SignUpPage() {
                 label="Email"
                 name="email"
                 placeholder="Your email address"
-                value={email}
-                onChange={(event) => setEmail(event.currentTarget.value)}
-                error={errors.email}
+                {...form.getInputProps("email")}
               />
               <PasswordInput
                 required
@@ -111,9 +101,7 @@ export default function SignUpPage() {
                 label="Password"
                 name="password"
                 placeholder="Your password"
-                value={password}
-                onChange={(event) => setPassword(event.currentTarget.value)}
-                error={errors.password}
+                {...form.getInputProps("password")}
               />
               <PasswordInput
                 required
@@ -121,13 +109,15 @@ export default function SignUpPage() {
                 radius="md"
                 label="Confirm password"
                 placeholder="Confirm your password"
-                value={confirmPassword}
-                onChange={(event) =>
-                  setConfirmPassword(event.currentTarget.value)
-                }
-                error={errors.confirmPassword}
+                {...form.getInputProps("confirmPassword")}
               />
-              <Button type="submit" fullWidth mt="md" size="lg">
+              <Button
+                type="submit"
+                fullWidth
+                mt="md"
+                size="lg"
+                loading={isLoading}
+              >
                 Sign up
               </Button>
             </Stack>
