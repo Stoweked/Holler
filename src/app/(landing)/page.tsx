@@ -15,10 +15,10 @@ export default function LandingPage() {
       p="md"
       className="pageBackground"
     >
-      <Stack align="center" gap="xl">
+      <Stack align="center" gap="lg">
         <Image src="/images/logomark.svg" alt="Holler Logo" w={60} h="auto" />
         <Stack align="center" gap="xs">
-          <Title order={1} ta="center" size={48}>
+          <Title order={1} ta="center" lh={1.2}>
             Welcome to Holler
           </Title>
           <Text c="dimmed" ta="center" maw={480}>
@@ -29,13 +29,12 @@ export default function LandingPage() {
         <Group>
           <Button
             size="lg"
-            radius="xl"
-            variant="default"
+            variant="outline"
             onClick={() => router.push("/login")}
           >
             Log in
           </Button>
-          <Button size="lg" radius="xl" onClick={() => router.push("/signup")}>
+          <Button size="lg" onClick={() => router.push("/signup")}>
             Sign up
           </Button>
         </Group>
