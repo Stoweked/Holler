@@ -22,6 +22,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     <ProfileProvider>
       <Spotlight
         size="lg"
+        radius="md"
         scrollable
         actions={actions}
         shortcut={["mod + k", "/"]}
