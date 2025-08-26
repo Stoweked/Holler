@@ -38,7 +38,7 @@ export default function TopNav({ opened, toggle }: TopNavProps) {
           <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
 
           {/* Logo */}
-          <Group gap={8} wrap="nowrap">
+          <Group gap={8} wrap="nowrap" visibleFrom="xs">
             <Image
               src="/images/logomark.svg"
               alt="Holler Logo"
