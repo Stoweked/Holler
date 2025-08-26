@@ -2,7 +2,7 @@
 "use client";
 
 import "@mantine/core/styles.css";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { AppShell, ScrollArea } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { SideNav } from "@/components/layout/SideNav";
@@ -14,9 +14,19 @@ import { Spotlight } from "@mantine/spotlight";
 import { Search01Icon } from "hugeicons-react";
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
-  const [opened, { toggle }] = useDisclosure();
   const router = useRouter();
   const actions = getSpotlightActions(router);
+  const [opened, { toggle }] = useDisclosure();
+  const [mounted, setMounted] = useState(false);
+  // Ensure the component only renders on the client side
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Render null on the server and the full layout on the client
+  if (!mounted) {
+    return null;
+  }
 
   return (
     <ProfileProvider>

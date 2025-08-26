@@ -1,4 +1,3 @@
-// src/app/page.tsx
 "use client";
 
 import AppLayout from "@/app/AppLayout";
@@ -6,6 +5,8 @@ import PrimaryActionsCard from "@/components/primaryActions/PrimaryActionsCard";
 import TransactionsTable from "@/components/transactions/TransactionsTable";
 import { useViewportSize } from "@mantine/hooks";
 import { useEffect, useState } from "react";
+
+export const dynamic = "force-dynamic";
 
 export default function HomePage() {
   const { width } = useViewportSize();
