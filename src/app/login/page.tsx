@@ -10,22 +10,9 @@ import {
   TextInput,
   Title,
 } from "@mantine/core";
-import { useForm } from "@mantine/form";
 import { login } from "../auth/login/actions";
 
 export default function LoginPage() {
-  const form = useForm({
-    initialValues: {
-      email: "",
-      password: "",
-    },
-    validate: {
-      email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
-      password: (value) =>
-        value.length < 6 ? "Password must have at least 6 characters" : null,
-    },
-  });
-
   return (
     <Stack
       align="center"
@@ -51,19 +38,19 @@ export default function LoginPage() {
                 size="lg"
                 radius="md"
                 required
+                name="email"
                 label="Email"
                 placeholder="Your email address"
-                {...form.getInputProps("email")}
               />
               <PasswordInput
                 size="lg"
                 radius="md"
                 required
+                name="password"
                 label="Password"
                 placeholder="Your password"
-                {...form.getInputProps("password")}
               />
-              <Anchor href="#" size="sm" ta="right">
+              <Anchor href="/forgot-password" size="sm" ta="right">
                 Forgot password?
               </Anchor>
               <Button type="submit" fullWidth mt="md" size="lg">

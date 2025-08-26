@@ -1,4 +1,4 @@
-///middleware.ts
+// stoweked/holler/Holler-main/middleware.ts
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
@@ -27,23 +27,25 @@ export async function middleware(request: NextRequest) {
     }
   );
 
-  // **New:** Refresh the session before checking for a user
   await supabase.auth.getSession();
 
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const publicPaths = [
-    "/login",
-    "/signup",
-    "/forgot-password",
-    "/auth/confirm",
-  ];
+  const publicPaths = ["/", "/login", "/signup", "/auth/confirm"];
+  const isPublicPath = publicPaths.includes(request.nextUrl.pathname);
 
-  // if user is not signed in and the current path is not a public path, redirect the user to /login
-  if (!user && !publicPaths.includes(request.nextUrl.pathname)) {
-    return NextResponse.redirect(new URL("/login", request.url));
+  // If the user is authenticated and tries to access a public-only path,
+  // redirect them to the dashboard.
+  if (user && isPublicPath) {
+    return NextResponse.redirect(new URL("/dashboard", request.url));
+  }
+
+  // If the user is not authenticated and tries to access a protected path,
+  // redirect them to the landing page.
+  if (!user && !isPublicPath) {
+    return NextResponse.redirect(new URL("/", request.url));
   }
 
   return response;

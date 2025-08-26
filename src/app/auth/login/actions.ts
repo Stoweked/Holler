@@ -1,4 +1,4 @@
-// app/auth/login/actions.ts
+// stoweked/holler/Holler-main/src/app/auth/login/actions.ts
 "use server";
 
 import { createClient } from "@/utils/supabase/server";
@@ -18,5 +18,5 @@ export async function login(formData: FormData) {
     return redirect("/login?message=Could not authenticate user");
   }
 
-  return redirect("/");
+  return redirect("/dashboard");
 }

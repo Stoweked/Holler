@@ -57,14 +57,10 @@ export default function AccountAvatar() {
           </Menu.Item>
           <ColorSchemeMenuItem />
           <Menu.Divider />
-          <form action={logout}>
-            <Menu.Item
-              leftSection={<Logout02Icon size={16} />}
-              onClick={() => router.push("/login")}
-            >
-              Log out
-            </Menu.Item>
-          </form>
+
+          <Menu.Item leftSection={<Logout02Icon size={16} />} onClick={logout}>
+            Log out
+          </Menu.Item>
         </Menu.Dropdown>
       </Menu>
 
