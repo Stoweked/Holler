@@ -38,22 +38,6 @@ export default function ActionButtons({
           </Text>
         </Stack>
 
-        {/* Request button */}
-        <Stack gap={4} align="center">
-          <ActionIcon
-            variant="default"
-            size={56}
-            radius="xl"
-            aria-label="Request funds"
-            onClick={onRequestClick}
-          >
-            <ArrowDown02Icon size={32} />
-          </ActionIcon>
-          <Text size="xs" fw={500}>
-            Request
-          </Text>
-        </Stack>
-
         {/* Send button */}
         <Stack gap={4} align="center">
           <ActionIcon
@@ -67,6 +51,22 @@ export default function ActionButtons({
           </ActionIcon>
           <Text size="xs" fw={500}>
             Send
+          </Text>
+        </Stack>
+
+        {/* Request button */}
+        <Stack gap={4} align="center">
+          <ActionIcon
+            variant="default"
+            size={56}
+            radius="xl"
+            aria-label="Request funds"
+            onClick={onRequestClick}
+          >
+            <ArrowDown02Icon size={32} />
+          </ActionIcon>
+          <Text size="xs" fw={500}>
+            Request
           </Text>
         </Stack>
 

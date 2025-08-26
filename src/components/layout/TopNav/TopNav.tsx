@@ -18,6 +18,7 @@ import { useDisclosure } from "@mantine/hooks";
 import NotificationDrawer from "./Notifications/NotificationDrawer";
 import { useRouter } from "next/navigation";
 import classes from "./TopNav.module.css";
+import { spotlight } from "@mantine/spotlight";
 interface TopNavProps {
   opened: boolean;
   toggle: () => void;
@@ -37,30 +38,26 @@ export default function TopNav({ opened, toggle }: TopNavProps) {
           <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
 
           {/* Logo */}
-          <Anchor
-            onClick={() => router.push("/")}
-            inherit
-            underline="never"
-            mr="lg"
-            visibleFrom="xs"
-          >
-            <Group gap={8} wrap="nowrap">
-              <Image
-                src="/images/logomark.svg"
-                alt="Holler Logo"
-                maw={24}
-                w="100%"
-                h="auto"
-              />
-              <Title order={2} style={{ color: "var(--mantine-color-text)" }}>
-                Holler
-              </Title>
-            </Group>
-          </Anchor>
+          <Group gap={8} wrap="nowrap">
+            <Image
+              src="/images/logomark.svg"
+              alt="Holler Logo"
+              maw={24}
+              w="100%"
+              h="auto"
+            />
+            <Title order={2} style={{ color: "var(--mantine-color-text)" }}>
+              Holler
+            </Title>
+          </Group>
         </Group>
 
         {/* Search */}
-        <UnstyledButton aria-label="Search" className={classes.search}>
+        <UnstyledButton
+          aria-label="Search"
+          className={classes.search}
+          onClick={spotlight.open}
+        >
           <Group align="center" justify="space-between" w="100%">
             <Group align="center" gap="xs" wrap="nowrap">
               <Search01Icon size={16} />

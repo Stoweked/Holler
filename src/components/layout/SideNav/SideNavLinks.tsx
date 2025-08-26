@@ -12,7 +12,7 @@ import { useDisclosure } from "@mantine/hooks";
 import ContactsDrawer from "@/components/contacts/ContactsDrawer";
 import ConnectedBanksDrawer from "@/components/banks/ConnectedBanksDrawer";
 import LienWaiversDrawer from "@/components/waivers/LienWaiversDrawer";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ProfileModal from "@/components/profile/ProfileModal";
 import PaymentDrawer from "@/components/primaryActions/PaymentDrawer";
 import { Contact } from "@/types/recipient";
@@ -47,6 +47,19 @@ export default function SideNavLinks() {
   ] = useDisclosure(false);
 
   const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
+
+  useEffect(() => {
+    const handleOpenContacts = () => openContactsDrawer();
+    const handleOpenBanks = () => openConnectedBanksDrawer();
+
+    window.addEventListener("open-contacts", handleOpenContacts);
+    window.addEventListener("open-banks", handleOpenBanks);
+
+    return () => {
+      window.removeEventListener("open-contacts", handleOpenContacts);
+      window.removeEventListener("open-banks", handleOpenBanks);
+    };
+  }, [openContactsDrawer, openConnectedBanksDrawer]);
 
   const handleContactClick = (contact: Contact) => {
     setSelectedContact(contact);

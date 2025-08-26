@@ -7,6 +7,7 @@ import ProfileDrawer from "@/components/profile/AccountDrawer";
 import { useRouter } from "next/navigation";
 import { logout } from "@/app/auth/logout/actions";
 import { useProfile } from "@/contexts/ProfileContext";
+import { useEffect } from "react";
 
 export default function AccountAvatar() {
   const router = useRouter();
@@ -20,6 +21,19 @@ export default function AccountAvatar() {
     openedProfileDrawer,
     { open: openProfileDrawer, close: closeProfileDrawer },
   ] = useDisclosure(false);
+
+  useEffect(() => {
+    const handleOpenAccount = () => openProfileDrawer();
+    const handleOpenFeedback = () => openFeedbackModal();
+
+    window.addEventListener("open-account", handleOpenAccount);
+    window.addEventListener("open-feedback", handleOpenFeedback);
+
+    return () => {
+      window.removeEventListener("open-account", handleOpenAccount);
+      window.removeEventListener("open-feedback", handleOpenFeedback);
+    };
+  }, [openProfileDrawer, openFeedbackModal]);
 
   const getInitials = (name: string | undefined) => {
     if (!name) return "";

@@ -1,4 +1,4 @@
-import { Card, Menu, Skeleton, Stack, Text, Title } from "@mantine/core";
+import { Card, Stack, Text, Title } from "@mantine/core";
 import ActionButtons from "../layout/SideNav/ActionButtons";
 import { useDisclosure } from "@mantine/hooks";
 import classes from "./PrimaryActions.module.css";
@@ -6,6 +6,7 @@ import DepositDrawer from "./deposit/DepositDrawer";
 import TransferDrawer from "./transfer/TransferDrawer";
 import PaymentDrawer from "./PaymentDrawer";
 import AccountToggle from "./AccountToggle/AccountToggle";
+import { useEffect } from "react";
 
 export default function PrimaryActionsCard() {
   const [
@@ -25,6 +26,30 @@ export default function PrimaryActionsCard() {
     openedTransferDrawer,
     { open: openTransferDrawer, close: closeTransferDrawer },
   ] = useDisclosure(false);
+
+  useEffect(() => {
+    const handleOpenDeposit = () => openDepositDrawer();
+    const handleOpenSend = () => openSendDrawer();
+    const handleOpenRequest = () => openRequestDrawer();
+    const handleOpenTransfer = () => openTransferDrawer();
+
+    window.addEventListener("open-deposit", handleOpenDeposit);
+    window.addEventListener("open-send", handleOpenSend);
+    window.addEventListener("open-request", handleOpenRequest);
+    window.addEventListener("open-transfer", handleOpenTransfer);
+
+    return () => {
+      window.removeEventListener("open-deposit", handleOpenDeposit);
+      window.removeEventListener("open-send", handleOpenSend);
+      window.removeEventListener("open-request", handleOpenRequest);
+      window.removeEventListener("open-transfer", handleOpenTransfer);
+    };
+  }, [
+    openDepositDrawer,
+    openSendDrawer,
+    openRequestDrawer,
+    openTransferDrawer,
+  ]);
 
   return (
     <div>
