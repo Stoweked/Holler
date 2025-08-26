@@ -108,6 +108,7 @@ export default function TransactionsTable() {
             activeDateFilter={dateFilter}
             activeSortOption={sortOption}
             resetFilters={resetFilters}
+            total={processedTransactions.length}
           />
 
           {processedTransactions.length === 0 ? (

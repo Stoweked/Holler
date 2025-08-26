@@ -20,13 +20,14 @@ import {
   Text,
   Tooltip,
 } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
+import { useDisclosure, useViewportSize } from "@mantine/hooks";
 import {
   ArrowLeftRightIcon,
   Calendar02Icon,
   CheckmarkCircle02Icon,
   CoinsDollarIcon,
   FileExportIcon,
+  FilterHorizontalIcon,
   MoreVerticalCircle01Icon,
   SearchRemoveIcon,
   SortByDown01Icon,
@@ -38,6 +39,7 @@ import { useState } from "react";
 import dayjs from "dayjs";
 import isBetween from "dayjs/plugin/isBetween";
 import classes from "./Transactions.module.css";
+import TransactionFiltersDrawer from "./TransactionFiltersDrawer";
 
 dayjs.extend(isBetween);
 
@@ -65,6 +67,7 @@ interface TransactionFiltersProps {
   onDateChange: (date: DateFilter | [Date, Date]) => void;
   activeSortOption: SortOption;
   resetFilters: () => void;
+  total: number;
 }
 
 export default function TransactionFilters({
@@ -77,7 +80,14 @@ export default function TransactionFilters({
   onDateChange,
   activeSortOption,
   resetFilters,
+  total,
 }: TransactionFiltersProps) {
+  const { width } = useViewportSize();
+  const condenseFilters = width < 1118;
+
+  const [drawerOpened, { open: openDrawer, close: closeDrawer }] =
+    useDisclosure(false);
+
   const [datePickerOpened, { open: openDatePicker, close: closeDatePicker }] =
     useDisclosure(false);
 
@@ -138,237 +148,274 @@ export default function TransactionFilters({
         <ScrollArea type="never">
           <Group wrap="nowrap" justify="space-between" gap="sm" pl="sm" py="sm">
             {/* Left side */}
-            <Group wrap="nowrap" gap="sm">
-              {/* Type */}
-              <Menu shadow="md" width={170} radius="md" position="bottom-start">
-                <Menu.Target>
-                  <Indicator
-                    disabled={!isTypeFilterActive}
-                    color="lime"
-                    position="top-end"
-                    size={10}
-                    offset={6}
-                  >
-                    <Button
-                      variant="default"
-                      size="sm"
-                      leftSection={<ArrowLeftRightIcon size={16} />}
-                      style={{ flexShrink: 0 }}
+            {condenseFilters ? (
+              <Button
+                variant="default"
+                size="sm"
+                leftSection={<FilterHorizontalIcon size={16} />}
+                style={{ flexShrink: 0 }}
+                onClick={openDrawer}
+              >
+                Filters
+              </Button>
+            ) : (
+              <Group wrap="nowrap" gap="sm">
+                {/* Type */}
+                <Menu
+                  shadow="md"
+                  width={170}
+                  radius="md"
+                  position="bottom-start"
+                >
+                  <Menu.Target>
+                    <Indicator
+                      disabled={!isTypeFilterActive}
+                      color="lime"
+                      position="top-end"
+                      size={10}
+                      offset={6}
                     >
-                      Type
-                    </Button>
-                  </Indicator>
-                </Menu.Target>
-                <Menu.Dropdown>
-                  <Menu.Label>Filter by type</Menu.Label>
-                  {typeFilters.map((filter) => (
-                    <Menu.Item
-                      key={filter}
-                      onClick={() => onTypeFilterChange(filter)}
-                    >
-                      <Group wrap="nowrap" gap="xs">
-                        {filter}
-                        {activeTypeFilter === filter && (
-                          <Badge variant="light" size="sm">
-                            Active
-                          </Badge>
-                        )}
-                      </Group>
-                    </Menu.Item>
-                  ))}
-                </Menu.Dropdown>
-              </Menu>
+                      <Button
+                        variant="default"
+                        size="sm"
+                        leftSection={<ArrowLeftRightIcon size={16} />}
+                        style={{ flexShrink: 0 }}
+                      >
+                        Type
+                      </Button>
+                    </Indicator>
+                  </Menu.Target>
+                  <Menu.Dropdown>
+                    <Menu.Label>Filter by type</Menu.Label>
+                    {typeFilters.map((filter) => (
+                      <Menu.Item
+                        key={filter}
+                        onClick={() => onTypeFilterChange(filter)}
+                      >
+                        <Group wrap="nowrap" gap="xs">
+                          {filter}
+                          {activeTypeFilter === filter && (
+                            <Badge variant="light" size="sm">
+                              Active
+                            </Badge>
+                          )}
+                        </Group>
+                      </Menu.Item>
+                    ))}
+                  </Menu.Dropdown>
+                </Menu>
 
-              {/* Status */}
-              <Menu shadow="md" width={170} radius="md" position="bottom-start">
-                <Menu.Target>
-                  <Indicator
-                    disabled={!isStatusFilterActive}
-                    color="lime"
-                    position="top-end"
-                    size={10}
-                    offset={6}
-                  >
-                    <Button
-                      variant="default"
-                      size="sm"
-                      leftSection={<CheckmarkCircle02Icon size={16} />}
-                      style={{ flexShrink: 0 }}
+                {/* Status */}
+                <Menu
+                  shadow="md"
+                  width={170}
+                  radius="md"
+                  position="bottom-start"
+                >
+                  <Menu.Target>
+                    <Indicator
+                      disabled={!isStatusFilterActive}
+                      color="lime"
+                      position="top-end"
+                      size={10}
+                      offset={6}
                     >
-                      Status
-                    </Button>
-                  </Indicator>
-                </Menu.Target>
-                <Menu.Dropdown>
-                  <Menu.Label>Filter by status</Menu.Label>
-                  {statusFilters.map((filter) => (
-                    <Menu.Item
-                      key={filter}
-                      onClick={() => onStatusFilterChange(filter)}
-                    >
-                      <Group wrap="nowrap" gap="xs">
-                        {filter}
-                        {activeStatusFilter === filter && (
-                          <Badge variant="light" size="sm">
-                            Active
-                          </Badge>
-                        )}
-                      </Group>
-                    </Menu.Item>
-                  ))}
-                </Menu.Dropdown>
-              </Menu>
+                      <Button
+                        variant="default"
+                        size="sm"
+                        leftSection={<CheckmarkCircle02Icon size={16} />}
+                        style={{ flexShrink: 0 }}
+                      >
+                        Status
+                      </Button>
+                    </Indicator>
+                  </Menu.Target>
+                  <Menu.Dropdown>
+                    <Menu.Label>Filter by status</Menu.Label>
+                    {statusFilters.map((filter) => (
+                      <Menu.Item
+                        key={filter}
+                        onClick={() => onStatusFilterChange(filter)}
+                      >
+                        <Group wrap="nowrap" gap="xs">
+                          {filter}
+                          {activeStatusFilter === filter && (
+                            <Badge variant="light" size="sm">
+                              Active
+                            </Badge>
+                          )}
+                        </Group>
+                      </Menu.Item>
+                    ))}
+                  </Menu.Dropdown>
+                </Menu>
 
-              {/* Dates */}
-              <Menu shadow="md" width={170} radius="md" position="bottom-start">
-                <Menu.Target>
-                  <Indicator
-                    disabled={!isDateFilterActive}
-                    color="lime"
-                    position="top-end"
-                    size={10}
-                    offset={6}
-                  >
-                    <Button
-                      size="sm"
-                      variant="default"
-                      leftSection={<Calendar02Icon size={16} />}
+                {/* Dates */}
+                <Menu
+                  shadow="md"
+                  width={170}
+                  radius="md"
+                  position="bottom-start"
+                >
+                  <Menu.Target>
+                    <Indicator
+                      disabled={!isDateFilterActive}
+                      color="lime"
+                      position="top-end"
+                      size={10}
+                      offset={6}
                     >
-                      Dates
-                    </Button>
-                  </Indicator>
-                </Menu.Target>
-                <Menu.Dropdown>
-                  <Menu.Label>Filter by date</Menu.Label>
-                  <Menu.Item
-                    onClick={() => {
-                      onDateChange("All");
-                      setDateRange([null, null]);
-                    }}
-                  >
-                    Show all
-                  </Menu.Item>
-                  <Menu.Divider />
-                  <Menu.Item
-                    onClick={() => {
-                      onDateChange("Today");
-                      setDateRange([null, null]);
-                    }}
-                  >
-                    <Group gap="xs">
-                      Today
-                      {activeDateFilter === "Today" && (
-                        <Badge variant="light" size="sm">
-                          Active
-                        </Badge>
-                      )}
-                    </Group>
-                  </Menu.Item>
-                  <Menu.Item
-                    onClick={() => {
-                      onDateChange("This week");
-                      setDateRange([null, null]);
-                    }}
-                  >
-                    <Group gap="xs">
-                      This week
-                      {activeDateFilter === "This week" && (
-                        <Badge variant="light" size="sm">
-                          Active
-                        </Badge>
-                      )}
-                    </Group>
-                  </Menu.Item>
-                  <Menu.Item
-                    onClick={() => {
-                      onDateChange("This month");
-                      setDateRange([null, null]);
-                    }}
-                  >
-                    <Group gap="xs">
-                      This month
-                      {activeDateFilter === "This month" && (
-                        <Badge variant="light" size="sm">
-                          Active
-                        </Badge>
-                      )}
-                    </Group>
-                  </Menu.Item>
-                  <Menu.Divider />
-                  <Menu.Item onClick={openDatePicker}>
-                    <Stack gap={4}>
+                      <Button
+                        size="sm"
+                        variant="default"
+                        leftSection={<Calendar02Icon size={16} />}
+                      >
+                        Dates
+                      </Button>
+                    </Indicator>
+                  </Menu.Target>
+                  <Menu.Dropdown>
+                    <Menu.Label>Filter by date</Menu.Label>
+                    <Menu.Item
+                      onClick={() => {
+                        onDateChange("All");
+                        setDateRange([null, null]);
+                      }}
+                    >
+                      Show all
+                    </Menu.Item>
+                    <Menu.Divider />
+                    <Menu.Item
+                      onClick={() => {
+                        onDateChange("Today");
+                        setDateRange([null, null]);
+                      }}
+                    >
                       <Group gap="xs">
-                        Custom
-                        {Array.isArray(activeDateFilter) && (
+                        Today
+                        {activeDateFilter === "Today" && (
                           <Badge variant="light" size="sm">
                             Active
                           </Badge>
                         )}
                       </Group>
-                      {Array.isArray(activeDateFilter) && dateFilterLabel && (
-                        <Text size="sm" c="dimmed">
-                          {dateFilterLabel}
-                        </Text>
-                      )}
-                    </Stack>
-                  </Menu.Item>
-                </Menu.Dropdown>
-              </Menu>
-
-              {/* Amount */}
-              <Menu shadow="md" width={170} radius="md" position="bottom-start">
-                <Menu.Target>
-                  <Indicator
-                    disabled
-                    color="lime"
-                    position="top-end"
-                    size={10}
-                    offset={6}
-                  >
-                    <Button
-                      size="sm"
-                      variant="default"
-                      leftSection={<CoinsDollarIcon size={16} />}
+                    </Menu.Item>
+                    <Menu.Item
+                      onClick={() => {
+                        onDateChange("This week");
+                        setDateRange([null, null]);
+                      }}
                     >
-                      Amount
-                    </Button>
-                  </Indicator>
-                </Menu.Target>
-                <Menu.Dropdown>
-                  <Menu.Label>Filter by amount</Menu.Label>
-                  <Menu.Item>Show all</Menu.Item>
-                  <Menu.Divider />
-                  Slider components
-                </Menu.Dropdown>
-              </Menu>
-
-              {/* Contacts */}
-              <Menu shadow="md" width={170} radius="md" position="bottom-start">
-                <Menu.Target>
-                  <Indicator
-                    disabled
-                    color="lime"
-                    position="top-end"
-                    size={10}
-                    offset={6}
-                  >
-                    <Button
-                      size="sm"
-                      variant="default"
-                      leftSection={<UserMultiple02Icon size={16} />}
+                      <Group gap="xs">
+                        This week
+                        {activeDateFilter === "This week" && (
+                          <Badge variant="light" size="sm">
+                            Active
+                          </Badge>
+                        )}
+                      </Group>
+                    </Menu.Item>
+                    <Menu.Item
+                      onClick={() => {
+                        onDateChange("This month");
+                        setDateRange([null, null]);
+                      }}
                     >
-                      Contacts
-                    </Button>
-                  </Indicator>
-                </Menu.Target>
-                <Menu.Dropdown>
-                  <Menu.Label>Filter by contact</Menu.Label>
-                  <Menu.Item>Show all</Menu.Item>
-                  <Menu.Divider />
-                  Contacts list
-                </Menu.Dropdown>
-              </Menu>
-            </Group>
+                      <Group gap="xs">
+                        This month
+                        {activeDateFilter === "This month" && (
+                          <Badge variant="light" size="sm">
+                            Active
+                          </Badge>
+                        )}
+                      </Group>
+                    </Menu.Item>
+                    <Menu.Divider />
+                    <Menu.Item onClick={openDatePicker}>
+                      <Stack gap={4}>
+                        <Group gap="xs">
+                          Custom
+                          {Array.isArray(activeDateFilter) && (
+                            <Badge variant="light" size="sm">
+                              Active
+                            </Badge>
+                          )}
+                        </Group>
+                        {Array.isArray(activeDateFilter) && dateFilterLabel && (
+                          <Text size="sm" c="dimmed">
+                            {dateFilterLabel}
+                          </Text>
+                        )}
+                      </Stack>
+                    </Menu.Item>
+                  </Menu.Dropdown>
+                </Menu>
+
+                {/* Amount */}
+                <Menu
+                  shadow="md"
+                  width={170}
+                  radius="md"
+                  position="bottom-start"
+                >
+                  <Menu.Target>
+                    <Indicator
+                      disabled
+                      color="lime"
+                      position="top-end"
+                      size={10}
+                      offset={6}
+                    >
+                      <Button
+                        size="sm"
+                        variant="default"
+                        leftSection={<CoinsDollarIcon size={16} />}
+                      >
+                        Amount
+                      </Button>
+                    </Indicator>
+                  </Menu.Target>
+                  <Menu.Dropdown>
+                    <Menu.Label>Filter by amount</Menu.Label>
+                    <Menu.Item>Show all</Menu.Item>
+                    <Menu.Divider />
+                    Slider components
+                  </Menu.Dropdown>
+                </Menu>
+
+                {/* Contacts */}
+                <Menu
+                  shadow="md"
+                  width={170}
+                  radius="md"
+                  position="bottom-start"
+                >
+                  <Menu.Target>
+                    <Indicator
+                      disabled
+                      color="lime"
+                      position="top-end"
+                      size={10}
+                      offset={6}
+                    >
+                      <Button
+                        size="sm"
+                        variant="default"
+                        leftSection={<UserMultiple02Icon size={16} />}
+                      >
+                        Contacts
+                      </Button>
+                    </Indicator>
+                  </Menu.Target>
+                  <Menu.Dropdown>
+                    <Menu.Label>Filter by contact</Menu.Label>
+                    <Menu.Item>Show all</Menu.Item>
+                    <Menu.Divider />
+                    Contacts list
+                  </Menu.Dropdown>
+                </Menu>
+              </Group>
+            )}
 
             {/* Right side */}
             <Group wrap="nowrap" gap="sm" pr="sm">
@@ -499,6 +546,19 @@ export default function TransactionFilters({
           )}
         </ScrollArea>
       </Stack>
+
+      <TransactionFiltersDrawer
+        opened={drawerOpened}
+        onClose={closeDrawer}
+        activeStatusFilter={activeStatusFilter}
+        activeTypeFilter={activeTypeFilter}
+        activeDateFilter={activeDateFilter}
+        onStatusFilterChange={onStatusFilterChange}
+        onTypeFilterChange={onTypeFilterChange}
+        onDateChange={onDateChange}
+        total={total}
+        resetFilters={resetFilters}
+      />
 
       <Modal
         opened={datePickerOpened}
