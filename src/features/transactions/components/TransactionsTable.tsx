@@ -25,6 +25,8 @@ export default function TransactionsTable() {
     setSortOption,
     dateFilter,
     setDateFilter,
+    amountRange,
+    setAmountRange,
     processedTransactions,
     resetFilters,
   } = useTransactionFilters(mockTransactions);
@@ -33,6 +35,13 @@ export default function TransactionsTable() {
     setSelectedTransaction(transaction);
     openDrawer();
   };
+
+  const isAnyFilterActive =
+    activeStatusFilter !== "All" ||
+    activeTypeFilter !== "All" ||
+    dateFilter !== "All" ||
+    amountRange[0] !== 0 ||
+    amountRange[1] !== 250000;
 
   return (
     <>
@@ -47,6 +56,8 @@ export default function TransactionsTable() {
             onSortChange={setSortOption}
             activeDateFilter={dateFilter}
             onDateChange={setDateFilter}
+            activeAmountFilter={amountRange}
+            onAmountFilterChange={setAmountRange}
             resetFilters={resetFilters}
             total={processedTransactions.length}
           />
@@ -83,9 +94,7 @@ export default function TransactionsTable() {
                   onClick={() => handleTransactionClick(transaction)}
                 />
               ))}
-              {activeStatusFilter !== "All" ||
-              activeTypeFilter !== "All" ||
-              dateFilter !== "All" ? (
+              {isAnyFilterActive ? (
                 <Button
                   mt="lg"
                   size="md"

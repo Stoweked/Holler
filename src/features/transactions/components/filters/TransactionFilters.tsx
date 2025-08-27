@@ -1,4 +1,4 @@
-// stoweked/holler/Holler-main/src/features/transactions/components/filters/TransactionFilters.tsx
+// src/features/transactions/components/filters/TransactionFilters.tsx
 import { Group, Stack, ScrollArea, Button, Pill, Space } from "@mantine/core";
 import { useDisclosure, useViewportSize } from "@mantine/hooks";
 import { FilterHorizontalIcon } from "hugeicons-react";
@@ -10,15 +10,13 @@ import {
   TransactionStatusFilter,
   TransactionTypeFilter,
 } from "../../types/transaction";
-import {
-  TypeFilter,
-  StatusFilter,
-  DateFilterComponent,
-  AmountFilter,
-  ContactFilter,
-  Sort,
-  Options,
-} from "../index";
+import { TypeFilter } from "./TypeFilter";
+import { StatusFilter } from "./StatusFilter";
+import { DateFilterComponent } from "./DateFilter";
+import { AmountFilter } from "./AmountFilter";
+import { ContactFilter } from "./ContactFilter";
+import { Sort } from "./Sort";
+import { Options } from "./Options";
 import TransactionFiltersDrawer from "./TransactionFiltersDrawer";
 
 const statusFilters: TransactionStatusFilter[] = [
@@ -44,6 +42,8 @@ interface TransactionFiltersProps {
   onSortChange: (sort: SortOption) => void;
   activeDateFilter: DateFilter | [Date, Date];
   onDateChange: (date: DateFilter | [Date, Date]) => void;
+  activeAmountFilter: [number, number];
+  onAmountFilterChange: (range: [number, number]) => void;
   resetFilters: () => void;
   total: number;
 }
@@ -57,6 +57,8 @@ export default function TransactionFilters({
   onSortChange,
   activeDateFilter,
   onDateChange,
+  activeAmountFilter,
+  onAmountFilterChange,
   resetFilters,
   total,
 }: TransactionFiltersProps) {
@@ -72,6 +74,8 @@ export default function TransactionFilters({
     ? activeDateFilter[0] !== null && activeDateFilter[1] !== null
     : activeDateFilter !== "All";
   const isSortActive = activeSortOption !== "Newest first";
+  const isAmountFilterActive =
+    activeAmountFilter[0] !== 0 || activeAmountFilter[1] !== 250000;
 
   const getDateFilterLabel = () => {
     if (!isDateFilterActive) {
@@ -129,7 +133,10 @@ export default function TransactionFilters({
                   activeDateFilter={activeDateFilter}
                   onDateChange={onDateChange}
                 />
-                <AmountFilter />
+                <AmountFilter
+                  activeAmountFilter={activeAmountFilter}
+                  onAmountFilterChange={onAmountFilterChange}
+                />
                 <ContactFilter />
               </Group>
             )}
@@ -148,7 +155,8 @@ export default function TransactionFilters({
           {(isStatusFilterActive ||
             isTypeFilterActive ||
             isDateFilterActive ||
-            isSortActive) && (
+            isSortActive ||
+            isAmountFilterActive) && (
             <Group p="sm" pt={0} gap="sm" wrap="nowrap">
               {isTypeFilterActive && (
                 <Pill
@@ -166,6 +174,15 @@ export default function TransactionFilters({
                   onRemove={() => onStatusFilterChange("All")}
                 >
                   {activeStatusFilter}
+                </Pill>
+              )}
+              {isAmountFilterActive && (
+                <Pill
+                  className={classes.filterPill}
+                  withRemoveButton
+                  onRemove={() => onAmountFilterChange([0, 250000])}
+                >
+                  {`$${activeAmountFilter[0].toLocaleString()} - $${activeAmountFilter[1].toLocaleString()}`}
                 </Pill>
               )}
               {isDateFilterActive && (
@@ -199,6 +216,8 @@ export default function TransactionFilters({
         activeStatusFilter={activeStatusFilter}
         activeTypeFilter={activeTypeFilter}
         activeDateFilter={activeDateFilter}
+        activeAmountFilter={activeAmountFilter}
+        onAmountFilterChange={onAmountFilterChange}
         onStatusFilterChange={onStatusFilterChange}
         onTypeFilterChange={onTypeFilterChange}
         onDateChange={onDateChange}

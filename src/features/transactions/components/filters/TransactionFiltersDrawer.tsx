@@ -1,3 +1,4 @@
+// src/features/transactions/components/filters/TransactionFiltersDrawer.tsx
 import {
   TransactionStatusFilter,
   TransactionTypeFilter,
@@ -8,11 +9,15 @@ import {
   Center,
   Combobox,
   Drawer,
+  Group,
   InputBase,
   Modal,
+  NumberInput,
+  RangeSlider,
   Select,
   Space,
   Stack,
+  Text,
   useCombobox,
 } from "@mantine/core";
 import { DatePicker } from "@mantine/dates";
@@ -40,9 +45,11 @@ interface TransactionFiltersDrawerProps {
   activeStatusFilter: TransactionStatusFilter;
   activeTypeFilter: TransactionTypeFilter;
   activeDateFilter: DateFilter | [Date, Date];
+  activeAmountFilter: [number, number];
   onStatusFilterChange: (filter: TransactionStatusFilter) => void;
   onTypeFilterChange: (filter: TransactionTypeFilter) => void;
   onDateChange: (date: DateFilter | [Date, Date]) => void;
+  onAmountFilterChange: (range: [number, number]) => void;
   total: number;
   resetFilters: () => void;
 }
@@ -53,9 +60,11 @@ export default function TransactionFiltersDrawer({
   activeStatusFilter,
   activeTypeFilter,
   activeDateFilter,
+  activeAmountFilter,
   onStatusFilterChange,
   onTypeFilterChange,
   onDateChange,
+  onAmountFilterChange,
   total,
   resetFilters,
 }: TransactionFiltersDrawerProps) {
@@ -167,6 +176,53 @@ export default function TransactionFiltersDrawer({
               <Combobox.Options>{dateOptions}</Combobox.Options>
             </Combobox.Dropdown>
           </Combobox>
+
+          <Stack gap="sm">
+            <Text size="sm" fw={500}>
+              Amount
+            </Text>
+            <RangeSlider
+              min={0}
+              max={250000}
+              step={1000}
+              value={activeAmountFilter}
+              onChange={onAmountFilterChange}
+              label={null}
+              minRange={1000}
+              px="xs"
+              size="lg"
+            />
+            <Group justify="space-between" grow>
+              <NumberInput
+                value={activeAmountFilter[0]}
+                onChange={(val) =>
+                  onAmountFilterChange([Number(val), activeAmountFilter[1]])
+                }
+                prefix="$"
+                thousandSeparator
+                step={1000}
+                min={0}
+                max={activeAmountFilter[1]}
+                size="md"
+                radius="md"
+                hideControls
+              />
+              <NumberInput
+                value={activeAmountFilter[1]}
+                onChange={(val) =>
+                  onAmountFilterChange([activeAmountFilter[0], Number(val)])
+                }
+                prefix="$"
+                thousandSeparator
+                step={1000}
+                min={activeAmountFilter[0]}
+                max={250000}
+                size="md"
+                radius="md"
+                hideControls
+              />
+            </Group>
+          </Stack>
 
           <Stack>
             <Button size="lg" onClick={onClose} disabled={total === 0}>

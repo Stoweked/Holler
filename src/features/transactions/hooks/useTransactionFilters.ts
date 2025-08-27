@@ -1,3 +1,4 @@
+// src/features/transactions/hooks/useTransactionFilters.ts
 import { useState } from "react";
 import {
   DateFilter,
@@ -20,6 +21,7 @@ export const useTransactionFilters = (initialTransactions: Transaction[]) => {
   const [dateFilter, setDateFilter] = useState<DateFilter | [Date, Date]>(
     "All"
   );
+  const [amountRange, setAmountRange] = useState<[number, number]>([0, 250000]);
 
   const processedTransactions = initialTransactions
     .filter((transaction) => {
@@ -29,6 +31,12 @@ export const useTransactionFilters = (initialTransactions: Transaction[]) => {
     .filter((transaction) => {
       if (activeTypeFilter === "All") return true;
       return transaction.type === activeTypeFilter;
+    })
+    .filter((transaction) => {
+      return (
+        transaction.amount >= amountRange[0] &&
+        transaction.amount <= amountRange[1]
+      );
     })
     .filter((transaction) => {
       const transactionDate = dayjs(transaction.date);
@@ -72,6 +80,7 @@ export const useTransactionFilters = (initialTransactions: Transaction[]) => {
     setActiveTypeFilter("All");
     setDateFilter("All");
     setSortOption("Newest first");
+    setAmountRange([0, 250000]);
   };
 
   return {
@@ -83,6 +92,8 @@ export const useTransactionFilters = (initialTransactions: Transaction[]) => {
     setSortOption,
     dateFilter,
     setDateFilter,
+    amountRange,
+    setAmountRange,
     processedTransactions,
     resetFilters,
   };
