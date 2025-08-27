@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button, Center, Space, Stack, Text, Title } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import TransactionFilters from "./TransactionFilters";
+import TransactionFilters from "./filters/TransactionFilters";
 import TransactionItem from "./TransactionItem"; // Import the new item component
 import {
   DateFilter,

@@ -1,0 +1,91 @@
+import { useState } from "react";
+import {
+  DateFilter,
+  SortOption,
+  Transaction,
+  TransactionStatusFilter,
+  TransactionTypeFilter,
+} from "@/features/transactions/types/transaction";
+import dayjs from "dayjs";
+import isBetween from "dayjs/plugin/isBetween";
+
+dayjs.extend(isBetween);
+
+export const useTransactionFilters = (initialTransactions: Transaction[]) => {
+  const [activeStatusFilter, setActiveStatusFilter] =
+    useState<TransactionStatusFilter>("All");
+  const [activeTypeFilter, setActiveTypeFilter] =
+    useState<TransactionTypeFilter>("All");
+  const [sortOption, setSortOption] = useState<SortOption>("Newest first");
+  const [dateFilter, setDateFilter] = useState<DateFilter | [Date, Date]>(
+    "All"
+  );
+
+  const processedTransactions = initialTransactions
+    .filter((transaction) => {
+      if (activeStatusFilter === "All") return true;
+      return transaction.status === activeStatusFilter;
+    })
+    .filter((transaction) => {
+      if (activeTypeFilter === "All") return true;
+      return transaction.type === activeTypeFilter;
+    })
+    .filter((transaction) => {
+      const transactionDate = dayjs(transaction.date);
+      if (dateFilter === "All") return true;
+      if (dateFilter === "Today") {
+        return transactionDate.isSame(dayjs(), "day");
+      }
+      if (dateFilter === "This week") {
+        return transactionDate.isBetween(
+          dayjs().startOf("week"),
+          dayjs().endOf("week")
+        );
+      }
+      if (dateFilter === "This month") {
+        return transactionDate.isSame(dayjs(), "month");
+      }
+      if (Array.isArray(dateFilter)) {
+        return transactionDate.isBetween(
+          dateFilter[0],
+          dateFilter[1],
+          "day",
+          "[]"
+        );
+      }
+      return true;
+    })
+    .sort((a, b) => {
+      switch (sortOption) {
+        case "Oldest first":
+          return new Date(a.date).getTime() - new Date(b.date).getTime();
+        case "Amount (High to Low)":
+          return b.amount - a.amount;
+        case "Amount (Low to High)":
+          return a.amount - b.amount;
+        case "Newest first":
+        default:
+          return new Date(b.date).getTime() - new Date(a.date).getTime();
+      }
+    });
+
+  const resetFilters = () => {
+    setActiveStatusFilter("All");
+    setActiveTypeFilter("All");
+    setDateFilter("All");
+    setSortOption("Newest first");
+  };
+
+  return {
+    activeStatusFilter,
+    setActiveStatusFilter,
+    activeTypeFilter,
+    setActiveTypeFilter,
+    sortOption,
+    setSortOption,
+    dateFilter,
+    setDateFilter,
+    processedTransactions,
+    resetFilters,
+  };
+};
