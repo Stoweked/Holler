@@ -7,7 +7,7 @@ import {
   Message01Icon,
   UserMultiple02Icon,
 } from "hugeicons-react";
-import { classes } from "./index";
+import classes from "./SideNav.module.css";
 import { useDisclosure } from "@mantine/hooks";
 import ContactsDrawer from "@/components/contacts/ContactsDrawer";
 import ConnectedBanksDrawer from "@/components/banks/ConnectedBanksDrawer";

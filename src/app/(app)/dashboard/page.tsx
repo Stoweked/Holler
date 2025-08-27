@@ -1,6 +1,6 @@
 "use client";
 
-import AppLayout from "@/app/AppLayout";
+import AppLayout from "@/components/layout/AppLayout";
 import PrimaryActionsCard from "@/components/primaryActions/PrimaryActionsCard";
 import TransactionsTable from "@/components/transactions/TransactionsTable";
 import { useViewportSize } from "@mantine/hooks";
