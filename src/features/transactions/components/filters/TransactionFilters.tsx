@@ -52,6 +52,8 @@ interface TransactionFiltersProps {
   onDateChange: (date: DateFilter | [Date, Date]) => void;
   activeAmountFilter: [number, number];
   onAmountFilterChange: (range: [number, number]) => void;
+  activeContactFilter: string;
+  onContactFilterChange: (contact: string) => void;
   resetFilters: () => void;
   total: number;
 }
@@ -67,6 +69,8 @@ export default function TransactionFilters({
   onDateChange,
   activeAmountFilter,
   onAmountFilterChange,
+  activeContactFilter,
+  onContactFilterChange,
   resetFilters,
   total,
 }: TransactionFiltersProps) {
@@ -84,12 +88,14 @@ export default function TransactionFilters({
   const isSortActive = activeSortOption !== "Newest first";
   const isAmountFilterActive =
     activeAmountFilter[0] !== 0 || activeAmountFilter[1] !== 250000;
+  const isContactFilterActive = activeContactFilter !== "All";
 
   const isAnyFilterActive =
     isStatusFilterActive ||
     isTypeFilterActive ||
     isDateFilterActive ||
-    isAmountFilterActive;
+    isAmountFilterActive ||
+    isContactFilterActive;
 
   const getDateFilterLabel = () => {
     if (!isDateFilterActive) {
@@ -159,7 +165,10 @@ export default function TransactionFilters({
                   activeAmountFilter={activeAmountFilter}
                   onAmountFilterChange={onAmountFilterChange}
                 />
-                <ContactFilter />
+                <ContactFilter
+                  activeContactFilter={activeContactFilter}
+                  onContactFilterChange={onContactFilterChange}
+                />
               </Group>
             )}
             {/* Right side */}
@@ -174,11 +183,7 @@ export default function TransactionFilters({
         </ScrollArea>
         {/* Filter pills */}
         <ScrollArea type="never">
-          {(isStatusFilterActive ||
-            isTypeFilterActive ||
-            isDateFilterActive ||
-            isSortActive ||
-            isAmountFilterActive) && (
+          {(isAnyFilterActive || isSortActive) && (
             <Group p="sm" pt={0} gap="sm" wrap="nowrap">
               {isTypeFilterActive && (
                 <Pill
@@ -205,6 +210,15 @@ export default function TransactionFilters({
                   onRemove={() => onAmountFilterChange([0, 250000])}
                 >
                   {`$${activeAmountFilter[0].toLocaleString()} - $${activeAmountFilter[1].toLocaleString()}`}
+                </Pill>
+              )}
+              {isContactFilterActive && (
+                <Pill
+                  className={classes.filterPill}
+                  withRemoveButton
+                  onRemove={() => onContactFilterChange("All")}
+                >
+                  {activeContactFilter}
                 </Pill>
               )}
               {isDateFilterActive && (
@@ -239,10 +253,14 @@ export default function TransactionFilters({
         activeTypeFilter={activeTypeFilter}
         activeDateFilter={activeDateFilter}
         activeAmountFilter={activeAmountFilter}
+        activeContactFilter={activeContactFilter}
+        activeSortOption={activeSortOption}
+        onSortChange={onSortChange}
         onAmountFilterChange={onAmountFilterChange}
         onStatusFilterChange={onStatusFilterChange}
         onTypeFilterChange={onTypeFilterChange}
         onDateChange={onDateChange}
+        onContactFilterChange={onContactFilterChange}
         total={total}
         resetFilters={resetFilters}
       />

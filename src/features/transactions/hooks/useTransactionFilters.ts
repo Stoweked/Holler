@@ -22,6 +22,7 @@ export const useTransactionFilters = (initialTransactions: Transaction[]) => {
     "All"
   );
   const [amountRange, setAmountRange] = useState<[number, number]>([0, 250000]);
+  const [activeContactFilter, setActiveContactFilter] = useState<string>("All");
 
   const processedTransactions = initialTransactions
     .filter((transaction) => {
@@ -31,6 +32,13 @@ export const useTransactionFilters = (initialTransactions: Transaction[]) => {
     .filter((transaction) => {
       if (activeTypeFilter === "All") return true;
       return transaction.type === activeTypeFilter;
+    })
+    .filter((transaction) => {
+      if (activeContactFilter === "All") return true;
+      return (
+        transaction.sender === activeContactFilter ||
+        transaction.receiver === activeContactFilter
+      );
     })
     .filter((transaction) => {
       return (
@@ -81,6 +89,7 @@ export const useTransactionFilters = (initialTransactions: Transaction[]) => {
     setDateFilter("All");
     setSortOption("Newest first");
     setAmountRange([0, 250000]);
+    setActiveContactFilter("All");
   };
 
   return {
@@ -94,6 +103,8 @@ export const useTransactionFilters = (initialTransactions: Transaction[]) => {
     setDateFilter,
     amountRange,
     setAmountRange,
+    activeContactFilter,
+    setActiveContactFilter,
     processedTransactions,
     resetFilters,
   };

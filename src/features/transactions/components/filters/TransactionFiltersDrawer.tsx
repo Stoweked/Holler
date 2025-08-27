@@ -3,6 +3,7 @@ import {
   TransactionStatusFilter,
   TransactionTypeFilter,
   DateFilter,
+  SortOption,
 } from "@/features/transactions/types/transaction";
 import {
   Button,
@@ -24,6 +25,7 @@ import { DatePicker } from "@mantine/dates";
 import { useDisclosure } from "@mantine/hooks";
 import dayjs from "dayjs";
 import { useState } from "react";
+import { mockContacts } from "@/mockData/mockContacts";
 
 const statusFilters: TransactionStatusFilter[] = [
   "All",
@@ -39,6 +41,13 @@ const typeFilters: TransactionTypeFilter[] = [
   "Transferred",
 ];
 
+const sortOptions: SortOption[] = [
+  "Newest first",
+  "Oldest first",
+  "Amount (High to Low)",
+  "Amount (Low to High)",
+];
+
 interface TransactionFiltersDrawerProps {
   opened: boolean;
   onClose: () => void;
@@ -46,10 +55,14 @@ interface TransactionFiltersDrawerProps {
   activeTypeFilter: TransactionTypeFilter;
   activeDateFilter: DateFilter | [Date, Date];
   activeAmountFilter: [number, number];
+  activeContactFilter: string;
+  activeSortOption: SortOption;
+  onSortChange: (sort: SortOption) => void;
   onStatusFilterChange: (filter: TransactionStatusFilter) => void;
   onTypeFilterChange: (filter: TransactionTypeFilter) => void;
   onDateChange: (date: DateFilter | [Date, Date]) => void;
   onAmountFilterChange: (range: [number, number]) => void;
+  onContactFilterChange: (contact: string) => void;
   total: number;
   resetFilters: () => void;
 }
@@ -61,10 +74,14 @@ export default function TransactionFiltersDrawer({
   activeTypeFilter,
   activeDateFilter,
   activeAmountFilter,
+  activeContactFilter,
+  activeSortOption,
+  onSortChange,
   onStatusFilterChange,
   onTypeFilterChange,
   onDateChange,
   onAmountFilterChange,
+  onContactFilterChange,
   total,
   resetFilters,
 }: TransactionFiltersDrawerProps) {
@@ -113,6 +130,14 @@ export default function TransactionFiltersDrawer({
     )
   );
 
+  const contactOptions = [
+    { value: "All", label: "All contacts" },
+    ...mockContacts.map((contact) => ({
+      value: contact.name,
+      label: contact.name,
+    })),
+  ];
+
   return (
     <>
       <Drawer
@@ -122,6 +147,15 @@ export default function TransactionFiltersDrawer({
         position="right"
       >
         <Stack gap="lg">
+          <Select
+            label="Sort by"
+            size="lg"
+            radius="md"
+            data={sortOptions}
+            allowDeselect={false}
+            value={activeSortOption}
+            onChange={(value) => onSortChange(value as SortOption)}
+          />
           <Select
             label="Type"
             size="lg"
@@ -176,6 +210,17 @@ export default function TransactionFiltersDrawer({
               <Combobox.Options>{dateOptions}</Combobox.Options>
             </Combobox.Dropdown>
           </Combobox>
+
+          <Select
+            label="Contact"
+            size="lg"
+            radius="md"
+            data={contactOptions}
+            value={activeContactFilter}
+            onChange={(value) => onContactFilterChange(value || "All")}
+            searchable
+            allowDeselect={false}
+          />
 
           <Stack gap="sm">
             <Stack gap={8}>

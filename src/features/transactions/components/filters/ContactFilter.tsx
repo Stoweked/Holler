@@ -1,12 +1,47 @@
-import { Menu, Indicator, Button } from "@mantine/core";
-import { UserMultiple02Icon } from "hugeicons-react";
+// src/features/transactions/components/filters/ContactFilter.tsx
+import {
+  Menu,
+  Indicator,
+  Button,
+  TextInput,
+  ScrollArea,
+  Group,
+  Avatar,
+  Text,
+  Stack,
+} from "@mantine/core";
+import { UserMultiple02Icon, Search01Icon } from "hugeicons-react";
+import { mockContacts } from "@/mockData/mockContacts";
+import { useState } from "react";
 
-export function ContactFilter() {
+interface ContactFilterProps {
+  activeContactFilter: string;
+  onContactFilterChange: (contact: string) => void;
+}
+
+export function ContactFilter({
+  activeContactFilter,
+  onContactFilterChange,
+}: ContactFilterProps) {
+  const [searchValue, setSearchValue] = useState("");
+
+  const filteredContacts = mockContacts.filter((contact) =>
+    contact.name.toLowerCase().includes(searchValue.toLowerCase())
+  );
+
+  const isContactFilterActive = activeContactFilter !== "All";
+
   return (
-    <Menu shadow="md" width={170} radius="md" position="bottom-start">
+    <Menu
+      shadow="md"
+      width={300}
+      radius="md"
+      position="bottom-start"
+      closeOnItemClick
+    >
       <Menu.Target>
         <Indicator
-          disabled
+          disabled={!isContactFilterActive}
           color="lime"
           position="top-end"
           size={10}
@@ -21,11 +56,40 @@ export function ContactFilter() {
           </Button>
         </Indicator>
       </Menu.Target>
-      <Menu.Dropdown>
-        <Menu.Label>Filter by contact</Menu.Label>
-        <Menu.Item>Show all</Menu.Item>
-        <Menu.Divider />
-        Contacts list
+      <Menu.Dropdown p="sm">
+        <TextInput
+          placeholder="Search contacts"
+          leftSection={<Search01Icon size={16} />}
+          value={searchValue}
+          onChange={(event) => setSearchValue(event.currentTarget.value)}
+          onClick={(event) => event.stopPropagation()}
+          radius="md"
+          size="md"
+          mb={8}
+        />
+        <ScrollArea h={250}>
+          <Menu.Item onClick={() => onContactFilterChange("All")}>
+            Show all contacts
+          </Menu.Item>
+          {filteredContacts.map((contact) => (
+            <Menu.Item
+              key={contact.name}
+              onClick={() => onContactFilterChange(contact.name)}
+            >
+              <Group wrap="nowrap" gap="xs">
+                <Avatar color="lime" radius="xl" size="md">
+                  {contact.avatar}
+                </Avatar>
+                <Stack gap={0}>
+                  <Text size="sm">{contact.name}</Text>
+                  <Text size="xs" c="dimmed">
+                    {contact.details}
+                  </Text>
+                </Stack>
+              </Group>
+            </Menu.Item>
+          ))}
+        </ScrollArea>
       </Menu.Dropdown>
     </Menu>
   );

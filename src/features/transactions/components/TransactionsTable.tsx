@@ -1,4 +1,4 @@
-// stoweked/holler/Holler-main/src/features/transactions/components/TransactionsTable.tsx
+// src/features/transactions/components/TransactionsTable.tsx
 import { useState } from "react";
 import { Button, Center, Space, Stack, Text, Title } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
@@ -27,6 +27,8 @@ export default function TransactionsTable() {
     setDateFilter,
     amountRange,
     setAmountRange,
+    activeContactFilter,
+    setActiveContactFilter,
     processedTransactions,
     resetFilters,
   } = useTransactionFilters(mockTransactions);
@@ -40,6 +42,7 @@ export default function TransactionsTable() {
     activeStatusFilter !== "All" ||
     activeTypeFilter !== "All" ||
     dateFilter !== "All" ||
+    activeContactFilter !== "All" ||
     amountRange[0] !== 0 ||
     amountRange[1] !== 250000;
 
@@ -58,6 +61,8 @@ export default function TransactionsTable() {
             onDateChange={setDateFilter}
             activeAmountFilter={amountRange}
             onAmountFilterChange={setAmountRange}
+            activeContactFilter={activeContactFilter}
+            onContactFilterChange={setActiveContactFilter}
             resetFilters={resetFilters}
             total={processedTransactions.length}
           />
