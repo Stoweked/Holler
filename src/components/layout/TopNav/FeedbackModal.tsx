@@ -67,7 +67,7 @@ export default function FeedbackModal({
       close();
       form.reset();
       notifications.show({
-        color: "green",
+        color: "lime",
         title: "Thank you!",
         message: "Your feedback has been submitted",
         icon: <CheckIcon size={16} />,
