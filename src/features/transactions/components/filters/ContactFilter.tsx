@@ -9,6 +9,7 @@ import {
   Avatar,
   Text,
   Stack,
+  CloseButton,
 } from "@mantine/core";
 import { UserMultiple02Icon, Search01Icon } from "hugeicons-react";
 import { mockContacts } from "@/mockData/mockContacts";
@@ -36,7 +37,7 @@ export function ContactFilter({
       shadow="md"
       width={300}
       radius="md"
-      position="bottom-start"
+      position="bottom-end"
       closeOnItemClick
     >
       <Menu.Target>
@@ -66,22 +67,31 @@ export function ContactFilter({
           radius="md"
           size="md"
           mb={8}
+          rightSection={
+            searchValue ? (
+              <CloseButton
+                size="sm"
+                onClick={() => setSearchValue("")}
+                aria-label="Clear search"
+              />
+            ) : null
+          }
         />
-        <ScrollArea h={250}>
-          <Menu.Item onClick={() => onContactFilterChange("All")}>
-            Show all contacts
-          </Menu.Item>
+        <ScrollArea h={300}>
           {filteredContacts.map((contact) => (
             <Menu.Item
               key={contact.name}
               onClick={() => onContactFilterChange(contact.name)}
+              styles={{ item: { paddingLeft: "4px", paddingRight: "4px" } }}
             >
               <Group wrap="nowrap" gap="xs">
                 <Avatar color="lime" radius="xl" size="md">
                   {contact.avatar}
                 </Avatar>
                 <Stack gap={0}>
-                  <Text size="sm">{contact.name}</Text>
+                  <Text size="sm" fw="bold">
+                    {contact.name}
+                  </Text>
                   <Text size="xs" c="dimmed">
                     {contact.details}
                   </Text>

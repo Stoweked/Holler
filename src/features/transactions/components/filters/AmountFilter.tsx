@@ -21,7 +21,7 @@ export function AmountFilter({
   onAmountFilterChange,
 }: AmountFilterProps) {
   const isAmountFilterActive =
-    activeAmountFilter[0] !== 0 || activeAmountFilter[1] !== 250000;
+    activeAmountFilter[0] !== 0 || activeAmountFilter[1] !== 999999;
   const [value, setValue] = useState<[number, number]>(activeAmountFilter);
 
   useEffect(() => {
@@ -58,7 +58,7 @@ export function AmountFilter({
         <Stack p="sm" gap="lg">
           <RangeSlider
             min={0}
-            max={250000}
+            max={999999}
             step={1000}
             value={value}
             onChange={setValue}

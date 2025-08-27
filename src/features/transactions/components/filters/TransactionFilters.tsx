@@ -87,7 +87,7 @@ export default function TransactionFilters({
     : activeDateFilter !== "All";
   const isSortActive = activeSortOption !== "Newest first";
   const isAmountFilterActive =
-    activeAmountFilter[0] !== 0 || activeAmountFilter[1] !== 250000;
+    activeAmountFilter[0] !== 0 || activeAmountFilter[1] !== 999999;
   const isContactFilterActive = activeContactFilter !== "All";
 
   const isAnyFilterActive =
@@ -207,7 +207,7 @@ export default function TransactionFilters({
                 <Pill
                   className={classes.filterPill}
                   withRemoveButton
-                  onRemove={() => onAmountFilterChange([0, 250000])}
+                  onRemove={() => onAmountFilterChange([0, 999999])}
                 >
                   {`$${activeAmountFilter[0].toLocaleString()} - $${activeAmountFilter[1].toLocaleString()}`}
                 </Pill>

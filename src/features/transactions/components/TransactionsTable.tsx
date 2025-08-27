@@ -44,7 +44,7 @@ export default function TransactionsTable() {
     dateFilter !== "All" ||
     activeContactFilter !== "All" ||
     amountRange[0] !== 0 ||
-    amountRange[1] !== 250000;
+    amountRange[1] !== 999999;
 
   return (
     <>

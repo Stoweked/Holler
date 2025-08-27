@@ -1,4 +1,4 @@
-// src/features/transactions/components/filters/TransactionFiltersDrawer.tsx
+// stoweked/holler/Holler-main/src/features/transactions/components/filters/TransactionFiltersDrawer.tsx
 import {
   TransactionStatusFilter,
   TransactionTypeFilter,
@@ -20,12 +20,16 @@ import {
   Stack,
   Text,
   useCombobox,
+  Avatar,
+  ScrollArea,
+  CloseButton,
 } from "@mantine/core";
 import { DatePicker } from "@mantine/dates";
 import { useDisclosure } from "@mantine/hooks";
 import dayjs from "dayjs";
 import { useState } from "react";
 import { mockContacts } from "@/mockData/mockContacts";
+import { Search01Icon } from "hugeicons-react";
 
 const statusFilters: TransactionStatusFilter[] = [
   "All",
@@ -91,8 +95,9 @@ export default function TransactionFiltersDrawer({
     null,
     null,
   ]);
-
-  const combobox = useCombobox();
+  const [contactSearch, setContactSearch] = useState("");
+  const dateCombobox = useCombobox();
+  const contactCombobox = useCombobox();
 
   const handleDateChange = (value: [string | null, string | null]) => {
     const newRange: [Date | null, Date | null] = [
@@ -130,13 +135,27 @@ export default function TransactionFiltersDrawer({
     )
   );
 
-  const contactOptions = [
-    { value: "All", label: "All contacts" },
-    ...mockContacts.map((contact) => ({
-      value: contact.name,
-      label: contact.name,
-    })),
-  ];
+  const filteredContacts = mockContacts.filter((contact) =>
+    contact.name.toLowerCase().includes(contactSearch.toLowerCase())
+  );
+
+  const contactOptions = filteredContacts.map((item) => (
+    <Combobox.Option value={item.name} key={item.name}>
+      <Group>
+        <Avatar color="lime" radius="xl" size="md">
+          {item.avatar}
+        </Avatar>
+        <Stack gap={0}>
+          <Text size="md" fw="bold">
+            {item.name}
+          </Text>
+          <Text size="sm" c="dimmed">
+            {item.details}
+          </Text>
+        </Stack>
+      </Group>
+    </Combobox.Option>
+  ));
 
   return (
     <>
@@ -181,7 +200,7 @@ export default function TransactionFiltersDrawer({
 
           <Combobox
             size="lg"
-            store={combobox}
+            store={dateCombobox}
             withinPortal={false}
             onOptionSubmit={(val: string) => {
               if (val === "Custom") {
@@ -189,7 +208,7 @@ export default function TransactionFiltersDrawer({
               } else {
                 onDateChange(val as DateFilter);
               }
-              combobox.closeDropdown();
+              dateCombobox.closeDropdown();
             }}
           >
             <Combobox.Target>
@@ -201,7 +220,7 @@ export default function TransactionFiltersDrawer({
                 type="button"
                 pointer
                 rightSection={<Combobox.Chevron />}
-                onClick={() => combobox.toggleDropdown()}
+                onClick={() => dateCombobox.toggleDropdown()}
               >
                 {getDateFilterLabel()}
               </InputBase>
@@ -211,16 +230,62 @@ export default function TransactionFiltersDrawer({
             </Combobox.Dropdown>
           </Combobox>
 
-          <Select
-            label="Contact"
-            size="lg"
-            radius="md"
-            data={contactOptions}
-            value={activeContactFilter}
-            onChange={(value) => onContactFilterChange(value || "All")}
-            searchable
-            allowDeselect={false}
-          />
+          <Combobox
+            store={contactCombobox}
+            withinPortal={false}
+            onOptionSubmit={(val) => {
+              onContactFilterChange(val);
+              contactCombobox.closeDropdown();
+            }}
+          >
+            <Combobox.Target>
+              <InputBase
+                label="Contact"
+                size="lg"
+                radius="md"
+                component="button"
+                type="button"
+                pointer
+                rightSection={
+                  activeContactFilter !== "All" ? (
+                    <CloseButton
+                      size="md"
+                      onMouseDown={(event) => event.preventDefault()}
+                      onClick={() => onContactFilterChange("All")}
+                      aria-label="Clear value"
+                    />
+                  ) : (
+                    <Combobox.Chevron />
+                  )
+                }
+                onClick={() => contactCombobox.toggleDropdown()}
+              >
+                {activeContactFilter !== "All"
+                  ? activeContactFilter
+                  : "All contacts"}
+              </InputBase>
+            </Combobox.Target>
+            <Combobox.Dropdown>
+              <Combobox.Search
+                size="lg"
+                value={contactSearch}
+                onChange={(event) =>
+                  setContactSearch(event.currentTarget.value)
+                }
+                placeholder="Search contacts"
+                leftSection={<Search01Icon size={16} />}
+              />
+              <Combobox.Options>
+                <ScrollArea.Autosize type="scroll" mah={250}>
+                  {contactOptions.length > 0 ? (
+                    contactOptions
+                  ) : (
+                    <Combobox.Empty>No results found...</Combobox.Empty>
+                  )}
+                </ScrollArea.Autosize>
+              </Combobox.Options>
+            </Combobox.Dropdown>
+          </Combobox>
 
           <Stack gap="sm">
             <Stack gap={8}>
@@ -229,7 +294,7 @@ export default function TransactionFiltersDrawer({
               </Text>
               <RangeSlider
                 min={0}
-                max={250000}
+                max={999999}
                 step={1000}
                 value={activeAmountFilter}
                 onChange={onAmountFilterChange}
@@ -263,7 +328,7 @@ export default function TransactionFiltersDrawer({
                 thousandSeparator
                 step={1000}
                 min={activeAmountFilter[0]}
-                max={250000}
+                max={999999}
                 size="lg"
                 radius="md"
                 hideControls
