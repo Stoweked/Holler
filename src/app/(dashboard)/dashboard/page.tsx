@@ -1,7 +1,7 @@
 "use client";
 
 import AppLayout from "@/components/layout/AppLayout";
-import PrimaryActionsCard from "@/features/primaryActions/components/PrimaryActionsCard";
+import PrimaryActionsCard from "@/features/wallet/components/PrimaryActionsCard";
 import TransactionsTable from "@/features/transactions/components/TransactionsTable";
 import { useViewportSize } from "@mantine/hooks";
 import { useEffect, useState } from "react";
