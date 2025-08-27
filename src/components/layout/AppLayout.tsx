@@ -16,7 +16,7 @@ import { Search01Icon } from "hugeicons-react";
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const actions = getSpotlightActions(router);
-  const [opened, { toggle }] = useDisclosure();
+  const [opened, { toggle, close }] = useDisclosure();
   const [mounted, setMounted] = useState(false);
   // Ensure the component only renders on the client side
   useEffect(() => {

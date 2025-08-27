@@ -1,4 +1,4 @@
-// stoweked/holler/Holler-main/src/components/layout/SideNav/SideNavLinks.tsx
+// src/components/layout/SideNav/SideNavLinks.tsx
 import { Badge, Group, NavLink } from "@mantine/core";
 import {
   ArrowRight01Icon,
@@ -22,6 +22,8 @@ interface SideNavLinksProps {
 }
 
 export default function SideNavLinks({ closeMobileNav }: SideNavLinksProps) {
+  const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
+
   const [
     openedContactsDrawer,
     { open: openContactsDrawer, close: closeContactsDrawer },
@@ -49,8 +51,6 @@ export default function SideNavLinks({ closeMobileNav }: SideNavLinksProps) {
     openedRequestDrawer,
     { open: openRequestDrawer, close: closeRequestDrawer },
   ] = useDisclosure(false);
-
-  const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
 
   useEffect(() => {
     const handleOpenContacts = () => openContactsDrawer();
@@ -85,6 +85,22 @@ export default function SideNavLinks({ closeMobileNav }: SideNavLinksProps) {
     closeContactsDrawer();
   };
 
+  // New handlers to close the mobile nav before opening a drawer
+  const handleContactsClick = () => {
+    closeMobileNav();
+    openContactsDrawer();
+  };
+
+  const handleBankAccountsClick = () => {
+    closeMobileNav();
+    openConnectedBanksDrawer();
+  };
+
+  const handleLienWaiversClick = () => {
+    closeMobileNav();
+    openLienWaiversDrawer();
+  };
+
   return (
     <div>
       <NavLink
@@ -93,7 +109,7 @@ export default function SideNavLinks({ closeMobileNav }: SideNavLinksProps) {
         rightSection={<ArrowRight01Icon size={24} color="grey" />}
         className={classes.navLink}
         classNames={{ label: classes.label }}
-        onClick={openContactsDrawer}
+        onClick={handleContactsClick}
       />
 
       <NavLink
@@ -111,7 +127,7 @@ export default function SideNavLinks({ closeMobileNav }: SideNavLinksProps) {
         rightSection={<ArrowRight01Icon size={24} color="grey" />}
         className={classes.navLink}
         classNames={{ label: classes.label }}
-        onClick={openConnectedBanksDrawer}
+        onClick={handleBankAccountsClick}
       />
 
       <NavLink
@@ -120,7 +136,7 @@ export default function SideNavLinks({ closeMobileNav }: SideNavLinksProps) {
         rightSection={<ArrowRight01Icon size={24} color="grey" />}
         className={classes.navLink}
         classNames={{ label: classes.label }}
-        onClick={openLienWaiversDrawer}
+        onClick={handleLienWaiversClick}
       />
 
       <NavLink
