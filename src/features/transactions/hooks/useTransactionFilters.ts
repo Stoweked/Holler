@@ -37,21 +37,19 @@ export const useTransactionFilters = (initialTransactions: Transaction[]) => {
         return transactionDate.isSame(dayjs(), "day");
       }
       if (dateFilter === "This week") {
-        return transactionDate.isBetween(
-          dayjs().startOf("week"),
-          dayjs().endOf("week")
-        );
+        const startOfWeek = dayjs().startOf("week");
+        const endOfWeek = dayjs().endOf("week");
+        return transactionDate.isBetween(startOfWeek, endOfWeek, null, "[]");
       }
       if (dateFilter === "This month") {
-        return transactionDate.isSame(dayjs(), "month");
+        const startOfMonth = dayjs().startOf("month");
+        const endOfMonth = dayjs().endOf("month");
+        return transactionDate.isBetween(startOfMonth, endOfMonth, null, "[]");
       }
       if (Array.isArray(dateFilter)) {
-        return transactionDate.isBetween(
-          dateFilter[0],
-          dateFilter[1],
-          "day",
-          "[]"
-        );
+        const startDate = dayjs(dateFilter[0]).startOf("day");
+        const endDate = dayjs(dateFilter[1]).endOf("day");
+        return transactionDate.isBetween(startDate, endDate, null, "[]");
       }
       return true;
     })

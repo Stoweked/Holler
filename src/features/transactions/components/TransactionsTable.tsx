@@ -1,95 +1,37 @@
+// stoweked/holler/Holler-main/src/features/transactions/components/TransactionsTable.tsx
 import { useState } from "react";
 import { Button, Center, Space, Stack, Text, Title } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import TransactionFilters from "./filters/TransactionFilters";
-import TransactionItem from "./TransactionItem"; // Import the new item component
-import {
-  DateFilter,
-  SortOption,
-  Transaction,
-  TransactionStatusFilter,
-  TransactionTypeFilter,
-} from "@/features/transactions/types/transaction";
+import TransactionItem from "./TransactionItem";
+import { Transaction } from "@/features/transactions/types/transaction";
 import { Search01Icon } from "hugeicons-react";
 import TransactionDetailsDrawer from "./TransactionDetailsDrawer";
-import dayjs from "dayjs";
-import isBetween from "dayjs/plugin/isBetween";
 import { mockTransactions } from "@/mockData/mockTransactions";
-
-dayjs.extend(isBetween);
+import { useTransactionFilters } from "../hooks/useTransactionFilters";
 
 export default function TransactionsTable() {
-  const [activeStatusFilter, setActiveStatusFilter] =
-    useState<TransactionStatusFilter>("All");
-  const [activeTypeFilter, setActiveTypeFilter] =
-    useState<TransactionTypeFilter>("All");
-  const [sortOption, setSortOption] = useState<SortOption>("Newest first");
-  const [dateFilter, setDateFilter] = useState<DateFilter | [Date, Date]>(
-    "All"
-  );
   const [drawerOpened, { open: openDrawer, close: closeDrawer }] =
     useDisclosure(false);
   const [selectedTransaction, setSelectedTransaction] =
     useState<Transaction | null>(null);
 
+  const {
+    activeStatusFilter,
+    setActiveStatusFilter,
+    activeTypeFilter,
+    setActiveTypeFilter,
+    sortOption,
+    setSortOption,
+    dateFilter,
+    setDateFilter,
+    processedTransactions,
+    resetFilters,
+  } = useTransactionFilters(mockTransactions);
+
   const handleTransactionClick = (transaction: Transaction) => {
     setSelectedTransaction(transaction);
     openDrawer();
-  };
-
-  const processedTransactions = mockTransactions
-    .filter((transaction) => {
-      if (activeStatusFilter === "All") return true;
-      return transaction.status === activeStatusFilter;
-    })
-    .filter((transaction) => {
-      if (activeTypeFilter === "All") return true;
-      return transaction.type === activeTypeFilter;
-    })
-    .filter((transaction) => {
-      const transactionDate = dayjs(transaction.date);
-      if (dateFilter === "All") return true;
-      if (dateFilter === "Today") {
-        return transactionDate.isSame(dayjs(), "day");
-      }
-      if (dateFilter === "This week") {
-        return transactionDate.isBetween(
-          dayjs().startOf("week"),
-          dayjs().endOf("week")
-        );
-      }
-      if (dateFilter === "This month") {
-        return transactionDate.isSame(dayjs(), "month");
-      }
-      if (Array.isArray(dateFilter)) {
-        return transactionDate.isBetween(
-          dateFilter[0],
-          dateFilter[1],
-          "day",
-          "[]"
-        );
-      }
-      return true;
-    })
-    .sort((a, b) => {
-      switch (sortOption) {
-        case "Oldest first":
-          return new Date(a.date).getTime() - new Date(b.date).getTime();
-        case "Amount (High to Low)":
-          return b.amount - a.amount;
-        case "Amount (Low to High)":
-          return a.amount - b.amount;
-        case "Newest first":
-        default:
-          return new Date(b.date).getTime() - new Date(a.date).getTime();
-      }
-    });
-
-  const resetFilters = () => {
-    setActiveStatusFilter("All");
-    setActiveTypeFilter("All");
-    setDateFilter("All");
-    setSortOption("Newest first");
   };
 
   return (
@@ -101,10 +43,10 @@ export default function TransactionsTable() {
             onStatusFilterChange={setActiveStatusFilter}
             activeTypeFilter={activeTypeFilter}
             onTypeFilterChange={setActiveTypeFilter}
-            onSortChange={setSortOption}
-            onDateChange={setDateFilter}
-            activeDateFilter={dateFilter}
             activeSortOption={sortOption}
+            onSortChange={setSortOption}
+            activeDateFilter={dateFilter}
+            onDateChange={setDateFilter}
             resetFilters={resetFilters}
             total={processedTransactions.length}
           />

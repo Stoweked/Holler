@@ -1,15 +1,15 @@
+// stoweked/holler/Holler-main/src/features/transactions/components/filters/TransactionFilters.tsx
 import { Group, Stack, ScrollArea, Button, Pill, Space } from "@mantine/core";
 import { useDisclosure, useViewportSize } from "@mantine/hooks";
 import { FilterHorizontalIcon } from "hugeicons-react";
 import classes from "../Transactions.module.css";
-import TransactionFiltersDrawer from "./TransactionFiltersDrawer";
-import { mockTransactions } from "@/mockData/mockTransactions";
 import dayjs from "dayjs";
 import {
+  DateFilter,
+  SortOption,
   TransactionStatusFilter,
   TransactionTypeFilter,
 } from "../../types/transaction";
-import { useTransactionFilters } from "../../hooks/useTransactionFilters";
 import { TypeFilter } from "./TypeFilter";
 import { StatusFilter } from "./StatusFilter";
 import { DateFilterComponent } from "./DateFilter";
@@ -17,6 +17,7 @@ import { AmountFilter } from "./AmountFilter";
 import { ContactFilter } from "./ContactFilter";
 import { Sort } from "./Sort";
 import { Options } from "./Options";
+import TransactionFiltersDrawer from "./TransactionFiltersDrawer";
 
 const statusFilters: TransactionStatusFilter[] = [
   "All",
@@ -32,40 +33,51 @@ const typeFilters: TransactionTypeFilter[] = [
   "Transferred",
 ];
 
-export default function TransactionFilters() {
+interface TransactionFiltersProps {
+  activeStatusFilter: TransactionStatusFilter;
+  onStatusFilterChange: (filter: TransactionStatusFilter) => void;
+  activeTypeFilter: TransactionTypeFilter;
+  onTypeFilterChange: (filter: TransactionTypeFilter) => void;
+  activeSortOption: SortOption;
+  onSortChange: (sort: SortOption) => void;
+  activeDateFilter: DateFilter | [Date, Date];
+  onDateChange: (date: DateFilter | [Date, Date]) => void;
+  resetFilters: () => void;
+  total: number;
+}
+
+export default function TransactionFilters({
+  activeStatusFilter,
+  onStatusFilterChange,
+  activeTypeFilter,
+  onTypeFilterChange,
+  activeSortOption,
+  onSortChange,
+  activeDateFilter,
+  onDateChange,
+  resetFilters,
+  total,
+}: TransactionFiltersProps) {
   const { width } = useViewportSize();
   const condenseFilters = width < 1118;
 
   const [drawerOpened, { open: openDrawer, close: closeDrawer }] =
     useDisclosure(false);
 
-  const {
-    activeStatusFilter,
-    setActiveStatusFilter,
-    activeTypeFilter,
-    setActiveTypeFilter,
-    sortOption,
-    setSortOption,
-    dateFilter,
-    setDateFilter,
-    processedTransactions,
-    resetFilters,
-  } = useTransactionFilters(mockTransactions);
-
   const isStatusFilterActive = activeStatusFilter !== "All";
   const isTypeFilterActive = activeTypeFilter !== "All";
-  const isDateFilterActive = Array.isArray(dateFilter)
-    ? dateFilter[0] !== null && dateFilter[1] !== null
-    : dateFilter !== "All";
-  const isSortActive = sortOption !== "Newest first";
+  const isDateFilterActive = Array.isArray(activeDateFilter)
+    ? activeDateFilter[0] !== null && activeDateFilter[1] !== null
+    : activeDateFilter !== "All";
+  const isSortActive = activeSortOption !== "Newest first";
 
   const getDateFilterLabel = () => {
     if (!isDateFilterActive) {
       return null;
     }
 
-    if (Array.isArray(dateFilter)) {
-      const [start, end] = dateFilter;
+    if (Array.isArray(activeDateFilter)) {
+      const [start, end] = activeDateFilter;
       if (start && end) {
         const format = "MMM D";
         if (dayjs(start).isSame(end, "day")) {
@@ -73,8 +85,8 @@ export default function TransactionFilters() {
         }
         return `${dayjs(start).format(format)} - ${dayjs(end).format(format)}`;
       }
-    } else if (dateFilter !== "All") {
-      return dateFilter;
+    } else if (activeDateFilter !== "All") {
+      return activeDateFilter;
     }
 
     return null;
@@ -103,17 +115,17 @@ export default function TransactionFilters() {
               <Group wrap="nowrap" gap="sm">
                 <TypeFilter
                   activeTypeFilter={activeTypeFilter}
-                  onTypeFilterChange={setActiveTypeFilter}
+                  onTypeFilterChange={onTypeFilterChange}
                   typeFilters={typeFilters}
                 />
                 <StatusFilter
                   activeStatusFilter={activeStatusFilter}
-                  onStatusFilterChange={setActiveStatusFilter}
+                  onStatusFilterChange={onStatusFilterChange}
                   statusFilters={statusFilters}
                 />
                 <DateFilterComponent
-                  activeDateFilter={dateFilter}
-                  onDateChange={setDateFilter}
+                  activeDateFilter={activeDateFilter}
+                  onDateChange={onDateChange}
                 />
                 <AmountFilter />
                 <ContactFilter />
@@ -122,8 +134,8 @@ export default function TransactionFilters() {
             {/* Right side */}
             <Group wrap="nowrap" gap="sm" pr="sm">
               <Sort
-                activeSortOption={sortOption}
-                onSortChange={setSortOption}
+                activeSortOption={activeSortOption}
+                onSortChange={onSortChange}
               />
               <Options resetFilters={resetFilters} />
             </Group>
@@ -140,7 +152,7 @@ export default function TransactionFilters() {
                 <Pill
                   className={classes.filterPill}
                   withRemoveButton
-                  onRemove={() => setActiveTypeFilter("All")}
+                  onRemove={() => onTypeFilterChange("All")}
                 >
                   {activeTypeFilter}
                 </Pill>
@@ -149,7 +161,7 @@ export default function TransactionFilters() {
                 <Pill
                   className={classes.filterPill}
                   withRemoveButton
-                  onRemove={() => setActiveStatusFilter("All")}
+                  onRemove={() => onStatusFilterChange("All")}
                 >
                   {activeStatusFilter}
                 </Pill>
@@ -158,7 +170,7 @@ export default function TransactionFilters() {
                 <Pill
                   className={classes.filterPill}
                   withRemoveButton
-                  onRemove={() => setDateFilter("All")}
+                  onRemove={() => onDateChange("All")}
                 >
                   {dateFilterLabel}
                 </Pill>
@@ -167,9 +179,9 @@ export default function TransactionFilters() {
                 <Pill
                   className={classes.filterPill}
                   withRemoveButton
-                  onRemove={() => setSortOption("Newest first")}
+                  onRemove={() => onSortChange("Newest first")}
                 >
-                  {sortOption}
+                  {activeSortOption}
                 </Pill>
               )}
 
@@ -184,11 +196,11 @@ export default function TransactionFilters() {
         onClose={closeDrawer}
         activeStatusFilter={activeStatusFilter}
         activeTypeFilter={activeTypeFilter}
-        activeDateFilter={dateFilter}
-        onStatusFilterChange={setActiveStatusFilter}
-        onTypeFilterChange={setActiveTypeFilter}
-        onDateChange={setDateFilter}
-        total={processedTransactions.length}
+        activeDateFilter={activeDateFilter}
+        onStatusFilterChange={onStatusFilterChange}
+        onTypeFilterChange={onTypeFilterChange}
+        onDateChange={onDateChange}
+        total={total}
         resetFilters={resetFilters}
       />
     </>
