@@ -10,13 +10,15 @@ import {
   TransactionStatusFilter,
   TransactionTypeFilter,
 } from "../../types/transaction";
-import { TypeFilter } from "./TypeFilter";
-import { StatusFilter } from "./StatusFilter";
-import { DateFilterComponent } from "./DateFilter";
-import { AmountFilter } from "./AmountFilter";
-import { ContactFilter } from "./ContactFilter";
-import { Sort } from "./Sort";
-import { Options } from "./Options";
+import {
+  TypeFilter,
+  StatusFilter,
+  DateFilterComponent,
+  AmountFilter,
+  ContactFilter,
+  Sort,
+  Options,
+} from "../index";
 import TransactionFiltersDrawer from "./TransactionFiltersDrawer";
 
 const statusFilters: TransactionStatusFilter[] = [
