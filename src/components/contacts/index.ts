@@ -1,5 +1,4 @@
-export * from "./ContactsDrawer";
+export * from "./ContactDetailsCard";
 export * from "./ContactItem";
 export * from "./ContactList";
-export * from "./ContactItem.module.css";
-export * from "../mockData/mockContacts";
+export * from "./ContactsDrawer";
