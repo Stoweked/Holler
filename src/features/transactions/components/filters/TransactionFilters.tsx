@@ -1,16 +1,22 @@
-import { Group, Stack, ScrollArea, Button } from "@mantine/core";
+import { Group, Stack, ScrollArea, Button, Pill, Space } from "@mantine/core";
 import { useDisclosure, useViewportSize } from "@mantine/hooks";
 import { FilterHorizontalIcon } from "hugeicons-react";
 import classes from "../Transactions.module.css";
 import TransactionFiltersDrawer from "./TransactionFiltersDrawer";
-import { TypeFilter } from "./TypeFilter";
-import { StatusFilter } from "./StatusFilter";
-import { useTransactionFilters } from "../../hooks/useTransactionFilters";
 import { mockTransactions } from "@/mockData/mockTransactions";
+import dayjs from "dayjs";
 import {
   TransactionStatusFilter,
   TransactionTypeFilter,
 } from "../../types/transaction";
+import { useTransactionFilters } from "../../hooks/useTransactionFilters";
+import { TypeFilter } from "./TypeFilter";
+import { StatusFilter } from "./StatusFilter";
+import { DateFilterComponent } from "./DateFilter";
+import { AmountFilter } from "./AmountFilter";
+import { ContactFilter } from "./ContactFilter";
+import { Sort } from "./Sort";
+import { Options } from "./Options";
 
 const statusFilters: TransactionStatusFilter[] = [
   "All",
@@ -46,6 +52,36 @@ export default function TransactionFilters() {
     resetFilters,
   } = useTransactionFilters(mockTransactions);
 
+  const isStatusFilterActive = activeStatusFilter !== "All";
+  const isTypeFilterActive = activeTypeFilter !== "All";
+  const isDateFilterActive = Array.isArray(dateFilter)
+    ? dateFilter[0] !== null && dateFilter[1] !== null
+    : dateFilter !== "All";
+  const isSortActive = sortOption !== "Newest first";
+
+  const getDateFilterLabel = () => {
+    if (!isDateFilterActive) {
+      return null;
+    }
+
+    if (Array.isArray(dateFilter)) {
+      const [start, end] = dateFilter;
+      if (start && end) {
+        const format = "MMM D";
+        if (dayjs(start).isSame(end, "day")) {
+          return dayjs(start).format(format);
+        }
+        return `${dayjs(start).format(format)} - ${dayjs(end).format(format)}`;
+      }
+    } else if (dateFilter !== "All") {
+      return dateFilter;
+    }
+
+    return null;
+  };
+
+  const dateFilterLabel = getDateFilterLabel();
+
   return (
     <>
       <Stack gap={0} className={classes.filterHeader}>
@@ -75,13 +111,72 @@ export default function TransactionFilters() {
                   onStatusFilterChange={setActiveStatusFilter}
                   statusFilters={statusFilters}
                 />
-                {/* Add other filters here in a similar way */}
+                <DateFilterComponent
+                  activeDateFilter={dateFilter}
+                  onDateChange={setDateFilter}
+                />
+                <AmountFilter />
+                <ContactFilter />
               </Group>
             )}
-            {/* Right side remains the same */}
+            {/* Right side */}
+            <Group wrap="nowrap" gap="sm" pr="sm">
+              <Sort
+                activeSortOption={sortOption}
+                onSortChange={setSortOption}
+              />
+              <Options resetFilters={resetFilters} />
+            </Group>
           </Group>
         </ScrollArea>
-        {/* Filter pills remain the same */}
+        {/* Filter pills */}
+        <ScrollArea type="never">
+          {(isStatusFilterActive ||
+            isTypeFilterActive ||
+            isDateFilterActive ||
+            isSortActive) && (
+            <Group p="sm" pt={0} gap="sm" wrap="nowrap">
+              {isTypeFilterActive && (
+                <Pill
+                  className={classes.filterPill}
+                  withRemoveButton
+                  onRemove={() => setActiveTypeFilter("All")}
+                >
+                  {activeTypeFilter}
+                </Pill>
+              )}
+              {isStatusFilterActive && (
+                <Pill
+                  className={classes.filterPill}
+                  withRemoveButton
+                  onRemove={() => setActiveStatusFilter("All")}
+                >
+                  {activeStatusFilter}
+                </Pill>
+              )}
+              {isDateFilterActive && (
+                <Pill
+                  className={classes.filterPill}
+                  withRemoveButton
+                  onRemove={() => setDateFilter("All")}
+                >
+                  {dateFilterLabel}
+                </Pill>
+              )}
+              {isSortActive && (
+                <Pill
+                  className={classes.filterPill}
+                  withRemoveButton
+                  onRemove={() => setSortOption("Newest first")}
+                >
+                  {sortOption}
+                </Pill>
+              )}
+
+              <Space w={4} h={8} />
+            </Group>
+          )}
+        </ScrollArea>
       </Stack>
 
       <TransactionFiltersDrawer
