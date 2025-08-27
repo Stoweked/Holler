@@ -2,7 +2,7 @@
 
 import { Anchor, Space, Stack, Text } from "@mantine/core";
 import SideNavLinks from "./SideNavLinks";
-import PrimaryActionsCard from "../../primaryActions/PrimaryActionsCard";
+import PrimaryActionsCard from "../../../features/primaryActions/components/PrimaryActionsCard";
 import { useViewportSize } from "@mantine/hooks";
 
 interface SideNavProps {

@@ -16,7 +16,7 @@ import {
   PencilEdit01Icon,
 } from "hugeicons-react";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
-import { logout } from "@/app/(auth)/logout/actions";
+import { logout } from "@/features/auth/actions/logout";
 
 export const getSpotlightActions = (
   router: AppRouterInstance

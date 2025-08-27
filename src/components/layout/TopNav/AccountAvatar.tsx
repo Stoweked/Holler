@@ -3,9 +3,9 @@ import { useDisclosure } from "@mantine/hooks";
 import { Logout02Icon, PencilEdit01Icon, UserIcon } from "hugeicons-react";
 import FeedbackModal from "./FeedbackModal";
 import { ColorSchemeMenuItem } from "./ColorSchemeMenuItem";
-import ProfileDrawer from "@/components/profile/AccountDrawer";
+import ProfileDrawer from "@/features/profile/components/AccountDrawer";
 import { useRouter } from "next/navigation";
-import { logout } from "@/app/(auth)/logout/actions";
+import { logout } from "@/features/auth/actions/logout";
 import { useProfile } from "@/contexts/ProfileContext";
 import { useEffect } from "react";
 

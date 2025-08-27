@@ -9,13 +9,13 @@ import {
 } from "hugeicons-react";
 import classes from "./SideNav.module.css";
 import { useDisclosure } from "@mantine/hooks";
-import ContactsDrawer from "@/components/contacts/ContactsDrawer";
-import ConnectedBanksDrawer from "@/components/banks/ConnectedBanksDrawer";
-import LienWaiversDrawer from "@/components/waivers/LienWaiversDrawer";
+import LienWaiversDrawer from "@/features/waivers/components/LienWaiversDrawer";
 import { useState, useEffect } from "react";
-import ProfileModal from "@/components/profile/ProfileModal";
-import PaymentDrawer from "@/components/primaryActions/PaymentDrawer";
-import { Contact } from "@/types/recipient";
+import ProfileModal from "@/features/profile/components/ProfileModal";
+import PaymentDrawer from "@/features/send-request/components/PaymentDrawer";
+import { Contact } from "@/features/contacts/types/recipient";
+import ConnectedBanksDrawer from "@/features/banks/components/ConnectedBanksDrawer";
+import ContactsDrawer from "@/features/contacts/components/ContactsDrawer";
 
 interface SideNavLinksProps {
   closeMobileNav: () => void;
