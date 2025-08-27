@@ -1,5 +1,13 @@
 // src/features/transactions/components/filters/TransactionFilters.tsx
-import { Group, Stack, ScrollArea, Button, Pill, Space } from "@mantine/core";
+import {
+  Group,
+  Stack,
+  ScrollArea,
+  Button,
+  Pill,
+  Space,
+  Indicator,
+} from "@mantine/core";
 import { useDisclosure, useViewportSize } from "@mantine/hooks";
 import { FilterHorizontalIcon } from "hugeicons-react";
 import classes from "../Transactions.module.css";
@@ -77,6 +85,12 @@ export default function TransactionFilters({
   const isAmountFilterActive =
     activeAmountFilter[0] !== 0 || activeAmountFilter[1] !== 250000;
 
+  const isAnyFilterActive =
+    isStatusFilterActive ||
+    isTypeFilterActive ||
+    isDateFilterActive ||
+    isAmountFilterActive;
+
   const getDateFilterLabel = () => {
     if (!isDateFilterActive) {
       return null;
@@ -108,15 +122,23 @@ export default function TransactionFilters({
           <Group wrap="nowrap" justify="space-between" gap="sm" pl="sm" py="sm">
             {/* Left side */}
             {condenseFilters ? (
-              <Button
-                variant="default"
-                size="sm"
-                leftSection={<FilterHorizontalIcon size={16} />}
-                style={{ flexShrink: 0 }}
-                onClick={openDrawer}
+              <Indicator
+                disabled={!isAnyFilterActive}
+                color="lime"
+                position="top-end"
+                size={10}
+                offset={6}
               >
-                Filters
-              </Button>
+                <Button
+                  variant="default"
+                  size="sm"
+                  leftSection={<FilterHorizontalIcon size={16} />}
+                  style={{ flexShrink: 0 }}
+                  onClick={openDrawer}
+                >
+                  Filters
+                </Button>
+              </Indicator>
             ) : (
               <Group wrap="nowrap" gap="sm">
                 <TypeFilter

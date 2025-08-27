@@ -178,20 +178,22 @@ export default function TransactionFiltersDrawer({
           </Combobox>
 
           <Stack gap="sm">
-            <Text size="sm" fw={500}>
-              Amount
-            </Text>
-            <RangeSlider
-              min={0}
-              max={250000}
-              step={1000}
-              value={activeAmountFilter}
-              onChange={onAmountFilterChange}
-              label={null}
-              minRange={1000}
-              px="xs"
-              size="lg"
-            />
+            <Stack gap={8}>
+              <Text size="lg" fw={500}>
+                Amount
+              </Text>
+              <RangeSlider
+                min={0}
+                max={250000}
+                step={1000}
+                value={activeAmountFilter}
+                onChange={onAmountFilterChange}
+                label={null}
+                minRange={1000}
+                px="xs"
+                size="xl"
+              />
+            </Stack>
             <Group justify="space-between" grow>
               <NumberInput
                 value={activeAmountFilter[0]}
@@ -203,7 +205,7 @@ export default function TransactionFiltersDrawer({
                 step={1000}
                 min={0}
                 max={activeAmountFilter[1]}
-                size="md"
+                size="lg"
                 radius="md"
                 hideControls
               />
@@ -217,7 +219,7 @@ export default function TransactionFiltersDrawer({
                 step={1000}
                 min={activeAmountFilter[0]}
                 max={250000}
-                size="md"
+                size="lg"
                 radius="md"
                 hideControls
               />
