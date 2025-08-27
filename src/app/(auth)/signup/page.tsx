@@ -12,26 +12,32 @@ import {
   Title,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { login } from "../auth/login/actions";
-import { AlertCircleIcon, UserLove01Icon } from "hugeicons-react";
+import { signup } from "./actions";
+import { AlertCircleIcon, UserIcon } from "hugeicons-react";
 import { useState } from "react";
 import { notifications } from "@mantine/notifications";
 
-export default function LoginPage() {
+export default function SignUpPage() {
   const [isLoading, setIsLoading] = useState(false);
 
   // Mantine form hook for state management and validation
   const form = useForm({
     initialValues: {
+      full_name: "",
       email: "",
       password: "",
+      confirmPassword: "",
     },
 
     // Validation rules for each field
     validate: {
+      full_name: (value) =>
+        value.trim().length < 2 ? "Full name is required" : null,
       email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
       password: (value) =>
-        value.trim().length === 0 ? "Password is required" : null,
+        value.length < 6 ? "Password must have at least 6 characters" : null,
+      confirmPassword: (value, values) =>
+        value !== values.password ? "Passwords do not match" : null,
     },
   });
 
@@ -39,18 +45,18 @@ export default function LoginPage() {
   const handleSubmit = async (values: typeof form.values) => {
     setIsLoading(true);
     const formData = new FormData();
+    formData.append("full_name", values.full_name);
     formData.append("email", values.email);
     formData.append("password", values.password);
-
     try {
-      await login(formData);
+      await signup(formData);
     } catch (error) {
       console.error("Login failed:", error);
       // In case of an error, stop the loading state
       setIsLoading(false);
       // notifications.show({
-      //   title: "Login failed",
-      //   message: "Please check your credentials and try again.",
+      //   title: "Sign up failed",
+      //   message: "Please try again.",
       //   color: "red",
       //   icon: <AlertCircleIcon size={18} />,
       // });
@@ -68,36 +74,50 @@ export default function LoginPage() {
       <Paper withBorder shadow="lg" p="lg" radius="lg" maw={420} w="100%">
         <Stack gap="lg">
           <Avatar variant="default" size="md">
-            <UserLove01Icon size={20} />
+            <UserIcon size={20} />
           </Avatar>
           <Stack gap={0}>
-            <Title order={2}>Welcome back</Title>
-            <Text c="dimmed">Enter your credentials to continue.</Text>
+            <Title order={2}>Create an account</Title>
+            <Text c="dimmed">Enter your details to get started.</Text>
           </Stack>
 
           <form onSubmit={form.onSubmit(handleSubmit)}>
             <Stack>
               <TextInput
+                required
                 size="lg"
                 radius="md"
+                label="Full name"
+                name="full_name"
+                placeholder="Your full name"
+                {...form.getInputProps("full_name")}
+              />
+              <TextInput
                 required
-                name="email"
+                size="lg"
+                radius="md"
                 label="Email"
+                name="email"
                 placeholder="Your email address"
                 {...form.getInputProps("email")}
               />
               <PasswordInput
+                required
                 size="lg"
                 radius="md"
-                required
-                name="password"
                 label="Password"
+                name="password"
                 placeholder="Your password"
                 {...form.getInputProps("password")}
               />
-              <Anchor href="/forgot-password" size="sm" ta="right">
-                Forgot password?
-              </Anchor>
+              <PasswordInput
+                required
+                size="lg"
+                radius="md"
+                label="Confirm password"
+                placeholder="Confirm your password"
+                {...form.getInputProps("confirmPassword")}
+              />
               <Button
                 type="submit"
                 fullWidth
@@ -105,15 +125,15 @@ export default function LoginPage() {
                 size="lg"
                 loading={isLoading}
               >
-                Log in
+                Sign up
               </Button>
             </Stack>
           </form>
 
           <Text c="dimmed" size="sm" ta="center">
-            Don&apos;t have an account?{" "}
-            <Anchor href="/signup" size="sm">
-              Sign up
+            Already have an account?{" "}
+            <Anchor href="/login" size="sm">
+              Log in
             </Anchor>
           </Text>
         </Stack>

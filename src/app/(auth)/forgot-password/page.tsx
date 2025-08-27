@@ -11,7 +11,7 @@ import {
   TextInput,
   Title,
 } from "@mantine/core";
-import { requestPasswordReset } from "../auth/forgot-password/actions";
+import { requestPasswordReset } from "./actions";
 import { Shield01Icon } from "hugeicons-react";
 
 export default function ForgotPasswordPage() {

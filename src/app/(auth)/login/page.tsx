@@ -12,32 +12,26 @@ import {
   Title,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { signup } from "../auth/signup/actions";
-import { AlertCircleIcon, UserIcon } from "hugeicons-react";
+import { login } from "./actions";
+import { AlertCircleIcon, UserLove01Icon } from "hugeicons-react";
 import { useState } from "react";
 import { notifications } from "@mantine/notifications";
 
-export default function SignUpPage() {
+export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
 
   // Mantine form hook for state management and validation
   const form = useForm({
     initialValues: {
-      full_name: "",
       email: "",
       password: "",
-      confirmPassword: "",
     },
 
     // Validation rules for each field
     validate: {
-      full_name: (value) =>
-        value.trim().length < 2 ? "Full name is required" : null,
       email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
       password: (value) =>
-        value.length < 6 ? "Password must have at least 6 characters" : null,
-      confirmPassword: (value, values) =>
-        value !== values.password ? "Passwords do not match" : null,
+        value.trim().length === 0 ? "Password is required" : null,
     },
   });
 
@@ -45,18 +39,18 @@ export default function SignUpPage() {
   const handleSubmit = async (values: typeof form.values) => {
     setIsLoading(true);
     const formData = new FormData();
-    formData.append("full_name", values.full_name);
     formData.append("email", values.email);
     formData.append("password", values.password);
+
     try {
-      await signup(formData);
+      await login(formData);
     } catch (error) {
       console.error("Login failed:", error);
       // In case of an error, stop the loading state
       setIsLoading(false);
       // notifications.show({
-      //   title: "Sign up failed",
-      //   message: "Please try again.",
+      //   title: "Login failed",
+      //   message: "Please check your credentials and try again.",
       //   color: "red",
       //   icon: <AlertCircleIcon size={18} />,
       // });
@@ -74,50 +68,36 @@ export default function SignUpPage() {
       <Paper withBorder shadow="lg" p="lg" radius="lg" maw={420} w="100%">
         <Stack gap="lg">
           <Avatar variant="default" size="md">
-            <UserIcon size={20} />
+            <UserLove01Icon size={20} />
           </Avatar>
           <Stack gap={0}>
-            <Title order={2}>Create an account</Title>
-            <Text c="dimmed">Enter your details to get started.</Text>
+            <Title order={2}>Welcome back</Title>
+            <Text c="dimmed">Enter your credentials to continue.</Text>
           </Stack>
 
           <form onSubmit={form.onSubmit(handleSubmit)}>
             <Stack>
               <TextInput
-                required
                 size="lg"
                 radius="md"
-                label="Full name"
-                name="full_name"
-                placeholder="Your full name"
-                {...form.getInputProps("full_name")}
-              />
-              <TextInput
                 required
-                size="lg"
-                radius="md"
-                label="Email"
                 name="email"
+                label="Email"
                 placeholder="Your email address"
                 {...form.getInputProps("email")}
               />
               <PasswordInput
-                required
                 size="lg"
                 radius="md"
-                label="Password"
+                required
                 name="password"
+                label="Password"
                 placeholder="Your password"
                 {...form.getInputProps("password")}
               />
-              <PasswordInput
-                required
-                size="lg"
-                radius="md"
-                label="Confirm password"
-                placeholder="Confirm your password"
-                {...form.getInputProps("confirmPassword")}
-              />
+              <Anchor href="/forgot-password" size="sm" ta="right">
+                Forgot password?
+              </Anchor>
               <Button
                 type="submit"
                 fullWidth
@@ -125,15 +105,15 @@ export default function SignUpPage() {
                 size="lg"
                 loading={isLoading}
               >
-                Sign up
+                Log in
               </Button>
             </Stack>
           </form>
 
           <Text c="dimmed" size="sm" ta="center">
-            Already have an account?{" "}
-            <Anchor href="/login" size="sm">
-              Log in
+            Don&apos;t have an account?{" "}
+            <Anchor href="/signup" size="sm">
+              Sign up
             </Anchor>
           </Text>
         </Stack>

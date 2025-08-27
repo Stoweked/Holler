@@ -1,7 +1,7 @@
 //src/app/auth/signup/actions.ts
 "use server";
 
-import { createClient } from "@/utils/supabase/server";
+import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 
 export async function signup(formData: FormData) {
