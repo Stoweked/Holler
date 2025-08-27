@@ -82,7 +82,7 @@ export function ContactFilter({
             <Menu.Item
               key={contact.name}
               onClick={() => onContactFilterChange(contact.name)}
-              styles={{ item: { paddingLeft: "4px", paddingRight: "4px" } }}
+              styles={{ item: { paddingLeft: "6px", paddingRight: "6px" } }}
             >
               <Group wrap="nowrap" gap="xs">
                 <Avatar color="lime" radius="xl" size="md">
