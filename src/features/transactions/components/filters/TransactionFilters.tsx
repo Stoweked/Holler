@@ -1,4 +1,4 @@
-// src/features/transactions/components/filters/TransactionFilters.tsx
+// stoweked/holler/Holler-main/src/features/transactions/components/filters/TransactionFilters.tsx
 import {
   Group,
   Stack,
@@ -26,6 +26,7 @@ import { ContactFilter } from "./ContactFilter";
 import { Sort } from "./Sort";
 import { Options } from "./Options";
 import TransactionFiltersDrawer from "./TransactionFiltersDrawer";
+import { SearchFilter } from "./SearchFilter";
 
 const statusFilters: TransactionStatusFilter[] = [
   "All",
@@ -54,6 +55,8 @@ interface TransactionFiltersProps {
   onAmountFilterChange: (range: [number, number]) => void;
   activeContactFilter: string;
   onContactFilterChange: (contact: string) => void;
+  searchQuery: string[];
+  onSearchQueryChange: (query: string[]) => void;
   resetFilters: () => void;
   total: number;
 }
@@ -71,11 +74,13 @@ export default function TransactionFilters({
   onAmountFilterChange,
   activeContactFilter,
   onContactFilterChange,
+  searchQuery,
+  onSearchQueryChange,
   resetFilters,
   total,
 }: TransactionFiltersProps) {
   const { width } = useViewportSize();
-  const condenseFilters = width < 1118;
+  const condenseFilters = width < 1235;
 
   const [drawerOpened, { open: openDrawer, close: closeDrawer }] =
     useDisclosure(false);
@@ -89,13 +94,15 @@ export default function TransactionFilters({
   const isAmountFilterActive =
     activeAmountFilter[0] !== 0 || activeAmountFilter[1] !== 999999;
   const isContactFilterActive = activeContactFilter !== "All";
+  const isSearchActive = searchQuery.length > 0;
 
   const isAnyFilterActive =
     isStatusFilterActive ||
     isTypeFilterActive ||
     isDateFilterActive ||
     isAmountFilterActive ||
-    isContactFilterActive;
+    isContactFilterActive ||
+    isSearchActive;
 
   const getDateFilterLabel = () => {
     if (!isDateFilterActive) {
@@ -146,7 +153,11 @@ export default function TransactionFilters({
                 </Button>
               </Indicator>
             ) : (
-              <Group wrap="nowrap" gap="sm">
+              <Group wrap="nowrap" gap="sm" style={{ flex: 1 }}>
+                <SearchFilter
+                  searchQuery={searchQuery}
+                  onSearchQueryChange={onSearchQueryChange}
+                />
                 <TypeFilter
                   activeTypeFilter={activeTypeFilter}
                   onTypeFilterChange={onTypeFilterChange}
@@ -185,6 +196,21 @@ export default function TransactionFilters({
         <ScrollArea type="never">
           {(isAnyFilterActive || isSortActive) && (
             <Group p="sm" pt={0} gap="sm" wrap="nowrap">
+              {isSearchActive &&
+                searchQuery.map((query) => (
+                  <Pill
+                    key={query}
+                    className={classes.filterPill}
+                    withRemoveButton
+                    onRemove={() =>
+                      onSearchQueryChange(
+                        searchQuery.filter((item) => item !== query)
+                      )
+                    }
+                  >
+                    {query}
+                  </Pill>
+                ))}
               {isTypeFilterActive && (
                 <Pill
                   className={classes.filterPill}
@@ -254,8 +280,8 @@ export default function TransactionFilters({
         activeDateFilter={activeDateFilter}
         activeAmountFilter={activeAmountFilter}
         activeContactFilter={activeContactFilter}
-        activeSortOption={activeSortOption}
-        onSortChange={onSortChange}
+        searchQuery={searchQuery}
+        onSearchQueryChange={onSearchQueryChange}
         onAmountFilterChange={onAmountFilterChange}
         onStatusFilterChange={onStatusFilterChange}
         onTypeFilterChange={onTypeFilterChange}

@@ -23,6 +23,7 @@ export const useTransactionFilters = (initialTransactions: Transaction[]) => {
   );
   const [amountRange, setAmountRange] = useState<[number, number]>([0, 999999]);
   const [activeContactFilter, setActiveContactFilter] = useState<string>("All");
+  const [searchQuery, setSearchQuery] = useState<string[]>([]);
 
   const processedTransactions = initialTransactions
     .filter((transaction) => {
@@ -44,6 +45,14 @@ export const useTransactionFilters = (initialTransactions: Transaction[]) => {
       return (
         transaction.amount >= amountRange[0] &&
         transaction.amount <= amountRange[1]
+      );
+    })
+    .filter((transaction) => {
+      if (searchQuery.length === 0) return true;
+      const searchableText =
+        `${transaction.sender} ${transaction.receiver} ${transaction.bankAccount}`.toLowerCase();
+      return searchQuery.every((keyword) =>
+        searchableText.includes(keyword.toLowerCase())
       );
     })
     .filter((transaction) => {
@@ -90,6 +99,7 @@ export const useTransactionFilters = (initialTransactions: Transaction[]) => {
     setSortOption("Newest first");
     setAmountRange([0, 999999]);
     setActiveContactFilter("All");
+    setSearchQuery([]);
   };
 
   return {
@@ -105,6 +115,8 @@ export const useTransactionFilters = (initialTransactions: Transaction[]) => {
     setAmountRange,
     activeContactFilter,
     setActiveContactFilter,
+    searchQuery,
+    setSearchQuery,
     processedTransactions,
     resetFilters,
   };

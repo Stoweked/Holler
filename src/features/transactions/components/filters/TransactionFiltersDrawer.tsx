@@ -23,6 +23,7 @@ import {
   Avatar,
   ScrollArea,
   CloseButton,
+  TagsInput,
 } from "@mantine/core";
 import { DatePicker } from "@mantine/dates";
 import { useDisclosure } from "@mantine/hooks";
@@ -60,8 +61,8 @@ interface TransactionFiltersDrawerProps {
   activeDateFilter: DateFilter | [Date, Date];
   activeAmountFilter: [number, number];
   activeContactFilter: string;
-  activeSortOption: SortOption;
-  onSortChange: (sort: SortOption) => void;
+  searchQuery: string[];
+  onSearchQueryChange: (query: string[]) => void;
   onStatusFilterChange: (filter: TransactionStatusFilter) => void;
   onTypeFilterChange: (filter: TransactionTypeFilter) => void;
   onDateChange: (date: DateFilter | [Date, Date]) => void;
@@ -79,8 +80,8 @@ export default function TransactionFiltersDrawer({
   activeDateFilter,
   activeAmountFilter,
   activeContactFilter,
-  activeSortOption,
-  onSortChange,
+  searchQuery,
+  onSearchQueryChange,
   onStatusFilterChange,
   onTypeFilterChange,
   onDateChange,
@@ -166,14 +167,13 @@ export default function TransactionFiltersDrawer({
         position="right"
       >
         <Stack gap="lg">
-          <Select
-            label="Sort by"
-            size="lg"
+          <TagsInput
+            label="Search"
+            placeholder="Search"
+            value={searchQuery}
+            onChange={onSearchQueryChange}
             radius="md"
-            data={sortOptions}
-            allowDeselect={false}
-            value={activeSortOption}
-            onChange={(value) => onSortChange(value as SortOption)}
+            size="lg"
           />
           <Select
             label="Type"
