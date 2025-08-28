@@ -48,6 +48,7 @@ export function SearchFilter({
             radius="md"
             size="md"
             style={{ flex: 1 }}
+            acceptValueOnBlur
           />
         </Stack>
       </Menu.Dropdown>

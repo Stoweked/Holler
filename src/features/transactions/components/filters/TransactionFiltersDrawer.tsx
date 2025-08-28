@@ -174,6 +174,7 @@ export default function TransactionFiltersDrawer({
             onChange={onSearchQueryChange}
             radius="md"
             size="lg"
+            acceptValueOnBlur
           />
           <Select
             label="Type"
