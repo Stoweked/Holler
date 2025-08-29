@@ -1,4 +1,5 @@
 import {
+  Badge,
   Group,
   Stack,
   Text,
@@ -29,13 +30,21 @@ export default function WaiverItem({ waiver, onEdit }: WaiverItemProps) {
           </ThemeIcon>
 
           {/* Title */}
-          <Stack gap={4} style={{ overflow: "hidden" }}>
-            <Title order={5} lineClamp={2} lh={1.2}>
-              {waiver.title}
-            </Title>
-            <Text size="sm" c="dimmed" w="100%">
-              Last modified: {waiver.lastModified}
-            </Text>
+          <Stack gap={8}>
+            <Badge
+              variant="light"
+              color={waiver.type === "conditional" ? "indigo" : "orange"}
+            >
+              {waiver.type}
+            </Badge>
+            <Stack gap={4} style={{ overflow: "hidden" }}>
+              <Title order={5} lineClamp={2} lh={1.2}>
+                {waiver.title}
+              </Title>
+              <Text size="sm" c="dimmed" w="100%">
+                Last modified: {waiver.lastModified}
+              </Text>
+            </Stack>
           </Stack>
         </Group>
 

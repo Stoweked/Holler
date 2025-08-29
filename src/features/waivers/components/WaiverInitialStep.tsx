@@ -1,11 +1,14 @@
+// features/waivers/components/WaiverInitialStep.tsx
 import {
   ActionIcon,
   Group,
   Input,
   Stack,
   Text,
+  Title,
   Tooltip,
   UnstyledButton,
+  Center,
 } from "@mantine/core";
 import WaiverItem from "./WaiverItem";
 import {
@@ -31,6 +34,10 @@ export default function WaiverInitialStep({
   onEditWaiver,
 }: WaiverInitialStepProps) {
   const [searchValue, setSearchValue] = useState("");
+
+  const filteredWaivers = mockWaivers.filter((waiver) =>
+    waiver.title.toLowerCase().includes(searchValue.toLowerCase())
+  );
 
   return (
     <Stack gap="xl">
@@ -61,9 +68,25 @@ export default function WaiverInitialStep({
             )
           }
         />
-        {mockWaivers.map((waiver) => (
-          <WaiverItem key={waiver.id} waiver={waiver} onEdit={onEditWaiver} />
-        ))}
+        {filteredWaivers.length > 0 ? (
+          filteredWaivers.map((waiver) => (
+            <WaiverItem key={waiver.id} waiver={waiver} onEdit={onEditWaiver} />
+          ))
+        ) : (
+          <Center>
+            <Stack align="center" mt="xl" gap="lg">
+              <Search01Icon size={40} color="grey" />
+              <Stack gap={0} align="center">
+                <Title order={4} ta="center">
+                  No waivers found
+                </Title>
+                <Text c="dimmed" ta="center">
+                  Try adjusting your search terms
+                </Text>
+              </Stack>
+            </Stack>
+          </Center>
+        )}
       </Stack>
 
       {/* Create buttons */}
