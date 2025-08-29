@@ -1,7 +1,7 @@
 .item {
   border-radius: var(--mantine-radius-lg);
   width: 100%;
-  transition: background-color 200ms ease-in-out;
+  transition: all 200ms ease-in-out;
   padding: var(--mantine-spacing-md);
   border: 1px solid
     light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-5));
@@ -23,7 +23,7 @@
 .createButton {
   border-radius: var(--mantine-radius-lg);
   width: 100%;
-  transition: background-color 200ms ease-in-out;
+  transition: all 200ms ease-in-out;
   padding: var(--mantine-spacing-md);
   border: 1px solid
     light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-5));
