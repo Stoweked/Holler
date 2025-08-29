@@ -42,6 +42,21 @@ export default function WaiverInitialStep({
 
   return (
     <Stack gap="xl">
+      {/* Create buttons */}
+      <Group grow className={classes.buttonGroup}>
+        <Button
+          onClick={onNew}
+          variant="default"
+          className={classes.createButton}
+        >
+          Create new waiver
+        </Button>
+        <Button onClick={onTemplate} className={classes.createButton}>
+          Start from template
+        </Button>
+      </Group>
+
+      {/* Existing waivers */}
       <Stack>
         <Input
           placeholder="Search lien waivers"
@@ -72,19 +87,6 @@ export default function WaiverInitialStep({
           <WaiverItem key={waiver.id} waiver={waiver} />
         ))}
       </Stack>
-
-      <Group grow className={classes.buttonGroup}>
-        <Button
-          onClick={onNew}
-          variant="default"
-          className={classes.createButton}
-        >
-          Create new waiver
-        </Button>
-        <Button onClick={onTemplate} className={classes.createButton}>
-          Start from template
-        </Button>
-      </Group>
     </Stack>
   );
 }
