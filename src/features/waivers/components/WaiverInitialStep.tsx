@@ -4,7 +4,6 @@ import {
   Group,
   Input,
   Stack,
-  Title,
   Tooltip,
 } from "@mantine/core";
 import WaiverItem from "./WaiverItem";
@@ -43,18 +42,9 @@ export default function WaiverInitialStep({
 
   return (
     <Stack gap="xl">
-      <Group grow className={classes.buttonGroup}>
-        <Button onClick={onNew} variant="default" size="lg">
-          Create new waiver
-        </Button>
-        <Button onClick={onTemplate} size="lg">
-          Start from template
-        </Button>
-      </Group>
       <Stack>
-        <Title order={4}>Your lien waivers</Title>
         <Input
-          placeholder="Search your waivers"
+          placeholder="Search lien waivers"
           leftSection={<Search01Icon size={20} />}
           radius="xl"
           size="xl"
@@ -82,6 +72,19 @@ export default function WaiverInitialStep({
           <WaiverItem key={waiver.id} waiver={waiver} />
         ))}
       </Stack>
+
+      <Group grow className={classes.buttonGroup}>
+        <Button
+          onClick={onNew}
+          variant="default"
+          className={classes.createButton}
+        >
+          Create new waiver
+        </Button>
+        <Button onClick={onTemplate} className={classes.createButton}>
+          Start from template
+        </Button>
+      </Group>
     </Stack>
   );
 }
