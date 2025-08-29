@@ -16,9 +16,14 @@ import { Recipient } from "@/features/contacts/types/recipient";
 interface BankListProps {
   banks: Recipient[];
   onBankClick?: (bank: Recipient) => void;
+  onConnectNew?: () => void;
 }
 
-export default function BankList({ banks, onBankClick }: BankListProps) {
+export default function BankList({
+  banks,
+  onBankClick,
+  onConnectNew,
+}: BankListProps) {
   const [searchValue, setSearchValue] = useState("");
 
   const handleBankClick = (bank: Recipient) => {
@@ -103,7 +108,7 @@ export default function BankList({ banks, onBankClick }: BankListProps) {
         </Center>
       )}
 
-      <Button size="lg" variant="default">
+      <Button size="lg" variant="default" onClick={onConnectNew}>
         Connect new account
       </Button>
     </Stack>

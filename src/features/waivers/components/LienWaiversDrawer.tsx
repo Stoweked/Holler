@@ -33,7 +33,7 @@ export default function LienWaiversDrawer({
       <Drawer
         opened={opened}
         onClose={close}
-        title="Lien Waivers"
+        title="Lien waivers"
         padding="lg"
         size="lg"
       >
