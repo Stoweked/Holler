@@ -34,7 +34,13 @@ export default function TransactionDetailsDrawer({
     transaction;
 
   const isCredit = type === "Received" || type === "Deposited";
-  const formattedAmount = `${isCredit ? "+" : "-"} $${amount.toFixed(2)}`;
+  const formattedAmount = `${isCredit ? "+" : "-"} $${amount.toLocaleString(
+    "en-US",
+    {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }
+  )}`;
   const amountColor = isCredit ? "lime" : "inherit";
   const statusColors: Record<TransactionStatus, string> = {
     Completed: "lime",

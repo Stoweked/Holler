@@ -8,6 +8,7 @@ import {
   Text,
   Tooltip,
 } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
 import { ArrowLeft02Icon } from "hugeicons-react";
 import ConfirmationStep from "./ConfirmationStep";
 import SelectContactStep from "./SelectContactStep";
@@ -16,6 +17,7 @@ import PaymentAmountStep from "./PaymentAmountStep";
 import { notifications } from "@mantine/notifications";
 import { Recipient } from "@/features/contacts/types/recipient";
 import SelectBankStep from "@/features/deposit/components/SelectBankStep";
+import ConnectBankDrawer from "@/features/banks/components/ConnectBankDrawer";
 
 type PaymentStep = "selectContact" | "enterAmount" | "confirm" | "selectBank";
 
@@ -39,6 +41,10 @@ export default function PaymentDrawer({
   const [selectedBank, setSelectedBank] = useState<Recipient>(mockBanks[0]);
   const [amount, setAmount] = useState<string | number>("");
   const [note, setNote] = useState("");
+  const [
+    openedConnectBankDrawer,
+    { open: openConnectBankDrawer, close: closeConnectBankDrawer },
+  ] = useDisclosure(false);
 
   const isSend = actionType === "send";
 
@@ -156,44 +162,53 @@ export default function PaymentDrawer({
     );
 
   return (
-    <Drawer
-      opened={opened}
-      onClose={handleClose}
-      title={drawerTitle}
-      padding="md"
-      size="md"
-    >
-      {step === "selectContact" && (
-        <SelectContactStep onSelectContact={handleSelectContact} />
-      )}
-      {step === "selectBank" && (
-        <SelectBankStep onSelectBank={handleSelectBank} />
-      )}
-      {step === "enterAmount" && selectedContact && (
-        <PaymentAmountStep
-          contact={selectedContact}
-          bank={selectedBank}
-          amount={amount}
-          setAmount={setAmount}
-          note={note}
-          setNote={setNote}
-          onContinue={handleAmountContinue}
-          onEditContact={handleBack}
-          onEditBank={handleEditBank}
-          actionType={actionType}
-        />
-      )}
-      {step === "confirm" && selectedContact && (
-        <ConfirmationStep
-          contact={selectedContact}
-          bank={selectedBank}
-          amount={amount}
-          note={note}
-          onConfirm={handleConfirm}
-          actionType={actionType}
-        />
-      )}
-      <Space h={100} />
-    </Drawer>
+    <>
+      <Drawer
+        opened={opened}
+        onClose={handleClose}
+        title={drawerTitle}
+        padding="md"
+        size="md"
+      >
+        {step === "selectContact" && (
+          <SelectContactStep onSelectContact={handleSelectContact} />
+        )}
+        {step === "selectBank" && (
+          <SelectBankStep
+            onSelectBank={handleSelectBank}
+            onConnectNew={openConnectBankDrawer}
+          />
+        )}
+        {step === "enterAmount" && selectedContact && (
+          <PaymentAmountStep
+            contact={selectedContact}
+            bank={selectedBank}
+            amount={amount}
+            setAmount={setAmount}
+            note={note}
+            setNote={setNote}
+            onContinue={handleAmountContinue}
+            onEditContact={handleBack}
+            onEditBank={handleEditBank}
+            actionType={actionType}
+          />
+        )}
+        {step === "confirm" && selectedContact && (
+          <ConfirmationStep
+            contact={selectedContact}
+            bank={selectedBank}
+            amount={amount}
+            note={note}
+            onConfirm={handleConfirm}
+            actionType={actionType}
+          />
+        )}
+        <Space h={100} />
+      </Drawer>
+      <ConnectBankDrawer
+        opened={openedConnectBankDrawer}
+        close={closeConnectBankDrawer}
+      />
+    </>
   );
 }

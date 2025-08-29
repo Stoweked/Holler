@@ -8,12 +8,14 @@ import {
   Text,
   Tooltip,
 } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
 import { ArrowLeft02Icon } from "hugeicons-react";
 import EnterAmountStep from "./EnterAmountStep";
 import ConfirmationStep from "./ConfirmationStep";
 import SelectBankStep from "./SelectBankStep";
 import { Recipient } from "@/features/contacts/types/recipient";
 import { notifications } from "@mantine/notifications";
+import ConnectBankDrawer from "@/features/banks/components/ConnectBankDrawer";
 
 type TransferStep = "selectBank" | "enterAmount" | "confirm";
 
@@ -27,6 +29,10 @@ export default function TransferDrawer({ opened, close }: TransferDrawerProps) {
   const [selectedBank, setSelectedBank] = useState<Recipient | null>(null);
   const [amount, setAmount] = useState<string | number>("");
   const [note, setNote] = useState("");
+  const [
+    openedConnectBankDrawer,
+    { open: openConnectBankDrawer, close: closeConnectBankDrawer },
+  ] = useDisclosure(false);
 
   const handleSelectBank = (bank: Recipient) => {
     setSelectedBank(bank);
@@ -101,36 +107,45 @@ export default function TransferDrawer({ opened, close }: TransferDrawerProps) {
     );
 
   return (
-    <Drawer
-      opened={opened}
-      onClose={handleClose}
-      title={drawerTitle}
-      padding="md"
-      size="md"
-    >
-      {step === "selectBank" && (
-        <SelectBankStep onSelectBank={handleSelectBank} />
-      )}
-      {step === "enterAmount" && selectedBank && (
-        <EnterAmountStep
-          bank={selectedBank}
-          amount={amount}
-          setAmount={setAmount}
-          note={note}
-          setNote={setNote}
-          onContinue={handleAmountContinue}
-          onEditBank={handleBack}
-        />
-      )}
-      {step === "confirm" && selectedBank && (
-        <ConfirmationStep
-          bank={selectedBank}
-          amount={amount}
-          note={note}
-          onConfirm={handleConfirmTransfer}
-        />
-      )}
-      <Space h={100} />
-    </Drawer>
+    <>
+      <Drawer
+        opened={opened}
+        onClose={handleClose}
+        title={drawerTitle}
+        padding="md"
+        size="md"
+      >
+        {step === "selectBank" && (
+          <SelectBankStep
+            onSelectBank={handleSelectBank}
+            onConnectNew={openConnectBankDrawer}
+          />
+        )}
+        {step === "enterAmount" && selectedBank && (
+          <EnterAmountStep
+            bank={selectedBank}
+            amount={amount}
+            setAmount={setAmount}
+            note={note}
+            setNote={setNote}
+            onContinue={handleAmountContinue}
+            onEditBank={handleBack}
+          />
+        )}
+        {step === "confirm" && selectedBank && (
+          <ConfirmationStep
+            bank={selectedBank}
+            amount={amount}
+            note={note}
+            onConfirm={handleConfirmTransfer}
+          />
+        )}
+        <Space h={100} />
+      </Drawer>
+      <ConnectBankDrawer
+        opened={openedConnectBankDrawer}
+        close={closeConnectBankDrawer}
+      />
+    </>
   );
 }
