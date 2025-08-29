@@ -61,48 +61,46 @@ export default function NotificationDrawer({
   close,
 }: NotificationDrawerProps) {
   return (
-    <div>
-      <Drawer
-        opened={opened}
-        onClose={close}
-        title="Notifications"
-        size="md"
-        position="right"
-      >
-        {mockNotifications.length > 0 ? (
-          <Stack gap={0}>
-            {mockNotifications.map((notification) => (
-              <NotificationItem
-                key={notification.id}
-                icon={notification.icon}
-                title={notification.title}
-                description={notification.description}
-                timestamp={notification.timestamp}
-                read={notification.read}
-              />
-            ))}
-            <Group justify="center" p="md">
-              <Button variant="default" size="sm">
-                Mark all as read
-              </Button>
-            </Group>
-          </Stack>
-        ) : (
-          <Center h="100%">
-            <Stack align="center" gap="lg">
-              <Mail01Icon size={40} color="grey" />
-              <Stack gap={0} align="center">
-                <Title order={4} ta="center">
-                  No new notifications
-                </Title>
-                <Text c="dimmed" ta="center">
-                  You&apos;re all caught up!
-                </Text>
-              </Stack>
+    <Drawer
+      opened={opened}
+      onClose={close}
+      title="Notifications"
+      size="md"
+      position="right"
+    >
+      {mockNotifications.length > 0 ? (
+        <Stack gap={0}>
+          {mockNotifications.map((notification) => (
+            <NotificationItem
+              key={notification.id}
+              icon={notification.icon}
+              title={notification.title}
+              description={notification.description}
+              timestamp={notification.timestamp}
+              read={notification.read}
+            />
+          ))}
+          <Group justify="center" p="md">
+            <Button variant="default" size="sm">
+              Mark all as read
+            </Button>
+          </Group>
+        </Stack>
+      ) : (
+        <Center h="100%">
+          <Stack align="center" gap="lg">
+            <Mail01Icon size={40} color="grey" />
+            <Stack gap={0} align="center">
+              <Title order={4} ta="center">
+                No new notifications
+              </Title>
+              <Text c="dimmed" ta="center">
+                You&apos;re all caught up!
+              </Text>
             </Stack>
-          </Center>
-        )}
-      </Drawer>
-    </div>
+          </Stack>
+        </Center>
+      )}
+    </Drawer>
   );
 }

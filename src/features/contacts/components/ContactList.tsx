@@ -74,6 +74,7 @@ export default function ContactsList({
                 aria-label="Clear search"
                 radius="xl"
                 size="lg"
+                color="gray"
               >
                 <Cancel01Icon size={24} />
               </ActionIcon>

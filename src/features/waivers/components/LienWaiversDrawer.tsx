@@ -1,100 +1,134 @@
 "use client";
 
-import { Button, Drawer, Group, Stack, TextInput } from "@mantine/core";
-import { RichTextEditor, Link } from "@mantine/tiptap";
+import { ActionIcon, Drawer, Group, Text, Tooltip } from "@mantine/core";
+import { Link } from "@mantine/tiptap";
 import { useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
+import { ArrowLeft02Icon } from "hugeicons-react";
+import { useState } from "react";
+import WaiverInitialStep from "./WaiverInitialStep";
+import WaiverTemplatesStep from "./WaiverTemplatesStep";
+import WaiverEditorStep from "./WaiverEditorStep";
 
 interface LienWaiversDrawerProps {
   opened: boolean;
   close: () => void;
 }
 
-const content = `
-  <h2>Lien Waiver Agreement</h2>
-  <p>This Conditional Waiver and Release of Lien is made and entered into as of [Date], by and between <strong>[Your Company Name]</strong> ("Releasor") and <strong>[Customer Name]</strong> ("Owner").</p>
-  <p>For and in consideration of the progress payment of [Payment Amount], the receipt and sufficiency of which is hereby acknowledged, Releasor does hereby waive and release any and all liens, claims, or rights of lien on the above-described property and improvements thereon.</p>
-  <p>This waiver is conditional upon clear and final payment of the amount stated above. Until such payment is received and cleared, this waiver is void.</p>
-  <p><strong>IN WITNESS WHEREOF</strong>, the Releasor has executed this Conditional Waiver and Release of Lien on the date first above written.</p>
-`;
+type WaiverStep = "initial" | "templates" | "editor";
 
 export default function LienWaiversDrawer({
   opened,
   close,
 }: LienWaiversDrawerProps) {
+  const [step, setStep] = useState<WaiverStep>("initial");
+  const [previousStep, setPreviousStep] = useState<WaiverStep>("initial");
+  const [waiverTitle, setWaiverTitle] = useState("");
+
   const editor = useEditor({
     extensions: [StarterKit, Link],
-    content,
+    content: "",
     immediatelyRender: false,
   });
+
+  const handleCreateNew = () => {
+    setWaiverTitle("");
+    editor?.commands.setContent("");
+    setPreviousStep("initial");
+    setStep("editor");
+  };
+
+  const handleSelectTemplate = (content: string, name: string) => {
+    setWaiverTitle(name);
+    editor?.commands.setContent(content);
+    setPreviousStep("templates");
+    setStep("editor");
+  };
+
+  const handleBack = () => {
+    if (step === "editor") {
+      setStep(previousStep);
+    } else if (step === "templates") {
+      setStep("initial");
+    } else {
+      close();
+    }
+  };
+
+  const handleClose = () => {
+    close();
+    setTimeout(() => {
+      setStep("initial");
+      setWaiverTitle("");
+      editor?.commands.setContent("");
+    }, 200);
+  };
+
+  const handleSave = () => {
+    // aDD SAVE LOGIC HERE
+    handleClose();
+  };
+
+  const drawerTitle =
+    step === "initial" ? (
+      "Lien waivers"
+    ) : step === "templates" ? (
+      <Group gap="xs">
+        <Tooltip label="Back" position="right">
+          <ActionIcon
+            onClick={handleBack}
+            variant="subtle"
+            color="gray"
+            aria-label="Go back"
+          >
+            <ArrowLeft02Icon size={24} />
+          </ActionIcon>
+        </Tooltip>
+        <Text>Select a template</Text>
+      </Group>
+    ) : (
+      <Group gap="xs">
+        <Tooltip label="Back" position="right">
+          <ActionIcon
+            onClick={handleBack}
+            variant="subtle"
+            color="gray"
+            aria-label="Go back"
+          >
+            <ArrowLeft02Icon size={24} />
+          </ActionIcon>
+        </Tooltip>
+        <Text>{waiverTitle || "New Lien Waiver"}</Text>
+      </Group>
+    );
 
   return (
     <div>
       <Drawer
         opened={opened}
-        onClose={close}
-        title="Lien waivers"
+        onClose={handleClose}
+        title={drawerTitle}
         padding="lg"
         size="lg"
       >
-        <Stack gap="lg">
-          <TextInput
-            label="Title"
-            size="lg"
-            radius="md"
-            placeholder="Enter waiver title"
-            aria-label="Lien waver title"
+        {step === "initial" && (
+          <WaiverInitialStep
+            onNew={handleCreateNew}
+            onTemplate={() => setStep("templates")}
           />
-
-          <RichTextEditor editor={editor}>
-            <RichTextEditor.Toolbar sticky stickyOffset={60}>
-              <RichTextEditor.ControlsGroup>
-                <RichTextEditor.Bold />
-                <RichTextEditor.Italic />
-                <RichTextEditor.Underline />
-                <RichTextEditor.Strikethrough />
-                <RichTextEditor.ClearFormatting />
-                <RichTextEditor.Highlight />
-                <RichTextEditor.Code />
-              </RichTextEditor.ControlsGroup>
-
-              <RichTextEditor.ControlsGroup>
-                <RichTextEditor.H1 />
-                <RichTextEditor.H2 />
-                <RichTextEditor.H3 />
-                <RichTextEditor.H4 />
-              </RichTextEditor.ControlsGroup>
-
-              <RichTextEditor.ControlsGroup>
-                <RichTextEditor.Blockquote />
-                <RichTextEditor.Hr />
-                <RichTextEditor.BulletList />
-                <RichTextEditor.OrderedList />
-              </RichTextEditor.ControlsGroup>
-
-              <RichTextEditor.ControlsGroup>
-                <RichTextEditor.Link />
-                <RichTextEditor.Unlink />
-              </RichTextEditor.ControlsGroup>
-            </RichTextEditor.Toolbar>
-
-            <RichTextEditor.Content />
-          </RichTextEditor>
-
-          <Group justify="flex-end">
-            <Button
-              aria-label="Save"
-              size="lg"
-              variant="default"
-              onClick={close}
-            >
-              Cancel
-            </Button>
-            <Button aria-label="Save" size="lg">
-              Save
-            </Button>
-          </Group>
-        </Stack>
+        )}
+        {step === "templates" && (
+          <WaiverTemplatesStep onSelectTemplate={handleSelectTemplate} />
+        )}
+        {step === "editor" && (
+          <WaiverEditorStep
+            waiverTitle={waiverTitle}
+            onWaiverTitleChange={setWaiverTitle}
+            editor={editor}
+            onCancel={handleClose}
+            onSave={handleSave}
+          />
+        )}
       </Drawer>
     </div>
   );

@@ -34,7 +34,7 @@ export default function NotificationItem({
       aria-label="View notification"
     >
       <Group gap="md" wrap="nowrap" align="flex-start">
-        <ThemeIcon variant="light" size={40} radius="xl">
+        <ThemeIcon variant={read ? "default" : "light"} size={40} radius="xl">
           {icon}
         </ThemeIcon>
 
