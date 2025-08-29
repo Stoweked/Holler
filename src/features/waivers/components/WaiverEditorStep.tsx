@@ -73,14 +73,6 @@ export default function WaiverEditorStep({
       </RichTextEditor>
 
       <Group justify="flex-end">
-        <Button
-          aria-label="Save"
-          size="lg"
-          variant="default"
-          onClick={onCancel}
-        >
-          Cancel
-        </Button>
         <Button aria-label="Save" size="lg" onClick={onSave}>
           Save
         </Button>

@@ -4,10 +4,17 @@ import {
   Group,
   Input,
   Stack,
+  Text,
   Tooltip,
+  UnstyledButton,
 } from "@mantine/core";
 import WaiverItem from "./WaiverItem";
-import { Cancel01Icon, Search01Icon } from "hugeicons-react";
+import {
+  Cancel01Icon,
+  DocumentValidationIcon,
+  PlusSignIcon,
+  Search01Icon,
+} from "hugeicons-react";
 import { useState } from "react";
 import classes from "./Waivers.module.css";
 
@@ -57,20 +64,6 @@ export default function WaiverInitialStep({
 
   return (
     <Stack gap="xl">
-      {/* Create buttons */}
-      <Group grow className={classes.buttonGroup}>
-        <Button
-          onClick={onNew}
-          variant="default"
-          className={classes.createButton}
-        >
-          Create new waiver
-        </Button>
-        <Button onClick={onTemplate} className={classes.createButton}>
-          Start from template
-        </Button>
-      </Group>
-
       {/* Existing waivers */}
       <Stack>
         <Input
@@ -102,6 +95,31 @@ export default function WaiverInitialStep({
           <WaiverItem key={waiver.id} waiver={waiver} onEdit={onEditWaiver} />
         ))}
       </Stack>
+
+      {/* Create buttons */}
+      <Group grow className={classes.buttonGroup}>
+        <UnstyledButton
+          aria-label="Create new waiver"
+          className={classes.createButton}
+          onClick={onNew}
+        >
+          <Stack gap="xs" align="center">
+            <PlusSignIcon size={24} />
+            <Text ta="center">Create new waiver</Text>
+          </Stack>
+        </UnstyledButton>
+
+        <UnstyledButton
+          aria-label="Start from template"
+          className={classes.createButton}
+          onClick={onTemplate}
+        >
+          <Stack gap="xs" align="center">
+            <DocumentValidationIcon size={24} />
+            <Text ta="center">Start from template</Text>
+          </Stack>
+        </UnstyledButton>
+      </Group>
     </Stack>
   );
 }
