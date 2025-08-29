@@ -1,6 +1,6 @@
 "use client";
 
-import { ActionIcon, Drawer, Group, Text, Tooltip } from "@mantine/core";
+import { ActionIcon, Drawer, Group, Space, Text, Tooltip } from "@mantine/core";
 import { Link } from "@mantine/tiptap";
 import { useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
@@ -117,34 +117,33 @@ export default function LienWaiversDrawer({
     );
 
   return (
-    <div>
-      <Drawer
-        opened={opened}
-        onClose={handleClose}
-        title={drawerTitle}
-        padding="lg"
-        size="lg"
-      >
-        {step === "initial" && (
-          <WaiverInitialStep
-            onNew={handleCreateNew}
-            onTemplate={() => setStep("templates")}
-            onEditWaiver={handleEditWaiver}
-          />
-        )}
-        {step === "templates" && (
-          <WaiverTemplatesStep onSelectTemplate={handleSelectTemplate} />
-        )}
-        {step === "editor" && (
-          <WaiverEditorStep
-            waiverTitle={waiverTitle}
-            onWaiverTitleChange={setWaiverTitle}
-            editor={editor}
-            onCancel={handleClose}
-            onSave={handleSave}
-          />
-        )}
-      </Drawer>
-    </div>
+    <Drawer
+      opened={opened}
+      onClose={handleClose}
+      title={drawerTitle}
+      padding="lg"
+      size="lg"
+    >
+      {step === "initial" && (
+        <WaiverInitialStep
+          onNew={handleCreateNew}
+          onTemplate={() => setStep("templates")}
+          onEditWaiver={handleEditWaiver}
+        />
+      )}
+      {step === "templates" && (
+        <WaiverTemplatesStep onSelectTemplate={handleSelectTemplate} />
+      )}
+      {step === "editor" && (
+        <WaiverEditorStep
+          waiverTitle={waiverTitle}
+          onWaiverTitleChange={setWaiverTitle}
+          editor={editor}
+          onCancel={handleClose}
+          onSave={handleSave}
+        />
+      )}
+      <Space h={100} />
+    </Drawer>
   );
 }
