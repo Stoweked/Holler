@@ -1,4 +1,12 @@
-import { Button, Group, Stack, TextInput } from "@mantine/core";
+import {
+  Button,
+  Group,
+  Paper,
+  Stack,
+  Text,
+  TextInput,
+  Title,
+} from "@mantine/core";
 import { RichTextEditor } from "@mantine/tiptap";
 import { Editor } from "@tiptap/react";
 
@@ -77,6 +85,12 @@ export default function WaiverEditorStep({
           Save
         </Button>
       </Group>
+
+      {/* <Paper withBorder p="md" radius="lg">
+        <Title order={4}>Delete</Title>
+        <Text c="dimmed">This action cannot be undone</Text>
+        <Button color="red">Delete waiver</Button>
+      </Paper> */}
     </Stack>
   );
 }

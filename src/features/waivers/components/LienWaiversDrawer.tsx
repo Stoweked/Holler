@@ -15,6 +15,13 @@ interface LienWaiversDrawerProps {
   close: () => void;
 }
 
+interface Waiver {
+  id: string;
+  title: string;
+  lastModified: string;
+  content: string;
+}
+
 type WaiverStep = "initial" | "templates" | "editor";
 
 export default function LienWaiversDrawer({
@@ -42,6 +49,13 @@ export default function LienWaiversDrawer({
     setWaiverTitle(name);
     editor?.commands.setContent(content);
     setPreviousStep("templates");
+    setStep("editor");
+  };
+
+  const handleEditWaiver = (waiver: Waiver) => {
+    setWaiverTitle(waiver.title);
+    editor?.commands.setContent(waiver.content);
+    setPreviousStep("initial");
     setStep("editor");
   };
 
@@ -115,6 +129,7 @@ export default function LienWaiversDrawer({
           <WaiverInitialStep
             onNew={handleCreateNew}
             onTemplate={() => setStep("templates")}
+            onEditWaiver={handleEditWaiver}
           />
         )}
         {step === "templates" && (

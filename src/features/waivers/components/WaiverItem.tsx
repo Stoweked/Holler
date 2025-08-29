@@ -14,17 +14,30 @@ import {
 } from "hugeicons-react";
 import classes from "./Waivers.module.css";
 
-interface WaiverItemProps {
-  waiver: {
-    id: string;
-    title: string;
-    lastModified: string;
-  };
+interface Waiver {
+  id: string;
+  title: string;
+  lastModified: string;
+  content: string;
 }
 
-export default function WaiverItem({ waiver }: WaiverItemProps) {
+interface WaiverItemProps {
+  waiver: Waiver;
+  onEdit: (waiver: Waiver) => void;
+}
+
+export default function WaiverItem({ waiver, onEdit }: WaiverItemProps) {
+  const handleEdit = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    onEdit(waiver);
+  };
+
   return (
-    <UnstyledButton key={waiver.id} className={classes.item}>
+    <UnstyledButton
+      key={waiver.id}
+      className={classes.item}
+      onClick={() => onEdit(waiver)}
+    >
       <Group justify="space-between" wrap="nowrap">
         <Stack gap={8} style={{ overflow: "hidden" }}>
           <Title order={5} lineClamp={2} lh={1.2}>
@@ -44,12 +57,16 @@ export default function WaiverItem({ waiver }: WaiverItemProps) {
               radius="xl"
               aria-label="Options"
               color="gray"
+              onClick={(e) => e.stopPropagation()}
             >
               <MoreVerticalCircle01Icon size={24} />
             </ActionIcon>
           </Menu.Target>
           <Menu.Dropdown>
-            <Menu.Item leftSection={<PencilEdit02Icon size={16} />}>
+            <Menu.Item
+              leftSection={<PencilEdit02Icon size={16} />}
+              onClick={handleEdit}
+            >
               Edit
             </Menu.Item>
             <Menu.Item leftSection={<Delete02Icon size={16} />} color="red">
