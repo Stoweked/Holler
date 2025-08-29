@@ -1,8 +1,10 @@
 import {
   Avatar,
   Badge,
+  Button,
   Divider,
   Drawer,
+  Group,
   Space,
   Stack,
   Text,
@@ -57,6 +59,15 @@ export default function TransactionDetailsDrawer({
       size="md"
     >
       <Stack gap="lg">
+        <Group grow>
+          <Button aria-label="Print" size="md" variant="default">
+            Print
+          </Button>
+          <Button aria-label="Print" size="md" variant="default">
+            Download
+          </Button>
+        </Group>
+
         <Stack align="center">
           <Avatar color="lime" size={80} radius="50%">
             <Title order={2}>{avatar}</Title>

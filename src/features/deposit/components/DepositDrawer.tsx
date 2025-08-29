@@ -96,7 +96,7 @@ export default function DepositDrawer({ opened, close }: DepositDrawerProps) {
             <ArrowLeft02Icon size={24} />
           </ActionIcon>
         </Tooltip>
-        <Text>Enter amount to deposit</Text>
+        <Text>Enter amount</Text>
       </Group>
     );
 

@@ -9,6 +9,7 @@ import {
   Card,
   Divider,
   ThemeIcon,
+  Image,
 } from "@mantine/core";
 import { BankIcon } from "hugeicons-react";
 
@@ -38,7 +39,25 @@ export default function ConfirmationStep({
         <Stack>
           <Group gap="xs" wrap="nowrap" justify="space-between">
             <Stack gap={0}>
-              <Text c="dimmed">From bank account</Text>
+              <Text c="dimmed">Deposit to</Text>
+              <Title order={4}>Holler</Title>
+              <Text c="dimmed">Your wallet</Text>
+            </Stack>
+            <ThemeIcon variant="default" radius="xl" size={44}>
+              <Image
+                aria-label="Holler logo"
+                w={24}
+                h="auto"
+                src="/images/logomark.svg"
+              />
+            </ThemeIcon>
+          </Group>
+
+          <Divider />
+
+          <Group gap="xs" wrap="nowrap" justify="space-between">
+            <Stack gap={0}>
+              <Text c="dimmed">Withdraw from</Text>
               <Title order={4}>{bank.name}</Title>
               <Text c="dimmed">{bank.details}</Text>
             </Stack>
