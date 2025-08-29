@@ -1,12 +1,7 @@
-import {
-  Button,
-  Group,
-  Stack,
-  TextInput,
-  Select, // Import Select component
-} from "@mantine/core";
-import { RichTextEditor } from "@mantine/tiptap";
+// features/waivers/components/WaiverEditorStep.tsx
+import { Button, Group, Stack, TextInput, Select } from "@mantine/core";
 import { Editor } from "@tiptap/react";
+import { WaiverEditor } from "./WaiverEditor"; // Import the new component
 
 interface WaiverEditorStepProps {
   waiverTitle: string;
@@ -52,40 +47,7 @@ export default function WaiverEditorStep({
         }
       />
 
-      <RichTextEditor editor={editor}>
-        <RichTextEditor.Toolbar sticky stickyOffset={60}>
-          <RichTextEditor.ControlsGroup>
-            <RichTextEditor.Bold />
-            <RichTextEditor.Italic />
-            <RichTextEditor.Underline />
-            <RichTextEditor.Strikethrough />
-            <RichTextEditor.ClearFormatting />
-            <RichTextEditor.Highlight />
-            <RichTextEditor.Code />
-          </RichTextEditor.ControlsGroup>
-
-          <RichTextEditor.ControlsGroup>
-            <RichTextEditor.H1 />
-            <RichTextEditor.H2 />
-            <RichTextEditor.H3 />
-            <RichTextEditor.H4 />
-          </RichTextEditor.ControlsGroup>
-
-          <RichTextEditor.ControlsGroup>
-            <RichTextEditor.Blockquote />
-            <RichTextEditor.Hr />
-            <RichTextEditor.BulletList />
-            <RichTextEditor.OrderedList />
-          </RichTextEditor.ControlsGroup>
-
-          <RichTextEditor.ControlsGroup>
-            <RichTextEditor.Link />
-            <RichTextEditor.Unlink />
-          </RichTextEditor.ControlsGroup>
-        </RichTextEditor.Toolbar>
-
-        <RichTextEditor.Content />
-      </RichTextEditor>
+      <WaiverEditor editor={editor} />
 
       <Group justify="space-between">
         <Button

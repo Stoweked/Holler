@@ -16,6 +16,7 @@
     var(--mantine-color-gray-0),
     var(--mantine-color-dark-8)
   );
+  border-color: var(--mantine-color-lime-5);
   cursor: pointer;
 }
 

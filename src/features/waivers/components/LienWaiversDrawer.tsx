@@ -1,100 +1,38 @@
+// features/waivers/components/LienWaiversDrawer.tsx
 "use client";
 
 import { ActionIcon, Drawer, Group, Space, Text, Tooltip } from "@mantine/core";
-import { Link } from "@mantine/tiptap";
-import { useEditor } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
 import { ArrowLeft02Icon } from "hugeicons-react";
-import { useState } from "react";
 import WaiverInitialStep from "./WaiverInitialStep";
 import WaiverTemplatesStep from "./WaiverTemplatesStep";
 import WaiverEditorStep from "./WaiverEditorStep";
+import { useWaiver } from "../hooks/useWaiver";
 
 interface LienWaiversDrawerProps {
   opened: boolean;
   close: () => void;
 }
 
-interface Waiver {
-  id: string;
-  title: string;
-  lastModified: string;
-  content: string;
-  type: "conditional" | "unconditional";
-}
-
-type WaiverStep = "initial" | "templates" | "editor";
-type EditorMode = "new" | "edit" | "template";
-
 export default function LienWaiversDrawer({
   opened,
   close,
 }: LienWaiversDrawerProps) {
-  const [step, setStep] = useState<WaiverStep>("initial");
-  const [previousStep, setPreviousStep] = useState<WaiverStep>("initial");
-  const [waiverTitle, setWaiverTitle] = useState("");
-  const [waiverType, setWaiverType] = useState<"conditional" | "unconditional">(
-    "conditional"
-  );
-  const [editorMode, setEditorMode] = useState<EditorMode>("new");
-
-  const editor = useEditor({
-    extensions: [StarterKit, Link],
-    content: "",
-    immediatelyRender: false,
-  });
-
-  const handleCreateNew = () => {
-    setWaiverTitle("");
-    setWaiverType("conditional");
-    editor?.commands.setContent("");
-    setPreviousStep("initial");
-    setEditorMode("new");
-    setStep("editor");
-  };
-
-  const handleSelectTemplate = (content: string, name: string) => {
-    setWaiverTitle(name);
-    setWaiverType("conditional");
-    editor?.commands.setContent(content);
-    setPreviousStep("templates");
-    setEditorMode("template");
-    setStep("editor");
-  };
-
-  const handleEditWaiver = (waiver: Waiver) => {
-    setWaiverTitle(waiver.title);
-    setWaiverType(waiver.type);
-    editor?.commands.setContent(waiver.content);
-    setPreviousStep("initial");
-    setEditorMode("edit");
-    setStep("editor");
-  };
-
-  const handleBack = () => {
-    if (step === "editor") {
-      setStep(previousStep);
-    } else if (step === "templates") {
-      setStep("initial");
-    } else {
-      close();
-    }
-  };
-
-  const handleClose = () => {
-    close();
-    setTimeout(() => {
-      setStep("initial");
-      setWaiverTitle("");
-      setWaiverType("conditional");
-      editor?.commands.setContent("");
-    }, 200);
-  };
-
-  const handleSave = () => {
-    // aDD SAVE LOGIC HERE
-    handleClose();
-  };
+  const {
+    step,
+    setStep,
+    waiverTitle,
+    setWaiverTitle,
+    waiverType,
+    setWaiverType,
+    editor,
+    editorMode,
+    handleCreateNew,
+    handleSelectTemplate,
+    handleEditWaiver,
+    handleBack,
+    handleClose,
+    handleSave,
+  } = useWaiver(close);
 
   const drawerTitle =
     step === "initial" ? (
