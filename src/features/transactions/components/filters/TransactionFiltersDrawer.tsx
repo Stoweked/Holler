@@ -169,7 +169,7 @@ export default function TransactionFiltersDrawer({
         <Stack gap="lg">
           <TagsInput
             label="Search"
-            placeholder="Search"
+            placeholder="Enter keyword"
             value={searchQuery}
             onChange={onSearchQueryChange}
             radius="md"

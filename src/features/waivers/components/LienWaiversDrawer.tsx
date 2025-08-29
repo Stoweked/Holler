@@ -1,6 +1,6 @@
 "use client";
 
-import { Drawer } from "@mantine/core";
+import { Button, Drawer, Group, Stack, TextInput } from "@mantine/core";
 import { RichTextEditor, Link } from "@mantine/tiptap";
 import { useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
@@ -37,40 +37,64 @@ export default function LienWaiversDrawer({
         padding="lg"
         size="lg"
       >
-        <RichTextEditor editor={editor}>
-          <RichTextEditor.Toolbar sticky stickyOffset={60}>
-            <RichTextEditor.ControlsGroup>
-              <RichTextEditor.Bold />
-              <RichTextEditor.Italic />
-              <RichTextEditor.Underline />
-              <RichTextEditor.Strikethrough />
-              <RichTextEditor.ClearFormatting />
-              <RichTextEditor.Highlight />
-              <RichTextEditor.Code />
-            </RichTextEditor.ControlsGroup>
+        <Stack gap="lg">
+          <TextInput
+            label="Title"
+            size="lg"
+            radius="md"
+            placeholder="Enter waiver title"
+            aria-label="Lien waver title"
+          />
 
-            <RichTextEditor.ControlsGroup>
-              <RichTextEditor.H1 />
-              <RichTextEditor.H2 />
-              <RichTextEditor.H3 />
-              <RichTextEditor.H4 />
-            </RichTextEditor.ControlsGroup>
+          <RichTextEditor editor={editor}>
+            <RichTextEditor.Toolbar sticky stickyOffset={60}>
+              <RichTextEditor.ControlsGroup>
+                <RichTextEditor.Bold />
+                <RichTextEditor.Italic />
+                <RichTextEditor.Underline />
+                <RichTextEditor.Strikethrough />
+                <RichTextEditor.ClearFormatting />
+                <RichTextEditor.Highlight />
+                <RichTextEditor.Code />
+              </RichTextEditor.ControlsGroup>
 
-            <RichTextEditor.ControlsGroup>
-              <RichTextEditor.Blockquote />
-              <RichTextEditor.Hr />
-              <RichTextEditor.BulletList />
-              <RichTextEditor.OrderedList />
-            </RichTextEditor.ControlsGroup>
+              <RichTextEditor.ControlsGroup>
+                <RichTextEditor.H1 />
+                <RichTextEditor.H2 />
+                <RichTextEditor.H3 />
+                <RichTextEditor.H4 />
+              </RichTextEditor.ControlsGroup>
 
-            <RichTextEditor.ControlsGroup>
-              <RichTextEditor.Link />
-              <RichTextEditor.Unlink />
-            </RichTextEditor.ControlsGroup>
-          </RichTextEditor.Toolbar>
+              <RichTextEditor.ControlsGroup>
+                <RichTextEditor.Blockquote />
+                <RichTextEditor.Hr />
+                <RichTextEditor.BulletList />
+                <RichTextEditor.OrderedList />
+              </RichTextEditor.ControlsGroup>
 
-          <RichTextEditor.Content />
-        </RichTextEditor>
+              <RichTextEditor.ControlsGroup>
+                <RichTextEditor.Link />
+                <RichTextEditor.Unlink />
+              </RichTextEditor.ControlsGroup>
+            </RichTextEditor.Toolbar>
+
+            <RichTextEditor.Content />
+          </RichTextEditor>
+
+          <Group justify="flex-end">
+            <Button
+              aria-label="Save"
+              size="lg"
+              variant="default"
+              onClick={close}
+            >
+              Cancel
+            </Button>
+            <Button aria-label="Save" size="lg">
+              Save
+            </Button>
+          </Group>
+        </Stack>
       </Drawer>
     </div>
   );

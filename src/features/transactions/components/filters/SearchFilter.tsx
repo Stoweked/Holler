@@ -42,7 +42,7 @@ export function SearchFilter({
         <Stack p="xs" gap="xs">
           <TagsInput
             leftSection={<Search01Icon size={16} />}
-            placeholder="Search by keyword"
+            placeholder="Enter keyword"
             value={searchQuery}
             onChange={onSearchQueryChange}
             radius="md"
