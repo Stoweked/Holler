@@ -45,7 +45,7 @@ export default function ConfirmationStep({
             <ThemeIcon variant="default" radius="xl" size={44}>
               <Image
                 aria-label="Holler logo"
-                w={24}
+                w={20}
                 h="auto"
                 src="/images/logomark.svg"
               />
