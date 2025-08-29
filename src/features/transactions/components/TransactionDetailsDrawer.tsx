@@ -14,6 +14,7 @@ import {
   Transaction,
   TransactionStatus,
 } from "@/features/transactions/types/transaction";
+import { Download02Icon, PrinterIcon } from "hugeicons-react";
 
 interface TransactionDetailsDrawerProps {
   opened: boolean;
@@ -66,10 +67,20 @@ export default function TransactionDetailsDrawer({
     >
       <Stack gap="lg">
         <Group grow>
-          <Button aria-label="Print" size="md" variant="default">
+          <Button
+            aria-label="Print"
+            size="md"
+            variant="default"
+            leftSection={<PrinterIcon size={16} />}
+          >
             Print
           </Button>
-          <Button aria-label="Print" size="md" variant="default">
+          <Button
+            aria-label="Print"
+            size="md"
+            variant="default"
+            leftSection={<Download02Icon size={16} />}
+          >
             Download
           </Button>
         </Group>
