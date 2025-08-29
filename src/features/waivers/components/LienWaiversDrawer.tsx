@@ -1,6 +1,6 @@
 "use client";
 
-import { ActionIcon, Drawer, Group, Space, Text, Tooltip } from "@mantine/core";
+import { ActionIcon, Drawer, Group, Text, Tooltip } from "@mantine/core";
 import { Link } from "@mantine/tiptap";
 import { useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
@@ -23,6 +23,7 @@ interface Waiver {
 }
 
 type WaiverStep = "initial" | "templates" | "editor";
+type EditorMode = "new" | "edit" | "template";
 
 export default function LienWaiversDrawer({
   opened,
@@ -31,6 +32,7 @@ export default function LienWaiversDrawer({
   const [step, setStep] = useState<WaiverStep>("initial");
   const [previousStep, setPreviousStep] = useState<WaiverStep>("initial");
   const [waiverTitle, setWaiverTitle] = useState("");
+  const [editorMode, setEditorMode] = useState<EditorMode>("new");
 
   const editor = useEditor({
     extensions: [StarterKit, Link],
@@ -42,6 +44,7 @@ export default function LienWaiversDrawer({
     setWaiverTitle("");
     editor?.commands.setContent("");
     setPreviousStep("initial");
+    setEditorMode("new");
     setStep("editor");
   };
 
@@ -49,6 +52,7 @@ export default function LienWaiversDrawer({
     setWaiverTitle(name);
     editor?.commands.setContent(content);
     setPreviousStep("templates");
+    setEditorMode("template");
     setStep("editor");
   };
 
@@ -56,6 +60,7 @@ export default function LienWaiversDrawer({
     setWaiverTitle(waiver.title);
     editor?.commands.setContent(waiver.content);
     setPreviousStep("initial");
+    setEditorMode("edit");
     setStep("editor");
   };
 
@@ -112,7 +117,15 @@ export default function LienWaiversDrawer({
             <ArrowLeft02Icon size={24} />
           </ActionIcon>
         </Tooltip>
-        <Text>{waiverTitle || "New Lien Waiver"}</Text>
+        <Text>
+          {
+            {
+              new: "New Lien Waiver",
+              edit: "Edit Lien Waiver",
+              template: "Waiver Template",
+            }[editorMode]
+          }
+        </Text>
       </Group>
     );
 
@@ -143,7 +156,6 @@ export default function LienWaiversDrawer({
           onSave={handleSave}
         />
       )}
-      <Space h={100} />
     </Drawer>
   );
 }
