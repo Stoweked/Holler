@@ -1,11 +1,9 @@
 import {
   Button,
   Group,
-  Paper,
   Stack,
-  Text,
   TextInput,
-  Title,
+  Select, // Import Select component
 } from "@mantine/core";
 import { RichTextEditor } from "@mantine/tiptap";
 import { Editor } from "@tiptap/react";
@@ -13,16 +11,18 @@ import { Editor } from "@tiptap/react";
 interface WaiverEditorStepProps {
   waiverTitle: string;
   onWaiverTitleChange: (newTitle: string) => void;
+  waiverType: "conditional" | "unconditional";
+  onWaiverTypeChange: (type: "conditional" | "unconditional") => void;
   editor: Editor | null;
-  onCancel: () => void;
   onSave: () => void;
 }
 
 export default function WaiverEditorStep({
   waiverTitle,
   onWaiverTitleChange,
+  waiverType,
+  onWaiverTypeChange,
   editor,
-  onCancel,
   onSave,
 }: WaiverEditorStepProps) {
   return (
@@ -32,9 +32,24 @@ export default function WaiverEditorStep({
         size="lg"
         radius="md"
         placeholder="Enter waiver title"
-        aria-label="Lien waver title"
+        aria-label="Lien waiver title"
         value={waiverTitle}
         onChange={(event) => onWaiverTitleChange(event.currentTarget.value)}
+      />
+
+      <Select
+        label="Waiver type"
+        size="lg"
+        radius="md"
+        placeholder="Select waiver type"
+        data={[
+          { value: "conditional", label: "Conditional" },
+          { value: "unconditional", label: "Unconditional" },
+        ]}
+        value={waiverType}
+        onChange={(value) =>
+          onWaiverTypeChange(value as "conditional" | "unconditional")
+        }
       />
 
       <RichTextEditor editor={editor}>
@@ -72,17 +87,19 @@ export default function WaiverEditorStep({
         <RichTextEditor.Content />
       </RichTextEditor>
 
-      <Group justify="flex-end">
-        <Button aria-label="Save" size="lg" onClick={onSave}>
+      <Group justify="space-between">
+        <Button
+          aria-label="Delete waiver"
+          size="lg"
+          color="red"
+          variant="outline"
+        >
+          Delete
+        </Button>
+        <Button aria-label="Save waiver" size="lg" onClick={onSave}>
           Save
         </Button>
       </Group>
-
-      {/* <Paper withBorder p="md" radius="lg">
-        <Title order={4}>Delete</Title>
-        <Text c="dimmed">This action cannot be undone</Text>
-        <Button color="red">Delete waiver</Button>
-      </Paper> */}
     </Stack>
   );
 }

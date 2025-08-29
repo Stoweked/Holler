@@ -1,6 +1,6 @@
 "use client";
 
-import { ActionIcon, Drawer, Group, Text, Tooltip } from "@mantine/core";
+import { ActionIcon, Drawer, Group, Space, Text, Tooltip } from "@mantine/core";
 import { Link } from "@mantine/tiptap";
 import { useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
@@ -20,6 +20,7 @@ interface Waiver {
   title: string;
   lastModified: string;
   content: string;
+  type: "conditional" | "unconditional";
 }
 
 type WaiverStep = "initial" | "templates" | "editor";
@@ -32,6 +33,9 @@ export default function LienWaiversDrawer({
   const [step, setStep] = useState<WaiverStep>("initial");
   const [previousStep, setPreviousStep] = useState<WaiverStep>("initial");
   const [waiverTitle, setWaiverTitle] = useState("");
+  const [waiverType, setWaiverType] = useState<"conditional" | "unconditional">(
+    "conditional"
+  );
   const [editorMode, setEditorMode] = useState<EditorMode>("new");
 
   const editor = useEditor({
@@ -42,6 +46,7 @@ export default function LienWaiversDrawer({
 
   const handleCreateNew = () => {
     setWaiverTitle("");
+    setWaiverType("conditional");
     editor?.commands.setContent("");
     setPreviousStep("initial");
     setEditorMode("new");
@@ -50,6 +55,7 @@ export default function LienWaiversDrawer({
 
   const handleSelectTemplate = (content: string, name: string) => {
     setWaiverTitle(name);
+    setWaiverType("conditional");
     editor?.commands.setContent(content);
     setPreviousStep("templates");
     setEditorMode("template");
@@ -58,6 +64,7 @@ export default function LienWaiversDrawer({
 
   const handleEditWaiver = (waiver: Waiver) => {
     setWaiverTitle(waiver.title);
+    setWaiverType(waiver.type);
     editor?.commands.setContent(waiver.content);
     setPreviousStep("initial");
     setEditorMode("edit");
@@ -79,6 +86,7 @@ export default function LienWaiversDrawer({
     setTimeout(() => {
       setStep("initial");
       setWaiverTitle("");
+      setWaiverType("conditional");
       editor?.commands.setContent("");
     }, 200);
   };
@@ -151,11 +159,13 @@ export default function LienWaiversDrawer({
         <WaiverEditorStep
           waiverTitle={waiverTitle}
           onWaiverTitleChange={setWaiverTitle}
+          waiverType={waiverType}
+          onWaiverTypeChange={setWaiverType}
           editor={editor}
-          onCancel={handleClose}
           onSave={handleSave}
         />
       )}
+      <Space h={100} />
     </Drawer>
   );
 }
