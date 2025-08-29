@@ -3,27 +3,68 @@
 
 import "@mantine/core/styles.css";
 import React, { useEffect, useState } from "react";
-import { AppShell, ScrollArea } from "@mantine/core";
+import { AppShell, ScrollArea, Center, Loader } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { SideNav } from "@/components/layout/SideNav";
 import TopNav from "@/components/layout/TopNav/TopNav";
-import { ProfileProvider } from "@/contexts/ProfileContext";
+import { ProfileProvider, useProfile } from "@/contexts/ProfileContext";
 import { getSpotlightActions } from "@/components/layout/TopNav/SpotlightSearch/spotlightActions";
 import { useRouter } from "next/navigation";
 import { Spotlight } from "@mantine/spotlight";
 import { Search01Icon } from "hugeicons-react";
 
+const AuthenticatedLayout = ({ children }: { children: React.ReactNode }) => {
+  const { user, loading } = useProfile();
+  const [opened, { toggle, close }] = useDisclosure();
+
+  if (loading) {
+    return (
+      <Center style={{ height: "100vh" }}>
+        <Loader size="xl" />
+      </Center>
+    );
+  }
+
+  if (!user) {
+    // The context provider handles the redirect, so we render nothing here
+    // to prevent a flash of content before the redirect happens.
+    return null;
+  }
+
+  return (
+    <AppShell
+      header={{ height: 60 }}
+      navbar={{
+        width: 380,
+        breakpoint: "sm",
+        collapsed: { mobile: !opened },
+      }}
+      padding={0}
+    >
+      <AppShell.Header>
+        <TopNav opened={opened} toggle={toggle} />
+      </AppShell.Header>
+      <AppShell.Navbar>
+        <ScrollArea type="never">
+          <SideNav closeMobileNav={close} />
+        </ScrollArea>
+      </AppShell.Navbar>
+      <AppShell.Main pt={60} className="appShell">
+        {children}
+      </AppShell.Main>
+    </AppShell>
+  );
+};
+
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const actions = getSpotlightActions(router);
-  const [opened, { toggle, close }] = useDisclosure();
   const [mounted, setMounted] = useState(false);
-  // Ensure the component only renders on the client side
+
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  // Render null on the server and the full layout on the client
   if (!mounted) {
     return null;
   }
@@ -42,28 +83,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           placeholder: "Search...",
         }}
       />
-
-      <AppShell
-        header={{ height: 60 }}
-        navbar={{
-          width: 380,
-          breakpoint: "sm",
-          collapsed: { mobile: !opened },
-        }}
-        padding={0}
-      >
-        <AppShell.Header>
-          <TopNav opened={opened} toggle={toggle} />
-        </AppShell.Header>
-        <AppShell.Navbar>
-          <ScrollArea type="never">
-            <SideNav closeMobileNav={close} />
-          </ScrollArea>
-        </AppShell.Navbar>
-        <AppShell.Main pt={60} className="appShell">
-          {children}
-        </AppShell.Main>
-      </AppShell>
+      <AuthenticatedLayout>{children}</AuthenticatedLayout>
     </ProfileProvider>
   );
 }

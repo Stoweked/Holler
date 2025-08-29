@@ -4,6 +4,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { Profile } from "@/features/auth/types/profile";
+import { useRouter } from "next/navigation";
 
 interface ProfileContextType {
   user: User | null;
@@ -15,12 +16,13 @@ const ProfileContext = createContext<ProfileContextType | undefined>(undefined);
 
 export function ProfileProvider({ children }: { children: React.ReactNode }) {
   const supabase = createClient();
+  const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchProfile = async () => {
+    const fetchProfileAndSession = async () => {
       const {
         data: { user },
       } = await supabase.auth.getUser();
@@ -29,7 +31,7 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
         setUser(user);
         const { data, error } = await supabase
           .from("profiles")
-          .select("*") // Select all profile fields
+          .select("*")
           .eq("id", user.id)
           .single();
 
@@ -38,12 +40,30 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
         } else if (data) {
           setProfile(data);
         }
+        setLoading(false);
+      } else {
+        // If no user is found on initial check, redirect to the landing page
+        setLoading(false);
+        router.push("/");
       }
-      setLoading(false);
     };
 
-    fetchProfile();
-  }, [supabase]);
+    fetchProfileAndSession();
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === "SIGNED_OUT") {
+        router.push("/");
+      } else if (session) {
+        setUser(session.user);
+      }
+    });
+
+    return () => {
+      subscription?.unsubscribe();
+    };
+  }, [supabase, router]);
 
   const value = {
     user,
