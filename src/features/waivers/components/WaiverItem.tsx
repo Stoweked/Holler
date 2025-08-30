@@ -33,7 +33,7 @@ export default function WaiverItem({ waiver, onEdit }: WaiverItemProps) {
           <Stack gap={8}>
             <Badge
               variant="light"
-              color={waiver.type === "conditional" ? "indigo" : "orange"}
+              color={waiver.type === "conditional" ? "cyan" : "orange"}
             >
               {waiver.type}
             </Badge>

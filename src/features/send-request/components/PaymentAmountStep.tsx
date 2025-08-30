@@ -1,3 +1,4 @@
+// src/features/send-request/components/PaymentAmountStep.tsx
 import {
   Button,
   Stack,
@@ -16,6 +17,9 @@ import { notifications } from "@mantine/notifications";
 import { Recipient } from "@/features/contacts/types/recipient";
 import ContactDetailsCard from "@/features/contacts/components/ContactDetailsCard";
 import BankDetailsCard from "@/features/banks/components/BankDetailsCard";
+import { mockWaivers } from "@/mockData/mockWaivers";
+import { Waiver } from "@/features/waivers/types/waiver";
+import LienWaiverDetailsCard from "./LienWaiverDetailsCard";
 
 interface PaymentAmountStepProps {
   contact: Recipient;
@@ -28,6 +32,8 @@ interface PaymentAmountStepProps {
   onEditContact?: () => void;
   onEditBank?: () => void;
   actionType: "send" | "request";
+  selectedWaiver: Waiver | null;
+  setSelectedWaiver: (waiver: Waiver | null) => void;
 }
 
 export default function PaymentAmountStep({
@@ -41,6 +47,8 @@ export default function PaymentAmountStep({
   onEditContact,
   onEditBank,
   actionType,
+  selectedWaiver,
+  setSelectedWaiver,
 }: PaymentAmountStepProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [
@@ -56,12 +64,9 @@ export default function PaymentAmountStep({
     actionType === "send" ? "Sending to" : "Requesting from";
   const bankLabel = actionType === "send" ? "Pay from" : "Deposit into";
 
-  // A hardcoded value for demonstration purposes
   const availableBalance = 40000;
 
-  // 2. Create a handler to contain the notification logic
   const handleContinue = () => {
-    // 3. Add logic to check for insufficient funds
     if (actionType === "send" && Number(amount) > availableBalance) {
       notifications.show({
         title: "Insufficient funds",
@@ -73,9 +78,13 @@ export default function PaymentAmountStep({
       return;
     }
 
-    // If the check passes, call the original onContinue function
     onContinue?.();
   };
+
+  const waiverOptions = mockWaivers.map((waiver) => ({
+    value: waiver.id,
+    label: waiver.title,
+  }));
 
   return (
     <>
@@ -110,7 +119,6 @@ export default function PaymentAmountStep({
             }
           />
           <Text c="dimmed" size="md" ta="center">
-            {/* Display the balance dynamically */}
             Available balance: $
             {availableBalance.toLocaleString("en-US", {
               minimumFractionDigits: 2,
@@ -128,20 +136,24 @@ export default function PaymentAmountStep({
           />
           <BankDetailsCard bank={bank} label={bankLabel} onEdit={onEditBank} />
 
+          <LienWaiverDetailsCard
+            selectedWaiver={selectedWaiver}
+            setSelectedWaiver={setSelectedWaiver}
+          />
+
           <Textarea
-            placeholder="Add a note or description (optional)"
+            placeholder="Add a note or description"
             value={note}
             onChange={(event) => setNote(event.currentTarget.value)}
-            radius="lg"
+            radius="md"
             size="md"
             autosize
-            minRows={2}
+            minRows={3}
           />
           <Button
             size="xl"
             radius="xl"
             disabled={!amount || Number(amount) === 0}
-            // 4. Update the button's onClick handler
             onClick={handleContinue}
           >
             Continue to review

@@ -1,3 +1,4 @@
+// src/features/send-request/components/PaymentDrawer.tsx
 import { useState, useEffect } from "react";
 import {
   ActionIcon,
@@ -18,6 +19,7 @@ import { notifications } from "@mantine/notifications";
 import { Recipient } from "@/features/contacts/types/recipient";
 import SelectBankStep from "@/features/deposit/components/SelectBankStep";
 import ConnectBankDrawer from "@/features/banks/components/ConnectBankDrawer";
+import { Waiver } from "@/features/waivers/types/waiver";
 
 type PaymentStep = "selectContact" | "enterAmount" | "confirm" | "selectBank";
 
@@ -25,7 +27,7 @@ interface PaymentDrawerProps {
   opened: boolean;
   close: () => void;
   actionType: "send" | "request";
-  initialContact?: Recipient | null; // The only prop needed for pre-selection
+  initialContact?: Recipient | null;
 }
 
 export default function PaymentDrawer({
@@ -39,6 +41,7 @@ export default function PaymentDrawer({
     null
   );
   const [selectedBank, setSelectedBank] = useState<Recipient>(mockBanks[0]);
+  const [selectedWaiver, setSelectedWaiver] = useState<Waiver | null>(null);
   const [amount, setAmount] = useState<string | number>("");
   const [note, setNote] = useState("");
   const [
@@ -74,7 +77,6 @@ export default function PaymentDrawer({
     if (step === "selectBank" || step === "confirm") {
       setStep("enterAmount");
     } else if (step === "enterAmount") {
-      // If an initialContact was passed, close the drawer. Otherwise, go to contact list.
       initialContact ? close() : setStep("selectContact");
     }
   };
@@ -102,9 +104,7 @@ export default function PaymentDrawer({
 
   const handleClose = () => {
     close();
-    // Use a timeout to prevent flicker as the drawer closes
     setTimeout(() => {
-      // Only reset to the first step if the drawer wasn't opened with an initial contact
       if (!initialContact) {
         setStep("selectContact");
         setSelectedContact(null);
@@ -112,10 +112,10 @@ export default function PaymentDrawer({
       setSelectedBank(mockBanks[0]);
       setAmount("");
       setNote("");
+      setSelectedWaiver(null);
     }, 200);
   };
 
-  // Dynamic titles based on actionType
   const mainTitle = isSend ? "Send payment" : "Request payment";
   const reviewTitle = isSend ? "Review send" : "Review request";
   const amountTitle = isSend ? "Enter amount to send" : "Request amount";
@@ -130,7 +130,7 @@ export default function PaymentDrawer({
       bankTitle
     ) : step === "confirm" ? (
       <Group gap="xs">
-        <Tooltip label="Back to amount" position="right">
+        <Tooltip label="Back to payment" position="right">
           <ActionIcon
             onClick={handleBack}
             variant="transparent"
@@ -191,6 +191,8 @@ export default function PaymentDrawer({
             onEditContact={handleBack}
             onEditBank={handleEditBank}
             actionType={actionType}
+            selectedWaiver={selectedWaiver}
+            setSelectedWaiver={setSelectedWaiver}
           />
         )}
         {step === "confirm" && selectedContact && (
@@ -201,6 +203,7 @@ export default function PaymentDrawer({
             note={note}
             onConfirm={handleConfirm}
             actionType={actionType}
+            waiver={selectedWaiver}
           />
         )}
         <Space h={100} />
