@@ -1,6 +1,5 @@
 import {
   ActionIcon,
-  Anchor,
   Box,
   Burger,
   Group,
@@ -16,7 +15,6 @@ import React from "react";
 import AccountAvatar from "./AccountAvatar";
 import { useDisclosure } from "@mantine/hooks";
 import NotificationDrawer from "./Notifications/NotificationDrawer";
-import { useRouter } from "next/navigation";
 import classes from "./TopNav.module.css";
 import { spotlight } from "@mantine/spotlight";
 interface TopNavProps {
@@ -25,7 +23,6 @@ interface TopNavProps {
 }
 
 export default function TopNav({ opened, toggle }: TopNavProps) {
-  const router = useRouter();
   const [
     openedNotificationDrawer,
     { open: openNotificationDrawer, close: closeNotificationDrawer },
@@ -42,8 +39,7 @@ export default function TopNav({ opened, toggle }: TopNavProps) {
             <Image
               src="/images/logomark.svg"
               alt="Holler Logo"
-              maw={24}
-              w="100%"
+              w={24}
               h="auto"
             />
             <Title order={2} style={{ color: "var(--mantine-color-text)" }}>
@@ -69,6 +65,7 @@ export default function TopNav({ opened, toggle }: TopNavProps) {
           </Group>
         </UnstyledButton>
 
+        {/* Notifications */}
         <Group wrap="nowrap" gap="xs">
           <Indicator color="red" size={10} offset={6} position="top-end">
             <ActionIcon

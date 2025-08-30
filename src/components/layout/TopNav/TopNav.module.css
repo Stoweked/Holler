@@ -28,11 +28,3 @@
     max-width: initial;
   }
 }
-@media (max-width: 575px) {
-  .lsLogo {
-    display: none;
-  }
-  .search {
-    max-width: initial;
-  }
-}
