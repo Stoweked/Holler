@@ -3,7 +3,6 @@ import {
   TransactionStatusFilter,
   TransactionTypeFilter,
   DateFilter,
-  SortOption,
 } from "@/features/transactions/types/transaction";
 import {
   Button,

@@ -43,7 +43,8 @@ export default function FeedbackModal({
     });
     form.resetDirty();
     form.resetTouched();
-  }, [profile, form]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [profile?.email]);
 
   //SEND FEEDBACK
   const submitFeedback = async (

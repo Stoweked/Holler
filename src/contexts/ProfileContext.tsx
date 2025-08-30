@@ -15,7 +15,8 @@ interface ProfileContextType {
 const ProfileContext = createContext<ProfileContextType | undefined>(undefined);
 
 export function ProfileProvider({ children }: { children: React.ReactNode }) {
-  const supabase = createClient();
+  // FIX: Initialize the Supabase client only once using useState
+  const [supabase] = useState(() => createClient());
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
@@ -56,14 +57,17 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
       if (event === "SIGNED_OUT") {
         router.push("/");
       } else if (session) {
-        setUser(session.user);
+        // Prevent unnecessary re-renders if user is already set
+        if (JSON.stringify(session.user) !== JSON.stringify(user)) {
+          setUser(session.user);
+        }
       }
     });
 
     return () => {
       subscription?.unsubscribe();
     };
-  }, [supabase, router]);
+  }, [supabase, router, user]);
 
   const value = {
     user,
