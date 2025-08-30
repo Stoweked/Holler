@@ -1,6 +1,6 @@
 // /src/features/transactions/components/TransactionDrawer.tsx
 
-import { Drawer, Space } from "@mantine/core";
+import { Drawer, Space, Transition } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { Recipient } from "@/features/contacts/types/recipient";
 import ConnectBankDrawer from "@/features/banks/components/ConnectBankDrawer";
@@ -72,11 +72,22 @@ export default function TransactionDrawer({
           close: isSuccessStep ? classes.successCloseButton : undefined,
         }}
       >
-        <TransactionDrawerContent
-          state={state}
-          onConfirm={onConfirm}
-          onConnectNew={openConnectBankDrawer}
-        />
+        <Transition
+          mounted={opened}
+          transition="fade"
+          duration={400}
+          timingFunction="ease"
+        >
+          {(styles) => (
+            <div style={styles}>
+              <TransactionDrawerContent
+                state={state}
+                onConfirm={onConfirm}
+                onConnectNew={openConnectBankDrawer}
+              />
+            </div>
+          )}
+        </Transition>
         <Space h={100} />
       </Drawer>
       <ConnectBankDrawer
