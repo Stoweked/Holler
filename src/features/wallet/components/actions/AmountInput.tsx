@@ -96,6 +96,8 @@ export default function AmountInput({
         prefix="$"
         hideControls
         inputMode="decimal"
+        enterKeyHint="done"
+        type="text"
         placeholder="$0.00"
         rightSection={
           amount ? (
