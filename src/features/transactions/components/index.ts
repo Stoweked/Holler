@@ -1,12 +1,6 @@
+// src/features/transactions/components/index.ts
+
 export * from "./TransactionDetailsDrawer";
 export * from "./TransactionItem";
 export * from "./TransactionsTable";
 export * from "./filters/TransactionFilters";
-export * from "./filters/TransactionFiltersDrawer";
-export * from "./filters/StatusFilter";
-export * from "./filters/TypeFilter";
-export * from "./filters/AmountFilter";
-export * from "./filters/ContactFilter";
-export * from "./filters/DateFilter";
-export * from "./filters/Options";
-export * from "./filters/Sort";
