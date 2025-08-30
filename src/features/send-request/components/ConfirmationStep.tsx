@@ -13,9 +13,12 @@ import {
   Alert,
   ThemeIcon,
   Modal,
+  UnstyledButton,
+  Tooltip,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { BankIcon, File01Icon } from "hugeicons-react";
+import classes from "./EnterAmount.module.css";
 
 interface ConfirmationStepProps {
   contact: Contact;
@@ -129,33 +132,32 @@ export default function ConfirmationStep({
 
             {actionType === "send" && waiver && (
               <Alert title="" color="orange" variant="light" radius="lg">
-                <Stack gap="xs">
-                  <Title order={5} c="orange">
-                    Pending lien waiver
-                  </Title>
+                <Stack>
+                  <Stack gap={8}>
+                    <Title order={5} c="orange" lh={1.2}>
+                      Pending lien waiver
+                    </Title>
 
-                  <Group wrap="nowrap" gap={8}>
-                    <File01Icon
-                      size={18}
-                      color="gray"
-                      style={{ flexShrink: 0 }}
-                    />
-                    <Title order={6}>{waiver.title}</Title>
-                  </Group>
+                    <Text size="sm">
+                      Funds will be held until the attached lien waiver is
+                      reviewed and accepted by the recipient.
+                    </Text>
+                  </Stack>
 
-                  <Text size="sm">
-                    Funds will be held until the attached lien waiver is
-                    reviewed and accepted by the recipient.
-                  </Text>
-                  <Button
-                    aria-label="View lien waiver"
-                    variant="light"
-                    color="orange"
-                    size="sm"
-                    onClick={open}
-                  >
-                    View lien waiver
-                  </Button>
+                  <Tooltip label="View lien waiver">
+                    <UnstyledButton
+                      aria-label="View lien waiver"
+                      className={classes.waiverButton}
+                      onClick={open}
+                    >
+                      <Group wrap="nowrap" gap={8}>
+                        <File01Icon size={18} style={{ flexShrink: 0 }} />
+                        <Title order={6} lh={1.2}>
+                          {waiver.title}
+                        </Title>
+                      </Group>
+                    </UnstyledButton>
+                  </Tooltip>
                 </Stack>
               </Alert>
             )}

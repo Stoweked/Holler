@@ -56,3 +56,21 @@
 .waiverInputWrapper {
   height: auto !important;
 }
+
+.waiverButton {
+  padding: var(--mantine-spacing-md) var(--mantine-spacing-sm);
+  border: 1px solid;
+  border-color: var(--mantine-color-orange-4);
+
+  border-radius: 8px;
+  background: var(--mantine-color-orange-light);
+  transition: all 200ms ease-in-out;
+}
+
+.waiverButton:hover {
+  border-color: light-dark(
+    var(--mantine-color-orange-6),
+    var(--mantine-color-orange-7)
+  );
+  background: var(--mantine-color-orange-light);
+}
