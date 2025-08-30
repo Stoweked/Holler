@@ -1,9 +1,10 @@
+// src/contexts/ProfileContext.tsx
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { User } from "@supabase/supabase-js";
-import { Profile } from "@/features/auth/types/profile";
+import { Profile } from "@/features/profile/types/profile";
 import { useRouter } from "next/navigation";
 
 interface ProfileContextType {
@@ -22,57 +23,69 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchProfile = async (user: User) => {
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("id", user.id)
-        .single();
-
-      if (error) {
-        console.error("Error fetching profile:", error);
-        setProfile(null); // Clear profile on error
-      } else if (data) {
-        setProfile(data);
-      }
-    };
-
-    // First, check for an active session on initial load
-    const checkSession = async () => {
+    const fetchProfileAndSession = async () => {
       const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      if (session) {
-        setUser(session.user);
-        await fetchProfile(session.user);
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (user) {
+        setUser(user);
+        const { data, error } = await supabase
+          .from("profiles")
+          .select("*")
+          .eq("id", user.id)
+          .single();
+
+        if (error) {
+          console.error("Error fetching profile:", error);
+        } else if (data) {
+          setProfile(data);
+        }
+        setLoading(false);
       } else {
+        setLoading(false);
         router.push("/");
       }
-      setLoading(false);
     };
 
-    checkSession();
+    fetchProfileAndSession();
 
-    // Then, listen for authentication state changes
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (event, session) => {
-      setLoading(true);
-      if (session) {
-        setUser(session.user);
-        await fetchProfile(session.user);
-      } else {
-        setUser(null);
-        setProfile(null);
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === "SIGNED_OUT") {
         router.push("/");
+      } else if (session) {
+        if (JSON.stringify(session.user) !== JSON.stringify(user)) {
+          setUser(session.user);
+        }
       }
-      setLoading(false);
     });
+
+    // ** NEW: Subscribe to profile changes **
+    const profileChannel = supabase
+      .channel("public:profiles")
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "profiles",
+          filter: `id=eq.${user?.id}`,
+        },
+        (payload) => {
+          console.log("Profile change received!", payload);
+          setProfile(payload.new as Profile);
+        }
+      )
+      .subscribe();
 
     return () => {
       subscription?.unsubscribe();
+      // ** NEW: Unsubscribe from the channel when the component unmounts **
+      supabase.removeChannel(profileChannel);
     };
-  }, [supabase, router]);
+  }, [supabase, router, user]);
 
   const value = {
     user,

@@ -4,6 +4,7 @@ import {
   Anchor,
   Avatar,
   Button,
+  Divider,
   Paper,
   PasswordInput,
   Stack,
@@ -15,6 +16,7 @@ import { useForm } from "@mantine/form";
 import { login } from "../../../features/auth/actions/login";
 import { UserLove01Icon } from "hugeicons-react";
 import { useState } from "react";
+import { OAuthButtons } from "@/features/auth/components";
 
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -25,7 +27,6 @@ export default function LoginPage() {
       email: "",
       password: "",
     },
-
     // Validation rules for each field
     validate: {
       email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
@@ -73,6 +74,14 @@ export default function LoginPage() {
             <Title order={2}>Welcome back</Title>
             <Text c="dimmed">Enter your credentials to continue.</Text>
           </Stack>
+
+          <OAuthButtons />
+
+          <Divider
+            label="Or log in with email"
+            labelPosition="center"
+            my="xs"
+          />
 
           <form onSubmit={form.onSubmit(handleSubmit)}>
             <Stack>

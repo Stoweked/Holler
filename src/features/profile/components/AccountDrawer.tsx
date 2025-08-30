@@ -1,4 +1,4 @@
-import { Profile } from "@/features/auth/types/profile";
+import { Profile } from "@/features/profile/types/profile";
 import {
   Drawer,
   Stack,
