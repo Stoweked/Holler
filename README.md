@@ -25,6 +25,8 @@ Holler provides secure and efficient mobile payments designed for construction t
 
 The project is organized with a focus on feature-based modules.
 
+```
+/
 ├── src/
 │ ├── app/ # Next.js App Router: routing, pages, and API endpoints
 │ ├── components/ # Reusable UI components (Layout, Navigation)
@@ -40,6 +42,7 @@ The project is organized with a focus on feature-based modules.
 │ └── styles/ # Global styles and theme configuration
 ├── public/ # Static assets (images, fonts)
 └── ...config files
+```
 
 ## 🚀 Getting Started
 
