@@ -6,7 +6,7 @@ import {
   Tooltip,
   Alert,
 } from "@mantine/core";
-import classes from "./Shared.module.css";
+import classes from "./Actions.module.css";
 import { useEffect, useRef, useState } from "react";
 import { Alert02Icon, Cancel01Icon } from "hugeicons-react";
 

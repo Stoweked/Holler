@@ -41,6 +41,10 @@
   cursor: pointer;
 }
 
+.waiverInputWrapper {
+  height: auto !important;
+}
+
 @media (max-width: 450px) {
   .buttonGroup {
     flex-direction: column;

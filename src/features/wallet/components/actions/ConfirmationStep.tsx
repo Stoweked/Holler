@@ -21,7 +21,7 @@ import {
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { BankIcon, File01Icon } from "hugeicons-react";
-import classes from "./Shared.module.css";
+import classes from "./Actions.module.css";
 import { TransactionActionType } from "../../hooks/useTransactionState";
 import { useWallet } from "@/contexts/WalletContext";
 
