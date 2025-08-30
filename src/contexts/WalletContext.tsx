@@ -11,7 +11,7 @@ const WalletContext = createContext<WalletContextType | undefined>(undefined);
 export function WalletProvider({ children }: { children: React.ReactNode }) {
   // For now, we'll use a hardcoded value as requested.
   // This can be replaced with an API call in the future.
-  const [balance] = useState(3260.0);
+  const [balance] = useState(32640.0);
 
   const value = {
     balance,

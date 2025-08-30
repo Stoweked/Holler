@@ -5,6 +5,9 @@ import {
   ActionIcon,
   Tooltip,
   Alert,
+  Group,
+  Button,
+  Transition,
 } from "@mantine/core";
 import classes from "./Actions.module.css";
 import { useEffect, useRef, useState } from "react";
@@ -31,6 +34,7 @@ export default function AmountInput({
     flowType === "debit"
       ? initialBalance - numericAmount
       : initialBalance + numericAmount;
+  const quickAmounts = [20, 50, 100, 500];
 
   useEffect(() => {
     inputRef.current?.focus();
@@ -80,6 +84,14 @@ export default function AmountInput({
           maximumFractionDigits: 2,
         })}`;
 
+  const handleQuickAmount = (value: number) => {
+    handleAmountChange(value);
+    inputRef.current?.focus();
+  };
+
+  // Check if amount has a value (not empty string, not 0)
+  const hasAmount = amount !== "" && amount !== 0 && amount !== "0.00";
+
   return (
     <Stack align="center" gap="xs">
       <NumberInput
@@ -117,6 +129,29 @@ export default function AmountInput({
           ) : null
         }
       />
+
+      <Transition
+        mounted={!hasAmount}
+        transition="fade-up"
+        duration={200}
+        exitDuration={150}
+      >
+        {(styles) => (
+          <Group style={styles}>
+            {quickAmounts.map((quickAmount) => (
+              <Button
+                key={quickAmount}
+                variant="default"
+                size="compact-md"
+                onClick={() => handleQuickAmount(quickAmount)}
+              >
+                ${quickAmount}
+              </Button>
+            ))}
+          </Group>
+        )}
+      </Transition>
+
       {error && flowType === "debit" ? (
         <Alert
           variant="light"
