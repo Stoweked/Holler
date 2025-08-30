@@ -66,9 +66,9 @@ export default function LienWaiversDrawer({
         <Text>
           {
             {
-              new: "New Lien Waiver",
-              edit: "Edit Lien Waiver",
-              template: "Waiver Template",
+              new: "New lien waiver",
+              edit: "Edit lien waiver",
+              template: "Waiver template",
             }[editorMode]
           }
         </Text>
@@ -100,6 +100,7 @@ export default function LienWaiversDrawer({
           waiverType={waiverType}
           onWaiverTypeChange={setWaiverType}
           editor={editor}
+          editorMode={editorMode}
           onSave={handleSave}
         />
       )}

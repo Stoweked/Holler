@@ -13,16 +13,15 @@ export default function AccountToggle() {
           >
             <Group wrap="nowrap" gap="xs">
               <Text fw="bold" lineClamp={1} size="sm">
-                Mountain View Woodworking
+                Granite Builder Co
               </Text>
               <ArrowDown01Icon size={20} />
             </Group>
           </UnstyledButton>
         </Menu.Target>
         <Menu.Dropdown>
-          <Menu.Item>Account name</Menu.Item>
-          <Menu.Item>Account name</Menu.Item>
-          <Menu.Item>Account name</Menu.Item>
+          <Menu.Item>Wasatch Framing</Menu.Item>
+          <Menu.Item>Mountain View Carpentry</Menu.Item>
         </Menu.Dropdown>
       </Menu>
     </div>

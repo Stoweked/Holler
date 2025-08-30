@@ -10,6 +10,7 @@ interface WaiverEditorStepProps {
   onWaiverTypeChange: (type: "conditional" | "unconditional") => void;
   editor: Editor | null;
   onSave: () => void;
+  editorMode: "new" | "edit" | "template";
 }
 
 export default function WaiverEditorStep({
@@ -18,6 +19,7 @@ export default function WaiverEditorStep({
   waiverType,
   onWaiverTypeChange,
   editor,
+  editorMode,
   onSave,
 }: WaiverEditorStepProps) {
   return (
@@ -49,18 +51,28 @@ export default function WaiverEditorStep({
 
       <WaiverEditor editor={editor} />
 
-      <Group justify="space-between">
-        <Button
-          aria-label="Delete waiver"
-          size="lg"
-          color="red"
-          variant="outline"
-        >
-          Delete
-        </Button>
-        <Button aria-label="Save waiver" size="lg" onClick={onSave}>
-          Save
-        </Button>
+      <Group justify="space-between" wrap="nowrap">
+        {editorMode === "edit" && (
+          <Button
+            aria-label="Archive waiver"
+            size="lg"
+            color="red"
+            variant="outline"
+            style={{ flexShrink: 0 }}
+          >
+            Archive
+          </Button>
+        )}
+        <Group w="100%" justify="flex-end">
+          <Button
+            aria-label="Save waiver"
+            size="lg"
+            onClick={onSave}
+            style={{ flexShrink: 0 }}
+          >
+            Save
+          </Button>
+        </Group>
       </Group>
     </Stack>
   );

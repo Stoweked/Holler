@@ -40,7 +40,7 @@ export default function WaiverInitialStep({
   );
 
   return (
-    <Stack gap="xl">
+    <Stack gap="md">
       {/* Existing waivers */}
       <Stack>
         <Input
@@ -90,29 +90,31 @@ export default function WaiverInitialStep({
       </Stack>
 
       {/* Create buttons */}
-      <Group grow className={classes.buttonGroup}>
-        <UnstyledButton
-          aria-label="Create new waiver"
-          className={classes.createButton}
-          onClick={onNew}
-        >
-          <Stack gap="xs" align="center">
-            <PlusSignIcon size={24} />
-            <Text ta="center">Create new waiver</Text>
-          </Stack>
-        </UnstyledButton>
+      {!searchValue && (
+        <Group grow className={classes.buttonGroup}>
+          <UnstyledButton
+            aria-label="Create new waiver"
+            className={classes.createButton}
+            onClick={onNew}
+          >
+            <Stack gap="xs" align="center">
+              <PlusSignIcon size={24} />
+              <Text ta="center">Create new waiver</Text>
+            </Stack>
+          </UnstyledButton>
 
-        <UnstyledButton
-          aria-label="Start from template"
-          className={classes.createButton}
-          onClick={onTemplate}
-        >
-          <Stack gap="xs" align="center">
-            <DocumentValidationIcon size={24} />
-            <Text ta="center">Start from template</Text>
-          </Stack>
-        </UnstyledButton>
-      </Group>
+          <UnstyledButton
+            aria-label="Start from template"
+            className={classes.createButton}
+            onClick={onTemplate}
+          >
+            <Stack gap="xs" align="center">
+              <DocumentValidationIcon size={24} />
+              <Text ta="center">Start from template</Text>
+            </Stack>
+          </UnstyledButton>
+        </Group>
+      )}
     </Stack>
   );
 }
