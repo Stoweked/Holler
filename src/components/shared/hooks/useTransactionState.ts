@@ -1,20 +1,38 @@
-import { useState, useEffect } from "react";
+// /src/features/transactions/hooks/useTransactionState.ts
+
+import { useState, useEffect, useCallback } from "react";
 import { Recipient } from "@/features/contacts/types/recipient";
 import { Waiver } from "@/features/waivers/types/waiver";
 import { mockBanks } from "@/mockData/mockBanks";
 
-export type PaymentStep =
+export type TransactionStep =
   | "selectContact"
   | "enterAmount"
   | "confirm"
   | "selectBank";
 
-export function usePaymentState(
+export type TransactionActionType = "deposit" | "send" | "request" | "transfer";
+
+const hollerWalletContact: Recipient = {
+  name: "Holler Wallet",
+  avatar: "H",
+  details: "Your balance",
+};
+
+export function useTransactionState(
   opened: boolean,
-  initialContact: Recipient | null,
-  close: () => void
+  transactionType: TransactionActionType,
+  close: () => void,
+  initialContact: Recipient | null
 ) {
-  const [step, setStep] = useState<PaymentStep>("selectContact");
+  // Memoize getInitialStep with useCallback
+  const getInitialStep = useCallback(() => {
+    return transactionType === "deposit" || transactionType === "transfer"
+      ? "selectBank"
+      : "selectContact";
+  }, [transactionType]);
+
+  const [step, setStep] = useState<TransactionStep>(getInitialStep());
   const [selectedContact, setSelectedContact] = useState<Recipient | null>(
     null
   );
@@ -24,14 +42,19 @@ export function usePaymentState(
   const [note, setNote] = useState("");
 
   useEffect(() => {
-    if (opened && initialContact) {
-      setSelectedContact(initialContact);
-      setStep("enterAmount");
-    } else if (!opened) {
-      setStep("selectContact");
+    if (opened) {
+      if (initialContact) {
+        setSelectedContact(initialContact);
+        setStep("enterAmount");
+      } else {
+        setStep(getInitialStep());
+      }
+    } else {
+      // Reset state on close
+      setStep(getInitialStep());
       setSelectedContact(null);
     }
-  }, [opened, initialContact]);
+  }, [opened, initialContact, transactionType, getInitialStep]);
 
   const handleSelectContact = (contact: Recipient) => {
     setSelectedContact(contact);
@@ -43,6 +66,11 @@ export function usePaymentState(
 
   const handleSelectBank = (bank: Recipient) => {
     setSelectedBank(bank);
+    if (transactionType === "transfer") {
+      setSelectedContact(bank);
+    } else if (transactionType === "deposit") {
+      setSelectedContact(hollerWalletContact);
+    }
     setStep("enterAmount");
   };
 
@@ -50,7 +78,11 @@ export function usePaymentState(
     if (step === "selectBank" || step === "confirm") {
       setStep("enterAmount");
     } else if (step === "enterAmount") {
-      initialContact ? close() : setStep("selectContact");
+      if (initialContact) {
+        close();
+      } else {
+        setStep(getInitialStep());
+      }
     }
   };
 
@@ -58,7 +90,7 @@ export function usePaymentState(
     close();
     setTimeout(() => {
       if (!initialContact) {
-        setStep("selectContact");
+        setStep(getInitialStep());
         setSelectedContact(null);
       }
       setSelectedBank(mockBanks[0]);
@@ -84,5 +116,6 @@ export function usePaymentState(
     handleSelectBank,
     handleBack,
     handleClose,
+    transactionType,
   };
 }

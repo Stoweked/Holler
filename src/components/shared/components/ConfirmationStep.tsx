@@ -1,3 +1,5 @@
+// /src/features/send-request/components/ConfirmationStep.tsx
+
 import { Contact, Recipient } from "@/features/contacts/types/recipient";
 import { Waiver } from "@/features/waivers/types/waiver";
 import {
@@ -15,10 +17,13 @@ import {
   Modal,
   UnstyledButton,
   Tooltip,
+  Image,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { BankIcon, File01Icon } from "hugeicons-react";
-import classes from "./EnterAmount.module.css";
+import classes from "./Shared.module.css";
+import { TransactionActionType } from "../hooks/useTransactionState";
+import { useWallet } from "@/contexts/WalletContext";
 
 interface ConfirmationStepProps {
   contact: Contact;
@@ -26,7 +31,7 @@ interface ConfirmationStepProps {
   amount: string | number;
   note?: string;
   onConfirm: () => void;
-  actionType?: "send" | "request";
+  actionType?: TransactionActionType;
   waiver: Waiver | null;
 }
 
@@ -40,6 +45,7 @@ export default function ConfirmationStep({
   waiver,
 }: ConfirmationStepProps) {
   const [opened, { open, close }] = useDisclosure(false);
+  const { balance } = useWallet();
   const numericAmount =
     typeof amount === "string" ? parseFloat(amount) : amount;
   const formattedAmount = (numericAmount || 0).toLocaleString("en-US", {
@@ -47,18 +53,52 @@ export default function ConfirmationStep({
     currency: "USD",
   });
 
+  const getActionLabels = () => {
+    switch (actionType) {
+      case "send":
+        return { to: "Send to", from: "Pay from", button: "Send" };
+      case "request":
+        return { to: "Request from", from: "Deposit into", button: "Request" };
+      case "deposit":
+        return { to: "Deposit to", from: "Withdraw from", button: "Deposit" };
+      case "transfer":
+        return {
+          to: "Transfer to",
+          from: "Transfer from",
+          button: "Transfer",
+        };
+      default:
+        return { to: "", from: "", button: "" };
+    }
+  };
+
+  const { to, from, button } = getActionLabels();
+
+  const isTransfer = actionType === "transfer";
+  const isDeposit = actionType === "deposit";
+
+  const toParty = isTransfer ? bank : contact;
+  const fromParty = isTransfer
+    ? {
+        name: "Holler wallet",
+        details: balance.toLocaleString("en-US", {
+          style: "currency",
+          currency: "USD",
+        }),
+      }
+    : bank;
+
   return (
     <>
       <Stack justify="space-between" gap="lg">
         <Card withBorder p="lg" radius="lg" w="100%">
           <Stack>
+            {/* "To" Section */}
             <Group gap="xs" wrap="nowrap" justify="space-between">
               <Stack gap={0} miw={1} style={{ flex: 1 }}>
-                <Text c="dimmed">
-                  {actionType === "send" ? "Send to" : "Request from"}
-                </Text>
+                <Text c="dimmed">{to}</Text>
                 <Title order={4} lineClamp={3} lh={1.2}>
-                  {contact.name}
+                  {toParty.name}
                 </Title>
                 <Text
                   size="xs"
@@ -70,30 +110,43 @@ export default function ConfirmationStep({
                     textOverflow: "ellipsis",
                   }}
                 >
-                  {contact.details}
+                  {toParty.details}
                 </Text>
               </Stack>
-
-              <Avatar
-                src={null}
-                alt={contact.name}
-                variant="light"
-                color="lime"
-                size={44}
-              >
-                {contact.avatar}
-              </Avatar>
+              {isDeposit ? (
+                <ThemeIcon variant="default" radius="xl" size={44}>
+                  <Image
+                    aria-label="Holler logo"
+                    w={20}
+                    h="auto"
+                    src="/images/logomark.svg"
+                  />
+                </ThemeIcon>
+              ) : isTransfer ? (
+                <ThemeIcon variant="default" radius="xl" size={44}>
+                  <BankIcon size={24} />
+                </ThemeIcon>
+              ) : (
+                <Avatar
+                  src={null}
+                  alt={contact.name}
+                  variant="light"
+                  color="lime"
+                  size={44}
+                >
+                  {contact.avatar}
+                </Avatar>
+              )}
             </Group>
 
             <Divider />
 
+            {/* "From" Section */}
             <Group gap="xs" wrap="nowrap" justify="space-between">
               <Stack gap={0} miw={1} style={{ flex: 1 }}>
-                <Text c="dimmed">
-                  {actionType === "send" ? "Pay from" : "Deposit into"}
-                </Text>
+                <Text c="dimmed">{from}</Text>
                 <Title order={4} lineClamp={3} lh={1.2}>
-                  {bank.name}
+                  {fromParty.name}
                 </Title>
                 <Text
                   size="xs"
@@ -105,12 +158,23 @@ export default function ConfirmationStep({
                     textOverflow: "ellipsis",
                   }}
                 >
-                  {bank.details}
+                  {fromParty.details}
                 </Text>
               </Stack>
-              <ThemeIcon variant="default" radius="xl" size={44}>
-                <BankIcon size={24} />
-              </ThemeIcon>
+              {isTransfer ? (
+                <ThemeIcon variant="default" radius="xl" size={44}>
+                  <Image
+                    aria-label="Holler logo"
+                    w={20}
+                    h="auto"
+                    src="/images/logomark.svg"
+                  />
+                </ThemeIcon>
+              ) : (
+                <ThemeIcon variant="default" radius="xl" size={44}>
+                  <BankIcon size={24} />
+                </ThemeIcon>
+              )}
             </Group>
 
             {note && (
@@ -137,13 +201,11 @@ export default function ConfirmationStep({
                     <Title order={5} c="orange" lh={1.2}>
                       Pending lien waiver
                     </Title>
-
                     <Text size="sm">
                       Funds will be held until the attached lien waiver is
                       reviewed and accepted by the recipient.
                     </Text>
                   </Stack>
-
                   <Tooltip label="View lien waiver">
                     <UnstyledButton
                       aria-label="View lien waiver"
@@ -166,9 +228,7 @@ export default function ConfirmationStep({
 
         <Stack gap="lg">
           <Button size="xl" radius="xl" onClick={onConfirm}>
-            {actionType === "send"
-              ? `Send ${formattedAmount}`
-              : `Request ${formattedAmount}`}
+            {`${button} ${formattedAmount}`}
           </Button>
           <Stack gap="xs">
             <Text c="dimmed" size="sm" ta="center">

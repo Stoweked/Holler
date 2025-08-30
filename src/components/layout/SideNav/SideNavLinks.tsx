@@ -1,4 +1,5 @@
 // src/components/layout/SideNav/SideNavLinks.tsx
+
 import { Badge, Group, NavLink } from "@mantine/core";
 import {
   ArrowRight01Icon,
@@ -12,10 +13,11 @@ import { useDisclosure } from "@mantine/hooks";
 import LienWaiversDrawer from "@/features/waivers/components/LienWaiversDrawer";
 import { useState, useEffect } from "react";
 import ProfileModal from "@/features/profile/components/ProfileModal";
-import PaymentDrawer from "@/features/send-request/components/PaymentDrawer";
 import { Contact } from "@/features/contacts/types/recipient";
 import ConnectedBanksDrawer from "@/features/banks/components/ConnectedBanksDrawer";
 import ContactsDrawer from "@/features/contacts/components/ContactsDrawer";
+import { TransactionActionType } from "@/components/shared/hooks/useTransactionState";
+import TransactionDrawer from "@/components/shared/components/TransactionDrawer";
 
 interface SideNavLinksProps {
   closeMobileNav: () => void;
@@ -23,6 +25,9 @@ interface SideNavLinksProps {
 
 export default function SideNavLinks({ closeMobileNav }: SideNavLinksProps) {
   const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
+  // Use the correct type for state
+  const [transactionType, setTransactionType] =
+    useState<TransactionActionType>("send");
 
   const [
     openedContactsDrawer,
@@ -44,12 +49,9 @@ export default function SideNavLinks({ closeMobileNav }: SideNavLinksProps) {
     { open: openProfileDrawer, close: closeProfileDrawer },
   ] = useDisclosure(false);
 
-  const [openedSendDrawer, { open: openSendDrawer, close: closeSendDrawer }] =
-    useDisclosure(false);
-
   const [
-    openedRequestDrawer,
-    { open: openRequestDrawer, close: closeRequestDrawer },
+    openedTransactionDrawer,
+    { open: openTransactionDrawer, close: closeTransactionDrawer },
   ] = useDisclosure(false);
 
   useEffect(() => {
@@ -71,21 +73,18 @@ export default function SideNavLinks({ closeMobileNav }: SideNavLinksProps) {
     closeMobileNav();
   };
 
-  const handleSendClick = (contact: Contact) => {
+  // Use the correct type in the handler function
+  const handleTransactionStart = (
+    contact: Contact,
+    type: TransactionActionType
+  ) => {
     setSelectedContact(contact);
+    setTransactionType(type);
     closeProfileDrawer();
-    openSendDrawer();
+    openTransactionDrawer();
     closeContactsDrawer();
   };
 
-  const handleRequestClick = (contact: Contact) => {
-    setSelectedContact(contact);
-    closeProfileDrawer();
-    openRequestDrawer();
-    closeContactsDrawer();
-  };
-
-  // New handlers to close the mobile nav before opening a drawer
   const handleContactsClick = () => {
     closeMobileNav();
     openContactsDrawer();
@@ -164,20 +163,14 @@ export default function SideNavLinks({ closeMobileNav }: SideNavLinksProps) {
         opened={openedProfileDrawer}
         close={closeProfileDrawer}
         contact={selectedContact}
-        onSendClick={handleSendClick}
-        onRequestClick={handleRequestClick}
+        onSendClick={(contact) => handleTransactionStart(contact, "send")}
+        onRequestClick={(contact) => handleTransactionStart(contact, "request")}
       />
-      <PaymentDrawer
-        opened={openedRequestDrawer}
-        close={closeRequestDrawer}
+      <TransactionDrawer
+        opened={openedTransactionDrawer}
+        close={closeTransactionDrawer}
         initialContact={selectedContact}
-        actionType="request"
-      />
-      <PaymentDrawer
-        opened={openedSendDrawer}
-        close={closeSendDrawer}
-        initialContact={selectedContact}
-        actionType="send"
+        transactionType={transactionType}
       />
     </div>
   );

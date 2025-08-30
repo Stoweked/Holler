@@ -12,6 +12,7 @@ import { getSpotlightActions } from "@/components/layout/TopNav/SpotlightSearch/
 import { useRouter } from "next/navigation";
 import { Spotlight } from "@mantine/spotlight";
 import { Search01Icon } from "hugeicons-react";
+import { WalletProvider } from "@/contexts/WalletContext";
 
 const AuthenticatedLayout = ({ children }: { children: React.ReactNode }) => {
   const { user, loading } = useProfile();
@@ -71,19 +72,21 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <ProfileProvider>
-      <Spotlight
-        size="lg"
-        radius="md"
-        scrollable
-        actions={actions}
-        shortcut={["mod + k", "/"]}
-        nothingFound="No results found..."
-        searchProps={{
-          leftSection: <Search01Icon size={20} />,
-          placeholder: "Search...",
-        }}
-      />
-      <AuthenticatedLayout>{children}</AuthenticatedLayout>
+      <WalletProvider>
+        <Spotlight
+          size="lg"
+          radius="md"
+          scrollable
+          actions={actions}
+          shortcut={["mod + k", "/"]}
+          nothingFound="No results found..."
+          searchProps={{
+            leftSection: <Search01Icon size={20} />,
+            placeholder: "Search...",
+          }}
+        />
+        <AuthenticatedLayout>{children}</AuthenticatedLayout>
+      </WalletProvider>
     </ProfileProvider>
   );
 }

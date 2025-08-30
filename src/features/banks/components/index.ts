@@ -4,3 +4,4 @@ export * from "./BankList";
 export * from "./ConnectedBanksDrawer";
 export * from "./BankProfileModal";
 export * from "./ConnectBankDrawer";
+export * from "./SelectBankStep";

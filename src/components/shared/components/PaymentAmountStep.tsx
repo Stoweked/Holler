@@ -1,24 +1,19 @@
-import {
-  Button,
-  Stack,
-  Text,
-  NumberInput,
-  ActionIcon,
-  Tooltip,
-  Textarea,
-} from "@mantine/core";
-import classes from "./EnterAmount.module.css";
-import { useEffect, useRef, useState } from "react";
-import { Alert02Icon, Cancel01Icon } from "hugeicons-react";
+// /src/features/send-request/components/PaymentAmountStep.tsx
+
+import { Button, Stack, Text, Textarea } from "@mantine/core";
+import { useEffect, useRef } from "react";
+import { Alert02Icon } from "hugeicons-react";
 import { useDisclosure } from "@mantine/hooks";
-import ProfileModal from "../../profile/components/ProfileModal";
 import { notifications } from "@mantine/notifications";
 import { Recipient } from "@/features/contacts/types/recipient";
 import ContactDetailsCard from "@/features/contacts/components/ContactDetailsCard";
 import BankDetailsCard from "@/features/banks/components/BankDetailsCard";
 import { Waiver } from "@/features/waivers/types/waiver";
-import LienWaiverDetailsCard from "./LienWaiverDetailsCard";
-import AmountInput from "@/components/shared/AmountInput";
+import LienWaiverDetailsCard from "@/features/waivers/components/LienWaiverDetailsCard";
+import ProfileModal from "@/features/profile/components/ProfileModal";
+import { TransactionActionType } from "../hooks/useTransactionState";
+import AmountInput from "./AmountInput";
+import { useWallet } from "@/contexts/WalletContext";
 
 interface PaymentAmountStepProps {
   contact: Recipient;
@@ -30,7 +25,7 @@ interface PaymentAmountStepProps {
   onContinue?: () => void;
   onEditContact?: () => void;
   onEditBank?: () => void;
-  actionType: "send" | "request";
+  actionType: TransactionActionType;
   selectedWaiver: Waiver | null;
   setSelectedWaiver: (waiver: Waiver | null) => void;
   isSend: boolean;
@@ -56,33 +51,14 @@ export default function PaymentAmountStep({
     openedProfileModal,
     { open: openProfileModal, close: closeProfileModal },
   ] = useDisclosure(false);
-  const [fontSize, setFontSize] = useState("3.5rem");
-  const initialBalance = 40000;
-  const numericAmount = Number(amount) || 0;
-  const remainingBalance = initialBalance - numericAmount;
-
-  const recipientLabel =
-    actionType === "send" ? "Sending to" : "Requesting from";
-  const bankLabel = actionType === "send" ? "Pay from" : "Deposit into";
+  const { balance } = useWallet();
 
   useEffect(() => {
     inputRef.current?.focus();
   }, []);
 
-  useEffect(() => {
-    const valueString = String(amount);
-    const length = valueString.replace(/[^0-9]/g, "").length;
-    if (length > 9) {
-      setFontSize("2rem");
-    } else if (length > 6) {
-      setFontSize("2.5rem");
-    } else {
-      setFontSize("3.5rem");
-    }
-  }, [amount]);
-
   const handleContinue = () => {
-    if (actionType === "send" && Number(amount) > remainingBalance) {
+    if (actionType === "send" && Number(amount) > balance) {
       notifications.show({
         title: "Insufficient funds",
         message: "The amount you entered exceeds your available balance.",
@@ -96,24 +72,50 @@ export default function PaymentAmountStep({
     onContinue?.();
   };
 
+  const renderRecipientDetails = () => {
+    if (actionType === "transfer") {
+      return (
+        <BankDetailsCard
+          bank={bank}
+          label={"Transfer to"}
+          onEdit={onEditBank}
+        />
+      );
+    }
+    if (actionType !== "deposit") {
+      return (
+        <>
+          <ContactDetailsCard
+            contact={contact}
+            label={actionType === "send" ? "Sending to" : "Requesting from"}
+            onEdit={onEditContact}
+            onViewProfile={openProfileModal}
+          />
+          <BankDetailsCard
+            bank={bank}
+            label={actionType === "send" ? "Pay from" : "Deposit into"}
+            onEdit={onEditBank}
+          />
+        </>
+      );
+    }
+    return (
+      <BankDetailsCard bank={bank} label={"Deposit from"} onEdit={onEditBank} />
+    );
+  };
+
   return (
     <>
       <Stack justify="space-between" gap={30} pt="lg">
         <AmountInput
           amount={amount}
           setAmount={setAmount}
-          initialBalance={40000}
-          flowType={isSend ? "debit" : "credit"}
+          initialBalance={balance}
+          flowType={isSend || actionType === "transfer" ? "debit" : "credit"}
         />
 
         <Stack>
-          <ContactDetailsCard
-            contact={contact}
-            label={recipientLabel}
-            onEdit={onEditContact}
-            onViewProfile={openProfileModal}
-          />
-          <BankDetailsCard bank={bank} label={bankLabel} onEdit={onEditBank} />
+          {renderRecipientDetails()}
 
           {isSend && (
             <LienWaiverDetailsCard

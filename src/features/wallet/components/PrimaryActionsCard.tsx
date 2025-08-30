@@ -1,37 +1,34 @@
+// src/features/wallet/components/PrimaryActionsCard.tsx
+
 import { Card, Stack, Text, Title } from "@mantine/core";
 import ActionButtons from "../../../components/layout/SideNav/ActionButtons";
 import { useDisclosure } from "@mantine/hooks";
 import classes from "./PrimaryActions.module.css";
-import TransferDrawer from "../../transfer/components/TransferDrawer";
-import PaymentDrawer from "../../send-request/components/PaymentDrawer";
 import AccountToggle from "./AccountToggle/AccountToggle";
-import { useEffect } from "react";
-import DepositDrawer from "@/features/deposit/components/DepositDrawer";
+import { useEffect, useState } from "react";
+import { TransactionActionType } from "@/components/shared/hooks/useTransactionState";
+import TransactionDrawer from "@/components/shared/components/TransactionDrawer";
+import { useWallet } from "@/contexts/WalletContext";
 
 export default function PrimaryActionsCard() {
-  const [
-    openedDepositDrawer,
-    { open: openDepositDrawer, close: closeDepositDrawer },
-  ] = useDisclosure(false);
+  const [opened, { open, close }] = useDisclosure(false);
+  // Use the correct type for state
+  const [transactionType, setTransactionType] =
+    useState<TransactionActionType>("send");
 
-  const [
-    openedRequestDrawer,
-    { open: openRequestDrawer, close: closeRequestDrawer },
-  ] = useDisclosure(false);
+  const { balance } = useWallet();
 
-  const [openedSendDrawer, { open: openSendDrawer, close: closeSendDrawer }] =
-    useDisclosure(false);
-
-  const [
-    openedTransferDrawer,
-    { open: openTransferDrawer, close: closeTransferDrawer },
-  ] = useDisclosure(false);
+  // Use the correct type in the handler function
+  const handleOpenDrawer = (type: TransactionActionType) => {
+    setTransactionType(type);
+    open();
+  };
 
   useEffect(() => {
-    const handleOpenDeposit = () => openDepositDrawer();
-    const handleOpenSend = () => openSendDrawer();
-    const handleOpenRequest = () => openRequestDrawer();
-    const handleOpenTransfer = () => openTransferDrawer();
+    const handleOpenDeposit = () => handleOpenDrawer("deposit");
+    const handleOpenSend = () => handleOpenDrawer("send");
+    const handleOpenRequest = () => handleOpenDrawer("request");
+    const handleOpenTransfer = () => handleOpenDrawer("transfer");
 
     window.addEventListener("open-deposit", handleOpenDeposit);
     window.addEventListener("open-send", handleOpenSend);
@@ -44,12 +41,7 @@ export default function PrimaryActionsCard() {
       window.removeEventListener("open-request", handleOpenRequest);
       window.removeEventListener("open-transfer", handleOpenTransfer);
     };
-  }, [
-    openDepositDrawer,
-    openSendDrawer,
-    openRequestDrawer,
-    openTransferDrawer,
-  ]);
+  }, []);
 
   return (
     <div>
@@ -60,7 +52,11 @@ export default function PrimaryActionsCard() {
 
             <Stack align="center" gap={0}>
               <Title order={1} size={48}>
-                $3,260.00
+                {/* Display the balance from the context */}
+                {`$${balance.toLocaleString("en-US", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}`}
               </Title>
               <Text size="xs" c="dimmed">
                 Current balance
@@ -69,28 +65,18 @@ export default function PrimaryActionsCard() {
           </Stack>
 
           <ActionButtons
-            onDepositClick={openDepositDrawer}
-            onRequestClick={openRequestDrawer}
-            onSendClick={openSendDrawer}
-            onTransferClick={openTransferDrawer}
+            onDepositClick={() => handleOpenDrawer("deposit")}
+            onRequestClick={() => handleOpenDrawer("request")}
+            onSendClick={() => handleOpenDrawer("send")}
+            onTransferClick={() => handleOpenDrawer("transfer")}
           />
         </Stack>
       </Card>
 
-      <DepositDrawer opened={openedDepositDrawer} close={closeDepositDrawer} />
-      <PaymentDrawer
-        opened={openedRequestDrawer}
-        close={closeRequestDrawer}
-        actionType="request"
-      />
-      <PaymentDrawer
-        opened={openedSendDrawer}
-        close={closeSendDrawer}
-        actionType="send"
-      />
-      <TransferDrawer
-        opened={openedTransferDrawer}
-        close={closeTransferDrawer}
+      <TransactionDrawer
+        opened={opened}
+        close={close}
+        transactionType={transactionType}
       />
     </div>
   );

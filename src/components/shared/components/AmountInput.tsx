@@ -6,7 +6,7 @@ import {
   Tooltip,
   Alert,
 } from "@mantine/core";
-import classes from "@/features/send-request/components/EnterAmount.module.css"; // This path can be updated if you move the CSS file
+import classes from "./Shared.module.css";
 import { useEffect, useRef, useState } from "react";
 import { Alert02Icon, Cancel01Icon } from "hugeicons-react";
 
@@ -26,7 +26,6 @@ export default function AmountInput({
   const inputRef = useRef<HTMLInputElement>(null);
   const [fontSize, setFontSize] = useState("3.5rem");
   const [error, setError] = useState<string | null>(null);
-
   const numericAmount = Number(amount) || 0;
   const newBalance =
     flowType === "debit"

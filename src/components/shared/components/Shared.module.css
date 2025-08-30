@@ -60,7 +60,7 @@
 .waiverButton {
   padding: var(--mantine-spacing-md) var(--mantine-spacing-sm);
   border: 1px solid;
-  border-color: var(--mantine-color-orange-4);
+  border-color: var(--mantine-color-orange-5);
 
   border-radius: 8px;
   background: var(--mantine-color-orange-light);

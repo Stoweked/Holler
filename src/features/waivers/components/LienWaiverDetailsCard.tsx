@@ -28,7 +28,7 @@ import {
   Search01Icon,
   ViewIcon,
 } from "hugeicons-react";
-import classes from "./EnterAmount.module.css";
+import classes from "./Waivers.module.css";
 import { useState } from "react";
 import WaiverSelectItem from "./WaiverSelectItem";
 import { useDisclosure } from "@mantine/hooks";
