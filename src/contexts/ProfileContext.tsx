@@ -34,7 +34,7 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
           .from("profiles")
           .select("*")
           .eq("id", user.id)
-          .single();
+          .maybeSingle();
 
         if (error) {
           console.error("Error fetching profile:", error);
