@@ -61,7 +61,13 @@ export default function TransactionItem({
       aria-label="View transactions details"
     >
       <Group gap="xs" wrap="nowrap">
-        <Avatar variant="light" color="gray" radius="100%" size={48}>
+        <Avatar
+          variant="light"
+          color="gray"
+          radius="100%"
+          size={48}
+          visibleFrom="xs"
+        >
           {avatar}
         </Avatar>
 
