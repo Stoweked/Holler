@@ -8,9 +8,10 @@ import {
 
 interface OptionsProps {
   resetFilters: () => void;
+  isAnyFilterActive: boolean;
 }
 
-export function Options({ resetFilters }: OptionsProps) {
+export function Options({ resetFilters, isAnyFilterActive }: OptionsProps) {
   return (
     <Menu shadow="md" width={180} radius="md" position="bottom-end">
       <Menu.Target>
@@ -35,6 +36,7 @@ export function Options({ resetFilters }: OptionsProps) {
         </Menu.Item>
         <Menu.Divider />
         <Menu.Item
+          disabled={!isAnyFilterActive}
           leftSection={<SearchRemoveIcon size={16} />}
           onClick={resetFilters}
         >

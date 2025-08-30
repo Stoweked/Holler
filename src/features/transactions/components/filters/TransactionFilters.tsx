@@ -188,7 +188,10 @@ export default function TransactionFilters({
                 activeSortOption={activeSortOption}
                 onSortChange={onSortChange}
               />
-              <Options resetFilters={resetFilters} />
+              <Options
+                resetFilters={resetFilters}
+                isAnyFilterActive={isAnyFilterActive}
+              />
             </Group>
           </Group>
         </ScrollArea>
