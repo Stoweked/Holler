@@ -9,7 +9,8 @@ export type TransactionStep =
   | "selectContact"
   | "enterAmount"
   | "confirm"
-  | "selectBank";
+  | "selectBank"
+  | "success";
 
 export type TransactionActionType = "deposit" | "send" | "request" | "transfer";
 
@@ -86,6 +87,19 @@ export function useTransactionState(
     }
   };
 
+  const resetState = () => {
+    setStep(getInitialStep());
+    setSelectedContact(null);
+    setSelectedBank(mockBanks[0]);
+    setAmount("");
+    setNote("");
+    setSelectedWaiver(null);
+  };
+
+  const handleStartOver = () => {
+    resetState();
+  };
+
   const handleClose = () => {
     close();
     setTimeout(() => {
@@ -102,6 +116,7 @@ export function useTransactionState(
 
   return {
     step,
+    setStep,
     selectedContact,
     selectedBank,
     selectedWaiver,
@@ -117,5 +132,6 @@ export function useTransactionState(
     handleBack,
     handleClose,
     transactionType,
+    handleStartOver,
   };
 }

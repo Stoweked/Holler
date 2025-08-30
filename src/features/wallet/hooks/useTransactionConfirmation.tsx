@@ -2,7 +2,7 @@
 
 import { notifications } from "@mantine/notifications";
 import { CheckIcon } from "@mantine/core";
-import { TransactionActionType } from "./useTransactionState";
+import { TransactionActionType, TransactionStep } from "./useTransactionState";
 import { Recipient } from "@/features/contacts/types/recipient";
 import { Waiver } from "@/features/waivers/types/waiver";
 
@@ -14,6 +14,7 @@ interface ConfirmationParams {
   selectedContact: Recipient | null;
   selectedWaiver: Waiver | null;
   handleClose: () => void;
+  setStep: (step: TransactionStep) => void;
 }
 
 export function useTransactionConfirmation() {
@@ -25,6 +26,7 @@ export function useTransactionConfirmation() {
     selectedContact,
     selectedWaiver,
     handleClose,
+    setStep,
   }: ConfirmationParams) => {
     const transactionData = {
       amount,
@@ -59,20 +61,21 @@ export function useTransactionConfirmation() {
     try {
       console.log(`Simulating API call to ${endpoint} with payload:`, payload);
 
-      const successMessage =
-        transactionType === "deposit"
-          ? "Your deposit has been started."
-          : transactionType === "send"
-          ? "Your payment has been sent."
-          : "Your payment has been requested.";
+      // const successMessage =
+      //   transactionType === "deposit"
+      //     ? "Your deposit has been started."
+      //     : transactionType === "send"
+      //     ? "Your payment has been sent."
+      //     : "Your payment has been requested.";
 
-      notifications.show({
-        title: "Success",
-        message: successMessage,
-        color: "lime",
-        icon: <CheckIcon size={16} />,
-        autoClose: 6000,
-      });
+      // notifications.show({
+      //   title: "Success",
+      //   message: successMessage,
+      //   color: "lime",
+      //   icon: <CheckIcon size={16} />,
+      //   autoClose: 6000,
+      // });
+      setStep("success");
     } catch (error) {
       console.error("Transaction failed:", error);
       notifications.show({
@@ -80,7 +83,7 @@ export function useTransactionConfirmation() {
         message: "Your transaction failed. Please try again.",
         color: "red",
       });
-    } finally {
+      // Only close the drawer on error
       handleClose();
     }
   };

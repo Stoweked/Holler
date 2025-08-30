@@ -5,6 +5,7 @@ import { useTransactionState } from "../../hooks/useTransactionState";
 import SelectContactStep from "@/features/contacts/components/SelectContactStep";
 import PaymentAmountStep from "./PaymentAmountStep";
 import ConfirmationStep from "./ConfirmationStep";
+import SuccessStep from "./SuccessStep";
 
 interface TransactionDrawerContentProps {
   state: ReturnType<typeof useTransactionState>;
@@ -33,6 +34,7 @@ export default function TransactionDrawerContent({
     setSelectedWaiver,
     handleSelectBank,
     transactionType,
+    handleStartOver,
   } = state;
 
   switch (step) {
@@ -81,6 +83,14 @@ export default function TransactionDrawerContent({
         );
       }
       return null;
+    case "success":
+      return (
+        <SuccessStep
+          transactionType={transactionType}
+          onDone={state.handleClose}
+          onStartOver={handleStartOver}
+        />
+      );
     default:
       return null;
   }

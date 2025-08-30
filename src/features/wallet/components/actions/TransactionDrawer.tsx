@@ -11,6 +11,7 @@ import {
 import { useTransactionConfirmation } from "../../hooks/useTransactionConfirmation";
 import TransactionDrawerTitle from "./TransactionDrawerTitle";
 import TransactionDrawerContent from "./TransactionDrawerContent";
+import classes from "./Actions.module.css";
 
 interface TransactionDrawerProps {
   opened: boolean;
@@ -32,6 +33,7 @@ export default function TransactionDrawer({
     initialContact
   );
   const { handleConfirm } = useTransactionConfirmation();
+  const isSuccessStep = state.step === "success";
   const [
     openedConnectBankDrawer,
     { open: openConnectBankDrawer, close: closeConnectBankDrawer },
@@ -42,6 +44,7 @@ export default function TransactionDrawer({
       ...state,
       transactionType,
       handleClose: state.handleClose,
+      setStep: state.setStep,
     });
   };
 
@@ -51,15 +54,23 @@ export default function TransactionDrawer({
         opened={opened}
         onClose={state.handleClose}
         title={
-          <TransactionDrawerTitle
-            step={state.step}
-            transactionType={transactionType}
-            initialContact={initialContact}
-            handleBack={state.handleBack}
-          />
+          !isSuccessStep && (
+            <TransactionDrawerTitle
+              step={state.step}
+              transactionType={transactionType}
+              initialContact={initialContact}
+              handleBack={state.handleBack}
+            />
+          )
         }
+        withCloseButton
         padding="md"
         size="md"
+        classNames={{
+          header: isSuccessStep ? classes.transparentHeader : undefined,
+          content: isSuccessStep ? classes.successDrawer : undefined,
+          close: isSuccessStep ? classes.successCloseButton : undefined,
+        }}
       >
         <TransactionDrawerContent
           state={state}
