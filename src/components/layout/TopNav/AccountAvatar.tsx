@@ -4,13 +4,11 @@ import { Logout02Icon, PencilEdit01Icon, UserIcon } from "hugeicons-react";
 import FeedbackModal from "./FeedbackModal";
 import { ColorSchemeMenuItem } from "./ColorSchemeMenuItem";
 import ProfileDrawer from "@/features/profile/components/AccountDrawer";
-import { useRouter } from "next/navigation";
 import { logout } from "@/features/auth/actions/logout";
 import { useProfile } from "@/contexts/ProfileContext";
 import { useEffect } from "react";
 
 export default function AccountAvatar() {
-  const router = useRouter();
   const { profile, loading } = useProfile();
   const [
     openedFeedbackModal,

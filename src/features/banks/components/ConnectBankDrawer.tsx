@@ -1,4 +1,4 @@
-import { Button, Drawer, Select, Stack, TextInput, Text } from "@mantine/core";
+import { Button, Drawer, Select, Stack, TextInput } from "@mantine/core";
 
 interface ConnectBankDrawerProps {
   opened: boolean;

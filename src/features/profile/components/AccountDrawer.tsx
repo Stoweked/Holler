@@ -9,13 +9,6 @@ import {
   Group,
 } from "@mantine/core";
 
-interface Contact {
-  name: string;
-  avatar: string;
-  details: string;
-  topContact?: boolean;
-}
-
 interface AccountDrawerProps {
   opened: boolean;
   close: () => void;

@@ -43,7 +43,7 @@ export default function FeedbackModal({
     });
     form.resetDirty();
     form.resetTouched();
-  }, [profile]);
+  }, [profile, form]);
 
   //SEND FEEDBACK
   const submitFeedback = async (

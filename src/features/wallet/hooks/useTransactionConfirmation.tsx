@@ -1,7 +1,6 @@
 // /src/features/transactions/hooks/useTransactionConfirmation.ts
 
 import { notifications } from "@mantine/notifications";
-import { CheckIcon } from "@mantine/core";
 import { TransactionActionType, TransactionStep } from "./useTransactionState";
 import { Recipient } from "@/features/contacts/types/recipient";
 import { Waiver } from "@/features/waivers/types/waiver";

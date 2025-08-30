@@ -46,13 +46,6 @@ const typeFilters: TransactionTypeFilter[] = [
   "Transferred",
 ];
 
-const sortOptions: SortOption[] = [
-  "Newest first",
-  "Oldest first",
-  "Amount (High to Low)",
-  "Amount (Low to High)",
-];
-
 interface TransactionFiltersDrawerProps {
   opened: boolean;
   onClose: () => void;

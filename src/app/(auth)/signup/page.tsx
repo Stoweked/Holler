@@ -13,9 +13,8 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { signup } from "../../../features/auth/actions/signup";
-import { AlertCircleIcon, UserIcon } from "hugeicons-react";
+import { UserIcon } from "hugeicons-react";
 import { useState } from "react";
-import { notifications } from "@mantine/notifications";
 
 export default function SignUpPage() {
   const [isLoading, setIsLoading] = useState(false);
