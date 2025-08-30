@@ -18,6 +18,7 @@ import ContactDetailsCard from "@/features/contacts/components/ContactDetailsCar
 import BankDetailsCard from "@/features/banks/components/BankDetailsCard";
 import { Waiver } from "@/features/waivers/types/waiver";
 import LienWaiverDetailsCard from "./LienWaiverDetailsCard";
+import AmountInput from "@/components/shared/AmountInput";
 
 interface PaymentAmountStepProps {
   contact: Recipient;
@@ -56,6 +57,13 @@ export default function PaymentAmountStep({
     { open: openProfileModal, close: closeProfileModal },
   ] = useDisclosure(false);
   const [fontSize, setFontSize] = useState("3.5rem");
+  const initialBalance = 40000;
+  const numericAmount = Number(amount) || 0;
+  const remainingBalance = initialBalance - numericAmount;
+
+  const recipientLabel =
+    actionType === "send" ? "Sending to" : "Requesting from";
+  const bankLabel = actionType === "send" ? "Pay from" : "Deposit into";
 
   useEffect(() => {
     inputRef.current?.focus();
@@ -73,14 +81,8 @@ export default function PaymentAmountStep({
     }
   }, [amount]);
 
-  const recipientLabel =
-    actionType === "send" ? "Sending to" : "Requesting from";
-  const bankLabel = actionType === "send" ? "Pay from" : "Deposit into";
-
-  const availableBalance = 40000;
-
   const handleContinue = () => {
-    if (actionType === "send" && Number(amount) > availableBalance) {
+    if (actionType === "send" && Number(amount) > remainingBalance) {
       notifications.show({
         title: "Insufficient funds",
         message: "The amount you entered exceeds your available balance.",
@@ -97,45 +99,12 @@ export default function PaymentAmountStep({
   return (
     <>
       <Stack justify="space-between" gap={30} pt="lg">
-        <Stack align="center" gap="xs">
-          <NumberInput
-            w="100%"
-            ref={inputRef}
-            value={amount}
-            onChange={setAmount}
-            classNames={{ input: classes.amountInput }}
-            styles={{ input: { fontSize } }}
-            variant="unstyled"
-            decimalScale={2}
-            fixedDecimalScale
-            thousandSeparator
-            prefix="$"
-            hideControls
-            type="tel"
-            placeholder="$0.00"
-            rightSection={
-              amount ? (
-                <Tooltip label="Clear amount" position="left">
-                  <ActionIcon
-                    onClick={() => setAmount("")}
-                    variant="default"
-                    c="gray"
-                    aria-label="Clear amount"
-                  >
-                    <Cancel01Icon size={20} />
-                  </ActionIcon>
-                </Tooltip>
-              ) : null
-            }
-          />
-          <Text c="dimmed" size="md" ta="center">
-            Available balance: $
-            {availableBalance.toLocaleString("en-US", {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })}
-          </Text>
-        </Stack>
+        <AmountInput
+          amount={amount}
+          setAmount={setAmount}
+          initialBalance={40000}
+          flowType={isSend ? "debit" : "credit"}
+        />
 
         <Stack>
           <ContactDetailsCard

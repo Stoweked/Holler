@@ -25,6 +25,7 @@ import {
 import { useDisclosure } from "@mantine/hooks";
 import ProfileModal from "../../../features/profile/components/ProfileModal";
 import { Recipient } from "@/features/contacts/types/recipient";
+import AmountInput from "@/components/shared/AmountInput";
 
 // Internal Template for Contact transactions (Send/Request)
 const ContactRecipientDetails = ({
@@ -254,6 +255,9 @@ export default function EnterAmountStep({
   ] = useDisclosure(false);
 
   const [fontSize, setFontSize] = useState("3.5rem");
+  const initialBalance = 40000;
+  const numericAmount = Number(amount) || 0;
+  const remainingBalance = initialBalance - numericAmount;
 
   useEffect(() => {
     inputRef.current?.focus();
@@ -275,41 +279,12 @@ export default function EnterAmountStep({
     <>
       <Stack justify="space-between" gap={30} pt="lg">
         {/* --- Common UI --- */}
-        <Stack align="center" gap="xs">
-          <NumberInput
-            w="100%"
-            ref={inputRef}
-            value={amount}
-            onChange={setAmount}
-            styles={{ input: { fontSize } }}
-            classNames={{ input: classes.amountInput }}
-            variant="unstyled"
-            decimalScale={2}
-            fixedDecimalScale
-            thousandSeparator
-            prefix="$"
-            hideControls
-            type="tel"
-            placeholder="$0.00"
-            rightSection={
-              amount ? (
-                <Tooltip label="Clear amount" position="left">
-                  <ActionIcon
-                    onClick={() => setAmount("")}
-                    variant="default"
-                    c="gray"
-                    aria-label="Clear amount"
-                  >
-                    <Cancel01Icon size={20} />
-                  </ActionIcon>
-                </Tooltip>
-              ) : null
-            }
-          />
-          <Text c="dimmed" size="md" ta="center">
-            Available balance: $40,000.00
-          </Text>
-        </Stack>
+        <AmountInput
+          amount={amount}
+          setAmount={setAmount}
+          initialBalance={initialBalance}
+          flowType="credit"
+        />
 
         <Stack>
           {/* --- Conditional Internal Templates --- */}

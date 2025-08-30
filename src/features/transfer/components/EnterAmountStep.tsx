@@ -13,6 +13,7 @@ import { useEffect, useRef, useState } from "react";
 import { Alert02Icon, Cancel01Icon, CancelCircleIcon } from "hugeicons-react";
 import { Recipient } from "@/features/contacts/types/recipient";
 import BankDetailsCard from "@/features/banks/components/BankDetailsCard";
+import AmountInput from "@/components/shared/AmountInput";
 
 interface EnterAmountStepProps {
   bank: Recipient;
@@ -74,55 +75,12 @@ export default function EnterAmountStep({
   return (
     <>
       <Stack justify="space-between" gap={30} pt="lg">
-        <Stack align="center" gap="xs">
-          <NumberInput
-            w="100%"
-            ref={inputRef}
-            value={amount}
-            onChange={handleAmountChange}
-            styles={{ input: { fontSize } }}
-            classNames={{ input: classes.amountInput }}
-            variant="unstyled"
-            decimalScale={2}
-            fixedDecimalScale
-            thousandSeparator
-            prefix="$"
-            hideControls
-            type="tel"
-            placeholder="$0.00"
-            rightSection={
-              amount ? (
-                <Tooltip label="Clear amount" position="left">
-                  <ActionIcon
-                    onClick={() => setAmount("")}
-                    variant="default"
-                    c="gray"
-                    aria-label="Clear amount"
-                  >
-                    <Cancel01Icon size={20} />
-                  </ActionIcon>
-                </Tooltip>
-              ) : null
-            }
-          />
-          {error ? (
-            <Alert
-              variant="light"
-              color="red"
-              radius="lg"
-              title={error}
-              icon={<Alert02Icon />}
-            />
-          ) : (
-            <Text c="dimmed" size="md" ta="center">
-              Available balance: $
-              {availableBalance.toLocaleString("en-US", {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              })}
-            </Text>
-          )}
-        </Stack>
+        <AmountInput
+          amount={amount}
+          setAmount={setAmount}
+          initialBalance={40000}
+          flowType="debit"
+        />
 
         <Stack>
           <BankDetailsCard
