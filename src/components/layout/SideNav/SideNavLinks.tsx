@@ -16,8 +16,8 @@ import ProfileModal from "@/features/profile/components/ProfileModal";
 import { Contact } from "@/features/contacts/types/recipient";
 import ConnectedBanksDrawer from "@/features/banks/components/ConnectedBanksDrawer";
 import ContactsDrawer from "@/features/contacts/components/ContactsDrawer";
-import { TransactionActionType } from "@/features/wallet/hooks/useTransactionState";
 import TransactionDrawer from "@/features/wallet/components/actions/TransactionDrawer";
+import { TransactionActionType } from "@/features/wallet/types/wallet";
 
 interface SideNavLinksProps {
   closeMobileNav: () => void;

@@ -9,9 +9,9 @@ import {
   Title,
   Transition,
 } from "@mantine/core";
-import { TransactionActionType } from "../../hooks/useTransactionState";
 import classes from "./Actions.module.css";
 import { useEffect, useState } from "react";
+import { TransactionActionType } from "../../types/wallet";
 
 interface SuccessStepProps {
   transactionType: TransactionActionType;

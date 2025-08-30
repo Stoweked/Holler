@@ -8,7 +8,7 @@ import AccountToggle from "./AccountToggle/AccountToggle";
 import { useEffect, useState, useCallback } from "react";
 import { useWallet } from "@/contexts/WalletContext";
 import TransactionDrawer from "@/features/wallet/components/actions/TransactionDrawer";
-import { TransactionActionType } from "@/features/wallet/hooks/useTransactionState";
+import { TransactionActionType } from "../types/wallet";
 
 export default function PrimaryActionsCard() {
   const [opened, { open, close }] = useDisclosure(false);

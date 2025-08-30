@@ -1,9 +1,9 @@
 // /src/features/transactions/hooks/useTransactionConfirmation.ts
 
 import { notifications } from "@mantine/notifications";
-import { TransactionActionType, TransactionStep } from "./useTransactionState";
 import { Recipient } from "@/features/contacts/types/recipient";
 import { Waiver } from "@/features/waivers/types/waiver";
+import { TransactionActionType, TransactionStep } from "../types/wallet";
 
 interface ConfirmationParams {
   transactionType: TransactionActionType;

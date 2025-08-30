@@ -2,11 +2,8 @@
 
 import { ActionIcon, Group, Text, Tooltip } from "@mantine/core";
 import { ArrowLeft02Icon } from "hugeicons-react";
-import {
-  TransactionStep,
-  TransactionActionType,
-} from "../../hooks/useTransactionState";
 import { Recipient } from "@/features/contacts/types/recipient";
+import { TransactionActionType, TransactionStep } from "../../types/wallet";
 
 interface TransactionDrawerTitleProps {
   step: TransactionStep;

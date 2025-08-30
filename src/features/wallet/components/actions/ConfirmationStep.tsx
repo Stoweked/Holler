@@ -22,8 +22,8 @@ import {
 import { useDisclosure } from "@mantine/hooks";
 import { BankIcon, File01Icon } from "hugeicons-react";
 import classes from "./Actions.module.css";
-import { TransactionActionType } from "../../hooks/useTransactionState";
 import { useWallet } from "@/contexts/WalletContext";
+import { TransactionActionType } from "../../types/wallet";
 
 interface ConfirmationStepProps {
   contact: Contact;

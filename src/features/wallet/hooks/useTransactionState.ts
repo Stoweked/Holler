@@ -4,15 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { Recipient } from "@/features/contacts/types/recipient";
 import { Waiver } from "@/features/waivers/types/waiver";
 import { mockBanks } from "@/mockData/mockBanks";
-
-export type TransactionStep =
-  | "selectContact"
-  | "enterAmount"
-  | "confirm"
-  | "selectBank"
-  | "success";
-
-export type TransactionActionType = "deposit" | "send" | "request" | "transfer";
+import { TransactionActionType, TransactionStep } from "../types/wallet";
 
 const hollerWalletContact: Recipient = {
   name: "Holler Wallet",
