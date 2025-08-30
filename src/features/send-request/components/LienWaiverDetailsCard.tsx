@@ -122,9 +122,8 @@ export default function LienWaiverDetailsCard({
                         </HoverCard.Target>
                         <HoverCard.Dropdown>
                           <Text size="sm">
-                            You can create conditional waivers (effective upon
-                            payment) or unconditional waivers (effective
-                            immediately).
+                            Attach conditional waivers (effective upon payment)
+                            or unconditional waivers (effective immediately).
                           </Text>
                         </HoverCard.Dropdown>
                       </HoverCard>
