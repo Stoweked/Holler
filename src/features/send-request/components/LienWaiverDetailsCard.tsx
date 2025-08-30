@@ -15,17 +15,23 @@ import {
   Divider,
   HoverCard,
   ActionIcon,
+  Button,
+  Menu,
+  Modal, // Import the Button component
 } from "@mantine/core";
 import {
   ClipboardIcon,
   File01Icon,
   InformationCircleIcon,
+  MoreVerticalCircle01Icon,
   PlusSignIcon,
   Search01Icon,
+  ViewIcon,
 } from "hugeicons-react";
 import classes from "./EnterAmount.module.css";
 import { useState } from "react";
 import WaiverSelectItem from "./WaiverSelectItem";
+import { useDisclosure } from "@mantine/hooks";
 
 interface LienWaiverDetailsCardProps {
   selectedWaiver: Waiver | null;
@@ -36,8 +42,11 @@ export default function LienWaiverDetailsCard({
   selectedWaiver,
   setSelectedWaiver,
 }: LienWaiverDetailsCardProps) {
-  const combobox = useCombobox({});
+  const combobox = useCombobox({
+    onDropdownClose: () => combobox.resetSelectedOption(),
+  });
   const [search, setSearch] = useState("");
+  const [opened, { open, close }] = useDisclosure(false);
 
   const filteredWaivers = mockWaivers.filter((waiver) =>
     waiver.title.toLowerCase().includes(search.toLowerCase().trim())
@@ -53,122 +62,181 @@ export default function LienWaiverDetailsCard({
   ));
 
   return (
-    <Paper withBorder radius="lg" p="xs" w="100%">
-      <Stack gap="sm">
-        <Group gap="xs" justify="space-between" wrap="nowrap">
-          <Group wrap="nowrap" gap={8}>
-            <ThemeIcon variant="default" radius="xl" size="lg">
-              <ClipboardIcon size={20} />
-            </ThemeIcon>
-            <Stack gap={0} className={classes.recipientTextContainer}>
-              <Text size="sm" c="dimmed">
-                {selectedWaiver ? "Required" : "Optional"}
-              </Text>
-              <Text size="md" fw="bold" lh={1.2}>
-                Lien waiver
-              </Text>
-            </Stack>
-          </Group>
-
-          <HoverCard width={310} shadow="md" position="bottom-end">
-            <HoverCard.Target>
-              <ActionIcon
-                aria-label="Info"
-                size="md"
-                radius="xl"
-                variant="subtle"
-                color="gray"
-                c="dimmed"
-              >
-                <InformationCircleIcon size={20} />
-              </ActionIcon>
-            </HoverCard.Target>
-            <HoverCard.Dropdown>
-              <Text size="sm">
-                You can create conditional waivers (effective upon payment) or
-                unconditional waivers (effective immediately).
-              </Text>
-            </HoverCard.Dropdown>
-          </HoverCard>
-        </Group>
-
-        <Combobox
-          store={combobox}
-          withinPortal={false}
-          onOptionSubmit={(val) => {
-            const waiver = mockWaivers.find((w) => w.id === val) || null;
-            setSelectedWaiver(waiver);
-            combobox.closeDropdown();
-            setSearch("");
-          }}
+    <>
+      {selectedWaiver && (
+        <Modal
+          opened={opened}
+          onClose={close}
+          title="Attached lien waiver"
+          centered
         >
-          <Combobox.Target>
-            <InputBase
-              h="auto"
-              w="100%"
-              component="button"
-              type="button"
-              pointer
-              classNames={{ input: classes.waiverInputWrapper }}
-              rightSection={
-                selectedWaiver ? (
-                  <Tooltip position="left" label="Remove waiver">
-                    <CloseButton
-                      size="lg"
-                      radius="xl"
-                      onMouseDown={(event) => event.preventDefault()}
-                      onClick={() => setSelectedWaiver(null)}
-                      aria-label="Clear value"
-                    />
-                  </Tooltip>
-                ) : (
-                  <PlusSignIcon size={20} />
-                )
-              }
-              onClick={() => combobox.toggleDropdown()}
-              rightSectionPointerEvents={selectedWaiver ? "all" : "none"}
-              size="lg"
-              radius="md"
-            >
-              {selectedWaiver ? (
-                <Group wrap="nowrap" gap={8} py="md">
-                  <File01Icon
-                    size={18}
-                    color="gray"
-                    style={{ flexShrink: 0 }}
-                  />
-                  <Text fw="bold" lh={1.2}>
-                    {selectedWaiver.title}
-                  </Text>
-                </Group>
-              ) : (
-                <Text c="dimmed" component="span" size="md">
-                  Add a lien waiver
-                </Text>
-              )}
-            </InputBase>
-          </Combobox.Target>
+          <div dangerouslySetInnerHTML={{ __html: selectedWaiver.content }} />
+        </Modal>
+      )}
 
-          <Combobox.Dropdown>
-            <Combobox.Search
-              size="lg"
-              value={search}
-              onChange={(event) => setSearch(event.currentTarget.value)}
-              placeholder="Search your waivers"
-              leftSection={<Search01Icon size={16} />}
-            />
-            <Combobox.Options>
-              <ScrollArea.Autosize type="scroll" mah={200}>
-                {options.length > 0 ? (
-                  options
-                ) : (
-                  <Combobox.Empty>No waivers found</Combobox.Empty>
+      <Combobox
+        store={combobox}
+        withinPortal={false}
+        onOptionSubmit={(val) => {
+          const waiver = mockWaivers.find((w) => w.id === val) || null;
+          setSelectedWaiver(waiver);
+          combobox.closeDropdown();
+          setSearch("");
+        }}
+      >
+        <Combobox.Target>
+          <Paper withBorder radius="lg" p="xs" w="100%">
+            <Group
+              gap="sm"
+              wrap={!selectedWaiver ? "nowrap" : "wrap"}
+              justify="space-between"
+            >
+              <Group gap="xs" wrap="nowrap" justify="space-between" w="100%">
+                {/* Header */}
+                <Group wrap="nowrap" gap={8}>
+                  <ThemeIcon variant="default" radius="xl" size="lg">
+                    <ClipboardIcon size={20} />
+                  </ThemeIcon>
+
+                  <Stack gap={0}>
+                    <Text size="sm" c="dimmed">
+                      {selectedWaiver ? "Required" : "Optional"}
+                    </Text>
+                    {/* Title */}
+                    <Group wrap="nowrap" gap={4}>
+                      <Text size="md" fw="bold" lh={1.2}>
+                        Lien waiver
+                      </Text>
+                      <HoverCard width={310} shadow="md" position="bottom">
+                        <HoverCard.Target>
+                          <ActionIcon
+                            aria-label="Info"
+                            size="sm"
+                            radius="xl"
+                            variant="subtle"
+                            color="gray"
+                            c="dimmed"
+                          >
+                            <InformationCircleIcon size={16} />
+                          </ActionIcon>
+                        </HoverCard.Target>
+                        <HoverCard.Dropdown>
+                          <Text size="sm">
+                            You can create conditional waivers (effective upon
+                            payment) or unconditional waivers (effective
+                            immediately).
+                          </Text>
+                        </HoverCard.Dropdown>
+                      </HoverCard>
+                    </Group>
+                  </Stack>
+                </Group>
+
+                {/* Options */}
+                {selectedWaiver && (
+                  <Menu
+                    shadow="md"
+                    width={170}
+                    position="bottom-end"
+                    radius="md"
+                  >
+                    <Menu.Target>
+                      <Tooltip position="left" label="Options">
+                        <ActionIcon
+                          aria-label="Options"
+                          size="lg"
+                          variant="subtle"
+                          color="grey"
+                        >
+                          <MoreVerticalCircle01Icon size={24} />
+                        </ActionIcon>
+                      </Tooltip>
+                    </Menu.Target>
+                    <Menu.Dropdown>
+                      <Menu.Item
+                        leftSection={<ViewIcon size={16} />}
+                        aria-label="View lien waiver"
+                        onClick={open}
+                      >
+                        View lien waiver
+                      </Menu.Item>
+                    </Menu.Dropdown>
+                  </Menu>
                 )}
-              </ScrollArea.Autosize>
-            </Combobox.Options>
-          </Combobox.Dropdown>
-        </Combobox>
-      </Stack>
-    </Paper>
+              </Group>
+
+              {selectedWaiver ? (
+                // STATE 2: A waiver is selected, show the InputBase
+                <InputBase
+                  h="auto"
+                  w="100%"
+                  component="button"
+                  type="button"
+                  pointer
+                  classNames={{ input: classes.waiverInputWrapper }}
+                  rightSection={
+                    <Tooltip position="left" label="Remove waiver">
+                      <CloseButton
+                        size="lg"
+                        radius="xl"
+                        onMouseDown={(event) => event.preventDefault()}
+                        onClick={() => setSelectedWaiver(null)}
+                        aria-label="Clear value"
+                      />
+                    </Tooltip>
+                  }
+                  onClick={() => combobox.toggleDropdown()}
+                  rightSectionPointerEvents="all"
+                  size="lg"
+                  radius="md"
+                >
+                  <Group wrap="nowrap" gap={8} py="md">
+                    <File01Icon
+                      size={18}
+                      color="gray"
+                      style={{ flexShrink: 0 }}
+                    />
+                    <Text fw="bold" lh={1.2}>
+                      {selectedWaiver.title}
+                    </Text>
+                  </Group>
+                </InputBase>
+              ) : (
+                // STATE 1: No waiver selected, show the "Add" Button
+                <Button
+                  style={{ flexShrink: 0 }}
+                  variant="light"
+                  size="sm"
+                  leftSection={<PlusSignIcon size={16} />}
+                  onClick={() => combobox.openDropdown()}
+                  aria-label="Attach a lien waiver"
+                >
+                  Attach
+                </Button>
+              )}
+            </Group>
+          </Paper>
+        </Combobox.Target>
+
+        <Combobox.Dropdown miw={350}>
+          <Combobox.Search
+            size="lg"
+            value={search}
+            onChange={(event) => setSearch(event.currentTarget.value)}
+            placeholder="Search your waivers"
+            leftSection={<Search01Icon size={16} />}
+          />
+          <Combobox.Options>
+            <ScrollArea.Autosize type="scroll" mah={200}>
+              {options.length > 0 ? (
+                options
+              ) : (
+                <Combobox.Empty>No waivers found</Combobox.Empty>
+              )}
+            </ScrollArea.Autosize>
+          </Combobox.Options>
+        </Combobox.Dropdown>
+      </Combobox>
+    </>
   );
 }
