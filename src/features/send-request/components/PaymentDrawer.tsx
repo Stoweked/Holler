@@ -1,5 +1,3 @@
-// src/features/send-request/components/PaymentDrawer.tsx
-import { useState, useEffect } from "react";
 import {
   ActionIcon,
   CheckIcon,
@@ -13,15 +11,12 @@ import { useDisclosure } from "@mantine/hooks";
 import { ArrowLeft02Icon } from "hugeicons-react";
 import ConfirmationStep from "./ConfirmationStep";
 import SelectContactStep from "./SelectContactStep";
-import { mockBanks } from "@/mockData/mockBanks";
 import PaymentAmountStep from "./PaymentAmountStep";
 import { notifications } from "@mantine/notifications";
 import { Recipient } from "@/features/contacts/types/recipient";
 import SelectBankStep from "@/features/deposit/components/SelectBankStep";
 import ConnectBankDrawer from "@/features/banks/components/ConnectBankDrawer";
-import { Waiver } from "@/features/waivers/types/waiver";
-
-type PaymentStep = "selectContact" | "enterAmount" | "confirm" | "selectBank";
+import { usePaymentState, PaymentStep } from "../hooks/usePaymentState";
 
 interface PaymentDrawerProps {
   opened: boolean;
@@ -30,56 +25,83 @@ interface PaymentDrawerProps {
   initialContact?: Recipient | null;
 }
 
+const PaymentDrawerTitle = ({
+  step,
+  isSend,
+  initialContact,
+  handleBack,
+}: {
+  step: PaymentStep;
+  isSend: boolean;
+  initialContact: Recipient | null;
+  handleBack: () => void;
+}) => {
+  const mainTitle = isSend ? "Send payment" : "Request payment";
+  const reviewTitle = isSend ? "Review send" : "Review request";
+  const amountTitle = isSend ? "Enter amount to send" : "Request amount";
+  const bankTitle = isSend
+    ? "Select payment account"
+    : "Select deposit account";
+
+  if (step === "selectContact") return <>{mainTitle}</>;
+  if (step === "selectBank") return <>{bankTitle}</>;
+
+  const backLabel =
+    step === "confirm"
+      ? "Back to payment"
+      : initialContact
+      ? "Close"
+      : "Back to contacts";
+
+  const title = step === "confirm" ? reviewTitle : amountTitle;
+
+  return (
+    <Group gap="xs">
+      <Tooltip label={backLabel} position="right">
+        <ActionIcon
+          onClick={handleBack}
+          variant={step === "confirm" ? "transparent" : "subtle"}
+          c="gray"
+          aria-label="Go back"
+        >
+          <ArrowLeft02Icon size={24} />
+        </ActionIcon>
+      </Tooltip>
+      <Text>{title}</Text>
+    </Group>
+  );
+};
+
 export default function PaymentDrawer({
   opened,
   close,
   actionType,
   initialContact = null,
 }: PaymentDrawerProps) {
-  const [step, setStep] = useState<PaymentStep>("selectContact");
-  const [selectedContact, setSelectedContact] = useState<Recipient | null>(
-    null
-  );
-  const [selectedBank, setSelectedBank] = useState<Recipient>(mockBanks[0]);
-  const [selectedWaiver, setSelectedWaiver] = useState<Waiver | null>(null);
-  const [amount, setAmount] = useState<string | number>("");
-  const [note, setNote] = useState("");
+  const {
+    step,
+    selectedContact,
+    selectedBank,
+    selectedWaiver,
+    amount,
+    note,
+    setAmount,
+    setNote,
+    setSelectedWaiver,
+    handleSelectContact,
+    handleAmountContinue,
+    handleEditBank,
+    handleSelectBank,
+    handleBack,
+    handleClose,
+  } = usePaymentState(opened, initialContact, close);
+
   const [
     openedConnectBankDrawer,
     { open: openConnectBankDrawer, close: closeConnectBankDrawer },
   ] = useDisclosure(false);
 
   const isSend = actionType === "send";
-
-  useEffect(() => {
-    if (opened && initialContact) {
-      setSelectedContact(initialContact);
-      setStep("enterAmount");
-    } else if (!opened) {
-      setStep("selectContact");
-      setSelectedContact(null);
-    }
-  }, [opened, initialContact]);
-
-  const handleSelectContact = (contact: Recipient) => {
-    setSelectedContact(contact);
-    setStep("enterAmount");
-  };
-
-  const handleAmountContinue = () => setStep("confirm");
-  const handleEditBank = () => setStep("selectBank");
-  const handleSelectBank = (bank: Recipient) => {
-    setSelectedBank(bank);
-    setStep("enterAmount");
-  };
-
-  const handleBack = () => {
-    if (step === "selectBank" || step === "confirm") {
-      setStep("enterAmount");
-    } else if (step === "enterAmount") {
-      initialContact ? close() : setStep("selectContact");
-    }
-  };
 
   const handleConfirm = () => {
     const logMessage = isSend
@@ -88,10 +110,9 @@ export default function PaymentDrawer({
     console.log(logMessage);
     handleClose();
 
-    const successMessage =
-      actionType === "send"
-        ? "Your payment has been sent."
-        : "Your payment has been requested.";
+    const successMessage = isSend
+      ? "Your payment has been sent."
+      : "Your payment has been requested.";
 
     notifications.show({
       title: "Success",
@@ -102,71 +123,19 @@ export default function PaymentDrawer({
     });
   };
 
-  const handleClose = () => {
-    close();
-    setTimeout(() => {
-      if (!initialContact) {
-        setStep("selectContact");
-        setSelectedContact(null);
-      }
-      setSelectedBank(mockBanks[0]);
-      setAmount("");
-      setNote("");
-      setSelectedWaiver(null);
-    }, 200);
-  };
-
-  const mainTitle = isSend ? "Send payment" : "Request payment";
-  const reviewTitle = isSend ? "Review send" : "Review request";
-  const amountTitle = isSend ? "Enter amount to send" : "Request amount";
-  const bankTitle = isSend
-    ? "Select payment account"
-    : "Select deposit account";
-
-  const drawerTitle =
-    step === "selectContact" ? (
-      mainTitle
-    ) : step === "selectBank" ? (
-      bankTitle
-    ) : step === "confirm" ? (
-      <Group gap="xs">
-        <Tooltip label="Back to payment" position="right">
-          <ActionIcon
-            onClick={handleBack}
-            variant="transparent"
-            c="gray"
-            aria-label="Go back"
-          >
-            <ArrowLeft02Icon size={24} />
-          </ActionIcon>
-        </Tooltip>
-        <Text>{reviewTitle}</Text>
-      </Group>
-    ) : (
-      <Group gap="xs">
-        <Tooltip
-          label={initialContact ? "Close" : "Back to contacts"}
-          position="right"
-        >
-          <ActionIcon
-            onClick={handleBack}
-            variant="subtle"
-            color="gray"
-            aria-label="Go back"
-          >
-            <ArrowLeft02Icon size={24} />
-          </ActionIcon>
-        </Tooltip>
-        <Text>{amountTitle}</Text>
-      </Group>
-    );
-
   return (
     <>
       <Drawer
         opened={opened}
         onClose={handleClose}
-        title={drawerTitle}
+        title={
+          <PaymentDrawerTitle
+            step={step}
+            isSend={isSend}
+            initialContact={initialContact}
+            handleBack={handleBack}
+          />
+        }
         padding="md"
         size="md"
       >
@@ -193,6 +162,7 @@ export default function PaymentDrawer({
             actionType={actionType}
             selectedWaiver={selectedWaiver}
             setSelectedWaiver={setSelectedWaiver}
+            isSend={isSend}
           />
         )}
         {step === "confirm" && selectedContact && (

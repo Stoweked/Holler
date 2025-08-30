@@ -1,4 +1,3 @@
-// src/features/send-request/components/PaymentAmountStep.tsx
 import {
   Button,
   Stack,
@@ -9,15 +8,14 @@ import {
   Textarea,
 } from "@mantine/core";
 import classes from "./EnterAmount.module.css";
-import { useEffect, useRef } from "react";
-import { Alert02Icon, CancelCircleIcon } from "hugeicons-react";
+import { useEffect, useRef, useState } from "react";
+import { Alert02Icon, Cancel01Icon } from "hugeicons-react";
 import { useDisclosure } from "@mantine/hooks";
 import ProfileModal from "../../profile/components/ProfileModal";
 import { notifications } from "@mantine/notifications";
 import { Recipient } from "@/features/contacts/types/recipient";
 import ContactDetailsCard from "@/features/contacts/components/ContactDetailsCard";
 import BankDetailsCard from "@/features/banks/components/BankDetailsCard";
-import { mockWaivers } from "@/mockData/mockWaivers";
 import { Waiver } from "@/features/waivers/types/waiver";
 import LienWaiverDetailsCard from "./LienWaiverDetailsCard";
 
@@ -34,6 +32,7 @@ interface PaymentAmountStepProps {
   actionType: "send" | "request";
   selectedWaiver: Waiver | null;
   setSelectedWaiver: (waiver: Waiver | null) => void;
+  isSend: boolean;
 }
 
 export default function PaymentAmountStep({
@@ -49,16 +48,30 @@ export default function PaymentAmountStep({
   actionType,
   selectedWaiver,
   setSelectedWaiver,
+  isSend,
 }: PaymentAmountStepProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [
     openedProfileModal,
     { open: openProfileModal, close: closeProfileModal },
   ] = useDisclosure(false);
+  const [fontSize, setFontSize] = useState("3.5rem");
 
   useEffect(() => {
     inputRef.current?.focus();
   }, []);
+
+  useEffect(() => {
+    const valueString = String(amount);
+    const length = valueString.replace(/[^0-9]/g, "").length;
+    if (length > 9) {
+      setFontSize("2rem");
+    } else if (length > 6) {
+      setFontSize("2.5rem");
+    } else {
+      setFontSize("3.5rem");
+    }
+  }, [amount]);
 
   const recipientLabel =
     actionType === "send" ? "Sending to" : "Requesting from";
@@ -81,20 +94,17 @@ export default function PaymentAmountStep({
     onContinue?.();
   };
 
-  const waiverOptions = mockWaivers.map((waiver) => ({
-    value: waiver.id,
-    label: waiver.title,
-  }));
-
   return (
     <>
       <Stack justify="space-between" gap={30} pt="lg">
         <Stack align="center" gap="xs">
           <NumberInput
+            w="100%"
             ref={inputRef}
             value={amount}
             onChange={setAmount}
             classNames={{ input: classes.amountInput }}
+            styles={{ input: { fontSize } }}
             variant="unstyled"
             decimalScale={2}
             fixedDecimalScale
@@ -108,11 +118,11 @@ export default function PaymentAmountStep({
                 <Tooltip label="Clear amount" position="left">
                   <ActionIcon
                     onClick={() => setAmount("")}
-                    variant="transparent"
+                    variant="default"
                     c="gray"
                     aria-label="Clear amount"
                   >
-                    <CancelCircleIcon size={24} />
+                    <Cancel01Icon size={20} />
                   </ActionIcon>
                 </Tooltip>
               ) : null
@@ -136,10 +146,12 @@ export default function PaymentAmountStep({
           />
           <BankDetailsCard bank={bank} label={bankLabel} onEdit={onEditBank} />
 
-          <LienWaiverDetailsCard
-            selectedWaiver={selectedWaiver}
-            setSelectedWaiver={setSelectedWaiver}
-          />
+          {isSend && (
+            <LienWaiverDetailsCard
+              selectedWaiver={selectedWaiver}
+              setSelectedWaiver={setSelectedWaiver}
+            />
+          )}
 
           <Textarea
             placeholder="Add a note or description"

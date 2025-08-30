@@ -13,13 +13,14 @@ import {
   Menu,
 } from "@mantine/core";
 import classes from "./EnterAmount.module.css";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   CancelCircleIcon,
   BankIcon,
   MoreVerticalCircle01Icon,
   PencilEdit02Icon,
   UserIcon,
+  Cancel01Icon,
 } from "hugeicons-react";
 import { useDisclosure } from "@mantine/hooks";
 import ProfileModal from "../../../features/profile/components/ProfileModal";
@@ -252,9 +253,23 @@ export default function EnterAmountStep({
     { open: openProfileModal, close: closeProfileModal },
   ] = useDisclosure(false);
 
+  const [fontSize, setFontSize] = useState("3.5rem");
+
   useEffect(() => {
     inputRef.current?.focus();
   }, []);
+
+  useEffect(() => {
+    const valueString = String(amount);
+    const length = valueString.replace(/[^0-9]/g, "").length;
+    if (length > 9) {
+      setFontSize("2rem");
+    } else if (length > 6) {
+      setFontSize("2.5rem");
+    } else {
+      setFontSize("3.5rem");
+    }
+  }, [amount]);
 
   return (
     <>
@@ -262,9 +277,11 @@ export default function EnterAmountStep({
         {/* --- Common UI --- */}
         <Stack align="center" gap="xs">
           <NumberInput
+            w="100%"
             ref={inputRef}
             value={amount}
             onChange={setAmount}
+            styles={{ input: { fontSize } }}
             classNames={{ input: classes.amountInput }}
             variant="unstyled"
             decimalScale={2}
@@ -279,11 +296,11 @@ export default function EnterAmountStep({
                 <Tooltip label="Clear amount" position="left">
                   <ActionIcon
                     onClick={() => setAmount("")}
-                    variant="transparent"
+                    variant="default"
                     c="gray"
                     aria-label="Clear amount"
                   >
-                    <CancelCircleIcon size={24} />
+                    <Cancel01Icon size={20} />
                   </ActionIcon>
                 </Tooltip>
               ) : null
@@ -313,13 +330,13 @@ export default function EnterAmountStep({
 
           {/* --- Common UI --- */}
           <Textarea
-            placeholder="Add a note or description (optional)"
+            placeholder="Add a note or description"
             value={note}
             onChange={(event) => setNote(event.currentTarget.value)}
-            radius="lg"
+            radius="md"
             size="md"
             autosize
-            minRows={2}
+            minRows={3}
           />
           <Button
             size="xl"
