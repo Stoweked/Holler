@@ -1,4 +1,4 @@
-// /src/features/transactions/components/TransactionDrawerContent.tsx
+// /src/features/wallet/components/actions/TransactionDrawerContent.tsx
 
 import SelectBankStep from "@/features/banks/components/SelectBankStep";
 import { useTransactionState } from "../../hooks/useTransactionState";
@@ -6,6 +6,8 @@ import SelectContactStep from "@/features/contacts/components/SelectContactStep"
 import PaymentAmountStep from "./PaymentAmountStep";
 import ConfirmationStep from "./ConfirmationStep";
 import SuccessStep from "./SuccessStep";
+import { Transition } from "@mantine/core";
+import { useState, useEffect } from "react";
 
 interface TransactionDrawerContentProps {
   state: ReturnType<typeof useTransactionState>;
@@ -35,63 +37,92 @@ export default function TransactionDrawerContent({
     handleSelectBank,
     transactionType,
     handleStartOver,
+    handleClose,
   } = state;
 
-  switch (step) {
-    case "selectContact":
-      return <SelectContactStep onSelectContact={handleSelectContact} />;
-    case "selectBank":
-      return (
-        <SelectBankStep
-          onSelectBank={handleSelectBank}
-          onConnectNew={onConnectNew}
-        />
-      );
-    case "enterAmount":
-      if (selectedContact && selectedBank) {
+  const [activeStep, setActiveStep] = useState(step);
+  const [isMounted, setIsMounted] = useState(true);
+  const transitionDuration = 200;
+
+  useEffect(() => {
+    if (step !== activeStep) {
+      setIsMounted(false); // Start exit animation
+      const timer = setTimeout(() => {
+        setActiveStep(step); // Swap content after exit animation
+        setIsMounted(true); // Start enter animation
+      }, transitionDuration);
+      return () => clearTimeout(timer);
+    }
+  }, [step, activeStep]);
+
+  const renderStep = (currentStep: typeof step) => {
+    switch (currentStep) {
+      case "selectContact":
+        return <SelectContactStep onSelectContact={handleSelectContact} />;
+      case "selectBank":
         return (
-          <PaymentAmountStep
-            contact={selectedContact}
-            bank={selectedBank}
-            amount={amount}
-            setAmount={setAmount}
-            note={note}
-            setNote={setNote}
-            onContinue={handleAmountContinue}
-            onEditContact={handleBack}
-            onEditBank={handleEditBank}
-            actionType={transactionType}
-            selectedWaiver={selectedWaiver}
-            setSelectedWaiver={setSelectedWaiver}
-            isSend={transactionType === "send"}
+          <SelectBankStep
+            onSelectBank={handleSelectBank}
+            onConnectNew={onConnectNew}
           />
         );
-      }
-      return null;
-    case "confirm":
-      if (selectedContact && selectedBank) {
+      case "enterAmount":
+        if (selectedContact && selectedBank) {
+          return (
+            <PaymentAmountStep
+              contact={selectedContact}
+              bank={selectedBank}
+              amount={amount}
+              setAmount={setAmount}
+              note={note}
+              setNote={setNote}
+              onContinue={handleAmountContinue}
+              onEditContact={handleBack}
+              onEditBank={handleEditBank}
+              actionType={transactionType}
+              selectedWaiver={selectedWaiver}
+              setSelectedWaiver={setSelectedWaiver}
+              isSend={transactionType === "send"}
+            />
+          );
+        }
+        return null;
+      case "confirm":
+        if (selectedContact && selectedBank) {
+          return (
+            <ConfirmationStep
+              contact={selectedContact}
+              bank={selectedBank}
+              amount={amount}
+              note={note}
+              onConfirm={onConfirm}
+              actionType={transactionType}
+              waiver={selectedWaiver}
+            />
+          );
+        }
+        return null;
+      case "success":
         return (
-          <ConfirmationStep
-            contact={selectedContact}
-            bank={selectedBank}
-            amount={amount}
-            note={note}
-            onConfirm={onConfirm}
-            actionType={transactionType}
-            waiver={selectedWaiver}
+          <SuccessStep
+            transactionType={transactionType}
+            onDone={handleClose}
+            onStartOver={handleStartOver}
           />
         );
-      }
-      return null;
-    case "success":
-      return (
-        <SuccessStep
-          transactionType={transactionType}
-          onDone={state.handleClose}
-          onStartOver={handleStartOver}
-        />
-      );
-    default:
-      return null;
-  }
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <Transition
+      mounted={isMounted}
+      transition="fade"
+      duration={transitionDuration}
+      timingFunction="ease"
+    >
+      {(styles) => <div style={styles}>{renderStep(activeStep)}</div>}
+    </Transition>
+  );
 }
