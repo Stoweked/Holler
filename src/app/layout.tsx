@@ -39,6 +39,18 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <ColorSchemeScript />
+        {/* Preload the images for the success step */}
+        <link
+          rel="preload"
+          href="/images/success-step/background.svg"
+          as="image"
+        />
+        <link rel="preload" href="/images/success-step/coins.png" as="image" />
+        <link
+          rel="preload"
+          href="/images/success-step/coins-fade.svg"
+          as="image"
+        />
         <meta
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width, user-scalable=no"

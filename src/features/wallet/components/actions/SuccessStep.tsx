@@ -1,8 +1,17 @@
 // /src/features/wallet/components/actions/SuccessStep.tsx
 
-import { Box, Button, Image, Stack, Text, Title } from "@mantine/core";
+import {
+  Box,
+  Button,
+  Image,
+  Stack,
+  Text,
+  Title,
+  Transition,
+} from "@mantine/core";
 import { TransactionActionType } from "../../hooks/useTransactionState";
 import classes from "./Actions.module.css";
+import { useEffect, useState } from "react";
 
 interface SuccessStepProps {
   transactionType: TransactionActionType;
@@ -15,6 +24,12 @@ export default function SuccessStep({
   onDone,
   onStartOver,
 }: SuccessStepProps) {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const getSuccessMessages = () => {
     switch (transactionType) {
       case "deposit":
@@ -49,40 +64,68 @@ export default function SuccessStep({
 
   return (
     <Stack align="center" justify="center" h="100%" gap="lg" px="md">
-      <Box className={classes.coinContainer} mt={-100}>
-        <Image
-          src="/images/success-step/coins.png" // The rotating PNG
-          h="auto"
-          w="100%"
-          alt="Coins graphic"
-          className={classes.rotatingCoin}
-        />
-        <Image
-          src="/images/success-step/coins-fade.svg" // The SVG overlay
-          h="auto"
-          w="100%"
-          alt="Fade overlay"
-          className={classes.coinOverlay}
-        />
-      </Box>
-      <Stack gap="xl" w="100%" style={{ zIndex: 9 }}>
-        <Stack align="center" gap="xs">
-          <Title order={1} style={{ color: "white" }} ta="center" lh={1.2}>
-            {title}
-          </Title>
-          <Text c="dimmed" ta="center">
-            {message}
-          </Text>
-        </Stack>
+      <Transition
+        mounted={mounted}
+        transition="fade"
+        duration={800}
+        timingFunction="ease"
+      >
+        {(styles) => (
+          <Box className={classes.coinContainer} mt={-100} style={styles}>
+            <Image
+              src="/images/success-step/coins.png"
+              h="auto"
+              w="100%"
+              alt="Coins graphic"
+              className={classes.rotatingCoin}
+            />
+            <Image
+              src="/images/success-step/coins-fade.svg"
+              h="auto"
+              w="100%"
+              alt="Fade overlay"
+              className={classes.coinOverlay}
+            />
+          </Box>
+        )}
+      </Transition>
 
-        <Stack align="center" w="100%">
-          <Button onClick={onStartOver} size="lg" fullWidth>
-            Start a new transaction
-          </Button>
-          <Button onClick={onDone} size="lg" variant="outline" fullWidth>
-            Close
-          </Button>
-        </Stack>
+      <Stack gap="xl" w="100%" style={{ zIndex: 9 }}>
+        <Transition
+          mounted={mounted}
+          transition="slide-up"
+          duration={1000}
+          timingFunction="ease"
+        >
+          {(styles) => (
+            <Stack align="center" gap="xs" style={styles}>
+              <Title order={1} style={{ color: "white" }} ta="center" lh={1.2}>
+                {title}
+              </Title>
+              <Text c="dimmed" ta="center">
+                {message}
+              </Text>
+            </Stack>
+          )}
+        </Transition>
+
+        <Transition
+          mounted={mounted}
+          transition="slide-up"
+          duration={1200}
+          timingFunction="ease"
+        >
+          {(styles) => (
+            <Stack align="center" w="100%" style={styles}>
+              <Button onClick={onStartOver} size="lg" fullWidth>
+                Start a new transaction
+              </Button>
+              <Button onClick={onDone} size="lg" variant="outline" fullWidth>
+                Done
+              </Button>
+            </Stack>
+          )}
+        </Transition>
       </Stack>
     </Stack>
   );
