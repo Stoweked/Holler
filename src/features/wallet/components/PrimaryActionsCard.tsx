@@ -50,16 +50,16 @@ export default function PrimaryActionsCard() {
           <Stack align="center" gap="lg">
             <AccountToggle />
 
-            <Stack align="center" gap={0}>
+            <Stack align="center" gap={4}>
+              <Text size="sm" c="dimmed">
+                Current balance
+              </Text>
               <Title order={1} size={48}>
                 {`$${balance.toLocaleString("en-US", {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
                 })}`}
               </Title>
-              <Text size="xs" c="dimmed">
-                Current balance
-              </Text>
             </Stack>
           </Stack>
 
