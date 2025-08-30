@@ -95,7 +95,7 @@ export default function AmountInput({
         thousandSeparator
         prefix="$"
         hideControls
-        type="tel"
+        inputMode="decimal"
         placeholder="$0.00"
         rightSection={
           amount ? (

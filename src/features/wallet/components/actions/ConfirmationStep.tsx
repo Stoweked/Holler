@@ -24,6 +24,8 @@ import { BankIcon, File01Icon } from "hugeicons-react";
 import classes from "./Actions.module.css";
 import { useWallet } from "@/contexts/WalletContext";
 import { TransactionActionType } from "../../types/wallet";
+import TermsConditionsModal from "@/components/modals/TermsConditionsModal";
+import PrivacyPolicyModal from "@/components/modals/PrivacyPolicyModal";
 
 interface ConfirmationStepProps {
   contact: Contact;
@@ -52,6 +54,14 @@ export default function ConfirmationStep({
     style: "currency",
     currency: "USD",
   });
+
+  const [openedTermsModal, { open: openTermsModal, close: closeTermsModal }] =
+    useDisclosure(false);
+
+  const [
+    openedPrivacyModal,
+    { open: openPrivacyModal, close: closePrivacyModal },
+  ] = useDisclosure(false);
 
   const getActionLabels = () => {
     switch (actionType) {
@@ -235,16 +245,32 @@ export default function ConfirmationStep({
               Transactions typically take 1-3 business days to process.
             </Text>
             <Group justify="center">
-              <Anchor ta="center" size="xs">
+              <Anchor
+                ta="center"
+                size="xs"
+                onClick={openTermsModal}
+                aria-label="Open terms and conditions modal"
+              >
                 Terms of Service
               </Anchor>
-              <Anchor ta="center" size="xs">
+              <Anchor
+                ta="center"
+                size="xs"
+                onClick={openPrivacyModal}
+                aria-label="Open privacy policy label"
+              >
                 Privacy Policy
               </Anchor>
             </Group>
           </Stack>
         </Stack>
       </Stack>
+
+      <TermsConditionsModal opened={openedTermsModal} close={closeTermsModal} />
+      <PrivacyPolicyModal
+        opened={openedPrivacyModal}
+        close={closePrivacyModal}
+      />
 
       {waiver && (
         <Modal
