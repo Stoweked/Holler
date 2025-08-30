@@ -7,10 +7,9 @@ Holler provides secure and efficient mobile payments designed for construction t
 ## ✨ Features
 
 - **Authentication**: Secure user login, signup, and password recovery powered by Supabase.
-- **Payments**: Easily send and request payments from contacts.
-- **Deposits**: Add money to your Holler account from a connected bank.
-- **Transaction Management**: View a detailed history of your transactions with filtering and sorting capabilities.
-- **Contact Management**: A simple interface to manage your contacts.
+- **Wallet Actions**: A unified, multi-step flow to easily send, request, deposit, and transfer funds.
+- **Transaction Management**: View a detailed history of your transactions with powerful filtering and sorting capabilities.
+- **Contact Management**: A simple interface to manage your business and personal contacts.
 - **Bank Account Linking**: Connect and manage your bank accounts for seamless transfers.
 - **Spotlight Search**: Quickly navigate the app and perform actions with a powerful search tool (`⌘K`).
 - **Light & Dark Mode**: Switch between light and dark themes for your visual comfort.
@@ -26,33 +25,21 @@ Holler provides secure and efficient mobile payments designed for construction t
 
 The project is organized with a focus on feature-based modules.
 
-```
-/
 ├── src/
-│   ├── app/                # Next.js App Router: routing, pages, and API endpoints
-│   │   ├── (app)/          # Authenticated application routes
-│   │   ├── (auth)/         # Authentication routes (login, signup)
-│   │   ├── (landing)/      # Public-facing landing page
-│   │   └── api/            # API routes for server-side functionality
-│   ├── components/         # Reusable UI components (Layout, Navigation)
-│   ├── contexts/           # Global React context providers (e.g., ProfileContext)
-│   ├── features/           # Feature-based modules containing UI, logic, and types
-│   │   ├── auth/           # Authentication actions and types
-│   │   ├── banks/          # Components for managing bank accounts
-│   │   ├── contacts/       # Components for contact management
-│   │   ├── deposit/        # Components for the deposit flow
-│   │   ├── profile/        # User profile components
-│   │   ├── send-request/   # Components for sending and requesting payments
-│   │   ├── transactions/   # Components for displaying transactions
-│   │   └── ...and more
-│   ├── lib/                # Utility functions and libraries
-│   │   └── supabase/       # Supabase client and server helpers
-│   ├── mockData/           # Mock data for development (contacts, banks, transactions)
-│   ├── styles/             # Global styles and theme configuration
-│   └── types/              # TypeScript type definitions
-├── public/                 # Static assets (images, fonts)
+│ ├── app/ # Next.js App Router: routing, pages, and API endpoints
+│ ├── components/ # Reusable UI components (Layout, Navigation)
+│ ├── contexts/ # Global React context providers (Profile, Wallet)
+│ ├── features/ # Feature-based modules containing UI, logic, and types
+│ │ ├── auth/ # Authentication actions and types
+│ │ ├── banks/ # Components for managing bank accounts
+│ │ ├── contacts/ # Components for contact management
+│ │ ├── transactions/ # Components for displaying transaction history
+│ │ └── wallet/ # Components and hooks for wallet actions (send, request, etc.)
+│ ├── lib/ # Utility functions and libraries (Supabase helpers)
+│ ├── mockData/ # Mock data for development
+│ └── styles/ # Global styles and theme configuration
+├── public/ # Static assets (images, fonts)
 └── ...config files
-```
 
 ## 🚀 Getting Started
 
