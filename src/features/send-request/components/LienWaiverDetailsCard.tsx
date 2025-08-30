@@ -52,6 +52,11 @@ export default function LienWaiverDetailsCard({
     waiver.title.toLowerCase().includes(search.toLowerCase().trim())
   );
 
+  const capitalize = (s: string) => {
+    if (!s) return "";
+    return s.charAt(0).toUpperCase() + s.slice(1);
+  };
+
   const options = filteredWaivers.map((waiver, index) => (
     <Stack gap={4} key={waiver.id} style={{ paddingTop: index > 0 ? 4 : 0 }}>
       <Combobox.Option value={waiver.id} style={{ borderRadius: 8 }}>
@@ -100,7 +105,9 @@ export default function LienWaiverDetailsCard({
 
                   <Stack gap={0}>
                     <Text size="sm" c="dimmed">
-                      {selectedWaiver ? "Required" : "Optional"}
+                      {selectedWaiver
+                        ? capitalize(selectedWaiver.type)
+                        : "Optional"}
                     </Text>
                     {/* Title */}
                     <Group wrap="nowrap" gap={4}>
