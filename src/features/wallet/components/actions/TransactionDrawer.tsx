@@ -7,8 +7,8 @@ import ConnectBankDrawer from "@/features/banks/components/ConnectBankDrawer";
 import {
   useTransactionState,
   TransactionActionType,
-} from "../hooks/useTransactionState";
-import { useTransactionConfirmation } from "../hooks/useTransactionConfirmation";
+} from "../../hooks/useTransactionState";
+import { useTransactionConfirmation } from "../../hooks/useTransactionConfirmation";
 import TransactionDrawerTitle from "./TransactionDrawerTitle";
 import TransactionDrawerContent from "./TransactionDrawerContent";
 

@@ -1,7 +1,7 @@
 // /src/features/transactions/components/TransactionDrawerContent.tsx
 
 import SelectBankStep from "@/features/banks/components/SelectBankStep";
-import { useTransactionState } from "../hooks/useTransactionState";
+import { useTransactionState } from "../../hooks/useTransactionState";
 import SelectContactStep from "@/features/contacts/components/SelectContactStep";
 import PaymentAmountStep from "./PaymentAmountStep";
 import ConfirmationStep from "./ConfirmationStep";

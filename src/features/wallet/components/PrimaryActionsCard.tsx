@@ -1,28 +1,28 @@
-// src/features/wallet/components/PrimaryActionsCard.tsx
+// /src/features/wallet/components/PrimaryActionsCard.tsx
 
 import { Card, Stack, Text, Title } from "@mantine/core";
 import ActionButtons from "../../../components/layout/SideNav/ActionButtons";
 import { useDisclosure } from "@mantine/hooks";
 import classes from "./PrimaryActions.module.css";
 import AccountToggle from "./AccountToggle/AccountToggle";
-import { useEffect, useState } from "react";
-import { TransactionActionType } from "@/components/shared/hooks/useTransactionState";
-import TransactionDrawer from "@/components/shared/components/TransactionDrawer";
+import { useEffect, useState, useCallback } from "react";
 import { useWallet } from "@/contexts/WalletContext";
+import TransactionDrawer from "@/features/wallet/components/actions/TransactionDrawer";
+import { TransactionActionType } from "@/features/wallet/hooks/useTransactionState";
 
 export default function PrimaryActionsCard() {
   const [opened, { open, close }] = useDisclosure(false);
-  // Use the correct type for state
   const [transactionType, setTransactionType] =
     useState<TransactionActionType>("send");
-
   const { balance } = useWallet();
 
-  // Use the correct type in the handler function
-  const handleOpenDrawer = (type: TransactionActionType) => {
-    setTransactionType(type);
-    open();
-  };
+  const handleOpenDrawer = useCallback(
+    (type: TransactionActionType) => {
+      setTransactionType(type);
+      open();
+    },
+    [open]
+  );
 
   useEffect(() => {
     const handleOpenDeposit = () => handleOpenDrawer("deposit");
@@ -41,7 +41,7 @@ export default function PrimaryActionsCard() {
       window.removeEventListener("open-request", handleOpenRequest);
       window.removeEventListener("open-transfer", handleOpenTransfer);
     };
-  }, []);
+  }, [handleOpenDrawer]);
 
   return (
     <div>
@@ -52,7 +52,6 @@ export default function PrimaryActionsCard() {
 
             <Stack align="center" gap={0}>
               <Title order={1} size={48}>
-                {/* Display the balance from the context */}
                 {`$${balance.toLocaleString("en-US", {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,

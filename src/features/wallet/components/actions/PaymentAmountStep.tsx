@@ -11,7 +11,7 @@ import BankDetailsCard from "@/features/banks/components/BankDetailsCard";
 import { Waiver } from "@/features/waivers/types/waiver";
 import LienWaiverDetailsCard from "@/features/waivers/components/LienWaiverDetailsCard";
 import ProfileModal from "@/features/profile/components/ProfileModal";
-import { TransactionActionType } from "../hooks/useTransactionState";
+import { TransactionActionType } from "../../hooks/useTransactionState";
 import AmountInput from "./AmountInput";
 import { useWallet } from "@/contexts/WalletContext";
 

@@ -5,7 +5,7 @@ import { ArrowLeft02Icon } from "hugeicons-react";
 import {
   TransactionStep,
   TransactionActionType,
-} from "../hooks/useTransactionState";
+} from "../../hooks/useTransactionState";
 import { Recipient } from "@/features/contacts/types/recipient";
 
 interface TransactionDrawerTitleProps {
