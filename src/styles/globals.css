@@ -20,3 +20,13 @@
   background-size: cover;
   background-position: center;
 }
+
+.mantine-Input-input {
+  transition: border-color 200ms;
+}
+.mantine-Input-input:hover {
+  border-color: light-dark(
+    var(--mantine-color-lime-5),
+    var(--mantine-color-lime-8)
+  );
+}
