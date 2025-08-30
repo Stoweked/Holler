@@ -54,23 +54,23 @@ export default function LienWaiverDetailsCard({
 
   return (
     <Paper withBorder radius="lg" p="xs" w="100%">
-      <Stack gap="xs">
+      <Stack gap="sm">
         <Group gap="xs" justify="space-between" wrap="nowrap">
           <Group wrap="nowrap" gap={8}>
             <ThemeIcon variant="default" radius="xl" size="lg">
               <ClipboardIcon size={20} />
             </ThemeIcon>
             <Stack gap={0} className={classes.recipientTextContainer}>
+              <Text size="sm" c="dimmed">
+                {selectedWaiver ? "Required" : "Optional"}
+              </Text>
               <Text size="md" fw="bold" lh={1.2}>
                 Lien waiver
-              </Text>
-              <Text size="xs" c="dimmed">
-                {selectedWaiver ? "Required" : "Optional"}
               </Text>
             </Stack>
           </Group>
 
-          <HoverCard width={330} shadow="md" position="bottom-end">
+          <HoverCard width={310} shadow="md" position="bottom-end">
             <HoverCard.Target>
               <ActionIcon
                 aria-label="Info"
@@ -78,16 +78,15 @@ export default function LienWaiverDetailsCard({
                 radius="xl"
                 variant="subtle"
                 color="gray"
+                c="dimmed"
               >
                 <InformationCircleIcon size={20} />
               </ActionIcon>
             </HoverCard.Target>
             <HoverCard.Dropdown>
               <Text size="sm">
-                Attach a lien waiver to your payment to provide proof of payment
-                and protect the property owner. You can create conditional
-                waivers (effective upon payment) or unconditional waivers
-                (effective immediately).
+                You can create conditional waivers (effective upon payment) or
+                unconditional waivers (effective immediately).
               </Text>
             </HoverCard.Dropdown>
           </HoverCard>
@@ -115,7 +114,7 @@ export default function LienWaiverDetailsCard({
                 selectedWaiver ? (
                   <Tooltip position="left" label="Remove waiver">
                     <CloseButton
-                      size="md"
+                      size="lg"
                       radius="xl"
                       onMouseDown={(event) => event.preventDefault()}
                       onClick={() => setSelectedWaiver(null)}
@@ -144,7 +143,7 @@ export default function LienWaiverDetailsCard({
                 </Group>
               ) : (
                 <Text c="dimmed" component="span" size="md">
-                  Add a waiver
+                  Add a lien waiver
                 </Text>
               )}
             </InputBase>
