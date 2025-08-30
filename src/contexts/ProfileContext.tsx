@@ -15,7 +15,6 @@ interface ProfileContextType {
 const ProfileContext = createContext<ProfileContextType | undefined>(undefined);
 
 export function ProfileProvider({ children }: { children: React.ReactNode }) {
-  // FIX: Initialize the Supabase client only once using useState
   const [supabase] = useState(() => createClient());
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
@@ -23,51 +22,57 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchProfileAndSession = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+    const fetchProfile = async (user: User) => {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", user.id)
+        .single();
 
-      if (user) {
-        setUser(user);
-        const { data, error } = await supabase
-          .from("profiles")
-          .select("*")
-          .eq("id", user.id)
-          .single();
-
-        if (error) {
-          console.error("Error fetching profile:", error);
-        } else if (data) {
-          setProfile(data);
-        }
-        setLoading(false);
-      } else {
-        // If no user is found on initial check, redirect to the landing page
-        setLoading(false);
-        router.push("/");
+      if (error) {
+        console.error("Error fetching profile:", error);
+        setProfile(null); // Clear profile on error
+      } else if (data) {
+        setProfile(data);
       }
     };
 
-    fetchProfileAndSession();
+    // First, check for an active session on initial load
+    const checkSession = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      if (session) {
+        setUser(session.user);
+        await fetchProfile(session.user);
+      } else {
+        router.push("/");
+      }
+      setLoading(false);
+    };
 
+    checkSession();
+
+    // Then, listen for authentication state changes
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === "SIGNED_OUT") {
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
+      setLoading(true);
+      if (session) {
+        setUser(session.user);
+        await fetchProfile(session.user);
+      } else {
+        setUser(null);
+        setProfile(null);
         router.push("/");
-      } else if (session) {
-        // Prevent unnecessary re-renders if user is already set
-        if (JSON.stringify(session.user) !== JSON.stringify(user)) {
-          setUser(session.user);
-        }
       }
+      setLoading(false);
     });
 
     return () => {
       subscription?.unsubscribe();
     };
-  }, [supabase, router, user]);
+  }, [supabase, router]);
 
   const value = {
     user,
