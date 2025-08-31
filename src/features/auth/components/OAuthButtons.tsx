@@ -1,31 +1,27 @@
 "use client";
 
-import { ActionIcon, Group } from "@mantine/core";
+import { ActionIcon, Box, Group } from "@mantine/core";
 import { Provider } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/client";
-import { AppleLogo, FacebookLogo, GoogleLogo } from "./SocialLogos";
+import {
+  AppleLogoDark,
+  AppleLogoLight,
+  FacebookLogo,
+  GoogleLogo,
+} from "./SocialLogos";
 
-interface OAuthButtonsProps {
-  onError?: (error: unknown) => void;
-}
-
-export function OAuthButtons({ onError }: OAuthButtonsProps) {
+export function OAuthButtons() {
   const supabase = createClient();
 
   // Handle OAuth sign-in
   const handleOAuthLogin = async (provider: Provider) => {
-    console.log("OAuth clicked!");
-    // try {
-    //   await supabase.auth.signInWithOAuth({
-    //     provider,
-    //     options: {
-    //       redirectTo: `${location.origin}/auth/callback`,
-    //     },
-    //   });
-    // } catch (error) {
-    //   console.error("OAuth login failed:", error);
-    //   onError?.(error);
-    // }
+    await supabase.auth.signInWithOAuth({
+      provider,
+      options: {
+        // This will redirect the user back to your app after authentication
+        redirectTo: `${location.origin}/auth/callback`,
+      },
+    });
   };
 
   return (
@@ -57,7 +53,12 @@ export function OAuthButtons({ onError }: OAuthButtonsProps) {
         variant="default"
         onClick={() => handleOAuthLogin("apple")}
       >
-        <AppleLogo />
+        <Box darkHidden>
+          <AppleLogoLight />
+        </Box>
+        <Box lightHidden>
+          <AppleLogoDark />
+        </Box>
       </ActionIcon>
     </Group>
   );
