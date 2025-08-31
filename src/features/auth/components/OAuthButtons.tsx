@@ -26,6 +26,7 @@ export function OAuthButtons() {
 
   return (
     <Group grow wrap="nowrap">
+      {/* Google */}
       <ActionIcon
         aria-label="Log in with Google"
         size="xl"
@@ -36,7 +37,8 @@ export function OAuthButtons() {
         <GoogleLogo />
       </ActionIcon>
 
-      <ActionIcon
+      {/* Facebook */}
+      {/* <ActionIcon
         aria-label="Log in with Facebook"
         size="xl"
         radius="xl"
@@ -44,9 +46,10 @@ export function OAuthButtons() {
         onClick={() => handleOAuthLogin("facebook")}
       >
         <FacebookLogo />
-      </ActionIcon>
+      </ActionIcon> */}
 
-      <ActionIcon
+      {/* Apple */}
+      {/* <ActionIcon
         aria-label="Log in with Apple"
         size="xl"
         radius="xl"
@@ -59,7 +62,7 @@ export function OAuthButtons() {
         <Box lightHidden>
           <AppleLogoDark />
         </Box>
-      </ActionIcon>
+      </ActionIcon> */}
     </Group>
   );
 }
