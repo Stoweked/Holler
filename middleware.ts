@@ -33,7 +33,13 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const publicPaths = ["/", "/login", "/signup", "/auth/confirm"];
+  const publicPaths = [
+    "/",
+    "/login",
+    "/signup",
+    "/signup/multi-step",
+    "/auth/confirm",
+  ];
   const isPublicPath = publicPaths.includes(request.nextUrl.pathname);
 
   // If the user is authenticated and tries to access a public-only path,

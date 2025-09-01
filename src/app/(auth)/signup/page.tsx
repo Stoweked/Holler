@@ -6,7 +6,6 @@ import {
   Button,
   Divider,
   Paper,
-  PasswordInput,
   Stack,
   Text,
   TextInput,
@@ -24,21 +23,12 @@ export default function SignUpPage() {
   // Mantine form hook for state management and validation
   const form = useForm({
     initialValues: {
-      full_name: "",
       email: "",
-      password: "",
-      confirmPassword: "",
     },
 
     // Validation rules for each field
     validate: {
-      full_name: (value) =>
-        value.trim().length < 2 ? "Full name is required" : null,
       email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
-      password: (value) =>
-        value.length < 6 ? "Password must have at least 6 characters" : null,
-      confirmPassword: (value, values) =>
-        value !== values.password ? "Passwords do not match" : null,
     },
   });
 
@@ -46,21 +36,12 @@ export default function SignUpPage() {
   const handleSubmit = async (values: typeof form.values) => {
     setIsLoading(true);
     const formData = new FormData();
-    formData.append("full_name", values.full_name);
     formData.append("email", values.email);
-    formData.append("password", values.password);
     try {
       await signup(formData);
     } catch (error) {
-      console.error("Login failed:", error);
-      // In case of an error, stop the loading state
+      console.error("Sign up failed:", error);
       setIsLoading(false);
-      // notifications.show({
-      //   title: "Sign up failed",
-      //   message: "Please try again.",
-      //   color: "red",
-      //   icon: <AlertCircleIcon size={18} />,
-      // });
     }
   };
 
@@ -79,7 +60,7 @@ export default function SignUpPage() {
           </Avatar>
           <Stack gap={0}>
             <Title order={2}>Create an account</Title>
-            <Text c="dimmed">Enter your details to get started.</Text>
+            <Text c="dimmed">Enter your email to get started.</Text>
           </Stack>
 
           <OAuthButtons />
@@ -96,36 +77,10 @@ export default function SignUpPage() {
                 required
                 size="lg"
                 radius="md"
-                label="Full name"
-                name="full_name"
-                placeholder="Your full name"
-                {...form.getInputProps("full_name")}
-              />
-              <TextInput
-                required
-                size="lg"
-                radius="md"
                 label="Email"
                 name="email"
                 placeholder="Your email address"
                 {...form.getInputProps("email")}
-              />
-              <PasswordInput
-                required
-                size="lg"
-                radius="md"
-                label="Password"
-                name="password"
-                placeholder="Your password"
-                {...form.getInputProps("password")}
-              />
-              <PasswordInput
-                required
-                size="lg"
-                radius="md"
-                label="Confirm password"
-                placeholder="Confirm your password"
-                {...form.getInputProps("confirmPassword")}
               />
               <Button
                 type="submit"
@@ -134,7 +89,7 @@ export default function SignUpPage() {
                 size="lg"
                 loading={isLoading}
               >
-                Sign up
+                Continue
               </Button>
             </Stack>
           </form>

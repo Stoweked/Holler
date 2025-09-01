@@ -7,4 +7,5 @@ export interface Profile {
   phone_number?: string;
   username?: string;
   avatar_url?: string;
+  business_name?: string;
 }

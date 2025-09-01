@@ -1,4 +1,4 @@
-//src/app/auth/signup/actions.ts
+// src/features/auth/actions/initial-signup.ts
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
@@ -6,28 +6,11 @@ import { redirect } from "next/navigation";
 
 export async function signup(formData: FormData) {
   const email = formData.get("email") as string;
-  const password = formData.get("password") as string;
-  const fullName = formData.get("full_name") as string;
   const supabase = await createClient();
 
-  const { error } = await supabase.auth.signUp({
-    email,
-    password,
-    options: {
-      data: {
-        full_name: fullName,
-        // You can add avatar_url here as well if you have it
-        // avatar_url: 'some-url'
-      },
-    },
-  });
+  // Log out any existing user to ensure a fresh sign-up flow
+  await supabase.auth.signOut();
 
-  if (error) {
-    // Log the specific error to your server console for debugging
-    console.error("Supabase signup error:", error.message);
-    return redirect(`/signup?error=${error.message}`);
-  }
-
-  // Redirect to a page that tells the user to check their email but for now is the dashboard...
-  return redirect("/dashboard");
+  // Redirect to the multi-step page to collect more info
+  return redirect(`/signup/multi-step?email=${encodeURIComponent(email)}`);
 }
