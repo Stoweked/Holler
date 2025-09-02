@@ -8,7 +8,23 @@ interface WaiverEditorProps {
 
 export function WaiverEditor({ editor }: WaiverEditorProps) {
   return (
-    <RichTextEditor editor={editor}>
+    <RichTextEditor
+      editor={editor}
+      styles={{
+        root: {
+          fontSize: "var(--mantine-font-size-lg)",
+          borderRadius: "var(--mantine-radius-md)",
+        },
+        content: {
+          minHeight: 200,
+          borderRadius: "var(--mantine-radius-md)",
+        },
+        toolbar: {
+          borderTopLeftRadius: "var(--mantine-radius-md)",
+          borderTopRightRadius: "var(--mantine-radius-md)",
+        },
+      }}
+    >
       <RichTextEditor.Toolbar sticky stickyOffset={60}>
         <RichTextEditor.ControlsGroup>
           <RichTextEditor.Bold />

@@ -77,7 +77,6 @@ export default function SuccessStep({
               h="auto"
               w="100%"
               alt="Coins graphic"
-              className={classes.rotatingCoin}
             />
             <Image
               src="/images/success-step/coins-fade.svg"

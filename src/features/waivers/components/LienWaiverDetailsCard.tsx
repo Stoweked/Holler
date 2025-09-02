@@ -1,5 +1,6 @@
+"use client";
+
 import { Waiver } from "@/features/waivers/types/waiver";
-import { mockWaivers } from "../../../mockData/mockWaivers";
 import {
   Group,
   Paper,
@@ -16,8 +17,8 @@ import {
   HoverCard,
   ActionIcon,
   Button,
+  Modal,
   Menu,
-  Modal, // Import the Button component
 } from "@mantine/core";
 import {
   ClipboardIcon,
@@ -32,6 +33,7 @@ import classes from "./Waivers.module.css";
 import { useState } from "react";
 import WaiverSelectItem from "./WaiverSelectItem";
 import { useDisclosure } from "@mantine/hooks";
+import { useFetchWaivers } from "../hooks/useFetchWaivers";
 
 interface LienWaiverDetailsCardProps {
   selectedWaiver: Waiver | null;
@@ -47,8 +49,9 @@ export default function LienWaiverDetailsCard({
   });
   const [search, setSearch] = useState("");
   const [opened, { open, close }] = useDisclosure(false);
+  const { waivers: userWaivers, loading: waiversLoading } = useFetchWaivers();
 
-  const filteredWaivers = mockWaivers.filter((waiver) =>
+  const filteredWaivers = userWaivers.filter((waiver) =>
     waiver.title.toLowerCase().includes(search.toLowerCase().trim())
   );
 
@@ -83,7 +86,7 @@ export default function LienWaiverDetailsCard({
         store={combobox}
         withinPortal={false}
         onOptionSubmit={(val) => {
-          const waiver = mockWaivers.find((w) => w.id === val) || null;
+          const waiver = userWaivers.find((w) => w.id === val) || null;
           setSelectedWaiver(waiver);
           combobox.closeDropdown();
           setSearch("");
@@ -216,6 +219,7 @@ export default function LienWaiverDetailsCard({
                   leftSection={<PlusSignIcon size={16} />}
                   onClick={() => combobox.openDropdown()}
                   aria-label="Attach a lien waiver"
+                  loading={waiversLoading}
                 >
                   Attach
                 </Button>
@@ -237,7 +241,9 @@ export default function LienWaiverDetailsCard({
               {options.length > 0 ? (
                 options
               ) : (
-                <Combobox.Empty>No waivers found</Combobox.Empty>
+                <Combobox.Empty>
+                  <Text size="lg">No waivers found</Text>
+                </Combobox.Empty>
               )}
             </ScrollArea.Autosize>
           </Combobox.Options>

@@ -10,6 +10,10 @@ import {
 import { ArrowRight01Icon, File01Icon } from "hugeicons-react";
 import classes from "./Waivers.module.css";
 import { Waiver } from "../types/waiver";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+
+dayjs.extend(relativeTime);
 
 interface WaiverItemProps {
   waiver: Waiver;
@@ -42,7 +46,7 @@ export default function WaiverItem({ waiver, onEdit }: WaiverItemProps) {
                 {waiver.title}
               </Title>
               <Text size="sm" c="dimmed" w="100%">
-                Last modified: {waiver.lastModified}
+                Last modified: {dayjs(waiver.updated_at).fromNow()}
               </Text>
             </Stack>
           </Stack>

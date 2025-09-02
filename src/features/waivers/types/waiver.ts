@@ -4,4 +4,7 @@ export interface Waiver {
   lastModified: string;
   content: string;
   type: "conditional" | "unconditional";
+  archived: boolean;
+  created_at: string;
+  updated_at: string;
 }

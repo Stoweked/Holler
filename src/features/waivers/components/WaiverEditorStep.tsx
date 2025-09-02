@@ -1,7 +1,7 @@
 // features/waivers/components/WaiverEditorStep.tsx
-import { Button, Group, Stack, TextInput, Select } from "@mantine/core";
+import { Button, Group, Stack, TextInput, Select, Text } from "@mantine/core";
 import { Editor } from "@tiptap/react";
-import { WaiverEditor } from "./WaiverEditor"; // Import the new component
+import { WaiverEditor } from "./WaiverEditor";
 
 interface WaiverEditorStepProps {
   waiverTitle: string;
@@ -10,7 +10,10 @@ interface WaiverEditorStepProps {
   onWaiverTypeChange: (type: "conditional" | "unconditional") => void;
   editor: Editor | null;
   onSave: () => void;
+  onArchive: () => void;
   editorMode: "new" | "edit" | "template";
+  isSaving: boolean;
+  isArchiving: boolean;
 }
 
 export default function WaiverEditorStep({
@@ -21,6 +24,9 @@ export default function WaiverEditorStep({
   editor,
   editorMode,
   onSave,
+  onArchive,
+  isSaving,
+  isArchiving,
 }: WaiverEditorStepProps) {
   return (
     <Stack gap="lg">
@@ -49,7 +55,12 @@ export default function WaiverEditorStep({
         }
       />
 
-      <WaiverEditor editor={editor} />
+      <Stack gap={4}>
+        <Text component="label" size="lg" fw={500}>
+          Content
+        </Text>
+        <WaiverEditor editor={editor} />
+      </Stack>
 
       <Group justify="space-between" wrap="nowrap">
         {editorMode === "edit" && (
@@ -59,6 +70,8 @@ export default function WaiverEditorStep({
             color="red"
             variant="outline"
             style={{ flexShrink: 0 }}
+            onClick={onArchive}
+            loading={isArchiving}
           >
             Archive
           </Button>
@@ -69,6 +82,7 @@ export default function WaiverEditorStep({
             size="lg"
             onClick={onSave}
             style={{ flexShrink: 0 }}
+            loading={isSaving}
           >
             Save
           </Button>

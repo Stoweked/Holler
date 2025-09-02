@@ -30,9 +30,6 @@
   position: relative;
   width: 100%;
 }
-.rotatingCoin {
-  animation: rotate 300s linear infinite;
-}
 .coinOverlay {
   position: absolute;
   top: 0;

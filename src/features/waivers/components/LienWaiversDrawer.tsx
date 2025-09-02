@@ -32,6 +32,10 @@ export default function LienWaiversDrawer({
     handleBack,
     handleClose,
     handleSave,
+    handleArchive,
+    waivers,
+    isSaving,
+    isArchiving,
   } = useWaiver(close);
 
   const drawerTitle =
@@ -88,6 +92,7 @@ export default function LienWaiversDrawer({
           onNew={handleCreateNew}
           onTemplate={() => setStep("templates")}
           onEditWaiver={handleEditWaiver}
+          waivers={waivers}
         />
       )}
       {step === "templates" && (
@@ -102,6 +107,9 @@ export default function LienWaiversDrawer({
           editor={editor}
           editorMode={editorMode}
           onSave={handleSave}
+          onArchive={handleArchive}
+          isSaving={isSaving}
+          isArchiving={isArchiving}
         />
       )}
       <Space h={100} />
