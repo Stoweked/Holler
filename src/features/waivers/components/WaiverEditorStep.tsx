@@ -40,20 +40,26 @@ export default function WaiverEditorStep({
         onChange={(event) => onWaiverTitleChange(event.currentTarget.value)}
       />
 
-      <Select
-        label="Waiver type"
-        size="lg"
-        radius="md"
-        placeholder="Select waiver type"
-        data={[
-          { value: "conditional", label: "Conditional" },
-          { value: "unconditional", label: "Unconditional" },
-        ]}
-        value={waiverType}
-        onChange={(value) =>
-          onWaiverTypeChange(value as "conditional" | "unconditional")
-        }
-      />
+      <Stack gap={4}>
+        <Select
+          label="Waiver type"
+          size="lg"
+          radius="md"
+          placeholder="Select waiver type"
+          data={[
+            { value: "conditional", label: "Conditional" },
+            { value: "unconditional", label: "Unconditional" },
+          ]}
+          value={waiverType}
+          onChange={(value) =>
+            onWaiverTypeChange(value as "conditional" | "unconditional")
+          }
+        />
+        <Text c="dimmed" size="xs">
+          Attach conditional waivers (effective upon payment) or unconditional
+          waivers (effective immediately).
+        </Text>
+      </Stack>
 
       <Stack gap={4}>
         <Text component="label" size="lg" fw={500}>
