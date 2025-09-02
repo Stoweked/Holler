@@ -15,11 +15,24 @@ import {
 import { useForm } from "@mantine/form";
 import { login } from "../../../features/auth/actions/login";
 import { UserLove01Icon } from "hugeicons-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { OAuthButtons } from "@/features/auth/components";
+import { useSearchParams } from "next/navigation";
+import { notifications } from "@mantine/notifications";
 
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
+  const searchParams = useSearchParams();
+  const message = searchParams.get("message");
+
+  useEffect(() => {
+    if (message) {
+      notifications.show({
+        title: "Heads up!",
+        message,
+      });
+    }
+  }, [message]);
 
   // Mantine form hook for state management and validation
   const form = useForm({
@@ -48,12 +61,6 @@ export default function LoginPage() {
       console.error("Login failed:", error);
       // In case of an error, stop the loading state
       setIsLoading(false);
-      // notifications.show({
-      //   title: "Login failed",
-      //   message: "Please check your credentials and try again.",
-      //   color: "red",
-      //   icon: <AlertCircleIcon size={18} />,
-      // });
     }
   };
 

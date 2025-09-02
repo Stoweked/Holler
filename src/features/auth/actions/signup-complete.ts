@@ -11,7 +11,6 @@ export async function signupComplete(formData: FormData) {
   const businessName = formData.get("business_name") as string;
   let phoneNumber = formData.get("phone_number") as string | null;
 
-  // If the phone number is an empty string, set it to null
   if (phoneNumber === "") {
     phoneNumber = null;
   }
@@ -32,6 +31,14 @@ export async function signupComplete(formData: FormData) {
   });
 
   if (signUpError) {
+    // If user already exists, redirect to login page with a message
+    if (signUpError.message.includes("User already registered")) {
+      return redirect(
+        `/login?message=An account with this email already exists. Please log in.`
+      );
+    }
+
+    // For other errors, redirect back to signup page
     console.error("Supabase signup error:", signUpError.message);
     return redirect(`/signup?error=${encodeURIComponent(signUpError.message)}`);
   }

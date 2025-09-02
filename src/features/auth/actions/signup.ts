@@ -1,4 +1,4 @@
-// src/features/auth/actions/initial-signup.ts
+// src/features/auth/actions/signup.ts
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
