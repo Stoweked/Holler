@@ -2,18 +2,19 @@
 
 import { notifications } from "@mantine/notifications";
 import { Waiver } from "@/features/waivers/types/waiver";
-import { TransactionActionType, TransactionStep } from "../types/wallet";
 import {
-  Contact,
-  TransactionRecipient,
-} from "@/features/contacts/types/contact";
+  TransactionActionType,
+  TransactionStep,
+  TransactionParty,
+} from "../types/wallet";
+import { Bank } from "@/features/banks/types/bank";
 
 interface ConfirmationParams {
   transactionType: TransactionActionType;
   amount: string | number;
   note: string;
-  selectedBank: TransactionRecipient | null;
-  selectedContact: Contact | null;
+  selectedBank: Bank | null;
+  selectedParty: TransactionParty | null;
   selectedWaiver: Waiver | null;
   handleClose: () => void;
   setStep: (step: TransactionStep) => void;
@@ -25,7 +26,7 @@ export function useTransactionConfirmation() {
     amount,
     note,
     selectedBank,
-    selectedContact,
+    selectedParty,
     selectedWaiver,
     handleClose,
     setStep,
@@ -34,7 +35,7 @@ export function useTransactionConfirmation() {
       amount,
       note,
       fromBank: selectedBank,
-      toContact: selectedContact,
+      toParty: selectedParty,
       waiver: selectedWaiver,
     };
 

@@ -15,6 +15,7 @@ import { UserMultiple02Icon, Search01Icon } from "hugeicons-react";
 import { mockContacts } from "@/mockData/mockContacts";
 import { useState } from "react";
 import { Contact } from "@/features/contacts/types/contact";
+import { getInitials } from "@/lib/hooks/getInitials";
 
 interface ContactFilterProps {
   activeContactFilter: string;
@@ -105,13 +106,3 @@ export function ContactFilter({
     </Menu>
   );
 }
-
-// Helper function to get initials from a name
-const getInitials = (name: string | undefined) => {
-  if (!name) return "";
-  const words = name.split(" ");
-  if (words.length > 1) {
-    return words[0][0] + words[words.length - 1][0];
-  }
-  return name.substring(0, 2);
-};

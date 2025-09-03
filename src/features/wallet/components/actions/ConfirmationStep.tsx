@@ -1,5 +1,3 @@
-// /src/features/wallet/components/actions/ConfirmationStep.tsx
-
 import { Waiver } from "@/features/waivers/types/waiver";
 import {
   Avatar,
@@ -22,18 +20,15 @@ import { useDisclosure } from "@mantine/hooks";
 import { BankIcon, File01Icon } from "hugeicons-react";
 import classes from "./Actions.module.css";
 import { useWallet } from "@/contexts/WalletContext";
-import { TransactionActionType } from "../../types/wallet";
+import { TransactionActionType, TransactionParty } from "../../types/wallet";
 import TermsConditionsModal from "@/components/modals/TermsConditionsModal";
 import PrivacyPolicyModal from "@/components/modals/PrivacyPolicyModal";
-import {
-  Contact,
-  TransactionRecipient,
-} from "@/features/contacts/types/contact";
 import { getInitials } from "@/lib/hooks/getInitials";
+import { Bank } from "@/features/banks/types/bank";
 
 interface ConfirmationStepProps {
-  contact: Contact;
-  bank: TransactionRecipient;
+  party: TransactionParty | null;
+  bank: Bank;
   amount: string | number;
   note?: string;
   onConfirm: () => void;
@@ -42,7 +37,7 @@ interface ConfirmationStepProps {
 }
 
 export default function ConfirmationStep({
-  contact,
+  party,
   bank,
   amount,
   note,
@@ -91,14 +86,20 @@ export default function ConfirmationStep({
   const isTransfer = actionType === "transfer";
   const isDeposit = actionType === "deposit";
 
-  // Create a unified object for the "To" party to simplify rendering
-  const toPartyDetails: TransactionRecipient = isTransfer
-    ? bank
-    : {
-        name: contact.full_name || "Unknown Contact",
-        details: contact.email || contact.phone_number || "",
-        avatar: contact.avatar_url || getInitials(contact.full_name),
-      };
+  if (!party) return null;
+
+  const toPartyDetails =
+    party.type === "contact"
+      ? {
+          name: party.data.full_name || "Unknown Contact",
+          details: party.data.email || party.data.phone_number || "",
+          avatar: party.data.avatar_url || getInitials(party.data.full_name),
+        }
+      : {
+          name: party.data.name,
+          details: party.data.details,
+          avatar: party.data.avatar,
+        };
 
   const fromParty = isTransfer
     ? {
@@ -151,13 +152,17 @@ export default function ConfirmationStep({
                 </ThemeIcon>
               ) : (
                 <Avatar
-                  src={contact.avatar_url || null}
-                  alt={contact.full_name || "Contact"}
+                  src={
+                    party.type === "contact" ? party.data.avatar_url : undefined
+                  }
+                  alt={
+                    party.type === "contact" ? party.data.full_name : "Avatar"
+                  }
                   variant="light"
                   color="lime"
                   size={44}
                 >
-                  {getInitials(contact.full_name)}
+                  {toPartyDetails.avatar}
                 </Avatar>
               )}
             </Group>

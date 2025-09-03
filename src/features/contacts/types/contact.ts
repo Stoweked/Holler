@@ -21,10 +21,3 @@ export interface Contact {
   zip?: string;
   topContact?: boolean;
 }
-
-// This represents any entity that can be a party in a transaction (a contact, a bank, etc.)
-export interface TransactionRecipient {
-  name: string;
-  avatar: string;
-  details: string;
-}

@@ -1,5 +1,3 @@
-// /src/features/send-request/components/PaymentAmountStep.tsx
-
 import { Button, Stack, Text, Textarea } from "@mantine/core";
 import { useEffect, useRef } from "react";
 import { Alert02Icon } from "hugeicons-react";
@@ -12,15 +10,12 @@ import LienWaiverDetailsCard from "@/features/waivers/components/LienWaiverDetai
 import ProfileModal from "@/features/contacts/components/ContactModal";
 import AmountInput from "./AmountInput";
 import { useWallet } from "@/contexts/WalletContext";
-import { TransactionActionType } from "../../types/wallet";
-import {
-  Contact,
-  TransactionRecipient,
-} from "@/features/contacts/types/contact";
+import { TransactionActionType, TransactionParty } from "../../types/wallet";
+import { Bank } from "@/features/banks/types/bank";
 
 interface PaymentAmountStepProps {
-  contact: Contact;
-  bank: TransactionRecipient;
+  party: TransactionParty | null;
+  bank: Bank;
   amount: string | number;
   setAmount: (value: string | number) => void;
   note: string;
@@ -35,7 +30,7 @@ interface PaymentAmountStepProps {
 }
 
 export default function PaymentAmountStep({
-  contact,
+  party,
   bank,
   amount,
   setAmount,
@@ -71,25 +66,17 @@ export default function PaymentAmountStep({
       });
       return;
     }
-
     onContinue?.();
   };
 
   const renderRecipientDetails = () => {
-    if (actionType === "transfer") {
-      return (
-        <BankDetailsCard
-          bank={bank}
-          label={"Transfer to"}
-          onEdit={onEditBank}
-        />
-      );
-    }
-    if (actionType !== "deposit") {
+    if (!party) return null;
+
+    if (party.type === "contact") {
       return (
         <>
           <ContactDetailsCard
-            contact={contact}
+            contact={party.data}
             label={actionType === "send" ? "Sending to" : "Requesting from"}
             onEdit={onEditContact}
             onViewProfile={openProfileModal}
@@ -102,9 +89,18 @@ export default function PaymentAmountStep({
         </>
       );
     }
-    return (
-      <BankDetailsCard bank={bank} label={"Deposit from"} onEdit={onEditBank} />
-    );
+
+    if (party.type === "bank") {
+      return (
+        <BankDetailsCard
+          bank={party.data}
+          label={actionType === "deposit" ? "Deposit from" : "Transfer to"}
+          onEdit={onEditBank}
+        />
+      );
+    }
+
+    return null;
   };
 
   return (
@@ -150,12 +146,14 @@ export default function PaymentAmountStep({
         </Stack>
       </Stack>
 
-      <ProfileModal
-        opened={openedProfileModal}
-        close={closeProfileModal}
-        contact={contact}
-        showButtons={false}
-      />
+      {party?.type === "contact" && (
+        <ProfileModal
+          opened={openedProfileModal}
+          close={closeProfileModal}
+          contact={party.data}
+          showButtons={false}
+        />
+      )}
     </>
   );
 }

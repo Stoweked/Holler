@@ -1,17 +1,13 @@
 import { useState, useEffect, useCallback } from "react";
 import { Waiver } from "@/features/waivers/types/waiver";
 import { mockBanks } from "@/mockData/mockBanks";
-import { TransactionActionType, TransactionStep } from "../types/wallet";
 import {
-  Contact,
-  TransactionRecipient,
-} from "@/features/contacts/types/contact";
-
-const hollerWalletContact: Contact = {
-  id: "holler-wallet",
-  full_name: "Holler Wallet",
-  email: "Your balance",
-};
+  TransactionActionType,
+  TransactionStep,
+  TransactionParty,
+} from "../types/wallet";
+import { Contact } from "@/features/contacts/types/contact";
+import { Bank } from "@/features/banks/types/bank";
 
 export function useTransactionState(
   opened: boolean,
@@ -19,17 +15,18 @@ export function useTransactionState(
   close: () => void,
   initialContact: Contact | null
 ) {
-  const getInitialStep = useCallback(() => {
-    return transactionType === "deposit" || transactionType === "transfer"
-      ? "selectBank"
-      : "selectContact";
+  const getInitialStep = useCallback((): TransactionStep => {
+    if (transactionType === "deposit" || transactionType === "transfer") {
+      return "selectBank";
+    }
+    return "selectContact";
   }, [transactionType]);
 
   const [step, setStep] = useState<TransactionStep>(getInitialStep());
-  const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
-  const [selectedBank, setSelectedBank] = useState<TransactionRecipient>(
-    mockBanks[0]
+  const [selectedParty, setSelectedParty] = useState<TransactionParty | null>(
+    null
   );
+  const [selectedBank, setSelectedBank] = useState<Bank>(mockBanks[0]);
   const [selectedWaiver, setSelectedWaiver] = useState<Waiver | null>(null);
   const [amount, setAmount] = useState<string | number>("");
   const [note, setNote] = useState("");
@@ -37,42 +34,40 @@ export function useTransactionState(
   useEffect(() => {
     if (opened) {
       if (initialContact) {
-        setSelectedContact(initialContact);
+        setSelectedParty({ type: "contact", data: initialContact });
         setStep("enterAmount");
       } else {
         setStep(getInitialStep());
       }
     } else {
+      // Reset state when drawer is closed
       setStep(getInitialStep());
-      setSelectedContact(null);
+      setSelectedParty(null);
+      setSelectedBank(mockBanks[0]);
+      setAmount("");
+      setNote("");
+      setSelectedWaiver(null);
     }
   }, [opened, initialContact, transactionType, getInitialStep]);
 
   const handleSelectContact = (contact: Contact) => {
-    setSelectedContact(contact);
+    setSelectedParty({ type: "contact", data: contact });
+    setStep("enterAmount");
+  };
+
+  const handleSelectBank = (bank: Bank) => {
+    setSelectedBank(bank);
+    if (transactionType === "transfer" || transactionType === "deposit") {
+      setSelectedParty({ type: "bank", data: bank });
+    }
     setStep("enterAmount");
   };
 
   const handleAmountContinue = () => setStep("confirm");
   const handleEditBank = () => setStep("selectBank");
 
-  const handleSelectBank = (bank: TransactionRecipient) => {
-    setSelectedBank(bank);
-    if (transactionType === "transfer") {
-      // In a real app, you might create a proper contact object for the bank
-      setSelectedContact({
-        id: bank.name,
-        full_name: bank.name,
-        email: bank.details,
-      });
-    } else if (transactionType === "deposit") {
-      setSelectedContact(hollerWalletContact);
-    }
-    setStep("enterAmount");
-  };
-
   const handleBack = () => {
-    if (step === "selectBank" || step === "confirm") {
+    if (step === "confirm") {
       setStep("enterAmount");
     } else if (step === "enterAmount") {
       if (initialContact) {
@@ -80,40 +75,28 @@ export function useTransactionState(
       } else {
         setStep(getInitialStep());
       }
+    } else {
+      close();
     }
   };
 
-  const resetState = () => {
+  const handleClose = () => {
+    close();
+  };
+
+  const handleStartOver = () => {
     setStep(getInitialStep());
-    setSelectedContact(null);
+    setSelectedParty(null);
     setSelectedBank(mockBanks[0]);
     setAmount("");
     setNote("");
     setSelectedWaiver(null);
   };
 
-  const handleStartOver = () => {
-    resetState();
-  };
-
-  const handleClose = () => {
-    close();
-    setTimeout(() => {
-      if (!initialContact) {
-        setStep(getInitialStep());
-        setSelectedContact(null);
-      }
-      setSelectedBank(mockBanks[0]);
-      setAmount("");
-      setNote("");
-      setSelectedWaiver(null);
-    }, 200);
-  };
-
   return {
     step,
     setStep,
-    selectedContact,
+    selectedParty,
     selectedBank,
     selectedWaiver,
     amount,

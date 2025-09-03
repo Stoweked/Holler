@@ -14,10 +14,10 @@ import {
   MoreVerticalCircle01Icon,
   PencilEdit02Icon,
 } from "hugeicons-react";
-import { TransactionRecipient } from "@/features/contacts/types/contact";
+import { Bank } from "../types/bank";
 
 interface BankDetailsCardProps {
-  bank: TransactionRecipient;
+  bank: Bank;
   label: string;
   onEdit?: () => void;
 }

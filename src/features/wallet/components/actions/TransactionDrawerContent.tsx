@@ -22,7 +22,7 @@ export default function TransactionDrawerContent({
 }: TransactionDrawerContentProps) {
   const {
     step,
-    selectedContact,
+    selectedParty,
     selectedBank,
     amount,
     note,
@@ -46,10 +46,10 @@ export default function TransactionDrawerContent({
 
   useEffect(() => {
     if (step !== activeStep) {
-      setIsMounted(false); // Start exit animation
+      setIsMounted(false);
       const timer = setTimeout(() => {
-        setActiveStep(step); // Swap content after exit animation
-        setIsMounted(true); // Start enter animation
+        setActiveStep(step);
+        setIsMounted(true);
       }, transitionDuration);
       return () => clearTimeout(timer);
     }
@@ -67,10 +67,10 @@ export default function TransactionDrawerContent({
           />
         );
       case "enterAmount":
-        if (selectedContact && selectedBank) {
+        if (selectedParty && selectedBank) {
           return (
             <PaymentAmountStep
-              contact={selectedContact}
+              party={selectedParty}
               bank={selectedBank}
               amount={amount}
               setAmount={setAmount}
@@ -88,10 +88,10 @@ export default function TransactionDrawerContent({
         }
         return null;
       case "confirm":
-        if (selectedContact && selectedBank) {
+        if (selectedParty && selectedBank) {
           return (
             <ConfirmationStep
-              contact={selectedContact}
+              party={selectedParty}
               bank={selectedBank}
               amount={amount}
               note={note}

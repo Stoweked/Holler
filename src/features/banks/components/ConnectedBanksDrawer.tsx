@@ -5,7 +5,7 @@ import { useDisclosure } from "@mantine/hooks";
 import BankList from "./BankList";
 import { mockBanks } from "@/mockData/mockBanks";
 import ConnectBankDrawer from "./ConnectBankDrawer";
-import { TransactionRecipient } from "@/features/contacts/types/contact";
+import { Bank } from "../types/bank";
 
 interface ConnectedBanksDrawerProps {
   opened: boolean;
@@ -16,9 +16,7 @@ export default function ConnectedBanksDrawer({
   opened,
   close,
 }: ConnectedBanksDrawerProps) {
-  const [selectedBank, setSelectedBank] = useState<TransactionRecipient | null>(
-    null
-  );
+  const [selectedBank, setSelectedBank] = useState<Bank | null>(null);
   const [
     openedBankProfileModal,
     { open: openBankProfileModal, close: closeBankProfileModal },
@@ -28,7 +26,7 @@ export default function ConnectedBanksDrawer({
     { open: openConnectBankDrawer, close: closeConnectBankDrawer },
   ] = useDisclosure(false);
 
-  const handleSelectBank = (bank: TransactionRecipient) => {
+  const handleSelectBank = (bank: Bank) => {
     setSelectedBank(bank);
     openBankProfileModal();
   };

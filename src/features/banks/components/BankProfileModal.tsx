@@ -1,11 +1,11 @@
-import { TransactionRecipient } from "@/features/contacts/types/contact";
 import { Stack, Title, Text, Modal, ThemeIcon, Button } from "@mantine/core";
 import { BankIcon } from "hugeicons-react";
+import { Bank } from "../types/bank";
 
 interface BankProfileModalProps {
   opened: boolean;
   close: () => void;
-  bank: TransactionRecipient | null;
+  bank: Bank | null;
 }
 
 export default function BankProfileModal({

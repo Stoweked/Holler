@@ -1,4 +1,4 @@
-// /src/features/transactions/components/TransactionDrawer.tsx
+// /src/features/wallet/components/actions/TransactionDrawer.tsx
 
 import { Drawer, Space } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
@@ -9,10 +9,7 @@ import TransactionDrawerTitle from "./TransactionDrawerTitle";
 import TransactionDrawerContent from "./TransactionDrawerContent";
 import classes from "./Actions.module.css";
 import { TransactionActionType } from "../../types/wallet";
-import {
-  Contact,
-  TransactionRecipient,
-} from "@/features/contacts/types/contact";
+import { Contact } from "@/features/contacts/types/contact";
 
 interface TransactionDrawerProps {
   opened: boolean;
