@@ -28,9 +28,11 @@ export function ContactFilter({
 }: ContactFilterProps) {
   const [searchValue, setSearchValue] = useState("");
 
-  const filteredContacts = mockContacts.filter((contact: Contact) =>
-    contact.full_name?.toLowerCase().includes(searchValue.toLowerCase())
-  );
+  const filteredContacts = mockContacts
+    .filter((contact: Contact) =>
+      contact.full_name?.toLowerCase().includes(searchValue.toLowerCase())
+    )
+    .sort((a, b) => a.full_name?.localeCompare(b.full_name || "") || 0);
 
   const isContactFilterActive = activeContactFilter !== "All";
 
