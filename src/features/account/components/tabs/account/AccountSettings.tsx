@@ -14,10 +14,10 @@ import {
   Divider,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { Profile } from "@/features/profile/types/profile";
 import { useMantineColorScheme, useComputedColorScheme } from "@mantine/core";
 import { logout } from "@/features/auth/actions/logout";
 import { Moon01Icon, Sun01Icon } from "hugeicons-react";
+import { Profile } from "@/features/account/types/account";
 
 interface AccountSettingsProps {
   profile: Profile;

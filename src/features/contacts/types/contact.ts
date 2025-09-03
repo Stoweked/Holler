@@ -1,4 +1,4 @@
-export interface Profile {
+export interface Contact {
   id: string;
   email: string;
   first_name?: string;
@@ -16,5 +16,4 @@ export interface Profile {
   city?: string;
   state?: string;
   zip?: string;
-  auth_provider?: string;
 }

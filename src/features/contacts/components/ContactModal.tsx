@@ -17,7 +17,7 @@ interface Contact {
   topContact?: boolean;
 }
 
-interface ProfileModalProps {
+interface ContactModalProps {
   opened: boolean;
   close: () => void;
   contact: Contact | null;
@@ -26,14 +26,14 @@ interface ProfileModalProps {
   onRequestClick?: (contact: Contact) => void;
 }
 
-export default function ProfileModal({
+export default function ContactModal({
   opened,
   close,
   contact,
   showButtons = true,
   onSendClick,
   onRequestClick,
-}: ProfileModalProps) {
+}: ContactModalProps) {
   if (!contact) {
     return null;
   }

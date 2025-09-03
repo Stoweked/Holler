@@ -12,12 +12,12 @@ import classes from "./SideNav.module.css";
 import { useDisclosure } from "@mantine/hooks";
 import LienWaiversDrawer from "@/features/waivers/components/LienWaiversDrawer";
 import { useState, useEffect } from "react";
-import ProfileModal from "@/features/profile/components/ProfileModal";
 import { Contact } from "@/features/contacts/types/recipient";
 import ConnectedBanksDrawer from "@/features/banks/components/ConnectedBanksDrawer";
 import ContactsDrawer from "@/features/contacts/components/ContactsDrawer";
 import TransactionDrawer from "@/features/wallet/components/actions/TransactionDrawer";
 import { TransactionActionType } from "@/features/wallet/types/wallet";
+import ContactModal from "@/features/contacts/components/ContactModal";
 
 interface SideNavLinksProps {
   closeMobileNav: () => void;
@@ -159,7 +159,7 @@ export default function SideNavLinks({ closeMobileNav }: SideNavLinksProps) {
         opened={openedLienWaiversDrawer}
         close={closeLienWaiversDrawer}
       />
-      <ProfileModal
+      <ContactModal
         opened={openedProfileDrawer}
         close={closeProfileDrawer}
         contact={selectedContact}

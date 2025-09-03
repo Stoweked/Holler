@@ -10,8 +10,8 @@ import {
 } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { User } from "@supabase/supabase-js";
-import { Profile } from "@/features/profile/types/profile";
 import { useRouter } from "next/navigation";
+import { Profile } from "@/features/account/types/account";
 
 interface ProfileContextType {
   user: User | null;
