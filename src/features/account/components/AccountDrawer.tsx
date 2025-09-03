@@ -27,6 +27,7 @@ import { BillingSettings } from "./tabs/BillingSettings";
 import { useEffect, useState } from "react";
 import { useViewportSize } from "@mantine/hooks";
 import { useProfile } from "@/contexts/ProfileContext";
+import AccountCard from "./tabs/account/AccountCard";
 
 interface AccountDrawerProps {
   opened: boolean;
@@ -208,7 +209,7 @@ export default function AccountDrawer({
                 </Tabs.Panel>
 
                 <Tabs.Panel value="profile" pt="lg">
-                  <Skeleton radius="lg" h={400} />
+                  <AccountCard />
                   <Space h={100} />
                 </Tabs.Panel>
 
