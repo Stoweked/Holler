@@ -5,7 +5,6 @@ import { useEffect, useRef } from "react";
 import { Alert02Icon } from "hugeicons-react";
 import { useDisclosure } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
-import { Recipient } from "@/features/contacts/types/recipient";
 import ContactDetailsCard from "@/features/contacts/components/ContactDetailsCard";
 import BankDetailsCard from "@/features/banks/components/BankDetailsCard";
 import { Waiver } from "@/features/waivers/types/waiver";
@@ -14,10 +13,14 @@ import ProfileModal from "@/features/contacts/components/ContactModal";
 import AmountInput from "./AmountInput";
 import { useWallet } from "@/contexts/WalletContext";
 import { TransactionActionType } from "../../types/wallet";
+import {
+  Contact,
+  TransactionRecipient,
+} from "@/features/contacts/types/contact";
 
 interface PaymentAmountStepProps {
-  contact: Recipient;
-  bank: Recipient;
+  contact: Contact;
+  bank: TransactionRecipient;
   amount: string | number;
   setAmount: (value: string | number) => void;
   note: string;

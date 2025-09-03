@@ -11,11 +11,11 @@ import {
 } from "@mantine/core";
 import { Cancel01Icon, Search01Icon, BankIcon } from "hugeicons-react";
 import BankItem from "./BankItem";
-import { Recipient } from "@/features/contacts/types/recipient";
+import { TransactionRecipient } from "@/features/contacts/types/contact";
 
 interface BankListProps {
-  banks: Recipient[];
-  onBankClick?: (bank: Recipient) => void;
+  banks: TransactionRecipient[];
+  onBankClick?: (bank: TransactionRecipient) => void;
   onConnectNew?: () => void;
 }
 
@@ -26,7 +26,7 @@ export default function BankList({
 }: BankListProps) {
   const [searchValue, setSearchValue] = useState("");
 
-  const handleBankClick = (bank: Recipient) => {
+  const handleBankClick = (bank: TransactionRecipient) => {
     if (onBankClick) {
       onBankClick(bank);
     }

@@ -15,10 +15,10 @@ import {
 import classes from "./Account.module.css";
 import {
   ArrowLeft02Icon,
-  Award01Icon,
   Cancel01Icon,
   CreditCardIcon,
   Notification01Icon,
+  OfficeIcon,
   UserIcon,
 } from "hugeicons-react";
 import { AccountSettings } from "./tabs/account/AccountSettings";
@@ -136,11 +136,11 @@ export default function AccountDrawer({
                     Profile
                   </Tabs.Tab>
                   <Tabs.Tab
-                    value="achievements"
-                    leftSection={<Award01Icon size={16} />}
-                    aria-label="Achievements"
+                    value="business"
+                    leftSection={<OfficeIcon size={16} />}
+                    aria-label="Business"
                   >
-                    Achievements
+                    Business
                   </Tabs.Tab>
                   <Tabs.Tab
                     value="notifications"
@@ -175,14 +175,14 @@ export default function AccountDrawer({
                       onClick={() => setActiveTab("profile")}
                     />
                     <NavLink
-                      label="Achievements"
-                      leftSection={<Award01Icon size="1rem" />}
+                      label="Business"
+                      leftSection={<OfficeIcon size="1rem" />}
                       classNames={{
                         root: classes.navLinkRoot,
                         label: classes.navLinkLabel,
                         body: classes.navLinkBody,
                       }}
-                      onClick={() => setActiveTab("achievements")}
+                      onClick={() => setActiveTab("business")}
                     />
                     <NavLink
                       label="Notifications"
@@ -212,7 +212,7 @@ export default function AccountDrawer({
                   <Space h={100} />
                 </Tabs.Panel>
 
-                <Tabs.Panel value="achievements" pt="lg">
+                <Tabs.Panel value="business" pt="lg">
                   <Skeleton radius="lg" h={400} />
                   <Space h={100} />
                 </Tabs.Panel>

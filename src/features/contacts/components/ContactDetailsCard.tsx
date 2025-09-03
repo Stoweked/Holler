@@ -14,10 +14,11 @@ import {
   PencilEdit02Icon,
   UserIcon,
 } from "hugeicons-react";
-import { Recipient } from "@/features/contacts/types/recipient";
+import { Contact } from "../types/contact";
+import { getInitials } from "@/lib/hooks/getInitials";
 
 interface ContactDetailsCardProps {
-  contact: Recipient;
+  contact: Contact;
   label: string;
   onEdit?: () => void;
   onViewProfile?: () => void;
@@ -33,15 +34,21 @@ export default function ContactDetailsCard({
     <Paper withBorder radius="lg" p="xs" w="100%">
       <Group gap="xs" className={classes.recipientContainer}>
         <Group wrap="nowrap" gap={8} className={classes.recipientDetailsGroup}>
-          <Avatar variant="light" color="lime" radius="xl" size={34}>
-            {contact.avatar}
+          <Avatar
+            src={contact?.avatar_url}
+            variant="light"
+            color="lime"
+            radius="xl"
+            size={34}
+          >
+            {getInitials(contact?.full_name)}
           </Avatar>
           <Stack gap={0} className={classes.recipientTextContainer}>
             <Text size="sm" c="dimmed">
               {label}
             </Text>
             <Text fw={500} lineClamp={2} lh={1.2}>
-              {contact.name}
+              {contact.full_name}
             </Text>
             <Text
               size="xs"
@@ -49,7 +56,7 @@ export default function ContactDetailsCard({
               lineClamp={1}
               className={classes.detailsText}
             >
-              {contact.details}
+              {contact.email || contact.phone_number || ""}
             </Text>
           </Stack>
         </Group>

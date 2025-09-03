@@ -18,6 +18,7 @@ import { useMantineColorScheme, useComputedColorScheme } from "@mantine/core";
 import { logout } from "@/features/auth/actions/logout";
 import { Moon01Icon, Sun01Icon } from "hugeicons-react";
 import { Profile } from "@/features/account/types/account";
+import { getInitials } from "@/lib/hooks/getInitials";
 
 interface AccountSettingsProps {
   profile: Profile;
@@ -43,14 +44,6 @@ export function AccountSettings({
         value.trim().length < 2 ? "Full name is required" : null,
     },
   });
-
-  const getInitials = (name: string | undefined) => {
-    if (!name) return "";
-    return name
-      .split(" ")
-      .map((n) => n[0])
-      .join("");
-  };
 
   return (
     <Stack gap="xl">

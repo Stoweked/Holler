@@ -14,6 +14,7 @@ import {
 import { UserMultiple02Icon, Search01Icon } from "hugeicons-react";
 import { mockContacts } from "@/mockData/mockContacts";
 import { useState } from "react";
+import { Contact } from "@/features/contacts/types/contact";
 
 interface ContactFilterProps {
   activeContactFilter: string;
@@ -26,8 +27,8 @@ export function ContactFilter({
 }: ContactFilterProps) {
   const [searchValue, setSearchValue] = useState("");
 
-  const filteredContacts = mockContacts.filter((contact) =>
-    contact.name.toLowerCase().includes(searchValue.toLowerCase())
+  const filteredContacts = mockContacts.filter((contact: Contact) =>
+    contact.full_name?.toLowerCase().includes(searchValue.toLowerCase())
   );
 
   const isContactFilterActive = activeContactFilter !== "All";
@@ -80,20 +81,20 @@ export function ContactFilter({
         <ScrollArea h={300}>
           {filteredContacts.map((contact) => (
             <Menu.Item
-              key={contact.name}
-              onClick={() => onContactFilterChange(contact.name)}
+              key={contact.id}
+              onClick={() => onContactFilterChange(contact.full_name || "")}
               styles={{ item: { paddingLeft: "6px", paddingRight: "6px" } }}
             >
               <Group wrap="nowrap" gap="xs">
                 <Avatar color="lime" radius="xl" size="md">
-                  {contact.avatar}
+                  {contact.avatar_url || getInitials(contact.full_name)}
                 </Avatar>
                 <Stack gap={0}>
                   <Text size="sm" fw="bold">
-                    {contact.name}
+                    {contact.full_name}
                   </Text>
                   <Text size="xs" c="dimmed">
-                    {contact.details}
+                    {contact.email || contact.phone_number}
                   </Text>
                 </Stack>
               </Group>
@@ -104,3 +105,13 @@ export function ContactFilter({
     </Menu>
   );
 }
+
+// Helper function to get initials from a name
+const getInitials = (name: string | undefined) => {
+  if (!name) return "";
+  const words = name.split(" ");
+  if (words.length > 1) {
+    return words[0][0] + words[words.length - 1][0];
+  }
+  return name.substring(0, 2);
+};

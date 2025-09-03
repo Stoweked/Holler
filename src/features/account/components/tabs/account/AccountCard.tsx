@@ -27,6 +27,7 @@ import {
 } from "hugeicons-react";
 import { usStates } from "@/lib/data/usStates";
 import { useProfile } from "@/contexts/ProfileContext";
+import { getInitials } from "@/lib/hooks/getInitials";
 
 export default function AccountCard() {
   const { profile } = useProfile();
@@ -74,14 +75,6 @@ export default function AccountCard() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile]);
-
-  const getInitials = (name: string | undefined) => {
-    if (!name) return "";
-    return name
-      .split(" ")
-      .map((n) => n[0])
-      .join("");
-  };
 
   return (
     <Paper withBorder radius="lg" shadow="xs" p="md">

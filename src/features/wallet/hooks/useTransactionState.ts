@@ -1,24 +1,24 @@
-// /src/features/transactions/hooks/useTransactionState.ts
-
 import { useState, useEffect, useCallback } from "react";
-import { Recipient } from "@/features/contacts/types/recipient";
 import { Waiver } from "@/features/waivers/types/waiver";
 import { mockBanks } from "@/mockData/mockBanks";
 import { TransactionActionType, TransactionStep } from "../types/wallet";
+import {
+  Contact,
+  TransactionRecipient,
+} from "@/features/contacts/types/contact";
 
-const hollerWalletContact: Recipient = {
-  name: "Holler Wallet",
-  avatar: "H",
-  details: "Your balance",
+const hollerWalletContact: Contact = {
+  id: "holler-wallet",
+  full_name: "Holler Wallet",
+  email: "Your balance",
 };
 
 export function useTransactionState(
   opened: boolean,
   transactionType: TransactionActionType,
   close: () => void,
-  initialContact: Recipient | null
+  initialContact: Contact | null
 ) {
-  // Memoize getInitialStep with useCallback
   const getInitialStep = useCallback(() => {
     return transactionType === "deposit" || transactionType === "transfer"
       ? "selectBank"
@@ -26,10 +26,10 @@ export function useTransactionState(
   }, [transactionType]);
 
   const [step, setStep] = useState<TransactionStep>(getInitialStep());
-  const [selectedContact, setSelectedContact] = useState<Recipient | null>(
-    null
+  const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
+  const [selectedBank, setSelectedBank] = useState<TransactionRecipient>(
+    mockBanks[0]
   );
-  const [selectedBank, setSelectedBank] = useState<Recipient>(mockBanks[0]);
   const [selectedWaiver, setSelectedWaiver] = useState<Waiver | null>(null);
   const [amount, setAmount] = useState<string | number>("");
   const [note, setNote] = useState("");
@@ -43,13 +43,12 @@ export function useTransactionState(
         setStep(getInitialStep());
       }
     } else {
-      // Reset state on close
       setStep(getInitialStep());
       setSelectedContact(null);
     }
   }, [opened, initialContact, transactionType, getInitialStep]);
 
-  const handleSelectContact = (contact: Recipient) => {
+  const handleSelectContact = (contact: Contact) => {
     setSelectedContact(contact);
     setStep("enterAmount");
   };
@@ -57,10 +56,15 @@ export function useTransactionState(
   const handleAmountContinue = () => setStep("confirm");
   const handleEditBank = () => setStep("selectBank");
 
-  const handleSelectBank = (bank: Recipient) => {
+  const handleSelectBank = (bank: TransactionRecipient) => {
     setSelectedBank(bank);
     if (transactionType === "transfer") {
-      setSelectedContact(bank);
+      // In a real app, you might create a proper contact object for the bank
+      setSelectedContact({
+        id: bank.name,
+        full_name: bank.name,
+        email: bank.details,
+      });
     } else if (transactionType === "deposit") {
       setSelectedContact(hollerWalletContact);
     }

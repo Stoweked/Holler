@@ -2,13 +2,13 @@
 
 import { ActionIcon, Group, Text, Tooltip } from "@mantine/core";
 import { ArrowLeft02Icon } from "hugeicons-react";
-import { Recipient } from "@/features/contacts/types/recipient";
 import { TransactionActionType, TransactionStep } from "../../types/wallet";
+import { Contact } from "@/features/contacts/types/contact";
 
 interface TransactionDrawerTitleProps {
   step: TransactionStep;
   transactionType: TransactionActionType;
-  initialContact: Recipient | null;
+  initialContact: Contact | null;
   handleBack: () => void;
 }
 

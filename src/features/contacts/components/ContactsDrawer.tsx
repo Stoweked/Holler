@@ -1,13 +1,7 @@
 import { Drawer, Space } from "@mantine/core";
 import ContactsList from "./ContactList";
 import { mockContacts } from "@/mockData/mockContacts";
-
-interface Contact {
-  name: string;
-  avatar: string;
-  details: string;
-  topContact?: boolean;
-}
+import { Contact } from "../types/contact";
 
 interface ContactsDrawerProps {
   opened: boolean;

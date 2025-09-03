@@ -1,10 +1,10 @@
 // src/components/primaryActions/deposit/SelectBankStep.tsx
 import { mockBanks } from "@/mockData/mockBanks";
-import { Recipient } from "@/features/contacts/types/recipient";
 import BankList from "@/features/banks/components/BankList";
+import { TransactionRecipient } from "@/features/contacts/types/contact";
 
 interface SelectBankStepProps {
-  onSelectBank: (bank: Recipient) => void;
+  onSelectBank: (bank: TransactionRecipient) => void;
   onConnectNew?: () => void;
 }
 

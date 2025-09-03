@@ -1,6 +1,5 @@
-// /src/features/send-request/components/ConfirmationStep.tsx
+// /src/features/wallet/components/actions/ConfirmationStep.tsx
 
-import { Contact, Recipient } from "@/features/contacts/types/recipient";
 import { Waiver } from "@/features/waivers/types/waiver";
 import {
   Avatar,
@@ -26,10 +25,15 @@ import { useWallet } from "@/contexts/WalletContext";
 import { TransactionActionType } from "../../types/wallet";
 import TermsConditionsModal from "@/components/modals/TermsConditionsModal";
 import PrivacyPolicyModal from "@/components/modals/PrivacyPolicyModal";
+import {
+  Contact,
+  TransactionRecipient,
+} from "@/features/contacts/types/contact";
+import { getInitials } from "@/lib/hooks/getInitials";
 
 interface ConfirmationStepProps {
   contact: Contact;
-  bank: Recipient;
+  bank: TransactionRecipient;
   amount: string | number;
   note?: string;
   onConfirm: () => void;
@@ -87,7 +91,15 @@ export default function ConfirmationStep({
   const isTransfer = actionType === "transfer";
   const isDeposit = actionType === "deposit";
 
-  const toParty = isTransfer ? bank : contact;
+  // Create a unified object for the "To" party to simplify rendering
+  const toPartyDetails: TransactionRecipient = isTransfer
+    ? bank
+    : {
+        name: contact.full_name || "Unknown Contact",
+        details: contact.email || contact.phone_number || "",
+        avatar: contact.avatar_url || getInitials(contact.full_name),
+      };
+
   const fromParty = isTransfer
     ? {
         name: "Holler wallet",
@@ -95,6 +107,7 @@ export default function ConfirmationStep({
           style: "currency",
           currency: "USD",
         }),
+        avatar: "", // Not needed for wallet
       }
     : bank;
 
@@ -108,7 +121,7 @@ export default function ConfirmationStep({
               <Stack gap={0} miw={1} style={{ flex: 1 }}>
                 <Text c="dimmed">{to}</Text>
                 <Title order={4} lineClamp={3} lh={1.2}>
-                  {toParty.name}
+                  {toPartyDetails.name}
                 </Title>
                 <Text
                   size="xs"
@@ -120,7 +133,7 @@ export default function ConfirmationStep({
                     textOverflow: "ellipsis",
                   }}
                 >
-                  {toParty.details}
+                  {toPartyDetails.details}
                 </Text>
               </Stack>
               {isDeposit ? (
@@ -138,13 +151,13 @@ export default function ConfirmationStep({
                 </ThemeIcon>
               ) : (
                 <Avatar
-                  src={null}
-                  alt={contact.name}
+                  src={contact.avatar_url || null}
+                  alt={contact.full_name || "Contact"}
                   variant="light"
                   color="lime"
                   size={44}
                 >
-                  {contact.avatar}
+                  {getInitials(contact.full_name)}
                 </Avatar>
               )}
             </Group>

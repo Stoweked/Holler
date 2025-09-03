@@ -1,3 +1,5 @@
+// src/features/contacts/components/ContactList.tsx
+
 import { useState } from "react";
 import {
   Input,
@@ -16,7 +18,8 @@ import {
   Search01Icon,
   UserMultiple02Icon,
 } from "hugeicons-react";
-import { Contact } from "@/features/contacts/types/recipient";
+import { Contact } from "../types/contact";
+import { getInitials } from "@/lib/hooks/getInitials"; // Import the utility function
 
 interface ContactsListProps {
   contacts: Contact[];
@@ -35,17 +38,24 @@ export default function ContactsList({
     }
   };
 
-  const filteredContacts = contacts.filter(
-    (contact) =>
-      contact.name.toLowerCase().includes(searchValue.toLowerCase()) ||
-      contact.details.toLowerCase().includes(searchValue.toLowerCase())
-  );
+  const filteredContacts = contacts.filter((contact) => {
+    const searchTerm = searchValue.toLowerCase();
+    const fullName = contact.full_name?.toLowerCase() || "";
+    const email = contact.email?.toLowerCase() || "";
+    const phone = contact.phone_number || "";
+
+    return (
+      fullName.includes(searchTerm) ||
+      email.includes(searchTerm) ||
+      phone.includes(searchTerm)
+    );
+  });
 
   const topContacts = filteredContacts.filter((c) => c.topContact);
   const otherContacts = filteredContacts.filter((c) => !c.topContact);
 
   const groupedContacts = otherContacts.reduce((acc, contact) => {
-    const firstLetter = contact.name[0].toUpperCase();
+    const firstLetter = (contact.full_name || "#")[0].toUpperCase();
     if (!acc[firstLetter]) {
       acc[firstLetter] = [];
     }
@@ -58,7 +68,7 @@ export default function ContactsList({
   return (
     <Stack gap="lg">
       <Input
-        placeholder="Search name or number"
+        placeholder="Search name, email, or number"
         leftSection={<Search01Icon size={20} />}
         radius="xl"
         size="xl"
@@ -83,7 +93,6 @@ export default function ContactsList({
         }
       />
 
-      {/* Show content only if there are results */}
       {filteredContacts.length > 0 ? (
         <>
           {topContacts.length > 0 && (
@@ -94,10 +103,12 @@ export default function ContactsList({
               <Stack gap={0}>
                 {topContacts.map((contact) => (
                   <ContactItem
-                    key={contact.name}
-                    avatar={contact.avatar}
-                    name={contact.name}
-                    details={contact.details}
+                    key={contact.id}
+                    avatar={
+                      contact.avatar_url || getInitials(contact.full_name)
+                    }
+                    name={contact.full_name || "Unknown"}
+                    details={contact.email || contact.phone_number || ""}
                     onClick={() => handleContactClick(contact)}
                   />
                 ))}
@@ -105,7 +116,6 @@ export default function ContactsList({
             </Stack>
           )}
 
-          {/* Conditionally render the divider */}
           {showDivider && <Divider />}
 
           <Stack gap="lg">
@@ -119,10 +129,12 @@ export default function ContactsList({
                   <Stack gap={0}>
                     {groupedContacts[letter].map((contact) => (
                       <ContactItem
-                        key={contact.name}
-                        avatar={contact.avatar}
-                        name={contact.name}
-                        details={contact.details}
+                        key={contact.id}
+                        avatar={
+                          contact.avatar_url || getInitials(contact.full_name)
+                        }
+                        name={contact.full_name || "Unknown"}
+                        details={contact.email || contact.phone_number || ""}
                         onClick={() => handleContactClick(contact)}
                       />
                     ))}
@@ -132,7 +144,6 @@ export default function ContactsList({
           </Stack>
         </>
       ) : (
-        // Show a message and a create button if no results are found
         <Center>
           <Stack align="center" mt="xl" gap="lg">
             <UserMultiple02Icon size={40} color="grey" />
@@ -144,7 +155,6 @@ export default function ContactsList({
                 Try adjusting your search or invite a new contact.
               </Text>
             </Stack>
-
             <Button
               size="lg"
               radius="xl"

@@ -11,6 +11,7 @@ import ProfileDrawer from "@/features/account/components/AccountDrawer";
 import { logout } from "@/features/auth/actions/logout";
 import { useProfile } from "@/contexts/ProfileContext";
 import { useEffect } from "react";
+import { getInitials } from "@/lib/hooks/getInitials";
 
 export default function AccountAvatar() {
   const { profile, loading } = useProfile();
@@ -36,14 +37,6 @@ export default function AccountAvatar() {
       window.removeEventListener("open-feedback", handleOpenFeedback);
     };
   }, [openProfileDrawer, openFeedbackModal]);
-
-  const getInitials = (name: string | undefined) => {
-    if (!name) return "";
-    return name
-      .split(" ")
-      .map((n) => n[0])
-      .join("");
-  };
 
   return (
     <div>

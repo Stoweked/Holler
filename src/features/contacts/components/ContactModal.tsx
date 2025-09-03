@@ -1,4 +1,4 @@
-// stoweked/holler/Holler-main/src/components/profile/ProfileModal.tsx
+// src/features/contacts/components/ContactModal.tsx
 import {
   Stack,
   Avatar,
@@ -9,13 +9,8 @@ import {
   Modal,
 } from "@mantine/core";
 import { StarIcon } from "hugeicons-react";
-
-interface Contact {
-  name: string;
-  avatar: string;
-  details: string;
-  topContact?: boolean;
-}
+import { Contact } from "../types/contact";
+import { getInitials } from "@/lib/hooks/getInitials";
 
 interface ContactModalProps {
   opened: boolean;
@@ -61,8 +56,8 @@ export default function ContactModal({
     >
       <Stack gap="xl">
         <Stack align="center" gap="sm">
-          <Avatar color="lime" size={100} radius="50%">
-            <Title order={1}>{contact.avatar}</Title>
+          <Avatar src={contact.avatar_url} color="lime" size={100} radius="50%">
+            <Title order={1}>{getInitials(contact.full_name)}</Title>
           </Avatar>
           <Button
             variant="default"
@@ -73,10 +68,10 @@ export default function ContactModal({
           </Button>
           <Stack align="center" gap={4}>
             <Title order={2} ta="center">
-              {contact.name}
+              {contact.full_name}
             </Title>
             <Text c="dimmed" ta="center">
-              {contact.details}
+              {contact.email || contact.phone_number}
             </Text>
           </Stack>
         </Stack>

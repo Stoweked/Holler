@@ -1,16 +1,19 @@
 // /src/features/transactions/hooks/useTransactionConfirmation.ts
 
 import { notifications } from "@mantine/notifications";
-import { Recipient } from "@/features/contacts/types/recipient";
 import { Waiver } from "@/features/waivers/types/waiver";
 import { TransactionActionType, TransactionStep } from "../types/wallet";
+import {
+  Contact,
+  TransactionRecipient,
+} from "@/features/contacts/types/contact";
 
 interface ConfirmationParams {
   transactionType: TransactionActionType;
   amount: string | number;
   note: string;
-  selectedBank: Recipient | null;
-  selectedContact: Recipient | null;
+  selectedBank: TransactionRecipient | null;
+  selectedContact: Contact | null;
   selectedWaiver: Waiver | null;
   handleClose: () => void;
   setStep: (step: TransactionStep) => void;

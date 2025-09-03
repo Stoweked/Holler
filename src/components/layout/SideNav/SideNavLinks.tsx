@@ -12,12 +12,12 @@ import classes from "./SideNav.module.css";
 import { useDisclosure } from "@mantine/hooks";
 import LienWaiversDrawer from "@/features/waivers/components/LienWaiversDrawer";
 import { useState, useEffect } from "react";
-import { Contact } from "@/features/contacts/types/recipient";
 import ConnectedBanksDrawer from "@/features/banks/components/ConnectedBanksDrawer";
 import ContactsDrawer from "@/features/contacts/components/ContactsDrawer";
 import TransactionDrawer from "@/features/wallet/components/actions/TransactionDrawer";
 import { TransactionActionType } from "@/features/wallet/types/wallet";
 import ContactModal from "@/features/contacts/components/ContactModal";
+import { Contact } from "@/features/contacts/types/contact";
 
 interface SideNavLinksProps {
   closeMobileNav: () => void;

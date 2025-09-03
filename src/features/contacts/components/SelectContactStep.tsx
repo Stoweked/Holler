@@ -1,12 +1,6 @@
 import ContactsList from "@/features/contacts/components/ContactList";
 import { mockContacts } from "@/mockData/mockContacts";
-
-interface Contact {
-  name: string;
-  avatar: string;
-  details: string;
-  topContact?: boolean;
-}
+import { Contact } from "../types/contact";
 
 interface SelectContactStepProps {
   onSelectContact: (contact: Contact) => void;

@@ -2,7 +2,6 @@
 
 import { Drawer, Space } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { Recipient } from "@/features/contacts/types/recipient";
 import ConnectBankDrawer from "@/features/banks/components/ConnectBankDrawer";
 import { useTransactionState } from "../../hooks/useTransactionState";
 import { useTransactionConfirmation } from "../../hooks/useTransactionConfirmation";
@@ -10,12 +9,16 @@ import TransactionDrawerTitle from "./TransactionDrawerTitle";
 import TransactionDrawerContent from "./TransactionDrawerContent";
 import classes from "./Actions.module.css";
 import { TransactionActionType } from "../../types/wallet";
+import {
+  Contact,
+  TransactionRecipient,
+} from "@/features/contacts/types/contact";
 
 interface TransactionDrawerProps {
   opened: boolean;
   close: () => void;
   transactionType: TransactionActionType;
-  initialContact?: Recipient | null;
+  initialContact?: Contact | null;
 }
 
 export default function TransactionDrawer({
