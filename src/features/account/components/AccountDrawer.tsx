@@ -21,13 +21,13 @@ import {
   OfficeIcon,
   UserIcon,
 } from "hugeicons-react";
-import { AccountSettings } from "./tabs/account/AccountSettings";
 import { NotificationsSettings } from "./tabs/NotificationsSettings";
 import { BillingSettings } from "./tabs/BillingSettings";
 import { useEffect, useState } from "react";
 import { useViewportSize } from "@mantine/hooks";
 import { useProfile } from "@/contexts/ProfileContext";
-import AccountCard from "./tabs/account/AccountCard";
+import AccountCard from "./tabs/profile/ProfileCard";
+import AccountProfile from "./tabs/profile/AccountProfile";
 
 interface AccountDrawerProps {
   opened: boolean;
@@ -209,7 +209,7 @@ export default function AccountDrawer({
                 </Tabs.Panel>
 
                 <Tabs.Panel value="profile" pt="lg">
-                  <AccountCard />
+                  <AccountProfile />
                   <Space h={100} />
                 </Tabs.Panel>
 

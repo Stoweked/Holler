@@ -22,7 +22,7 @@ import { usStates } from "@/lib/data/usStates";
 import { useProfile } from "@/contexts/ProfileContext";
 import { getInitials } from "@/lib/hooks/getInitials";
 
-export default function AccountCard() {
+export default function ProfileCard() {
   const { profile } = useProfile();
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -88,14 +88,7 @@ export default function AccountCard() {
           /* Initial state */
           <Stack>
             <Group align="center" justify="space-between" wrap="nowrap">
-              <Group wrap="nowrap" gap="xs">
-                <ThemeIcon size="sm" color="gray" variant="default" radius="xl">
-                  <UserIcon style={{ width: "70%", height: "70%" }} />
-                </ThemeIcon>
-                <Title order={5} lh={1.2} style={{ letterSpacing: "-0.5px" }}>
-                  Profile
-                </Title>
-              </Group>
+              <Title order={5}>Your profile</Title>
 
               <Button
                 size="compact-sm"
@@ -151,12 +144,8 @@ export default function AccountCard() {
           /* Editing state */
           <Stack>
             <Group align="center" justify="space-between" wrap="nowrap">
-              <Group wrap="nowrap" gap="xs">
-                <ThemeIcon size="sm" color="gray" variant="default" radius="xl">
-                  <UserIcon style={{ width: "70%", height: "70%" }} />
-                </ThemeIcon>
-                <Title order={5}>Profile</Title>
-              </Group>
+              <Title order={5}>Your profile</Title>
+
               <Button size="compact-sm" variant="subtle" disabled>
                 Editing
               </Button>
