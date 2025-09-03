@@ -1,9 +1,13 @@
 import { ActionIcon, Avatar, Menu } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { Logout02Icon, PencilEdit01Icon, UserIcon } from "hugeicons-react";
+import {
+  Logout02Icon,
+  PencilEdit01Icon,
+  UserCircleIcon,
+} from "hugeicons-react";
 import FeedbackModal from "./FeedbackModal";
 import { ColorSchemeMenuItem } from "./ColorSchemeMenuItem";
-import ProfileDrawer from "@/features/profile/components/AccountDrawer";
+import ProfileDrawer from "@/features/account/components/AccountDrawer";
 import { logout } from "@/features/auth/actions/logout";
 import { useProfile } from "@/contexts/ProfileContext";
 import { useEffect } from "react";
@@ -59,7 +63,7 @@ export default function AccountAvatar() {
 
         <Menu.Dropdown>
           <Menu.Item
-            leftSection={<UserIcon size={16} />}
+            leftSection={<UserCircleIcon size={16} />}
             onClick={openProfileDrawer}
           >
             Your account
@@ -84,9 +88,7 @@ export default function AccountAvatar() {
       <ProfileDrawer
         opened={openedProfileDrawer}
         close={closeProfileDrawer}
-        profile={profile}
         position="right"
-        showButtons={false}
       />
     </div>
   );
