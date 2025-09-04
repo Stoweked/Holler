@@ -11,7 +11,7 @@ import {
   Title,
   rem,
 } from "@mantine/core";
-import classes from "./Account.module.css";
+import classes from "./Settings.module.css";
 import {
   ArrowLeft02Icon,
   Cancel01Icon,
@@ -20,27 +20,25 @@ import {
   OfficeIcon,
   UserIcon,
 } from "hugeicons-react";
-import { NotificationsSettings } from "./tabs/NotificationsSettings";
-import { BillingSettings } from "./tabs/BillingSettings";
 import { useEffect, useState } from "react";
 import { useViewportSize } from "@mantine/hooks";
 import { useProfile } from "@/contexts/ProfileContext";
 import OptionButton from "@/components/shared/OptionButton/OptionButton";
-import Account from "./tabs/profile/Account";
+import Account from "./sections/account/Account";
 
-interface AccountDrawerProps {
+interface SettingsDrawerProps {
   opened: boolean;
   close: () => void;
   position?: "left" | "right";
   initialTab?: string;
 }
 
-export default function AccountDrawer({
+export default function SettingsDrawer({
   opened,
   close,
   position = "right",
   initialTab = "account",
-}: AccountDrawerProps) {
+}: SettingsDrawerProps) {
   const [activeTab, setActiveTab] = useState<string | null>("account");
   const { profile } = useProfile();
   const { height } = useViewportSize();

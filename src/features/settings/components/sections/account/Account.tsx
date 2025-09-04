@@ -1,5 +1,5 @@
 import { Space, Stack } from "@mantine/core";
-import ProfileCard from "./ProfileCard";
+import ProfileCard from "./profile/ProfileCard";
 import ColorModeCard from "./ColorModeCard";
 import ResetPasswordCard from "./ResetPasswordCard";
 import DeleteAccountCard from "./DeleteAccountCard";

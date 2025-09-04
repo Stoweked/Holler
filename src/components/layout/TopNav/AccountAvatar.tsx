@@ -7,11 +7,11 @@ import {
 } from "hugeicons-react";
 import FeedbackModal from "./FeedbackModal";
 import { ColorSchemeMenuItem } from "./ColorSchemeMenuItem";
-import ProfileDrawer from "@/features/account/components/AccountDrawer";
 import { logout } from "@/features/auth/actions/logout";
 import { useProfile } from "@/contexts/ProfileContext";
 import { useEffect } from "react";
 import { getInitials } from "@/lib/hooks/getInitials";
+import SettingsDrawer from "@/features/settings/components/SettingsDrawer";
 
 export default function AccountAvatar() {
   const { profile, loading } = useProfile();
@@ -78,7 +78,7 @@ export default function AccountAvatar() {
 
       <FeedbackModal opened={openedFeedbackModal} close={closeFeedbackModal} />
 
-      <ProfileDrawer
+      <SettingsDrawer
         opened={openedProfileDrawer}
         close={closeProfileDrawer}
         position="right"

@@ -6,6 +6,7 @@ import {
   BankIcon,
   ClipboardIcon,
   Message01Icon,
+  Settings01Icon,
   UserMultiple02Icon,
 } from "hugeicons-react";
 import classes from "./SideNav.module.css";
@@ -18,6 +19,7 @@ import TransactionDrawer from "@/features/wallet/components/actions/TransactionD
 import { TransactionActionType } from "@/features/wallet/types/wallet";
 import ContactModal from "@/features/contacts/components/ContactModal";
 import { Contact } from "@/features/contacts/types/contact";
+import SettingsDrawer from "@/features/settings/components/SettingsDrawer";
 
 interface SideNavLinksProps {
   closeMobileNav: () => void;
@@ -25,7 +27,6 @@ interface SideNavLinksProps {
 
 export default function SideNavLinks({ closeMobileNav }: SideNavLinksProps) {
   const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
-  // Use the correct type for state
   const [transactionType, setTransactionType] =
     useState<TransactionActionType>("send");
 
@@ -45,6 +46,11 @@ export default function SideNavLinks({ closeMobileNav }: SideNavLinksProps) {
   ] = useDisclosure(false);
 
   const [
+    openedSettingsDrawer,
+    { open: openSettingsDrawer, close: closeSettingsDrawer },
+  ] = useDisclosure(false);
+
+  const [
     openedProfileDrawer,
     { open: openProfileDrawer, close: closeProfileDrawer },
   ] = useDisclosure(false);
@@ -57,15 +63,18 @@ export default function SideNavLinks({ closeMobileNav }: SideNavLinksProps) {
   useEffect(() => {
     const handleOpenContacts = () => openContactsDrawer();
     const handleOpenBanks = () => openConnectedBanksDrawer();
+    const handleOpenAccount = () => openSettingsDrawer();
 
     window.addEventListener("open-contacts", handleOpenContacts);
     window.addEventListener("open-banks", handleOpenBanks);
+    window.addEventListener("open-account", handleOpenAccount);
 
     return () => {
       window.removeEventListener("open-contacts", handleOpenContacts);
       window.removeEventListener("open-banks", handleOpenBanks);
+      window.removeEventListener("open-account", handleOpenAccount);
     };
-  }, [openContactsDrawer, openConnectedBanksDrawer]);
+  }, [openContactsDrawer, openConnectedBanksDrawer, openSettingsDrawer]);
 
   const handleContactClick = (contact: Contact) => {
     setSelectedContact(contact);
@@ -73,7 +82,6 @@ export default function SideNavLinks({ closeMobileNav }: SideNavLinksProps) {
     closeMobileNav();
   };
 
-  // Use the correct type in the handler function
   const handleTransactionStart = (
     contact: Contact,
     type: TransactionActionType
@@ -100,6 +108,11 @@ export default function SideNavLinks({ closeMobileNav }: SideNavLinksProps) {
     openLienWaiversDrawer();
   };
 
+  const handleSettingsClick = () => {
+    closeMobileNav();
+    openSettingsDrawer();
+  };
+
   return (
     <div>
       <NavLink
@@ -113,14 +126,12 @@ export default function SideNavLinks({ closeMobileNav }: SideNavLinksProps) {
 
       <NavLink
         label={
-          <>
-            <Group wrap="nowrap" gap="xs">
-              Bank accounts
-              <Badge variant="default" size="sm">
-                3
-              </Badge>
-            </Group>
-          </>
+          <Group wrap="nowrap" gap="xs">
+            Bank accounts
+            <Badge variant="default" size="sm">
+              3
+            </Badge>
+          </Group>
         }
         leftSection={<BankIcon size={20} />}
         rightSection={<ArrowRight01Icon size={24} color="grey" />}
@@ -136,6 +147,15 @@ export default function SideNavLinks({ closeMobileNav }: SideNavLinksProps) {
         className={classes.navLink}
         classNames={{ label: classes.label }}
         onClick={handleLienWaiversClick}
+      />
+
+      <NavLink
+        label="Settings"
+        leftSection={<Settings01Icon size={20} />}
+        rightSection={<ArrowRight01Icon size={24} color="grey" />}
+        className={classes.navLink}
+        classNames={{ label: classes.label }}
+        onClick={handleSettingsClick}
       />
 
       <NavLink
@@ -158,6 +178,10 @@ export default function SideNavLinks({ closeMobileNav }: SideNavLinksProps) {
       <LienWaiversDrawer
         opened={openedLienWaiversDrawer}
         close={closeLienWaiversDrawer}
+      />
+      <SettingsDrawer
+        opened={openedSettingsDrawer}
+        close={closeSettingsDrawer}
       />
       <ContactModal
         opened={openedProfileDrawer}

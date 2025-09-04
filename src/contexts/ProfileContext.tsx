@@ -10,7 +10,7 @@ import {
 import { createClient } from "@/lib/supabase/client";
 import { User, RealtimePostgresChangesPayload } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
-import { Profile } from "@/features/account/types/account";
+import { Profile } from "@/features/settings/types/account";
 
 interface ProfileContextType {
   user: User | null;
