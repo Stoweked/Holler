@@ -4,6 +4,6 @@ export * from "./tabs/BillingSettings";
 export * from "./tabs/AchievementsSettings";
 export * from "./tabs/profile/ProfileCard";
 export * from "./tabs/profile/ResetPasswordCard";
-export * from "./tabs/profile/AccountProfile";
+export * from "./tabs/profile/Account";
 export * from "./tabs/profile/ColorModeCard";
 export * from "./tabs/profile/DeleteAccountCard";

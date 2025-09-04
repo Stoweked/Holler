@@ -4,7 +4,7 @@ import ColorModeCard from "./ColorModeCard";
 import ResetPasswordCard from "./ResetPasswordCard";
 import DeleteAccountCard from "./DeleteAccountCard";
 
-export default function AccountProfile() {
+export default function Account() {
   return (
     <Stack gap="lg">
       <ProfileCard />

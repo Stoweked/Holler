@@ -25,8 +25,8 @@ import { BillingSettings } from "./tabs/BillingSettings";
 import { useEffect, useState } from "react";
 import { useViewportSize } from "@mantine/hooks";
 import { useProfile } from "@/contexts/ProfileContext";
-import AccountProfile from "./tabs/profile/AccountProfile";
 import OptionButton from "@/components/shared/OptionButton/OptionButton";
+import Account from "./tabs/profile/Account";
 
 interface AccountDrawerProps {
   opened: boolean;
@@ -39,9 +39,9 @@ export default function AccountDrawer({
   opened,
   close,
   position = "right",
-  initialTab = "profile",
+  initialTab = "account",
 }: AccountDrawerProps) {
-  const [activeTab, setActiveTab] = useState<string | null>("profile");
+  const [activeTab, setActiveTab] = useState<string | null>("account");
   const { profile } = useProfile();
   const { height } = useViewportSize();
 
@@ -91,7 +91,7 @@ export default function AccountDrawer({
             ) : null}
 
             <Title order={5} style={{ flexShrink: "0" }}>
-              Account
+              Settings
             </Title>
           </Group>
 
@@ -112,7 +112,7 @@ export default function AccountDrawer({
           radius="md"
           variant="pills"
           orientation="vertical"
-          defaultValue="profile"
+          defaultValue="account"
           value={activeTab}
           onChange={setActiveTab}
           classNames={{
@@ -129,11 +129,11 @@ export default function AccountDrawer({
               <Tabs.List>
                 <Stack gap="sm">
                   <Tabs.Tab
-                    value="profile"
+                    value="account"
                     leftSection={<UserIcon size={16} />}
-                    aria-label="Profile"
+                    aria-label="Account"
                   >
-                    Profile
+                    Account
                   </Tabs.Tab>
                   <Tabs.Tab
                     value="business"
@@ -166,8 +166,8 @@ export default function AccountDrawer({
                   <Stack gap="lg" h={height}>
                     <OptionButton
                       icon={<UserIcon size={24} />}
-                      label="Profile"
-                      onClick={() => setActiveTab("profile")}
+                      label="Account"
+                      onClick={() => setActiveTab("account")}
                     />
                     <OptionButton
                       icon={<OfficeIcon size={24} />}
@@ -187,8 +187,8 @@ export default function AccountDrawer({
                   </Stack>
                 </Tabs.Panel>
 
-                <Tabs.Panel value="profile" pt="lg">
-                  <AccountProfile />
+                <Tabs.Panel value="account" pt="lg">
+                  <Account />
                 </Tabs.Panel>
 
                 <Tabs.Panel value="business" pt="lg">
