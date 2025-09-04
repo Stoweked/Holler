@@ -189,7 +189,6 @@ export default function AccountDrawer({
 
                 <Tabs.Panel value="profile" pt="lg">
                   <AccountProfile />
-                  <Space h={100} />
                 </Tabs.Panel>
 
                 <Tabs.Panel value="business" pt="lg">

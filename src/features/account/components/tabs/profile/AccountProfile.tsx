@@ -1,4 +1,4 @@
-import { Stack } from "@mantine/core";
+import { Space, Stack } from "@mantine/core";
 import ProfileCard from "./ProfileCard";
 import ColorModeCard from "./ColorModeCard";
 import ResetPasswordCard from "./ResetPasswordCard";
@@ -11,6 +11,7 @@ export default function AccountProfile() {
       <ColorModeCard />
       <ResetPasswordCard />
       <DeleteAccountCard />
+      <Space h={100} />
     </Stack>
   );
 }
