@@ -39,7 +39,7 @@ export default function AccountAvatar() {
   }, [openProfileDrawer, openFeedbackModal]);
 
   return (
-    <div>
+    <>
       <Menu shadow="md" width={170} position="bottom-end">
         <Menu.Target>
           <ActionIcon
@@ -48,7 +48,13 @@ export default function AccountAvatar() {
             size={38}
             aria-label="Profile menu"
           >
-            <Avatar radius="xl" color="lime" variant="filled">
+            <Avatar
+              src={profile?.avatar_url}
+              radius="xl"
+              color="lime"
+              variant="filled"
+              size={38}
+            >
               {!loading && profile ? getInitials(profile.full_name) : null}
             </Avatar>
           </ActionIcon>
@@ -83,6 +89,6 @@ export default function AccountAvatar() {
         close={closeProfileDrawer}
         position="right"
       />
-    </div>
+    </>
   );
 }

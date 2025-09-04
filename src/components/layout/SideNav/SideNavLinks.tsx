@@ -117,7 +117,7 @@ export default function SideNavLinks({ closeMobileNav }: SideNavLinksProps) {
 
   const handleSettingsClick = () => {
     closeMobileNav();
-    setInitialSettingsTab("account"); // Default to account tab on manual click
+    setInitialSettingsTab("account");
     openSettingsDrawer();
   };
 

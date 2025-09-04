@@ -35,7 +35,7 @@ export function useProfileForm({
       formZip: profile?.zip || "",
       avatar_url: profile?.avatar_url || "",
       newAvatarFile: null as File | null,
-      avatarPreviewUrl: profile?.avatar_url || "", // Initialize preview with existing URL
+      avatarPreviewUrl: profile?.avatar_url || "",
     },
     validate: {
       formName: hasLength({ min: 2 }, "Name must have at least 2 letters"),
@@ -52,25 +52,24 @@ export function useProfileForm({
   });
 
   useEffect(() => {
-    if (profile) {
-      // Only reset the form if it's not already dirty
-      if (!form.isDirty()) {
-        form.setValues({
-          formName: profile.full_name || "",
-          formEmail: profile.email || "",
-          formPhone: profile.phone_number || "",
-          formDob: profile.dob ? dayjs(profile.dob).toDate() : null,
-          formGender: profile.gender || null,
-          formAddress1: profile.address1 || "",
-          formAddress2: profile.address2 || "",
-          formCity: profile.city || "",
-          formState: profile.state || "",
-          formZip: profile.zip || "",
-          avatar_url: profile.avatar_url || "",
-          newAvatarFile: null,
-          avatarPreviewUrl: profile.avatar_url || "", // Ensure preview is updated
-        });
-      }
+    // This is the key change: Only set form values if the form is not dirty.
+    // This prevents the context from overwriting the user's changes, including the avatar preview.
+    if (profile && !form.isDirty()) {
+      form.setValues({
+        formName: profile.full_name || "",
+        formEmail: profile.email || "",
+        formPhone: profile.phone_number || "",
+        formDob: profile.dob ? dayjs(profile.dob).toDate() : null,
+        formGender: profile.gender || null,
+        formAddress1: profile.address1 || "",
+        formAddress2: profile.address2 || "",
+        formCity: profile.city || "",
+        formState: profile.state || "",
+        formZip: profile.zip || "",
+        avatar_url: profile.avatar_url || "",
+        newAvatarFile: null,
+        avatarPreviewUrl: profile.avatar_url || "",
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile]);
@@ -135,9 +134,9 @@ export function useProfileForm({
       if (values.formEmail !== profile?.email) {
         setEmailPending(true);
       }
-      fetchProfile(); // Now we fetch the profile to get the canonical new state
+      fetchProfile();
       onSaveSuccess();
-      form.resetDirty(); // This will now use the newly fetched profile data
+      form.resetDirty();
       notifications.show({
         title: "Profile updated",
         message: "Your profile has been updated successfully.",
@@ -155,7 +154,6 @@ export function useProfileForm({
   };
 
   const handleAvatarUploadAction = (file: File | null) => {
-    // Clean up the old preview URL to prevent memory leaks
     if (
       form.values.avatarPreviewUrl &&
       form.values.avatarPreviewUrl.startsWith("blob:")
@@ -169,7 +167,6 @@ export function useProfileForm({
       form.setFieldValue("avatarPreviewUrl", previewUrl);
     } else {
       form.setFieldValue("newAvatarFile", null);
-      // Revert to the original avatar if the user cancels the file selection
       form.setFieldValue("avatarPreviewUrl", profile?.avatar_url || "");
     }
   };
