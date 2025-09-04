@@ -31,16 +31,15 @@ export async function signupComplete(formData: FormData) {
   });
 
   if (signUpError) {
-    // If user already exists, redirect to login page with a message
+    // Special case: If user exists, redirect to login with a message.
     if (signUpError.message.includes("User already registered")) {
       return redirect(
         `/login?message=An account with this email already exists. Please log in.`
       );
     }
-
-    // For other errors, redirect back to signup page
+    // For other errors, return an error object
     console.error("Supabase signup error:", signUpError.message);
-    return redirect(`/signup?error=${encodeURIComponent(signUpError.message)}`);
+    return { error: signUpError.message };
   }
 
   if (user) {
@@ -54,13 +53,10 @@ export async function signupComplete(formData: FormData) {
 
     if (profileError) {
       console.error("Error updating profile:", profileError);
-      return redirect(
-        `/signup/multi-step?email=${encodeURIComponent(
-          email
-        )}&error=${encodeURIComponent(profileError.message)}`
-      );
+      return { error: profileError.message };
     }
   }
 
+  // Only redirect on success
   return redirect("/dashboard");
 }

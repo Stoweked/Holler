@@ -1,4 +1,4 @@
-// stoweked/holler/Holler-main/src/features/auth/hooks/useMultiStepSignupForm.ts
+// src/features/auth/hooks/useMultiStepSignupForm.ts
 import { useForm } from "@mantine/form";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -6,6 +6,7 @@ import { updateProfile } from "@/features/auth/actions/update-profile";
 import { createClient } from "@/lib/supabase/client";
 import { signupComplete } from "@/features/auth/actions/signup-complete";
 import { MultiStepSignupFormValues } from "../types/signup";
+import { notifications } from "@mantine/notifications"; // Import notifications
 
 export function useMultiStepSignupForm() {
   const router = useRouter();
@@ -85,6 +86,7 @@ export function useMultiStepSignupForm() {
     }
   };
 
+  // --- THIS IS THE ONLY MODIFIED FUNCTION ---
   const handleFinalSubmit = async (values: typeof form.values) => {
     setLoading(true);
     const formData = new FormData();
@@ -95,7 +97,16 @@ export function useMultiStepSignupForm() {
     if (isAuthenticated) {
       await updateProfile(formData);
     } else {
-      await signupComplete(formData);
+      const result = await signupComplete(formData);
+
+      if (result?.error) {
+        notifications.show({
+          title: "Sign up failed",
+          message: result.error,
+          color: "red",
+        });
+        setLoading(false);
+      }
     }
   };
 

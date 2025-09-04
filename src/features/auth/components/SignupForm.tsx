@@ -1,4 +1,4 @@
-// src/features/auth/components/LoginForm.tsx
+// src/features/auth/components/SignUpForm.tsx
 "use client";
 
 import {
@@ -7,55 +7,60 @@ import {
   Button,
   Divider,
   Paper,
-  PasswordInput,
   Stack,
   Text,
   TextInput,
   Title,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { login } from "../../../features/auth/actions/login";
-import { Alert01Icon, UserLove01Icon } from "hugeicons-react";
+import { signup } from "@/features/auth/actions/signup";
+import { UserIcon } from "hugeicons-react";
 import { useState } from "react";
 import { OAuthButtons } from "@/features/auth/components";
 import { notifications } from "@mantine/notifications";
 
-export default function LoginForm() {
+export default function SignUpForm() {
   const [isLoading, setIsLoading] = useState(false);
 
-  // Mantine form hook for state management and validation
   const form = useForm({
     initialValues: {
       email: "",
-      password: "",
     },
-    // Validation rules for each field
     validate: {
       email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
-      password: (value) =>
-        value.trim().length === 0 ? "Password is required" : null,
     },
   });
 
-  // Handle form submission
   const handleSubmit = async (values: typeof form.values) => {
     setIsLoading(true);
     const formData = new FormData();
     formData.append("email", values.email);
-    formData.append("password", values.password);
-
-    const result = await login(formData);
+    const result = await signup(formData);
 
     if (result?.error) {
-      notifications.show({
-        title: "Login failed",
-        message: result.error,
-        icon: <Alert01Icon size={20} />,
-        color: "red",
-      });
+      // Check for the specific "account exists" error message
+      if (result.error.includes("already exists")) {
+        notifications.show({
+          title: "Account exists",
+          message: (
+            <>
+              {result.error}{" "}
+              <Anchor href="/login" size="sm">
+                Log in
+              </Anchor>
+            </>
+          ),
+        });
+      } else {
+        // Show a generic error for anything else
+        notifications.show({
+          title: "Sign-up Failed",
+          message: "An unexpected error occurred. Please try again.",
+          color: "red",
+        });
+      }
+      setIsLoading(false);
     }
-    // The redirect will happen on success, so we only need to handle the loading state for the error case.
-    setIsLoading(false);
   };
 
   return (
@@ -69,17 +74,17 @@ export default function LoginForm() {
       <Paper withBorder shadow="lg" p="lg" radius="lg" maw={420} w="100%">
         <Stack gap="lg">
           <Avatar variant="default" size="md">
-            <UserLove01Icon size={20} />
+            <UserIcon size={20} />
           </Avatar>
           <Stack gap={0}>
-            <Title order={2}>Welcome back</Title>
-            <Text c="dimmed">Enter your credentials to continue.</Text>
+            <Title order={2}>Create an account</Title>
+            <Text c="dimmed">Enter your email to get started.</Text>
           </Stack>
 
           <OAuthButtons />
 
           <Divider
-            label="Or log in with email"
+            label="Or sign up with email"
             labelPosition="center"
             my="xs"
           />
@@ -87,26 +92,14 @@ export default function LoginForm() {
           <form onSubmit={form.onSubmit(handleSubmit)}>
             <Stack>
               <TextInput
+                required
                 size="lg"
                 radius="md"
-                required
-                name="email"
                 label="Email"
+                name="email"
                 placeholder="Your email address"
                 {...form.getInputProps("email")}
               />
-              <PasswordInput
-                size="lg"
-                radius="md"
-                required
-                name="password"
-                label="Password"
-                placeholder="Your password"
-                {...form.getInputProps("password")}
-              />
-              <Anchor href="/forgot-password" size="sm" ta="right">
-                Forgot password?
-              </Anchor>
               <Button
                 type="submit"
                 fullWidth
@@ -114,15 +107,15 @@ export default function LoginForm() {
                 size="lg"
                 loading={isLoading}
               >
-                Log in
+                Continue
               </Button>
             </Stack>
           </form>
 
           <Text c="dimmed" size="sm" ta="center">
-            Don&apos;t have an account?{" "}
-            <Anchor href="/signup" size="sm">
-              Sign up
+            Already have an account?{" "}
+            <Anchor href="/login" size="sm">
+              Log in
             </Anchor>
           </Text>
         </Stack>

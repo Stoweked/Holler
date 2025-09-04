@@ -1,4 +1,4 @@
-// /src/app/forgot-password/page.tsx
+// src/app/(auth)/forgot-password/page.tsx
 "use client";
 
 import {
@@ -12,9 +12,33 @@ import {
   Title,
 } from "@mantine/core";
 import { requestPasswordReset } from "../../../features/auth/actions/forgot-password";
-import { Shield01Icon } from "hugeicons-react";
+import { InformationCircleIcon, Shield01Icon } from "hugeicons-react";
+import { notifications } from "@mantine/notifications";
+import { useState } from "react";
 
 export default function ForgotPasswordPage() {
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (formData: FormData) => {
+    setLoading(true);
+    const result = await requestPasswordReset(formData);
+    setLoading(false);
+
+    if (result?.error) {
+      notifications.show({
+        title: "Error",
+        message: result.error,
+        color: "red",
+      });
+    } else {
+      notifications.show({
+        title: "Check your email",
+        message: "A password reset link has been sent to your email address.",
+        icon: <InformationCircleIcon size={20} />,
+      });
+    }
+  };
+
   return (
     <Stack
       align="center"
@@ -33,7 +57,7 @@ export default function ForgotPasswordPage() {
             <Text c="dimmed">Enter your email to get a reset link.</Text>
           </Stack>
 
-          <form action={requestPasswordReset}>
+          <form action={handleSubmit}>
             <Stack>
               <TextInput
                 size="lg"
@@ -43,7 +67,13 @@ export default function ForgotPasswordPage() {
                 label="Email"
                 placeholder="Your email address"
               />
-              <Button type="submit" fullWidth mt="md" size="lg">
+              <Button
+                type="submit"
+                fullWidth
+                mt="md"
+                size="lg"
+                loading={loading}
+              >
                 Send reset link
               </Button>
             </Stack>

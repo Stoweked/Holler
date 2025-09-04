@@ -1,8 +1,10 @@
 "use client";
 
 import { Button, Group, Paper, Stack, Text, Title } from "@mantine/core";
+import { useRouter } from "next/navigation";
 
 export default function ResetPasswordCard() {
+  const router = useRouter();
   return (
     <Paper withBorder radius="lg" shadow="xs" p="md">
       <Group justify="space-between">
@@ -12,7 +14,12 @@ export default function ResetPasswordCard() {
             Reset the password for this account.
           </Text>
         </Stack>
-        <Button variant="default" aria-label="Reset password" size="md">
+        <Button
+          variant="default"
+          aria-label="Reset password"
+          size="md"
+          onClick={() => router.push("/reset-password")}
+        >
           Reset password
         </Button>
       </Group>

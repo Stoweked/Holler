@@ -27,6 +27,7 @@ export const theme = createTheme({
       defaultProps: {
         radius: "lg",
         withBorder: true,
+        color: "none",
       },
       styles: {
         root: {

@@ -1,8 +1,7 @@
-// app/forgot-password/actions.ts
+// src/features/auth/actions/forgot-password.ts
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import { redirect } from "next/navigation";
 
 export async function requestPasswordReset(formData: FormData) {
   const email = formData.get("email") as string;
@@ -13,12 +12,8 @@ export async function requestPasswordReset(formData: FormData) {
   });
 
   if (error) {
-    return redirect(
-      "/forgot-password?message=Could not request password reset"
-    );
+    return { error: "Could not send password reset link." };
   }
 
-  return redirect(
-    "/forgot-password?message=Password reset link sent to your email"
-  );
+  return { success: true };
 }
