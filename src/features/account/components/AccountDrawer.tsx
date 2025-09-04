@@ -3,7 +3,6 @@ import {
   Box,
   Drawer,
   Group,
-  NavLink,
   ScrollArea,
   Skeleton,
   Space,
@@ -26,8 +25,8 @@ import { BillingSettings } from "./tabs/BillingSettings";
 import { useEffect, useState } from "react";
 import { useViewportSize } from "@mantine/hooks";
 import { useProfile } from "@/contexts/ProfileContext";
-import AccountCard from "./tabs/profile/ProfileCard";
 import AccountProfile from "./tabs/profile/AccountProfile";
+import OptionButton from "@/components/shared/OptionButton/OptionButton";
 
 interface AccountDrawerProps {
   opened: boolean;
@@ -125,7 +124,7 @@ export default function AccountDrawer({
             tabSection: classes.tabSection,
           }}
         >
-          <Group gap="lg" wrap="nowrap" align="flex-start" w="100%">
+          <Group gap="md" wrap="nowrap" align="flex-start" w="100%">
             <Stack visibleFrom="sm" pt="lg">
               <Tabs.List>
                 <Stack gap="sm">
@@ -164,45 +163,25 @@ export default function AccountDrawer({
             <Stack w="100%" px="lg" className={classes.sectionWrapper}>
               <ScrollArea type="never" h={height}>
                 <Tabs.Panel value="menu" pt="lg" hiddenFrom="sm">
-                  <Stack gap={8} h={height}>
-                    <NavLink
+                  <Stack gap="lg" h={height}>
+                    <OptionButton
+                      icon={<UserIcon size={24} />}
                       label="Profile"
-                      leftSection={<UserIcon size="1rem" />}
-                      classNames={{
-                        root: classes.navLinkRoot,
-                        label: classes.navLinkLabel,
-                        body: classes.navLinkBody,
-                      }}
                       onClick={() => setActiveTab("profile")}
                     />
-                    <NavLink
+                    <OptionButton
+                      icon={<OfficeIcon size={24} />}
                       label="Business"
-                      leftSection={<OfficeIcon size="1rem" />}
-                      classNames={{
-                        root: classes.navLinkRoot,
-                        label: classes.navLinkLabel,
-                        body: classes.navLinkBody,
-                      }}
                       onClick={() => setActiveTab("business")}
                     />
-                    <NavLink
+                    <OptionButton
+                      icon={<Notification01Icon size={24} />}
                       label="Notifications"
-                      leftSection={<Notification01Icon size="1rem" />}
-                      classNames={{
-                        root: classes.navLinkRoot,
-                        label: classes.navLinkLabel,
-                        body: classes.navLinkBody,
-                      }}
                       onClick={() => setActiveTab("notifications")}
                     />
-                    <NavLink
+                    <OptionButton
+                      icon={<CreditCardIcon size={24} />}
                       label="Billing"
-                      leftSection={<CreditCardIcon size="1rem" />}
-                      classNames={{
-                        root: classes.navLinkRoot,
-                        label: classes.navLinkLabel,
-                        body: classes.navLinkBody,
-                      }}
                       onClick={() => setActiveTab("billing")}
                     />
                   </Stack>

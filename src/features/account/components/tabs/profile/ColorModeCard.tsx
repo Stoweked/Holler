@@ -41,7 +41,7 @@ export default function ColorModeCard() {
         </Stack>
         <SegmentedControl
           value={mode}
-          size="lg"
+          size="xl"
           onChange={handleModeChange}
           radius="xl"
           data={[

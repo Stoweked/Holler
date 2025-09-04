@@ -7,7 +7,6 @@ import {
   Text,
   Title,
   Tooltip,
-  UnstyledButton,
   Center,
 } from "@mantine/core";
 import WaiverItem from "./WaiverItem";
@@ -21,6 +20,7 @@ import {
 import { useState } from "react";
 import classes from "./Waivers.module.css";
 import { Waiver } from "../types/waiver";
+import OptionButton from "@/components/shared/OptionButton/OptionButton";
 
 interface WaiverInitialStepProps {
   onNew: () => void;
@@ -122,27 +122,16 @@ export default function WaiverInitialStep({
 
       {/* Create buttons */}
       <Group grow className={classes.buttonGroup}>
-        <UnstyledButton
-          aria-label="Create new waiver"
-          className={classes.createButton}
+        <OptionButton
+          icon={<PlusSignIcon size={24} />}
+          label="Create new waiver"
           onClick={onNew}
-        >
-          <Stack gap="xs" align="center">
-            <PlusSignIcon size={24} />
-            <Text ta="center">Create new waiver</Text>
-          </Stack>
-        </UnstyledButton>
-
-        <UnstyledButton
-          aria-label="Start from template"
-          className={classes.createButton}
+        />
+        <OptionButton
+          icon={<DocumentValidationIcon size={24} />}
+          label="Start from template"
           onClick={onTemplate}
-        >
-          <Stack gap="xs" align="center">
-            <DocumentValidationIcon size={24} />
-            <Text ta="center">Start from template</Text>
-          </Stack>
-        </UnstyledButton>
+        />
       </Group>
     </Stack>
   );

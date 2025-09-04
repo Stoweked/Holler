@@ -1,4 +1,3 @@
-// src/contexts/ProfileContext.tsx
 "use client";
 
 import {
@@ -9,7 +8,7 @@ import {
   useCallback,
 } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { User } from "@supabase/supabase-js";
+import { User, RealtimePostgresChangesPayload } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
 import { Profile } from "@/features/account/types/account";
 
@@ -17,7 +16,7 @@ interface ProfileContextType {
   user: User | null;
   profile: Profile | null;
   loading: boolean;
-  fetchProfile: () => void;
+  fetchProfile: () => void; // Keep for manual fetches
 }
 
 const ProfileContext = createContext<ProfileContextType | undefined>(undefined);
@@ -29,6 +28,7 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
 
+  // This function is now only for the initial load and auth changes
   const fetchProfile = useCallback(async () => {
     const {
       data: { user },
@@ -47,41 +47,42 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
       } else if (data) {
         setProfile(data);
       }
-      setLoading(false);
     } else {
-      setLoading(false);
+      setUser(null);
+      setProfile(null);
       router.push("/");
     }
+    setLoading(false);
   }, [supabase, router]);
 
   useEffect(() => {
+    // Initial fetch and auth state handling remain the same
     fetchProfile();
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === "SIGNED_OUT") {
+    } = supabase.auth.onAuthStateChange((event) => {
+      if (event === "SIGNED_IN" || event === "TOKEN_REFRESHED") {
+        fetchProfile();
+      } else if (event === "SIGNED_OUT") {
         router.push("/");
-      } else if (session) {
-        if (JSON.stringify(session.user) !== JSON.stringify(user)) {
-          setUser(session.user);
-        }
       }
     });
 
-    // ** NEW: Subscribe to profile changes **
+    // We still need a separate effect for the realtime subscription
     const profileChannel = supabase
-      .channel("public:profiles")
+      .channel(`public:profiles:id=eq.${user?.id}`)
       .on(
         "postgres_changes",
         {
-          event: "*",
+          event: "UPDATE", // We only care about updates
           schema: "public",
           table: "profiles",
           filter: `id=eq.${user?.id}`,
         },
-        (payload) => {
-          console.log("Profile change received!", payload);
+        // ✅ INSTEAD of re-fetching, use the payload to update the state directly!
+        (payload: RealtimePostgresChangesPayload<Profile>) => {
+          console.log("Realtime update received:", payload);
           setProfile(payload.new as Profile);
         }
       )
@@ -89,10 +90,10 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
 
     return () => {
       subscription?.unsubscribe();
-      // ** NEW: Unsubscribe from the channel when the component unmounts **
       supabase.removeChannel(profileChannel);
     };
-  }, [supabase, router, user, fetchProfile]);
+    // The dependency array needs to be correct to avoid stale closures
+  }, [user, supabase, router, fetchProfile]);
 
   const value = {
     user,
