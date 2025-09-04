@@ -1,10 +1,10 @@
-# Account Components
+# Settings Feature
 
-This directory contains components related to user account management.
+This directory contains all components, hooks, and types related to user settings.
 
 ### Key Components
 
-- **`AccountDrawer.tsx`**: The main component that displays and manages user account settings.
-- **`AccountSettings.tsx`**: A tab within the `AccountDrawer` for managing profile information, appearance, and security settings.
-- **`BillingSettings.tsx`**: A tab for managing billing and payment information.
-- **`NotificationsSettings.tsx`**: A tab for managing notification preferences.
+- **`SettingsDrawer.tsx`**: The main drawer component that houses all user-configurable settings.
+- **`sections/`**: Contains the different tabs within the settings drawer, such as Account, Business, Notifications, and Billing.
+- **`hooks/`**: Includes custom React hooks for managing the state and logic of settings forms.
+- **`types/`**: Defines TypeScript types for the settings feature.

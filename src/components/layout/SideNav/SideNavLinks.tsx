@@ -1,5 +1,4 @@
 // src/components/layout/SideNav/SideNavLinks.tsx
-
 import { Badge, Group, NavLink } from "@mantine/core";
 import {
   ArrowRight01Icon,
@@ -29,6 +28,7 @@ export default function SideNavLinks({ closeMobileNav }: SideNavLinksProps) {
   const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
   const [transactionType, setTransactionType] =
     useState<TransactionActionType>("send");
+  const [initialSettingsTab, setInitialSettingsTab] = useState("account");
 
   const [
     openedContactsDrawer,
@@ -63,16 +63,23 @@ export default function SideNavLinks({ closeMobileNav }: SideNavLinksProps) {
   useEffect(() => {
     const handleOpenContacts = () => openContactsDrawer();
     const handleOpenBanks = () => openConnectedBanksDrawer();
-    const handleOpenAccount = () => openSettingsDrawer();
+
+    // Handler for opening settings with a specific tab from Spotlight
+    const handleOpenSettings = (event: Event) => {
+      const customEvent = event as CustomEvent;
+      const tab = customEvent.detail?.tab || "account";
+      setInitialSettingsTab(tab);
+      openSettingsDrawer();
+    };
 
     window.addEventListener("open-contacts", handleOpenContacts);
     window.addEventListener("open-banks", handleOpenBanks);
-    window.addEventListener("open-account", handleOpenAccount);
+    window.addEventListener("open-settings", handleOpenSettings);
 
     return () => {
       window.removeEventListener("open-contacts", handleOpenContacts);
       window.removeEventListener("open-banks", handleOpenBanks);
-      window.removeEventListener("open-account", handleOpenAccount);
+      window.removeEventListener("open-settings", handleOpenSettings);
     };
   }, [openContactsDrawer, openConnectedBanksDrawer, openSettingsDrawer]);
 
@@ -110,6 +117,7 @@ export default function SideNavLinks({ closeMobileNav }: SideNavLinksProps) {
 
   const handleSettingsClick = () => {
     closeMobileNav();
+    setInitialSettingsTab("account"); // Default to account tab on manual click
     openSettingsDrawer();
   };
 
@@ -182,6 +190,7 @@ export default function SideNavLinks({ closeMobileNav }: SideNavLinksProps) {
       <SettingsDrawer
         opened={openedSettingsDrawer}
         close={closeSettingsDrawer}
+        initialTab={initialSettingsTab}
       />
       <ContactModal
         opened={openedProfileDrawer}

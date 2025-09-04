@@ -1,3 +1,4 @@
+// src/components/layout/TopNav/TopNav.tsx
 import {
   ActionIcon,
   Box,
@@ -11,12 +12,13 @@ import {
   UnstyledButton,
 } from "@mantine/core";
 import { InboxIcon, Search01Icon } from "hugeicons-react";
-import React from "react";
+import React, { useEffect } from "react";
 import AccountAvatar from "./AccountAvatar";
 import { useDisclosure } from "@mantine/hooks";
 import NotificationDrawer from "./Notifications/NotificationDrawer";
 import classes from "./TopNav.module.css";
 import { spotlight } from "@mantine/spotlight";
+
 interface TopNavProps {
   opened: boolean;
   toggle: () => void;
@@ -27,6 +29,17 @@ export default function TopNav({ opened, toggle }: TopNavProps) {
     openedNotificationDrawer,
     { open: openNotificationDrawer, close: closeNotificationDrawer },
   ] = useDisclosure(false);
+
+  // Add event listener for opening notifications from Spotlight
+  useEffect(() => {
+    const handleOpenNotifications = () => openNotificationDrawer();
+
+    window.addEventListener("open-notifications", handleOpenNotifications);
+
+    return () => {
+      window.removeEventListener("open-notifications", handleOpenNotifications);
+    };
+  }, [openNotificationDrawer]);
 
   return (
     <>
