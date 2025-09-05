@@ -158,7 +158,7 @@ export default function SettingsDrawer({
               </Tabs.List>
             </Stack>
 
-            <Stack w="100%" px="lg" className={classes.sectionWrapper}>
+            <Stack w="100%" className={classes.sectionWrapper}>
               <ScrollArea type="never" h={height}>
                 <Tabs.Panel value="menu" pt="lg" hiddenFrom="sm">
                   <Stack gap="lg" h={height}>
