@@ -9,7 +9,7 @@ import {
   Modal,
   Space,
 } from "@mantine/core";
-import { StarIcon } from "hugeicons-react";
+import { CheckmarkCircle01Icon, StarIcon } from "hugeicons-react";
 import { Contact } from "../types/contact";
 import { getInitials } from "@/lib/hooks/getInitials";
 import { useState, useEffect } from "react";
@@ -67,13 +67,20 @@ function ContactModalContent({
         <Avatar src={contact.avatar_url} color="lime" size={100} radius="50%">
           <Title order={1}>{getInitials(contact.full_name)}</Title>
         </Avatar>
+
         <Button
-          variant={isFavorite ? "filled" : "default"}
+          variant={isFavorite ? "default" : "light"}
           size="compact-md"
-          leftSection={<StarIcon size={16} />}
+          leftSection={
+            isFavorite ? (
+              <CheckmarkCircle01Icon size={16} />
+            ) : (
+              <StarIcon size={16} />
+            )
+          }
           onClick={handleToggleFavorite}
         >
-          {isFavorite ? "Unfavorite" : "Favorite"}
+          {isFavorite ? "Favorite" : "Add to favorites"}
         </Button>
         <Stack align="center" gap={4}>
           <Title order={2} ta="center">
