@@ -154,7 +154,7 @@ function ContactModalContent({
           leftSection={<StarIcon size={16} />}
           onClick={handleToggleFavorite}
         >
-          Favorite
+          {isFavorite ? "Unfavorite" : "Favorite"}
         </Button>
         <Stack align="center" gap={4}>
           <Title order={2} ta="center">
