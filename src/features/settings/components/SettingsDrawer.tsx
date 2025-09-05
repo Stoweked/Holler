@@ -39,7 +39,7 @@ interface SettingsDrawerProps {
 export default function SettingsDrawer({
   opened,
   close,
-  position = "right",
+  position = "left",
   initialTab = "account",
 }: SettingsDrawerProps) {
   const [activeTab, setActiveTab] = useState<string | null>("account");
