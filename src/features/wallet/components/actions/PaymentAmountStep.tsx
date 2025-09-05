@@ -77,7 +77,7 @@ export default function PaymentAmountStep({
         <>
           <ContactDetailsCard
             contact={party.data}
-            label={actionType === "send" ? "Sending to" : "Requesting from"}
+            label={actionType === "send" ? "Send to" : "Request from"}
             onEdit={onEditContact}
             onViewProfile={openProfileModal}
           />

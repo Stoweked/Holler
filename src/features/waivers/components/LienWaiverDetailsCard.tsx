@@ -228,7 +228,13 @@ export default function LienWaiverDetailsCard({
           </Paper>
         </Combobox.Target>
 
-        <Combobox.Dropdown miw={350}>
+        <Combobox.Dropdown
+          miw={350}
+          style={{
+            boxShadow: "var(--mantine-shadow-xl)",
+            borderRadius: "var(--mantine-radius-md)",
+          }}
+        >
           <Combobox.Search
             size="lg"
             value={search}

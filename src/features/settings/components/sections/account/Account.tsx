@@ -1,18 +1,17 @@
-import { Space, Stack, Text, Title } from "@mantine/core";
+import { Space, Stack } from "@mantine/core";
 import ProfileCard from "./profile/ProfileCard";
 import ColorModeCard from "./ColorModeCard";
 import ResetPasswordCard from "./ResetPasswordCard";
 import DeleteAccountCard from "./DeleteAccountCard";
+import SectionHeader from "../SectionHeader";
 
 export default function Account() {
   return (
     <Stack gap="lg">
-      <Stack gap={0} py="xs">
-        <Title order={2}>Your account</Title>
-        <Text c="dimmed" size="lg">
-          Manage your account and profile.
-        </Text>
-      </Stack>
+      <SectionHeader
+        heading="Your account"
+        subHeading=" Manage your account and profile."
+      />
       <ProfileCard />
       <ColorModeCard />
       <ResetPasswordCard />

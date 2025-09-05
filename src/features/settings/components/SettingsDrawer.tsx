@@ -25,6 +25,9 @@ import { useViewportSize } from "@mantine/hooks";
 import { useProfile } from "@/contexts/ProfileContext";
 import OptionButton from "@/components/shared/OptionButton/OptionButton";
 import Account from "./sections/account/Account";
+import { BillingSettings } from "./sections/billing/BillingSettings";
+import { NotificationsSettings } from "./sections/notifications/NotificationsSettings";
+import { BusinessSettings } from "./sections/business/BusinessSettings";
 
 interface SettingsDrawerProps {
   opened: boolean;
@@ -158,7 +161,7 @@ export default function SettingsDrawer({
               </Tabs.List>
             </Stack>
 
-            <Stack w="100%" className={classes.sectionWrapper}>
+            <Stack w="100%" px="md" className={classes.sectionWrapper}>
               <ScrollArea type="never" h={height}>
                 <Tabs.Panel value="menu" pt="lg" hiddenFrom="sm">
                   <Stack gap="lg" h={height}>
@@ -190,18 +193,15 @@ export default function SettingsDrawer({
                 </Tabs.Panel>
 
                 <Tabs.Panel value="business" pt="lg">
-                  <Skeleton radius="lg" h={400} />
-                  <Space h={100} />
+                  <BusinessSettings />
                 </Tabs.Panel>
 
                 <Tabs.Panel value="billing" pt="lg">
-                  <Skeleton radius="lg" h={400} />
-                  <Space h={100} />
+                  <BillingSettings />
                 </Tabs.Panel>
 
                 <Tabs.Panel value="notifications" pt="lg">
-                  <Skeleton radius="lg" h={400} />
-                  <Space h={100} />
+                  <NotificationsSettings />
                 </Tabs.Panel>
               </ScrollArea>
             </Stack>

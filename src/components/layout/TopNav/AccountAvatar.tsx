@@ -65,7 +65,7 @@ export default function AccountAvatar() {
             leftSection={<UserCircleIcon size={16} />}
             onClick={openProfileDrawer}
           >
-            Your account
+            Your profile
           </Menu.Item>
           <Menu.Item
             leftSection={<PencilEdit01Icon size={16} />}
