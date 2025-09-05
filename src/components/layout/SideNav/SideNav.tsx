@@ -1,3 +1,4 @@
+// src/components/layout/SideNav/SideNav.tsx
 "use client";
 
 import { Anchor, Space, Stack, Text } from "@mantine/core";
@@ -5,6 +6,8 @@ import SideNavLinks from "./SideNavLinks";
 import PrimaryActionsCard from "../../../features/wallet/components/PrimaryActionsCard";
 import { useDisclosure, useViewportSize } from "@mantine/hooks";
 import TermsConditionsModal from "@/components/modals/TermsConditionsModal";
+import PrivacyPolicyModal from "@/components/modals/PrivacyPolicyModal";
+import { useEffect } from "react";
 
 interface SideNavProps {
   closeMobileNav: () => void;
@@ -15,6 +18,24 @@ export function SideNav({ closeMobileNav }: SideNavProps) {
   const isMobile = width < 768;
   const [openedTermsModal, { open: openTermsModal, close: closeTermsModal }] =
     useDisclosure(false);
+  const [
+    openedPrivacyModal,
+    { open: openPrivacyModal, close: closePrivacyModal },
+  ] = useDisclosure(false);
+
+  useEffect(() => {
+    const handleOpenTerms = () => openTermsModal();
+    const handleOpenPrivacy = () => openPrivacyModal();
+
+    window.addEventListener("open-terms", handleOpenTerms);
+    window.addEventListener("open-privacy", handleOpenPrivacy);
+
+    return () => {
+      window.removeEventListener("open-terms", handleOpenTerms);
+      window.removeEventListener("open-privacy", handleOpenPrivacy);
+    };
+  }, [openTermsModal, openPrivacyModal]);
+
   return (
     <>
       <Stack gap={0}>
@@ -32,6 +53,10 @@ export function SideNav({ closeMobileNav }: SideNavProps) {
         <Space h={100} />
       </Stack>
       <TermsConditionsModal opened={openedTermsModal} close={closeTermsModal} />
+      <PrivacyPolicyModal
+        opened={openedPrivacyModal}
+        close={closePrivacyModal}
+      />
     </>
   );
 }

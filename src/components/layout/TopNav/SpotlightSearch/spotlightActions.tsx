@@ -21,6 +21,9 @@ import {
   OfficeIcon,
   Sun03Icon,
   InboxIcon,
+  Shield01Icon,
+  Book01Icon,
+  LegalDocument01Icon,
 } from "hugeicons-react";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { logout } from "@/features/auth/actions/logout";
@@ -173,6 +176,36 @@ export const getSpotlightActions = (
             new CustomEvent("open-settings", { detail: { tab: "account" } })
           ),
         leftSection: <Sun03Icon size={24} />,
+      },
+      {
+        id: "reset-password",
+        label: "Reset Password",
+        description: "Reset your account password",
+        keywords: ["change password", "update password", "forgot password"],
+        onClick: () => router.push("/reset-password"),
+        leftSection: <Shield01Icon size={24} />,
+      },
+    ],
+  },
+
+  {
+    group: "Resources",
+    actions: [
+      {
+        id: "terms",
+        label: "Terms & Conditions",
+        description: "View the terms and conditions",
+        keywords: ["terms", "conditions", "legal", "tos"],
+        onClick: () => window.dispatchEvent(new CustomEvent("open-terms")),
+        leftSection: <LegalDocument01Icon size={24} />,
+      },
+      {
+        id: "privacy",
+        label: "Privacy Policy",
+        description: "View the privacy policy",
+        keywords: ["privacy", "policy", "legal"],
+        onClick: () => window.dispatchEvent(new CustomEvent("open-privacy")),
+        leftSection: <Book01Icon size={24} />,
       },
       {
         id: "feedback",
