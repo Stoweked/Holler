@@ -37,7 +37,7 @@ export default function ProfileForm({
   return (
     <Stack>
       <Group align="center" justify="space-between" wrap="nowrap">
-        <Title order={5}>Your profile</Title>
+        <Title order={5}>Profile</Title>
         <Button size="compact-sm" variant="subtle" disabled>
           Editing
         </Button>
