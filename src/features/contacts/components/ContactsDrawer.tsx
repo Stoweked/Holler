@@ -1,6 +1,5 @@
 import { Drawer, Space } from "@mantine/core";
 import ContactsList from "./ContactList";
-import { mockContacts } from "@/mockData/mockContacts";
 import { Contact } from "../types/contact";
 
 interface ContactsDrawerProps {
@@ -28,10 +27,7 @@ export default function ContactsDrawer({
       padding="lg"
       size="md"
     >
-      <ContactsList
-        contacts={mockContacts}
-        onContactClick={handleContactClick}
-      />
+      <ContactsList onContactClick={handleContactClick} />
       <Space h={100} />
     </Drawer>
   );

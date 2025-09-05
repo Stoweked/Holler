@@ -1,5 +1,4 @@
 // src/features/contacts/components/ContactList.tsx
-
 import { useState } from "react";
 import {
   Input,
@@ -11,6 +10,7 @@ import {
   Button,
   Text,
   Center,
+  Skeleton,
 } from "@mantine/core";
 import ContactItem from "./ContactItem";
 import {
@@ -19,22 +19,25 @@ import {
   UserMultiple02Icon,
 } from "hugeicons-react";
 import { Contact } from "../types/contact";
-import { getInitials } from "@/lib/hooks/getInitials"; // Import the utility function
+import { getInitials } from "@/lib/hooks/getInitials";
+import { useFavorites } from "../hooks/useFavorites";
+import { useContacts } from "../hooks/useContacts";
 
 interface ContactsListProps {
-  contacts: Contact[];
   onContactClick?: (contact: Contact) => void;
 }
 
-export default function ContactsList({
-  contacts,
-  onContactClick,
-}: ContactsListProps) {
+export default function ContactsList({ onContactClick }: ContactsListProps) {
   const [searchValue, setSearchValue] = useState("");
+  const { contacts, loading } = useContacts();
+  const { favoriteContacts } = useFavorites();
 
   const handleContactClick = (contact: Contact) => {
     if (onContactClick) {
-      onContactClick(contact);
+      onContactClick({
+        ...contact,
+        favorite: favoriteContacts.has(contact.id),
+      });
     }
   };
 
@@ -51,8 +54,12 @@ export default function ContactsList({
     );
   });
 
-  const topContacts = filteredContacts.filter((c) => c.topContact);
-  const otherContacts = filteredContacts.filter((c) => !c.topContact);
+  const topContacts = filteredContacts.filter((c) =>
+    favoriteContacts.has(c.id)
+  );
+  const otherContacts = filteredContacts.filter(
+    (c) => !favoriteContacts.has(c.id)
+  );
 
   const groupedContacts = otherContacts.reduce((acc, contact) => {
     const firstLetter = (contact.full_name || "#")[0].toUpperCase();
@@ -64,6 +71,16 @@ export default function ContactsList({
   }, {} as Record<string, typeof otherContacts>);
 
   const showDivider = topContacts.length > 0 && otherContacts.length > 0;
+
+  if (loading) {
+    return (
+      <Stack>
+        {Array.from({ length: 5 }).map((_, i) => (
+          <Skeleton key={i} height={60} radius="xl" />
+        ))}
+      </Stack>
+    );
+  }
 
   return (
     <Stack gap="lg">
@@ -155,15 +172,17 @@ export default function ContactsList({
                 Try adjusting your search or invite a new contact.
               </Text>
             </Stack>
-            <Button
-              size="lg"
-              radius="xl"
-              variant="default"
-              fullWidth
-              onClick={() => setSearchValue("")}
-            >
-              Clear search
-            </Button>
+            {searchValue && (
+              <Button
+                size="lg"
+                radius="xl"
+                variant="default"
+                fullWidth
+                onClick={() => setSearchValue("")}
+              >
+                Clear search
+              </Button>
+            )}
           </Stack>
         </Center>
       )}

@@ -52,7 +52,7 @@ export const getSpotlightActions = (
       },
       {
         id: "banks",
-        label: "Bank Accounts",
+        label: "Bank accounts",
         description: "Manage your connected bank accounts",
         keywords: ["payment methods", "financial", "link bank"],
         onClick: () => window.dispatchEvent(new CustomEvent("open-banks")),
@@ -179,7 +179,7 @@ export const getSpotlightActions = (
       },
       {
         id: "reset-password",
-        label: "Reset Password",
+        label: "Reset password",
         description: "Reset your account password",
         keywords: ["change password", "update password", "forgot password"],
         onClick: () => router.push("/reset-password"),
@@ -193,7 +193,7 @@ export const getSpotlightActions = (
     actions: [
       {
         id: "terms",
-        label: "Terms & Conditions",
+        label: "Terms & conditions",
         description: "View the terms and conditions",
         keywords: ["terms", "conditions", "legal", "tos"],
         onClick: () => window.dispatchEvent(new CustomEvent("open-terms")),
@@ -201,7 +201,7 @@ export const getSpotlightActions = (
       },
       {
         id: "privacy",
-        label: "Privacy Policy",
+        label: "Privacy policy",
         description: "View the privacy policy",
         keywords: ["privacy", "policy", "legal"],
         onClick: () => window.dispatchEvent(new CustomEvent("open-privacy")),
@@ -209,7 +209,7 @@ export const getSpotlightActions = (
       },
       {
         id: "feedback",
-        label: "Share Feedback",
+        label: "Share feedback",
         description: "Let us know how we can improve",
         keywords: ["suggestions", "report bug", "help"],
         onClick: () => window.dispatchEvent(new CustomEvent("open-feedback")),

@@ -51,6 +51,16 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA "extensions";
 
 
 
+CREATE TYPE "public"."business_role" AS ENUM (
+    'owner',
+    'admin',
+    'member'
+);
+
+
+ALTER TYPE "public"."business_role" OWNER TO "postgres";
+
+
 CREATE OR REPLACE FUNCTION "public"."compute_contract_agreements_table_row_hash"() RETURNS "trigger"
     LANGUAGE "plpgsql"
     AS $$
@@ -197,6 +207,40 @@ $$;
 ALTER FUNCTION "public"."handle_update_user"() OWNER TO "postgres";
 
 
+CREATE OR REPLACE FUNCTION "public"."handle_updated_at"() RETURNS "trigger"
+    LANGUAGE "plpgsql" SECURITY DEFINER
+    AS $$
+BEGIN
+  NEW.updated_at = NOW();
+  RETURN NEW;
+END;
+$$;
+
+
+ALTER FUNCTION "public"."handle_updated_at"() OWNER TO "postgres";
+
+
+CREATE OR REPLACE FUNCTION "public"."is_business_admin_or_owner"("p_business_id" "uuid") RETURNS boolean
+    LANGUAGE "plpgsql" SECURITY DEFINER
+    AS $$
+DECLARE
+    is_admin_or_owner BOOLEAN;
+BEGIN
+    SELECT EXISTS (
+        SELECT 1
+        FROM public.business_admins
+        WHERE business_id = p_business_id
+          AND user_id = auth.uid()
+          AND (role = 'admin' OR role = 'owner')
+    ) INTO is_admin_or_owner;
+    RETURN is_admin_or_owner;
+END;
+$$;
+
+
+ALTER FUNCTION "public"."is_business_admin_or_owner"("p_business_id" "uuid") OWNER TO "postgres";
+
+
 CREATE OR REPLACE FUNCTION "public"."reject_update_delete_on_contract_agreements"() RETURNS "trigger"
     LANGUAGE "plpgsql"
     AS $$
@@ -248,6 +292,18 @@ $$;
 
 ALTER FUNCTION "public"."reject_update_delete_on_pending_payments"() OWNER TO "postgres";
 
+
+CREATE OR REPLACE FUNCTION "public"."user_exists"("email_address" "text") RETURNS boolean
+    LANGUAGE "sql" SECURITY DEFINER
+    AS $$
+  select exists(
+    select 1 from public.profiles where email = email_address
+  );
+$$;
+
+
+ALTER FUNCTION "public"."user_exists"("email_address" "text") OWNER TO "postgres";
+
 SET default_tablespace = '';
 
 SET default_table_access_method = "heap";
@@ -261,6 +317,31 @@ CREATE TABLE IF NOT EXISTS "public"."accounts" (
 
 
 ALTER TABLE "public"."accounts" OWNER TO "postgres";
+
+
+CREATE TABLE IF NOT EXISTS "public"."business_admins" (
+    "business_id" "uuid" NOT NULL,
+    "user_id" "uuid" NOT NULL,
+    "role" "public"."business_role" DEFAULT 'member'::"public"."business_role" NOT NULL,
+    "created_at" timestamp with time zone DEFAULT "now"() NOT NULL
+);
+
+
+ALTER TABLE "public"."business_admins" OWNER TO "postgres";
+
+
+CREATE TABLE IF NOT EXISTS "public"."businesses" (
+    "id" "uuid" DEFAULT "extensions"."uuid_generate_v4"() NOT NULL,
+    "business_name" "text" NOT NULL,
+    "email" "text",
+    "phone_number" "text",
+    "avatar_url" "text",
+    "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
+    "updated_at" timestamp with time zone DEFAULT "now"() NOT NULL
+);
+
+
+ALTER TABLE "public"."businesses" OWNER TO "postgres";
 
 
 CREATE TABLE IF NOT EXISTS "public"."contract_agreements" (
@@ -312,6 +393,18 @@ CREATE TABLE IF NOT EXISTS "public"."contracts" (
 ALTER TABLE "public"."contracts" OWNER TO "postgres";
 
 
+CREATE TABLE IF NOT EXISTS "public"."favorite_contacts" (
+    "user_id" "uuid" NOT NULL,
+    "favorited_id" "uuid" NOT NULL,
+    "favorited_type" "text" NOT NULL,
+    "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
+    CONSTRAINT "favorite_contacts_favorited_type_check" CHECK (("favorited_type" = ANY (ARRAY['profile'::"text", 'business'::"text"])))
+);
+
+
+ALTER TABLE "public"."favorite_contacts" OWNER TO "postgres";
+
+
 CREATE TABLE IF NOT EXISTS "public"."feedback" (
     "id" bigint NOT NULL,
     "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
@@ -333,6 +426,21 @@ ALTER TABLE "public"."feedback" ALTER COLUMN "id" ADD GENERATED ALWAYS AS IDENTI
     CACHE 1
 );
 
+
+
+CREATE TABLE IF NOT EXISTS "public"."lien_waivers" (
+    "id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
+    "user_id" "uuid" NOT NULL,
+    "title" "text" NOT NULL,
+    "content" "text" NOT NULL,
+    "type" "text" NOT NULL,
+    "archived" boolean DEFAULT false NOT NULL,
+    "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
+    "updated_at" timestamp with time zone DEFAULT "now"() NOT NULL
+);
+
+
+ALTER TABLE "public"."lien_waivers" OWNER TO "postgres";
 
 
 CREATE TABLE IF NOT EXISTS "public"."pending_payment_events" (
@@ -374,7 +482,16 @@ CREATE TABLE IF NOT EXISTS "public"."profiles" (
     "username" "text",
     "full_name" "text",
     "avatar_url" "text",
-    "email" "text"
+    "email" "text",
+    "business_name" "text",
+    "dob" "date",
+    "gender" "text",
+    "address1" "text",
+    "address2" "text",
+    "city" "text",
+    "state" "text",
+    "zip" "text",
+    "auth_provider" "text"
 );
 
 
@@ -388,6 +505,21 @@ ALTER TABLE ONLY "public"."accounts"
 
 ALTER TABLE ONLY "public"."accounts"
     ADD CONSTRAINT "accounts_user_id_key" UNIQUE ("user_id");
+
+
+
+ALTER TABLE ONLY "public"."business_admins"
+    ADD CONSTRAINT "business_admins_pkey" PRIMARY KEY ("business_id", "user_id");
+
+
+
+ALTER TABLE ONLY "public"."businesses"
+    ADD CONSTRAINT "businesses_email_key" UNIQUE ("email");
+
+
+
+ALTER TABLE ONLY "public"."businesses"
+    ADD CONSTRAINT "businesses_pkey" PRIMARY KEY ("id");
 
 
 
@@ -411,8 +543,18 @@ ALTER TABLE ONLY "public"."contracts"
 
 
 
+ALTER TABLE ONLY "public"."favorite_contacts"
+    ADD CONSTRAINT "favorite_contacts_pkey" PRIMARY KEY ("user_id", "favorited_id", "favorited_type");
+
+
+
 ALTER TABLE ONLY "public"."feedback"
     ADD CONSTRAINT "feedback_pkey" PRIMARY KEY ("id");
+
+
+
+ALTER TABLE ONLY "public"."lien_waivers"
+    ADD CONSTRAINT "lien_waivers_pkey" PRIMARY KEY ("id");
 
 
 
@@ -441,6 +583,42 @@ ALTER TABLE ONLY "public"."profiles"
 
 
 
+CREATE INDEX "idx_accounts_moov_account_id" ON "public"."accounts" USING "btree" ("moov_account_id");
+
+
+
+CREATE INDEX "idx_contract_agreements_contract_id" ON "public"."contract_agreements" USING "btree" ("contract_id");
+
+
+
+CREATE INDEX "idx_contract_agreements_contract_version_id" ON "public"."contract_agreements" USING "btree" ("contract_version_id");
+
+
+
+CREATE INDEX "idx_contract_agreements_user_id" ON "public"."contract_agreements" USING "btree" ("user_id");
+
+
+
+CREATE INDEX "idx_contract_versions_contract_id" ON "public"."contract_versions" USING "btree" ("contract_id");
+
+
+
+CREATE INDEX "idx_contracts_owner_user_id" ON "public"."contracts" USING "btree" ("owner_user_id");
+
+
+
+CREATE INDEX "idx_pending_payment_events_pending_payment_id" ON "public"."pending_payment_events" USING "btree" ("pending_payment_id");
+
+
+
+CREATE INDEX "idx_pending_payments_destination_account_id" ON "public"."pending_payments" USING "btree" ("destination_account_id");
+
+
+
+CREATE INDEX "idx_pending_payments_source_account_id" ON "public"."pending_payments" USING "btree" ("source_account_id");
+
+
+
 CREATE OR REPLACE TRIGGER "no_update_or_delete_contract_agreements" BEFORE DELETE OR UPDATE ON "public"."contract_agreements" FOR EACH ROW EXECUTE FUNCTION "public"."reject_update_delete_on_contract_agreements"();
 
 
@@ -454,6 +632,10 @@ CREATE OR REPLACE TRIGGER "no_update_or_delete_pending_payment_events" BEFORE DE
 
 
 CREATE OR REPLACE TRIGGER "no_update_or_delete_pending_payments" BEFORE DELETE OR UPDATE ON "public"."pending_payments" FOR EACH ROW EXECUTE FUNCTION "public"."reject_update_delete_on_pending_payments"();
+
+
+
+CREATE OR REPLACE TRIGGER "on_businesses_update" BEFORE UPDATE ON "public"."businesses" FOR EACH ROW EXECUTE FUNCTION "public"."handle_updated_at"();
 
 
 
@@ -478,6 +660,16 @@ ALTER TABLE ONLY "public"."accounts"
 
 
 
+ALTER TABLE ONLY "public"."business_admins"
+    ADD CONSTRAINT "business_admins_business_id_fkey" FOREIGN KEY ("business_id") REFERENCES "public"."businesses"("id") ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY "public"."business_admins"
+    ADD CONSTRAINT "business_admins_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "auth"."users"("id") ON DELETE CASCADE;
+
+
+
 ALTER TABLE ONLY "public"."contract_agreements"
     ADD CONSTRAINT "contract_agreements_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "public"."profiles"("id");
 
@@ -488,13 +680,39 @@ ALTER TABLE ONLY "public"."contracts"
 
 
 
+ALTER TABLE ONLY "public"."favorite_contacts"
+    ADD CONSTRAINT "favorite_contacts_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "auth"."users"("id") ON DELETE CASCADE;
+
+
+
 ALTER TABLE ONLY "public"."profiles"
     ADD CONSTRAINT "fk_user" FOREIGN KEY ("id") REFERENCES "auth"."users"("id") ON DELETE CASCADE;
 
 
 
+ALTER TABLE ONLY "public"."lien_waivers"
+    ADD CONSTRAINT "lien_waivers_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "auth"."users"("id") ON DELETE CASCADE;
+
+
+
 ALTER TABLE ONLY "public"."profiles"
     ADD CONSTRAINT "profiles_id_fkey" FOREIGN KEY ("id") REFERENCES "auth"."users"("id") ON DELETE CASCADE;
+
+
+
+CREATE POLICY "Allow users to read own profile" ON "public"."profiles" FOR SELECT USING (("auth"."uid"() = "id"));
+
+
+
+CREATE POLICY "Authenticated users can create businesses." ON "public"."businesses" FOR INSERT WITH CHECK (("auth"."role"() = 'authenticated'::"text"));
+
+
+
+CREATE POLICY "Owners/admins can manage their business's members." ON "public"."business_admins" USING ("public"."is_business_admin_or_owner"("business_id"));
+
+
+
+CREATE POLICY "Public can view businesses." ON "public"."businesses" FOR SELECT USING (true);
 
 
 
@@ -508,6 +726,18 @@ CREATE POLICY "Users can delete their own feedback." ON "public"."feedback" FOR 
 
 
 
+CREATE POLICY "Users can delete their own lien waivers" ON "public"."lien_waivers" FOR DELETE USING (("auth"."uid"() = "user_id"));
+
+
+
+CREATE POLICY "Users can insert their own lien waivers" ON "public"."lien_waivers" FOR INSERT WITH CHECK (("auth"."uid"() = "user_id"));
+
+
+
+CREATE POLICY "Users can manage their own favorites." ON "public"."favorite_contacts" USING (("auth"."uid"() = "user_id"));
+
+
+
 CREATE POLICY "Users can submit feedback." ON "public"."feedback" FOR INSERT TO "authenticated" WITH CHECK (true);
 
 
@@ -518,7 +748,49 @@ CREATE POLICY "Users can update their own feedback." ON "public"."feedback" FOR 
 
 
 
+CREATE POLICY "Users can update their own lien waivers" ON "public"."lien_waivers" FOR UPDATE USING (("auth"."uid"() = "user_id"));
+
+
+
 CREATE POLICY "Users can update their own profile." ON "public"."profiles" FOR UPDATE USING (("auth"."uid"() = "id"));
+
+
+
+CREATE POLICY "Users can view contract versions for their own contracts" ON "public"."contract_versions" FOR SELECT USING ((EXISTS ( SELECT 1
+   FROM "public"."contracts"
+  WHERE (("contracts"."id" = "contract_versions"."contract_id") AND ("contracts"."owner_user_id" = "auth"."uid"())))));
+
+
+
+CREATE POLICY "Users can view events for their own pending payments" ON "public"."pending_payment_events" FOR SELECT USING ((EXISTS ( SELECT 1
+   FROM ("public"."pending_payments"
+     JOIN "public"."accounts" ON ((("accounts"."id" = "pending_payments"."source_account_id") OR ("accounts"."id" = "pending_payments"."destination_account_id"))))
+  WHERE (("pending_payments"."id" = "pending_payment_events"."pending_payment_id") AND ("accounts"."user_id" = "auth"."uid"())))));
+
+
+
+CREATE POLICY "Users can view requirements for their own contracts and payment" ON "public"."contract_requirements" FOR SELECT USING (((EXISTS ( SELECT 1
+   FROM "public"."contracts"
+  WHERE (("contracts"."id" = "contract_requirements"."contract_id") AND ("contracts"."owner_user_id" = "auth"."uid"())))) OR (EXISTS ( SELECT 1
+   FROM ("public"."pending_payments"
+     JOIN "public"."accounts" ON ((("accounts"."id" = "pending_payments"."source_account_id") OR ("accounts"."id" = "pending_payments"."destination_account_id"))))
+  WHERE (("pending_payments"."id" = "contract_requirements"."pending_payment_id") AND ("accounts"."user_id" = "auth"."uid"()))))));
+
+
+
+CREATE POLICY "Users can view their own account" ON "public"."accounts" FOR SELECT USING (("auth"."uid"() = "user_id"));
+
+
+
+CREATE POLICY "Users can view their own business memberships." ON "public"."business_admins" FOR SELECT USING (("auth"."uid"() = "user_id"));
+
+
+
+CREATE POLICY "Users can view their own contract agreements" ON "public"."contract_agreements" FOR SELECT USING (("auth"."uid"() = "user_id"));
+
+
+
+CREATE POLICY "Users can view their own contracts" ON "public"."contracts" FOR SELECT USING (("auth"."uid"() = "owner_user_id"));
 
 
 
@@ -528,7 +800,50 @@ CREATE POLICY "Users can view their own feedback." ON "public"."feedback" FOR SE
 
 
 
+CREATE POLICY "Users can view their own lien waivers" ON "public"."lien_waivers" FOR SELECT USING (("auth"."uid"() = "user_id"));
+
+
+
+CREATE POLICY "Users can view their own pending payments" ON "public"."pending_payments" FOR SELECT USING ((EXISTS ( SELECT 1
+   FROM "public"."accounts"
+  WHERE ((("accounts"."id" = "pending_payments"."source_account_id") OR ("accounts"."id" = "pending_payments"."destination_account_id")) AND ("accounts"."user_id" = "auth"."uid"())))));
+
+
+
+ALTER TABLE "public"."accounts" ENABLE ROW LEVEL SECURITY;
+
+
+ALTER TABLE "public"."business_admins" ENABLE ROW LEVEL SECURITY;
+
+
+ALTER TABLE "public"."businesses" ENABLE ROW LEVEL SECURITY;
+
+
+ALTER TABLE "public"."contract_agreements" ENABLE ROW LEVEL SECURITY;
+
+
+ALTER TABLE "public"."contract_requirements" ENABLE ROW LEVEL SECURITY;
+
+
+ALTER TABLE "public"."contract_versions" ENABLE ROW LEVEL SECURITY;
+
+
+ALTER TABLE "public"."contracts" ENABLE ROW LEVEL SECURITY;
+
+
+ALTER TABLE "public"."favorite_contacts" ENABLE ROW LEVEL SECURITY;
+
+
 ALTER TABLE "public"."feedback" ENABLE ROW LEVEL SECURITY;
+
+
+ALTER TABLE "public"."lien_waivers" ENABLE ROW LEVEL SECURITY;
+
+
+ALTER TABLE "public"."pending_payment_events" ENABLE ROW LEVEL SECURITY;
+
+
+ALTER TABLE "public"."pending_payments" ENABLE ROW LEVEL SECURITY;
 
 
 ALTER TABLE "public"."profiles" ENABLE ROW LEVEL SECURITY;
@@ -537,6 +852,10 @@ ALTER TABLE "public"."profiles" ENABLE ROW LEVEL SECURITY;
 
 
 ALTER PUBLICATION "supabase_realtime" OWNER TO "postgres";
+
+
+
+
 
 
 GRANT USAGE ON SCHEMA "public" TO "postgres";
@@ -732,6 +1051,18 @@ GRANT ALL ON FUNCTION "public"."handle_update_user"() TO "service_role";
 
 
 
+GRANT ALL ON FUNCTION "public"."handle_updated_at"() TO "anon";
+GRANT ALL ON FUNCTION "public"."handle_updated_at"() TO "authenticated";
+GRANT ALL ON FUNCTION "public"."handle_updated_at"() TO "service_role";
+
+
+
+GRANT ALL ON FUNCTION "public"."is_business_admin_or_owner"("p_business_id" "uuid") TO "anon";
+GRANT ALL ON FUNCTION "public"."is_business_admin_or_owner"("p_business_id" "uuid") TO "authenticated";
+GRANT ALL ON FUNCTION "public"."is_business_admin_or_owner"("p_business_id" "uuid") TO "service_role";
+
+
+
 GRANT ALL ON FUNCTION "public"."reject_update_delete_on_contract_agreements"() TO "anon";
 GRANT ALL ON FUNCTION "public"."reject_update_delete_on_contract_agreements"() TO "authenticated";
 GRANT ALL ON FUNCTION "public"."reject_update_delete_on_contract_agreements"() TO "service_role";
@@ -756,6 +1087,12 @@ GRANT ALL ON FUNCTION "public"."reject_update_delete_on_pending_payments"() TO "
 
 
 
+GRANT ALL ON FUNCTION "public"."user_exists"("email_address" "text") TO "anon";
+GRANT ALL ON FUNCTION "public"."user_exists"("email_address" "text") TO "authenticated";
+GRANT ALL ON FUNCTION "public"."user_exists"("email_address" "text") TO "service_role";
+
+
+
 
 
 
@@ -774,6 +1111,18 @@ GRANT ALL ON FUNCTION "public"."reject_update_delete_on_pending_payments"() TO "
 GRANT ALL ON TABLE "public"."accounts" TO "anon";
 GRANT ALL ON TABLE "public"."accounts" TO "authenticated";
 GRANT ALL ON TABLE "public"."accounts" TO "service_role";
+
+
+
+GRANT ALL ON TABLE "public"."business_admins" TO "anon";
+GRANT ALL ON TABLE "public"."business_admins" TO "authenticated";
+GRANT ALL ON TABLE "public"."business_admins" TO "service_role";
+
+
+
+GRANT ALL ON TABLE "public"."businesses" TO "anon";
+GRANT ALL ON TABLE "public"."businesses" TO "authenticated";
+GRANT ALL ON TABLE "public"."businesses" TO "service_role";
 
 
 
@@ -801,6 +1150,12 @@ GRANT ALL ON TABLE "public"."contracts" TO "service_role";
 
 
 
+GRANT ALL ON TABLE "public"."favorite_contacts" TO "anon";
+GRANT ALL ON TABLE "public"."favorite_contacts" TO "authenticated";
+GRANT ALL ON TABLE "public"."favorite_contacts" TO "service_role";
+
+
+
 GRANT ALL ON TABLE "public"."feedback" TO "anon";
 GRANT ALL ON TABLE "public"."feedback" TO "authenticated";
 GRANT ALL ON TABLE "public"."feedback" TO "service_role";
@@ -810,6 +1165,12 @@ GRANT ALL ON TABLE "public"."feedback" TO "service_role";
 GRANT ALL ON SEQUENCE "public"."feedback_id_seq" TO "anon";
 GRANT ALL ON SEQUENCE "public"."feedback_id_seq" TO "authenticated";
 GRANT ALL ON SEQUENCE "public"."feedback_id_seq" TO "service_role";
+
+
+
+GRANT ALL ON TABLE "public"."lien_waivers" TO "anon";
+GRANT ALL ON TABLE "public"."lien_waivers" TO "authenticated";
+GRANT ALL ON TABLE "public"."lien_waivers" TO "service_role";
 
 
 

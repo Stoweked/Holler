@@ -1,6 +1,4 @@
 // src/features/contacts/types/contact.ts
-
-// This is the main, comprehensive interface for a contact
 export interface Contact {
   id: string;
   email: string;
@@ -20,4 +18,6 @@ export interface Contact {
   state?: string;
   zip?: string;
   topContact?: boolean;
+  favorite?: boolean;
+  type: "profile" | "business";
 }

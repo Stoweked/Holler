@@ -1,4 +1,3 @@
-// src/mockData/mockContacts.ts
 import { Contact } from "@/features/contacts/types/contact";
 
 export const mockContacts: Contact[] = [
@@ -9,6 +8,7 @@ export const mockContacts: Contact[] = [
     phone_number: "(512) 555-0101",
     avatar_url: "",
     topContact: true,
+    type: "business", // Updated type property
   },
   {
     id: "2",
@@ -17,6 +17,7 @@ export const mockContacts: Contact[] = [
     phone_number: "",
     avatar_url: "",
     topContact: true,
+    type: "business", // Updated type property
   },
   {
     id: "3",
@@ -25,6 +26,7 @@ export const mockContacts: Contact[] = [
     phone_number: "",
     avatar_url: "",
     topContact: true,
+    type: "business", // Updated type property
   },
   {
     id: "4",
@@ -32,6 +34,7 @@ export const mockContacts: Contact[] = [
     email: "info@urbanalfandre.com",
     phone_number: "",
     avatar_url: "",
+    type: "business", // Updated type property
   },
   {
     id: "5",
@@ -39,6 +42,7 @@ export const mockContacts: Contact[] = [
     email: "contact@slateplumbing.com",
     phone_number: "(512) 555-0102",
     avatar_url: "",
+    type: "business", // Updated type property
   },
   {
     id: "6",
@@ -46,6 +50,7 @@ export const mockContacts: Contact[] = [
     email: "contact@midwaypainting.com",
     phone_number: "",
     avatar_url: "",
+    type: "business", // Updated type property
   },
   {
     id: "7",
@@ -53,6 +58,7 @@ export const mockContacts: Contact[] = [
     email: "accounts@frontierbuilding.inc",
     phone_number: "",
     avatar_url: "",
+    type: "business", // Updated type property
   },
   {
     id: "8",
@@ -60,6 +66,7 @@ export const mockContacts: Contact[] = [
     email: "contact@ezralee.com",
     phone_number: "(512) 555-0103",
     avatar_url: "",
+    type: "business", // Updated type property
   },
   {
     id: "9",
@@ -67,6 +74,7 @@ export const mockContacts: Contact[] = [
     email: "contact@cascadesiding.com",
     phone_number: "",
     avatar_url: "",
+    type: "business", // Updated type property
   },
   {
     id: "10",
@@ -74,6 +82,7 @@ export const mockContacts: Contact[] = [
     email: "info@kingsmountain.com",
     phone_number: "",
     avatar_url: "",
+    type: "business", // Updated type property
   },
   {
     id: "11",
@@ -81,5 +90,6 @@ export const mockContacts: Contact[] = [
     email: "contact@edgehome.com",
     phone_number: "",
     avatar_url: "",
+    type: "business", // Updated type property
   },
 ];

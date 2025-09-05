@@ -1,3 +1,4 @@
+// src/contexts/ProfileContext.tsx
 "use client";
 
 import {
@@ -16,7 +17,7 @@ interface ProfileContextType {
   user: User | null;
   profile: Profile | null;
   loading: boolean;
-  fetchProfile: () => void; // Keep for manual fetches
+  fetchProfile: () => Promise<void>;
 }
 
 const ProfileContext = createContext<ProfileContextType | undefined>(undefined);
@@ -28,72 +29,95 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // This function is now only for the initial load and auth changes
   const fetchProfile = useCallback(async () => {
     const {
       data: { user },
     } = await supabase.auth.getUser();
 
     if (user) {
-      setUser(user);
       const { data, error } = await supabase
         .from("profiles")
         .select("*")
         .eq("id", user.id)
-        .maybeSingle();
+        .single();
 
       if (error) {
         console.error("Error fetching profile:", error);
-      } else if (data) {
+        setProfile(null);
+      } else {
         setProfile(data);
       }
+      setUser(user);
     } else {
       setUser(null);
       setProfile(null);
-      router.push("/");
     }
-    setLoading(false);
-  }, [supabase, router]);
+  }, [supabase]);
 
+  // Effect for handling auth state changes
   useEffect(() => {
-    // Initial fetch and auth state handling remain the same
-    fetchProfile();
+    setLoading(true);
+    const getInitialUser = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (user) {
+        setUser(user);
+        const { data: profileData } = await supabase
+          .from("profiles")
+          .select("*")
+          .eq("id", user.id)
+          .single();
+        setProfile(profileData);
+      }
+      setLoading(false);
+    };
+
+    getInitialUser();
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((event) => {
-      if (event === "SIGNED_IN" || event === "TOKEN_REFRESHED") {
-        fetchProfile();
-      } else if (event === "SIGNED_OUT") {
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === "SIGNED_OUT") {
+        setUser(null);
+        setProfile(null);
         router.push("/");
+      } else if (session) {
+        setUser(session.user);
+        fetchProfile();
       }
     });
 
-    // We still need a separate effect for the realtime subscription
+    return () => {
+      subscription?.unsubscribe();
+    };
+  }, [supabase, router, fetchProfile]);
+
+  // Effect for handling real-time profile updates
+  useEffect(() => {
+    if (!user) return;
+
     const profileChannel = supabase
-      .channel(`public:profiles:id=eq.${user?.id}`)
+      .channel(`public:profiles:id=eq.${user.id}`)
       .on(
         "postgres_changes",
         {
-          event: "UPDATE", // We only care about updates
+          event: "UPDATE",
           schema: "public",
           table: "profiles",
-          filter: `id=eq.${user?.id}`,
+          filter: `id=eq.${user.id}`,
         },
-        // ✅ INSTEAD of re-fetching, use the payload to update the state directly!
         (payload: RealtimePostgresChangesPayload<Profile>) => {
-          console.log("Realtime update received:", payload);
           setProfile(payload.new as Profile);
         }
       )
       .subscribe();
 
     return () => {
-      subscription?.unsubscribe();
       supabase.removeChannel(profileChannel);
     };
-    // The dependency array needs to be correct to avoid stale closures
-  }, [user, supabase, router, fetchProfile]);
+  }, [user, supabase]);
 
   const value = {
     user,
