@@ -5,7 +5,7 @@ import {
   BankIcon,
   ClipboardIcon,
   Message01Icon,
-  Settings01Icon,
+  UserIcon,
   UserMultiple02Icon,
 } from "hugeicons-react";
 import classes from "./SideNav.module.css";
@@ -158,8 +158,8 @@ export default function SideNavLinks({ closeMobileNav }: SideNavLinksProps) {
       />
 
       <NavLink
-        label="Settings"
-        leftSection={<Settings01Icon size={20} />}
+        label="Your account"
+        leftSection={<UserIcon size={20} />}
         rightSection={<ArrowRight01Icon size={24} color="grey" />}
         className={classes.navLink}
         classNames={{ label: classes.label }}
