@@ -41,7 +41,7 @@ export default function SignUpForm() {
       // Check for the specific "account exists" error message
       if (result.error.includes("already exists")) {
         notifications.show({
-          title: "Account exists",
+          title: "Account already exists",
           message: (
             <>
               {result.error}{" "}

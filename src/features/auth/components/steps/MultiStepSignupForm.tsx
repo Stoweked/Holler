@@ -41,7 +41,15 @@ export default function MultiStepSignUpForm() {
       p="md"
       className="pageBackground"
     >
-      <Paper withBorder shadow="lg" p="lg" radius="lg" maw={420} w="100%">
+      <Paper
+        withBorder
+        shadow="lg"
+        p="lg"
+        pb="xl"
+        radius="lg"
+        maw={420}
+        w="100%"
+      >
         <form
           onSubmit={form.onSubmit((values) => {
             if (step === "profileInfo") {

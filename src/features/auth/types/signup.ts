@@ -5,7 +5,6 @@ export interface MultiStepSignupFormValues {
   full_name: string;
   password: string;
   confirmPassword: string;
-  business_name: string;
   phone_number: string;
 }
 

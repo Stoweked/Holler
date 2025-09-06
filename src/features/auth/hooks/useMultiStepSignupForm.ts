@@ -22,7 +22,6 @@ export function useMultiStepSignupForm() {
       full_name: "",
       password: "",
       confirmPassword: "",
-      business_name: "",
       phone_number: "",
     },
     validate: (values) => {
@@ -67,7 +66,6 @@ export function useMultiStepSignupForm() {
           form.setValues({
             email: profileData.email || "",
             full_name: profileData.full_name || "",
-            business_name: profileData.business_name || "",
             phone_number: profileData.phone_number || "",
           });
         }

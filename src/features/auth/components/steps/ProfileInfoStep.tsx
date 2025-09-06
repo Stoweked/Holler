@@ -37,13 +37,6 @@ export function ProfileInfoStep({
         size="lg"
         radius="md"
       />
-      <TextInput
-        label="Business name"
-        name="business_name"
-        {...form.getInputProps("business_name")}
-        size="lg"
-        radius="md"
-      />
       <Button type="submit" fullWidth mt="md" size="lg">
         Continue
       </Button>
