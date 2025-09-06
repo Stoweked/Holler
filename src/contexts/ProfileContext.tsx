@@ -29,44 +29,72 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const fetchProfileData = useCallback(
-    async (user: User | null) => {
+  const fetchProfile = useCallback(async () => {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (user) {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", user.id)
+        .single();
+
+      if (error) {
+        console.error("Error fetching profile:", error);
+        setProfile(null);
+      } else {
+        setProfile(data);
+      }
+      setUser(user);
+    } else {
+      setUser(null);
+      setProfile(null);
+    }
+  }, [supabase]);
+
+  // Effect for handling auth state changes
+  useEffect(() => {
+    setLoading(true);
+    const getInitialUser = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
       if (user) {
-        const { data, error } = await supabase
+        setUser(user);
+        const { data: profileData } = await supabase
           .from("profiles")
           .select("*")
           .eq("id", user.id)
           .single();
-
-        if (error) {
-          console.error("Error fetching profile:", error);
-          setProfile(null);
-        } else {
-          setProfile(data);
-        }
-        setUser(user);
-      } else {
-        setUser(null);
-        setProfile(null);
+        setProfile(profileData);
       }
-    },
-    [supabase]
-  );
+      setLoading(false);
+    };
 
-  useEffect(() => {
-    setLoading(true);
+    getInitialUser();
+
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      await fetchProfileData(session?.user ?? null);
-      setLoading(false);
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === "SIGNED_OUT") {
+        setUser(null);
+        setProfile(null);
+        router.push("/");
+      } else if (session) {
+        setUser(session.user);
+        fetchProfile();
+      }
     });
 
     return () => {
       subscription?.unsubscribe();
     };
-  }, [supabase, fetchProfileData]);
+  }, [supabase, router, fetchProfile]);
 
+  // Effect for handling real-time profile updates
   useEffect(() => {
     if (!user) return;
 
@@ -95,7 +123,7 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
     user,
     profile,
     loading,
-    fetchProfile: () => fetchProfileData(user),
+    fetchProfile,
   };
 
   return (
