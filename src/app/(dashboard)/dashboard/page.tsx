@@ -1,6 +1,6 @@
+// src/app/(dashboard)/dashboard/page.tsx
 "use client";
 
-import AppLayout from "@/components/layout/AppLayout";
 import PrimaryActionsCard from "@/features/wallet/components/PrimaryActionsCard";
 import TransactionsTable from "@/features/transactions/components/TransactionsTable";
 import { useViewportSize } from "@mantine/hooks";
@@ -18,9 +18,9 @@ export default function HomePage() {
   }, []);
 
   return (
-    <AppLayout>
+    <>
       {mounted && isMobile && <PrimaryActionsCard />}
       <TransactionsTable />
-    </AppLayout>
+    </>
   );
 }
