@@ -1,4 +1,4 @@
-// src/app/AppLayout.tsx
+// src/components/layout/AppLayout.tsx
 "use client";
 
 import "@mantine/core/styles.css";
@@ -18,19 +18,20 @@ import { FavoritesProvider } from "@/contexts/FavoritesContext";
 const AuthenticatedLayout = ({ children }: { children: React.ReactNode }) => {
   const { user, loading } = useProfile();
   const [opened, { toggle, close }] = useDisclosure();
+  const router = useRouter();
 
-  if (loading) {
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push("/");
+    }
+  }, [user, loading, router]);
+
+  if (loading || !user) {
     return (
       <Center style={{ height: "100vh" }}>
         <Loader size="xl" />
       </Center>
     );
-  }
-
-  if (!user) {
-    // The context provider handles the redirect, so we render nothing here
-    // to prevent a flash of content before the redirect happens.
-    return null;
   }
 
   return (
