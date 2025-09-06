@@ -44,7 +44,7 @@ export default function LandingPage() {
             </Text>
           </Stack>
           <Group gap="lg">
-            <Button size="lg" onClick={() => router.push("/signup")}>
+            <Button size="lg" onClick={() => router.push("/signup")} miw={120}>
               Sign up
             </Button>
 
@@ -52,6 +52,7 @@ export default function LandingPage() {
               size="lg"
               variant="outline"
               onClick={() => router.push("/login")}
+              miw={120}
             >
               Log in
             </Button>

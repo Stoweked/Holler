@@ -18,8 +18,7 @@ export function OAuthButtons() {
     await supabase.auth.signInWithOAuth({
       provider,
       options: {
-        // This will redirect the user back to your app after authentication
-        redirectTo: `${location.origin}/auth/callback`,
+        redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
       },
     });
   };
