@@ -18,15 +18,10 @@ import { FavoritesProvider } from "@/contexts/FavoritesContext";
 const AuthenticatedLayout = ({ children }: { children: React.ReactNode }) => {
   const { user, loading } = useProfile();
   const [opened, { toggle, close }] = useDisclosure();
-  const router = useRouter();
 
-  useEffect(() => {
-    if (!loading && !user) {
-      router.push("/");
-    }
-  }, [user, loading, router]);
-
-  if (loading || !user) {
+  // While the ProfileContext is loading the session, we show a full-screen loader.
+  // This prevents any flickering or premature rendering of content.
+  if (loading) {
     return (
       <Center style={{ height: "100vh" }}>
         <Loader size="xl" />
@@ -34,6 +29,14 @@ const AuthenticatedLayout = ({ children }: { children: React.ReactNode }) => {
     );
   }
 
+  // If loading is complete and there is still no user, we render nothing.
+  // The middleware is responsible for the actual redirect. This just prevents
+  // a flash of the component before the middleware kicks in.
+  if (!user) {
+    return null;
+  }
+
+  // If loading is complete and we have a user, render the main application shell.
   return (
     <AppShell
       header={{ height: 60 }}
