@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 import { Spotlight } from "@mantine/spotlight";
 import { Search01Icon } from "hugeicons-react";
 import { WalletProvider } from "@/contexts/WalletContext";
+import { FavoritesProvider } from "@/contexts/FavoritesContext";
 
 const AuthenticatedLayout = ({ children }: { children: React.ReactNode }) => {
   const { user, loading } = useProfile();
@@ -73,19 +74,21 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <ProfileProvider>
       <WalletProvider>
-        <Spotlight
-          size="lg"
-          radius="md"
-          scrollable
-          actions={actions}
-          shortcut={["mod + k", "/"]}
-          nothingFound="No results found..."
-          searchProps={{
-            leftSection: <Search01Icon size={20} />,
-            placeholder: "Search...",
-          }}
-        />
-        <AuthenticatedLayout>{children}</AuthenticatedLayout>
+        <FavoritesProvider>
+          <Spotlight
+            size="lg"
+            radius="md"
+            scrollable
+            actions={actions}
+            shortcut={["mod + k", "/"]}
+            nothingFound="No results found..."
+            searchProps={{
+              leftSection: <Search01Icon size={20} />,
+              placeholder: "Search...",
+            }}
+          />
+          <AuthenticatedLayout>{children}</AuthenticatedLayout>
+        </FavoritesProvider>
       </WalletProvider>
     </ProfileProvider>
   );

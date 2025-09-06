@@ -7,13 +7,11 @@ import {
   Button,
   Group,
   Modal,
-  Space,
 } from "@mantine/core";
 import { CheckmarkCircle01Icon, StarIcon } from "hugeicons-react";
 import { Contact } from "../types/contact";
 import { getInitials } from "@/lib/hooks/getInitials";
-import { useState, useEffect } from "react";
-import { useFavorites } from "../hooks/useFavorites";
+import { useFavorites } from "@/contexts/FavoritesContext"; // Update the import path
 
 interface ContactModalProps {
   opened: boolean;
@@ -34,18 +32,10 @@ function ContactModalContent({
   onSendClick,
   onRequestClick,
 }: ContactModalContentProps) {
-  // Use the toggleFavorite function from the hook
   const { favoriteContacts, toggleFavorite } = useFavorites();
-  const [isFavorite, setIsFavorite] = useState(
-    favoriteContacts.has(contact.id)
-  );
-
-  useEffect(() => {
-    setIsFavorite(favoriteContacts.has(contact.id));
-  }, [contact.id, favoriteContacts]);
+  const isFavorite = favoriteContacts.has(contact.id);
 
   const handleToggleFavorite = () => {
-    // Call the centralized function from the hook
     toggleFavorite(contact);
   };
 
@@ -69,14 +59,13 @@ function ContactModalContent({
         </Avatar>
 
         <Button
-          variant={isFavorite ? "default" : "light"}
+          variant="default"
           size="compact-md"
           leftSection={
-            isFavorite ? (
-              <CheckmarkCircle01Icon size={16} />
-            ) : (
-              <StarIcon size={16} />
-            )
+            <StarIcon
+              size={16}
+              style={{ fill: isFavorite ? "currentColor" : "none" }}
+            />
           }
           onClick={handleToggleFavorite}
         >

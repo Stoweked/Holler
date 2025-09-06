@@ -25,14 +25,10 @@ export const theme = createTheme({
     },
     Notification: {
       defaultProps: {
-        radius: "lg",
+        radius: "md",
         withBorder: true,
-        color: "none",
       },
       styles: {
-        root: {
-          paddingLeft: "var(--mantine-spacing-sm)",
-        },
         closeButton: {
           borderRadius: "var(--mantine-radius-xl)",
         },

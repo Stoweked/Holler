@@ -1,22 +1,43 @@
-// src/features/contacts/hooks/useFavorites.ts
-import { useState, useEffect, useCallback } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+  ReactNode,
+} from "react";
 import { createClient } from "@/lib/supabase/client";
-import { useProfile } from "@/contexts/ProfileContext";
+import { useProfile } from "./ProfileContext";
 import { notifications } from "@mantine/notifications";
 import { CheckIcon } from "@mantine/core";
-import { Contact } from "../types/contact";
+import { Contact } from "@/features/contacts/types/contact";
+
+interface FavoritesContextType {
+  favoriteContacts: Set<string>;
+  toggleFavorite: (contact: Contact) => void;
+  loading: boolean;
+}
+
+const FavoritesContext = createContext<FavoritesContextType | undefined>(
+  undefined
+);
 
 const supabase = createClient();
 
-export function useFavorites() {
+export function FavoritesProvider({ children }: { children: ReactNode }) {
   const [favoriteContacts, setFavoriteContacts] = useState<Set<string>>(
     new Set()
   );
+  const [loading, setLoading] = useState(true);
   const { user } = useProfile();
 
   useEffect(() => {
     const fetchFavorites = async () => {
-      if (!user) return;
+      if (!user) {
+        setLoading(false);
+        return;
+      }
+      setLoading(true);
       const { data, error } = await supabase
         .from("favorite_contacts")
         .select("favorited_id")
@@ -24,11 +45,13 @@ export function useFavorites() {
 
       if (error) {
         console.error("Error fetching favorites:", error);
+        setLoading(false);
         return;
       }
 
       const favoriteSet = new Set(data.map((fav) => fav.favorited_id));
       setFavoriteContacts(favoriteSet);
+      setLoading(false);
     };
 
     fetchFavorites();
@@ -42,7 +65,6 @@ export function useFavorites() {
       const newFavorites = new Set(favoriteContacts);
 
       if (isCurrentlyFavorite) {
-        // Optimistically remove
         newFavorites.delete(contact.id);
         setFavoriteContacts(newFavorites);
 
@@ -52,7 +74,6 @@ export function useFavorites() {
           .match({ user_id: user.id, favorited_id: contact.id });
 
         if (error) {
-          // Revert on error
           newFavorites.add(contact.id);
           setFavoriteContacts(newFavorites);
           notifications.show({
@@ -69,7 +90,6 @@ export function useFavorites() {
           });
         }
       } else {
-        // Optimistically add
         newFavorites.add(contact.id);
         setFavoriteContacts(newFavorites);
 
@@ -82,7 +102,6 @@ export function useFavorites() {
         ]);
 
         if (error) {
-          // Revert on error
           newFavorites.delete(contact.id);
           setFavoriteContacts(newFavorites);
           notifications.show({
@@ -103,5 +122,19 @@ export function useFavorites() {
     [user, favoriteContacts]
   );
 
-  return { favoriteContacts, setFavoriteContacts, toggleFavorite };
+  return (
+    <FavoritesContext.Provider
+      value={{ favoriteContacts, toggleFavorite, loading }}
+    >
+      {children}
+    </FavoritesContext.Provider>
+  );
+}
+
+export function useFavorites() {
+  const context = useContext(FavoritesContext);
+  if (context === undefined) {
+    throw new Error("useFavorites must be used within a FavoritesProvider");
+  }
+  return context;
 }

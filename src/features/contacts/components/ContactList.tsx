@@ -20,7 +20,7 @@ import {
 } from "hugeicons-react";
 import { Contact } from "../types/contact";
 import { getInitials } from "@/lib/hooks/getInitials";
-import { useFavorites } from "../hooks/useFavorites";
+import { useFavorites } from "@/contexts/FavoritesContext";
 import { useContacts } from "../hooks/useContacts";
 
 interface ContactsListProps {
@@ -29,8 +29,8 @@ interface ContactsListProps {
 
 export default function ContactsList({ onContactClick }: ContactsListProps) {
   const [searchValue, setSearchValue] = useState("");
-  const { contacts, loading } = useContacts();
-  const { favoriteContacts } = useFavorites();
+  const { contacts, loading: contactsLoading } = useContacts();
+  const { favoriteContacts, loading: favoritesLoading } = useFavorites();
 
   const handleContactClick = (contact: Contact) => {
     if (onContactClick) {
@@ -54,9 +54,7 @@ export default function ContactsList({ onContactClick }: ContactsListProps) {
     );
   });
 
-  const topContacts = filteredContacts.filter((c) =>
-    favoriteContacts.has(c.id)
-  );
+  const favorites = filteredContacts.filter((c) => favoriteContacts.has(c.id));
   const otherContacts = filteredContacts.filter(
     (c) => !favoriteContacts.has(c.id)
   );
@@ -70,14 +68,17 @@ export default function ContactsList({ onContactClick }: ContactsListProps) {
     return acc;
   }, {} as Record<string, typeof otherContacts>);
 
-  const showDivider = topContacts.length > 0 && otherContacts.length > 0;
+  const showDivider = favorites.length > 0 && otherContacts.length > 0;
 
-  if (loading) {
+  if (contactsLoading || favoritesLoading) {
     return (
-      <Stack>
-        {Array.from({ length: 5 }).map((_, i) => (
-          <Skeleton key={i} height={60} radius="xl" />
-        ))}
+      <Stack gap="lg">
+        <Skeleton height={60} radius="xl" w="100%" />
+        <Stack gap="md">
+          {Array.from({ length: 10 }).map((_, i) => (
+            <Skeleton key={i} height={60} radius="xl" w="100%" />
+          ))}
+        </Stack>
       </Stack>
     );
   }
@@ -112,13 +113,13 @@ export default function ContactsList({ onContactClick }: ContactsListProps) {
 
       {filteredContacts.length > 0 ? (
         <>
-          {topContacts.length > 0 && (
+          {favorites.length > 0 && (
             <Stack gap={8}>
               <Title order={4} px="xs">
                 Favorites
               </Title>
               <Stack gap={0}>
-                {topContacts.map((contact) => (
+                {favorites.map((contact) => (
                   <ContactItem
                     key={contact.id}
                     avatar={

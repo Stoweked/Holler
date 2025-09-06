@@ -19,8 +19,8 @@ import { Download02Icon, PrinterIcon } from "hugeicons-react";
 import { useState } from "react";
 import { useDisclosure } from "@mantine/hooks";
 import ContactModal from "@/features/contacts/components/ContactModal";
-import { mockContacts } from "@/mockData/mockContacts";
 import { Contact } from "@/features/contacts/types/contact";
+import { useContacts } from "@/features/contacts/hooks/useContacts"; // Import useContacts hook
 
 interface TransactionDetailsDrawerProps {
   opened: boolean;
@@ -38,6 +38,7 @@ export default function TransactionDetailsDrawer({
     { open: openContactModal, close: closeContactModal },
   ] = useDisclosure(false);
   const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
+  const { contacts, loading: contactsLoading } = useContacts(); // Fetch live contacts
 
   if (!transaction) {
     return null;
@@ -47,7 +48,7 @@ export default function TransactionDetailsDrawer({
     transaction;
 
   const handleViewProfile = (contactName: string) => {
-    const contactDetails = mockContacts.find(
+    const contactDetails = contacts.find(
       (contact) => contact.full_name === contactName
     );
     if (contactDetails) {
@@ -58,9 +59,10 @@ export default function TransactionDetailsDrawer({
 
   const renderParty = (partyName: string) => {
     const isContact =
+      !contactsLoading &&
       partyName !== "You" &&
       !["Business Savings", "Stripe", "Client Payment"].includes(partyName) &&
-      mockContacts.some((contact) => contact.full_name === partyName);
+      contacts.some((contact) => contact.full_name === partyName);
 
     if (isContact) {
       return (
@@ -117,7 +119,7 @@ export default function TransactionDetailsDrawer({
               Print
             </Button>
             <Button
-              aria-label="Print"
+              aria-label="Download"
               size="md"
               variant="default"
               leftSection={<Download02Icon size={16} />}
