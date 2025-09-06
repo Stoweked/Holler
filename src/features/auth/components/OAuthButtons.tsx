@@ -18,7 +18,7 @@ export function OAuthButtons() {
     await supabase.auth.signInWithOAuth({
       provider,
       options: {
-        redirectTo: `${location.origin}/dashboard`,
+        redirectTo: `${location.origin}/callback`,
       },
     });
   };
@@ -37,7 +37,8 @@ export function OAuthButtons() {
       </ActionIcon>
 
       {/* Facebook */}
-      {/* <ActionIcon
+      <ActionIcon
+        disabled
         aria-label="Log in with Facebook"
         size="xl"
         radius="xl"
@@ -45,10 +46,11 @@ export function OAuthButtons() {
         onClick={() => handleOAuthLogin("facebook")}
       >
         <FacebookLogo />
-      </ActionIcon> */}
+      </ActionIcon>
 
       {/* Apple */}
-      {/* <ActionIcon
+      <ActionIcon
+        disabled
         aria-label="Log in with Apple"
         size="xl"
         radius="xl"
@@ -61,7 +63,7 @@ export function OAuthButtons() {
         <Box lightHidden>
           <AppleLogoDark />
         </Box>
-      </ActionIcon> */}
+      </ActionIcon>
     </Group>
   );
 }
