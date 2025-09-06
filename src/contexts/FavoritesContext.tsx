@@ -1,3 +1,4 @@
+// src/contexts/FavoritesContext.tsx
 import {
   createContext,
   useContext,
@@ -59,7 +60,7 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
 
   const toggleFavorite = useCallback(
     async (contact: Contact) => {
-      if (!user) return;
+      if (!user || !contact.type) return;
 
       const isCurrentlyFavorite = favoriteContacts.has(contact.id);
       const newFavorites = new Set(favoriteContacts);
@@ -71,7 +72,11 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
         const { error } = await supabase
           .from("favorite_contacts")
           .delete()
-          .match({ user_id: user.id, favorited_id: contact.id });
+          .match({
+            user_id: user.id,
+            favorited_id: contact.id,
+            favorited_type: contact.type,
+          });
 
         if (error) {
           newFavorites.add(contact.id);
@@ -97,6 +102,7 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
           {
             user_id: user.id,
             favorited_id: contact.id,
+            favorited_type: contact.type,
           },
         ]);
 

@@ -4,7 +4,6 @@ import { createClient } from "@/lib/supabase/client";
 import { useProfile } from "@/contexts/ProfileContext";
 import { Contact } from "../types/contact";
 
-// Create the Supabase client once at the module level, not inside the hook
 const supabase = createClient();
 
 export function useContacts() {
@@ -21,18 +20,15 @@ export function useContacts() {
 
       setLoading(true);
 
-      // Fetch all profiles except the current user's
       const { data: profiles, error: profileError } = await supabase
         .from("profiles")
         .select("id, full_name, email, phone_number, avatar_url")
         .neq("id", user.id);
 
-      // Fetch all businesses
       const { data: businesses, error: businessError } = await supabase
         .from("businesses")
         .select("id, business_name, email, phone_number, avatar_url");
 
-      // Fetch the businesses the current user is an admin of
       const { data: userBusinesses, error: userBusinessError } = await supabase
         .from("business_admins")
         .select("business_id")
@@ -55,20 +51,18 @@ export function useContacts() {
       const profileContacts: Contact[] =
         profiles?.map((p) => ({
           ...p,
-          type: "profile",
+          type: "profile", // Add type for profiles
         })) || [];
 
-      // Filter out businesses the user is a member of
       const businessContacts: Contact[] =
         businesses
           ?.filter((b) => !userBusinessIds.has(b.id))
           .map((b) => ({
             ...b,
             full_name: b.business_name,
-            type: "business",
+            type: "business", // Add type for businesses
           })) || [];
 
-      // Combine, sort, and set the contacts
       const allContacts = [...profileContacts, ...businessContacts].sort(
         (a, b) => (a.full_name || "").localeCompare(b.full_name || "")
       );
@@ -78,7 +72,7 @@ export function useContacts() {
     };
 
     fetchContacts();
-  }, [user]); // Supabase client is stable now and can be removed from dependencies
+  }, [user]);
 
   return { contacts, loading };
 }

@@ -7,7 +7,6 @@ export const mockContacts: Contact[] = [
     email: "contact@layton.com",
     phone_number: "(512) 555-0101",
     avatar_url: "",
-    topContact: true,
   },
   {
     id: "2",
@@ -15,7 +14,6 @@ export const mockContacts: Contact[] = [
     email: "contact@j2homes.com",
     phone_number: "",
     avatar_url: "",
-    topContact: true,
   },
   {
     id: "3",
@@ -23,7 +21,6 @@ export const mockContacts: Contact[] = [
     email: "office@wasatchdrywall.co",
     phone_number: "",
     avatar_url: "",
-    topContact: true,
   },
   {
     id: "4",

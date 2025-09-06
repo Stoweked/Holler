@@ -8,7 +8,6 @@ export interface Contact {
   phone_number?: string;
   username?: string;
   avatar_url?: string;
-  business_name?: string;
   phone?: string;
   dob?: string;
   gender?: string;
@@ -17,6 +16,6 @@ export interface Contact {
   city?: string;
   state?: string;
   zip?: string;
-  topContact?: boolean;
   favorite?: boolean;
+  type?: "profile" | "business";
 }
