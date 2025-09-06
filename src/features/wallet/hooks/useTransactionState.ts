@@ -16,11 +16,14 @@ export function useTransactionState(
   initialContact: Contact | null
 ) {
   const getInitialStep = useCallback((): TransactionStep => {
+    if (initialContact) {
+      return "enterAmount";
+    }
     if (transactionType === "deposit" || transactionType === "transfer") {
       return "selectBank";
     }
     return "selectContact";
-  }, [transactionType]);
+  }, [transactionType, initialContact]);
 
   const [step, setStep] = useState<TransactionStep>(getInitialStep());
   const [selectedParty, setSelectedParty] = useState<TransactionParty | null>(
@@ -41,12 +44,14 @@ export function useTransactionState(
       }
     } else {
       // Reset state when drawer is closed
-      setStep(getInitialStep());
-      setSelectedParty(null);
-      setSelectedBank(mockBanks[0]);
-      setAmount("");
-      setNote("");
-      setSelectedWaiver(null);
+      setTimeout(() => {
+        setStep(getInitialStep());
+        setSelectedParty(null);
+        setSelectedBank(mockBanks[0]);
+        setAmount("");
+        setNote("");
+        setSelectedWaiver(null);
+      }, 200); // Delay to allow for closing animation
     }
   }, [opened, initialContact, transactionType, getInitialStep]);
 
@@ -64,18 +69,23 @@ export function useTransactionState(
   };
 
   const handleAmountContinue = () => setStep("confirm");
+
   const handleEditBank = () => setStep("selectBank");
 
   const handleBack = () => {
     if (step === "confirm") {
       setStep("enterAmount");
     } else if (step === "enterAmount") {
-      if (initialContact) {
-        close();
+      // For send/request, "back" always means choosing the contact again.
+      // For deposit/transfer, it means choosing the bank again.
+      if (transactionType === "send" || transactionType === "request") {
+        setStep("selectContact");
       } else {
-        setStep(getInitialStep());
+        // deposit or transfer
+        setStep("selectBank");
       }
     } else {
+      // From selectContact or selectBank step, close the drawer
       close();
     }
   };
@@ -85,8 +95,16 @@ export function useTransactionState(
   };
 
   const handleStartOver = () => {
-    setStep(getInitialStep());
-    setSelectedParty(null);
+    // Reset to the appropriate initial step, considering if there was an initialContact
+    const initialStep = getInitialStep();
+    setStep(initialStep);
+
+    // If there wasn't an initial contact, clear the selected party.
+    // If there was, keep it, because "start over" should just reset the amount/note.
+    if (!initialContact) {
+      setSelectedParty(null);
+    }
+
     setSelectedBank(mockBanks[0]);
     setAmount("");
     setNote("");

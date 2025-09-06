@@ -97,7 +97,6 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
           {
             user_id: user.id,
             favorited_id: contact.id,
-            favorited_type: contact.type,
           },
         ]);
 

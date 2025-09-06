@@ -19,5 +19,4 @@ export interface Contact {
   zip?: string;
   topContact?: boolean;
   favorite?: boolean;
-  type: "profile" | "business";
 }

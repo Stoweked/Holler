@@ -1,5 +1,6 @@
-import { Skeleton, Space, Stack } from "@mantine/core";
+import { Space, Stack } from "@mantine/core";
 import SectionHeader from "../SectionHeader";
+import BusinessProfileCard from "@/features/business/components/BusinessProfileCard";
 
 export function BusinessSettings() {
   return (
@@ -8,9 +9,7 @@ export function BusinessSettings() {
         heading="Your business"
         subHeading="Manage your Holler business profile."
       />
-      <Skeleton height={200} radius="lg" />
-      <Skeleton height={200} radius="lg" />
-      <Skeleton height={200} radius="lg" />
+      <BusinessProfileCard />
       <Space h={100} />
     </Stack>
   );

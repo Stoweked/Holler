@@ -1,3 +1,4 @@
+// src/features/wallet/components/actions/ConfirmationStep.tsx
 import { Waiver } from "@/features/waivers/types/waiver";
 import {
   Avatar,
@@ -95,6 +96,12 @@ export default function ConfirmationStep({
           details: party.data.email || party.data.phone_number || "",
           avatar: party.data.avatar_url || getInitials(party.data.full_name),
         }
+      : party.type === "business"
+      ? {
+          name: party.data.business_name,
+          details: party.data.email || party.data.phone_number || "",
+          avatar: getInitials(party.data.business_name),
+        }
       : {
           name: party.data.name,
           details: party.data.details,
@@ -156,7 +163,11 @@ export default function ConfirmationStep({
                     party.type === "contact" ? party.data.avatar_url : undefined
                   }
                   alt={
-                    party.type === "contact" ? party.data.full_name : "Avatar"
+                    party.type === "contact"
+                      ? party.data.full_name
+                      : party.type === "business"
+                      ? party.data.business_name
+                      : "Avatar"
                   }
                   variant="light"
                   color="lime"

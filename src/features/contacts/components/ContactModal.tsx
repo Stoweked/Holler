@@ -8,7 +8,7 @@ import {
   Group,
   Modal,
 } from "@mantine/core";
-import { CheckmarkCircle01Icon, StarIcon } from "hugeicons-react";
+import { StarIcon } from "hugeicons-react";
 import { Contact } from "../types/contact";
 import { getInitials } from "@/lib/hooks/getInitials";
 import { useFavorites } from "@/contexts/FavoritesContext"; // Update the import path
