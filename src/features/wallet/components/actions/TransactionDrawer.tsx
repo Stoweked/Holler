@@ -1,5 +1,3 @@
-// /src/features/wallet/components/actions/TransactionDrawer.tsx
-
 import { Drawer, Space } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import ConnectBankDrawer from "@/features/banks/components/ConnectBankDrawer";
@@ -9,26 +7,34 @@ import TransactionDrawerTitle from "./TransactionDrawerTitle";
 import TransactionDrawerContent from "./TransactionDrawerContent";
 import classes from "./Actions.module.css";
 import { TransactionActionType } from "../../types/wallet";
-import { Contact } from "@/features/contacts/types/contact";
+import { TransactionParty } from "@/features/transactions/types/transactionParty";
 
 interface TransactionDrawerProps {
   opened: boolean;
   close: () => void;
-  transactionType: TransactionActionType;
-  initialContact?: Contact | null;
+  actionType: TransactionActionType | null;
+  preselectedParty?: TransactionParty | null;
 }
 
-export default function TransactionDrawer({
+interface TransactionDrawerInnerProps {
+  opened: boolean;
+  close: () => void;
+  actionType: TransactionActionType; // Guaranteed to be non-null
+  preselectedParty: TransactionParty | null;
+}
+
+// All hooks and logic are moved into this inner component
+function TransactionDrawerInner({
   opened,
   close,
-  transactionType,
-  initialContact = null,
-}: TransactionDrawerProps) {
+  actionType,
+  preselectedParty,
+}: TransactionDrawerInnerProps) {
   const state = useTransactionState(
     opened,
-    transactionType,
+    actionType,
     close,
-    initialContact
+    preselectedParty
   );
   const { handleConfirm } = useTransactionConfirmation();
   const isSuccessStep = state.step === "success";
@@ -40,9 +46,7 @@ export default function TransactionDrawer({
   const onConfirm = () => {
     handleConfirm({
       ...state,
-      transactionType,
-      handleClose: state.handleClose,
-      setStep: state.setStep,
+      transactionType: actionType,
     });
   };
 
@@ -55,8 +59,8 @@ export default function TransactionDrawer({
           !isSuccessStep && (
             <TransactionDrawerTitle
               step={state.step}
-              transactionType={transactionType}
-              initialContact={initialContact}
+              transactionType={actionType}
+              preselectedParty={preselectedParty}
               handleBack={state.handleBack}
             />
           )
@@ -82,5 +86,28 @@ export default function TransactionDrawer({
         close={closeConnectBankDrawer}
       />
     </>
+  );
+}
+
+// The main export is now a lightweight wrapper
+export default function TransactionDrawer({
+  opened,
+  close,
+  actionType,
+  preselectedParty = null,
+}: TransactionDrawerProps) {
+  // Conditionally render the inner component *after* the check.
+  // This ensures hooks are not called conditionally.
+  if (!actionType) {
+    return null;
+  }
+
+  return (
+    <TransactionDrawerInner
+      opened={opened}
+      close={close}
+      actionType={actionType}
+      preselectedParty={preselectedParty}
+    />
   );
 }

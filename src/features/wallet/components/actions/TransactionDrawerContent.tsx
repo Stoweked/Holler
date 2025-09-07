@@ -1,5 +1,3 @@
-// /src/features/wallet/components/actions/TransactionDrawerContent.tsx
-
 import SelectBankStep from "@/features/banks/components/SelectBankStep";
 import { useTransactionState } from "../../hooks/useTransactionState";
 import SelectContactStep from "@/features/contacts/components/SelectContactStep";
@@ -8,6 +6,7 @@ import ConfirmationStep from "./ConfirmationStep";
 import SuccessStep from "./SuccessStep";
 import { Transition } from "@mantine/core";
 import { useState, useEffect } from "react";
+import { Contact } from "@/features/contacts/types/contact";
 
 interface TransactionDrawerContentProps {
   state: ReturnType<typeof useTransactionState>;
@@ -22,20 +21,20 @@ export default function TransactionDrawerContent({
 }: TransactionDrawerContentProps) {
   const {
     step,
-    selectedParty,
-    selectedBank,
+    party,
+    bank,
     amount,
     note,
     selectedWaiver,
-    handleSelectContact,
+    setParty,
     handleAmountContinue,
-    handleBack,
     handleEditBank,
+    handleEditContact,
     setAmount,
     setNote,
     setSelectedWaiver,
-    handleSelectBank,
-    transactionType,
+    setBank,
+    actionType,
     handleStartOver,
     handleClose,
   } = state;
@@ -55,48 +54,52 @@ export default function TransactionDrawerContent({
     }
   }, [step, activeStep]);
 
+  // Wrapper function to satisfy the expected type for onSelectContact
+  const handleSelectContact = (contact: Contact) => {
+    setParty({ type: "contact", data: contact });
+  };
+
   const renderStep = (currentStep: typeof step) => {
+    if (!actionType) return null;
+
     switch (currentStep) {
       case "selectContact":
         return <SelectContactStep onSelectContact={handleSelectContact} />;
       case "selectBank":
         return (
-          <SelectBankStep
-            onSelectBank={handleSelectBank}
-            onConnectNew={onConnectNew}
-          />
+          <SelectBankStep onSelectBank={setBank} onConnectNew={onConnectNew} />
         );
       case "enterAmount":
-        if (selectedParty && selectedBank) {
+        if (party && bank) {
           return (
             <PaymentAmountStep
-              party={selectedParty}
-              bank={selectedBank}
+              party={party}
+              bank={bank}
               amount={amount}
               setAmount={setAmount}
               note={note}
               setNote={setNote}
               onContinue={handleAmountContinue}
-              onEditContact={handleBack}
+              onEditContact={handleEditContact}
               onEditBank={handleEditBank}
-              actionType={transactionType}
+              actionType={actionType}
               selectedWaiver={selectedWaiver}
               setSelectedWaiver={setSelectedWaiver}
-              isSend={transactionType === "send"}
+              isSend={actionType === "send"}
             />
           );
         }
         return null;
       case "confirm":
-        if (selectedParty && selectedBank) {
+        if (party && bank) {
           return (
             <ConfirmationStep
-              party={selectedParty}
-              bank={selectedBank}
+              party={party}
+              bank={bank}
               amount={amount}
               note={note}
               onConfirm={onConfirm}
-              actionType={transactionType}
+              actionType={actionType}
               waiver={selectedWaiver}
             />
           );
@@ -105,7 +108,7 @@ export default function TransactionDrawerContent({
       case "success":
         return (
           <SuccessStep
-            transactionType={transactionType}
+            transactionType={actionType}
             onDone={handleClose}
             onStartOver={handleStartOver}
           />

@@ -8,12 +8,16 @@ import { Search01Icon } from "hugeicons-react";
 import TransactionDetailsDrawer from "./TransactionDetailsDrawer";
 import { mockTransactions } from "@/mockData/mockTransactions";
 import { useTransactionFilters } from "../hooks/useTransactionFilters";
+import { TransactionParty } from "../types/transactionParty";
+import { Contact } from "@/features/contacts/types/contact";
+import { useWallet } from "@/contexts/WalletContext";
 
 export default function TransactionsTable() {
   const [drawerOpened, { open: openDrawer, close: closeDrawer }] =
     useDisclosure(false);
   const [selectedTransaction, setSelectedTransaction] =
     useState<Transaction | null>(null);
+  const { openActionDrawer } = useWallet();
 
   const {
     activeStatusFilter,

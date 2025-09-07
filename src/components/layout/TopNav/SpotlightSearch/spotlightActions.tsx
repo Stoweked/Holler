@@ -27,9 +27,13 @@ import {
 } from "hugeicons-react";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { logout } from "@/features/auth/actions/logout";
+import { TransactionActionType } from "@/features/wallet/types/wallet";
+
+type OpenActionDrawerFunc = (type: TransactionActionType) => void;
 
 export const getSpotlightActions = (
-  router: AppRouterInstance
+  router: AppRouterInstance,
+  openActionDrawer: OpenActionDrawerFunc // Accept the function as an argument
 ): (SpotlightActionGroupData | SpotlightActionData)[] => [
   {
     group: "Navigation",
@@ -77,7 +81,7 @@ export const getSpotlightActions = (
         label: "Deposit",
         description: "Add money to your Holler account",
         keywords: ["add funds", "load money", "transfer in"],
-        onClick: () => window.dispatchEvent(new CustomEvent("open-deposit")),
+        onClick: () => openActionDrawer("deposit"),
         leftSection: <PlusSignIcon size={24} />,
       },
       {
@@ -85,7 +89,7 @@ export const getSpotlightActions = (
         label: "Send",
         description: "Send a payment to a contact",
         keywords: ["send money", "pay", "payout"],
-        onClick: () => window.dispatchEvent(new CustomEvent("open-send")),
+        onClick: () => openActionDrawer("send"),
         leftSection: <ArrowUp02Icon size={24} />,
       },
       {
@@ -93,7 +97,7 @@ export const getSpotlightActions = (
         label: "Request",
         description: "Request a payment from a contact",
         keywords: ["request money", "invoice", "bill"],
-        onClick: () => window.dispatchEvent(new CustomEvent("open-request")),
+        onClick: () => openActionDrawer("request"),
         leftSection: <ArrowDown02Icon size={24} />,
       },
       {
@@ -101,7 +105,7 @@ export const getSpotlightActions = (
         label: "Transfer",
         description: "Transfer funds between your accounts",
         keywords: ["move money", "internal transfer"],
-        onClick: () => window.dispatchEvent(new CustomEvent("open-transfer")),
+        onClick: () => openActionDrawer("transfer"),
         leftSection: <ArrowLeftRightIcon size={24} />,
       },
     ],

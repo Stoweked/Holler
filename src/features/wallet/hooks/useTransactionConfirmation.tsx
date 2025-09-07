@@ -1,17 +1,15 @@
-// /src/features/transactions/hooks/useTransactionConfirmation.ts
-
 import { notifications } from "@mantine/notifications";
 import { Waiver } from "@/features/waivers/types/waiver";
 import { TransactionActionType, TransactionStep } from "../types/wallet";
 import { Bank } from "@/features/banks/types/bank";
 import { TransactionParty } from "@/features/transactions/types/transactionParty";
 
-interface ConfirmationParams {
+export interface ConfirmationParams {
   transactionType: TransactionActionType;
+  party: TransactionParty | null;
+  bank: Bank;
   amount: string | number;
   note: string;
-  selectedBank: Bank | null;
-  selectedParty: TransactionParty | null;
   selectedWaiver: Waiver | null;
   handleClose: () => void;
   setStep: (step: TransactionStep) => void;
@@ -22,8 +20,8 @@ export function useTransactionConfirmation() {
     transactionType,
     amount,
     note,
-    selectedBank,
-    selectedParty,
+    bank,
+    party,
     selectedWaiver,
     handleClose,
     setStep,
@@ -31,8 +29,8 @@ export function useTransactionConfirmation() {
     const transactionData = {
       amount,
       note,
-      fromBank: selectedBank,
-      toParty: selectedParty,
+      fromBank: bank,
+      toParty: party,
       waiver: selectedWaiver,
     };
 

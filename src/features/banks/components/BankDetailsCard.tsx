@@ -60,7 +60,7 @@ export default function BankDetailsCard({
                   aria-label="Options"
                   size="lg"
                   variant="subtle"
-                  color="grey"
+                  color="gray"
                 >
                   <MoreVerticalCircle01Icon size={24} />
                 </ActionIcon>

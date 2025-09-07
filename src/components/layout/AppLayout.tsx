@@ -1,4 +1,3 @@
-// src/components/layout/AppLayout.tsx
 "use client";
 
 import "@mantine/core/styles.css";
@@ -12,15 +11,20 @@ import { getSpotlightActions } from "@/components/layout/TopNav/SpotlightSearch/
 import { useRouter } from "next/navigation";
 import { Spotlight } from "@mantine/spotlight";
 import { Search01Icon } from "hugeicons-react";
-import { WalletProvider } from "@/contexts/WalletContext";
+import { WalletProvider, useWallet } from "@/contexts/WalletContext";
 import { FavoritesProvider } from "@/contexts/FavoritesContext";
 
 const AuthenticatedLayout = ({ children }: { children: React.ReactNode }) => {
   const { user, loading } = useProfile();
   const [opened, { toggle, close }] = useDisclosure();
+  const router = useRouter();
 
-  // While the ProfileContext is loading the session, we show a full-screen loader.
-  // This prevents any flickering or premature rendering of content.
+  // Get the openActionDrawer function from the WalletContext
+  const { openActionDrawer } = useWallet();
+
+  // Pass the router and the openActionDrawer function to getSpotlightActions
+  const actions = getSpotlightActions(router, openActionDrawer);
+
   if (loading) {
     return (
       <Center style={{ height: "100vh" }}>
@@ -29,42 +33,52 @@ const AuthenticatedLayout = ({ children }: { children: React.ReactNode }) => {
     );
   }
 
-  // If loading is complete and there is still no user, we render nothing.
-  // The middleware is responsible for the actual redirect. This just prevents
-  // a flash of the component before the middleware kicks in.
   if (!user) {
+    // This can be a redirect or null, depending on your auth flow
+    // For now, returning null assumes middleware handles the redirect
     return null;
   }
 
-  // If loading is complete and we have a user, render the main application shell.
   return (
-    <AppShell
-      header={{ height: 60 }}
-      navbar={{
-        width: 380,
-        breakpoint: "sm",
-        collapsed: { mobile: !opened },
-      }}
-      padding={0}
-    >
-      <AppShell.Header>
-        <TopNav opened={opened} toggle={toggle} />
-      </AppShell.Header>
-      <AppShell.Navbar>
-        <ScrollArea type="never">
-          <SideNav closeMobileNav={close} />
-        </ScrollArea>
-      </AppShell.Navbar>
-      <AppShell.Main pt={60} className="appShell">
-        {children}
-      </AppShell.Main>
-    </AppShell>
+    <>
+      <Spotlight
+        size="lg"
+        radius="md"
+        scrollable
+        actions={actions}
+        shortcut={["mod + k", "/"]}
+        nothingFound="No results found..."
+        searchProps={{
+          leftSection: <Search01Icon size={20} />,
+          placeholder: "Search...",
+        }}
+      />
+      <AppShell
+        header={{ height: 60 }}
+        navbar={{
+          width: 380,
+          breakpoint: "sm",
+          collapsed: { mobile: !opened },
+        }}
+        padding={0}
+      >
+        <AppShell.Header>
+          <TopNav opened={opened} toggle={toggle} />
+        </AppShell.Header>
+        <AppShell.Navbar>
+          <ScrollArea type="never">
+            <SideNav closeMobileNav={close} />
+          </ScrollArea>
+        </AppShell.Navbar>
+        <AppShell.Main pt={60} className="appShell">
+          {children}
+        </AppShell.Main>
+      </AppShell>
+    </>
   );
 };
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
-  const router = useRouter();
-  const actions = getSpotlightActions(router);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -79,18 +93,6 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     <ProfileProvider>
       <WalletProvider>
         <FavoritesProvider>
-          <Spotlight
-            size="lg"
-            radius="md"
-            scrollable
-            actions={actions}
-            shortcut={["mod + k", "/"]}
-            nothingFound="No results found..."
-            searchProps={{
-              leftSection: <Search01Icon size={20} />,
-              placeholder: "Search...",
-            }}
-          />
           <AuthenticatedLayout>{children}</AuthenticatedLayout>
         </FavoritesProvider>
       </WalletProvider>

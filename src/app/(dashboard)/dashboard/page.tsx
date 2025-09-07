@@ -1,14 +1,15 @@
-// src/app/(dashboard)/dashboard/page.tsx
 "use client";
 
 import PrimaryActionsCard from "@/features/wallet/components/PrimaryActionsCard";
 import TransactionsTable from "@/features/transactions/components/TransactionsTable";
 import { useViewportSize } from "@mantine/hooks";
 import { useEffect, useState } from "react";
+import { useWallet } from "@/contexts/WalletContext";
+import TransactionDrawer from "@/features/wallet/components/actions/TransactionDrawer";
 
 export const dynamic = "force-dynamic";
 
-export default function HomePage() {
+export default function Dashboard() {
   const { width } = useViewportSize();
   const isMobile = width < 768;
 
@@ -17,10 +18,24 @@ export default function HomePage() {
     setMounted(true);
   }, []);
 
+  const {
+    isActionDrawerOpen,
+    closeActionDrawer,
+    actionType,
+    preselectedParty,
+  } = useWallet();
+
   return (
     <>
       {mounted && isMobile && <PrimaryActionsCard />}
       <TransactionsTable />
+
+      <TransactionDrawer
+        opened={isActionDrawerOpen}
+        close={closeActionDrawer}
+        actionType={actionType}
+        preselectedParty={preselectedParty}
+      />
     </>
   );
 }

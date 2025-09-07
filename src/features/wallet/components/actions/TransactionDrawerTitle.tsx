@@ -1,21 +1,19 @@
-// /src/features/transactions/components/TransactionDrawerTitle.tsx
-
 import { ActionIcon, Group, Text, Tooltip } from "@mantine/core";
 import { ArrowLeft02Icon } from "hugeicons-react";
 import { TransactionActionType, TransactionStep } from "../../types/wallet";
-import { Contact } from "@/features/contacts/types/contact";
+import { TransactionParty } from "@/features/transactions/types/transactionParty";
 
 interface TransactionDrawerTitleProps {
   step: TransactionStep;
-  transactionType: TransactionActionType;
-  initialContact: Contact | null;
+  transactionType: TransactionActionType | null;
+  preselectedParty?: TransactionParty | null;
   handleBack: () => void;
 }
 
 export default function TransactionDrawerTitle({
   step,
   transactionType,
-  initialContact,
+  preselectedParty,
   handleBack,
 }: TransactionDrawerTitleProps) {
   const getTitle = () => {
@@ -49,7 +47,7 @@ export default function TransactionDrawerTitle({
           bank: "Transfer to your bank",
         };
       default:
-        return { main: "", review: "", amount: "", bank: "" };
+        return { main: "Transaction", review: "", amount: "", bank: "" };
     }
   };
 
@@ -66,7 +64,7 @@ export default function TransactionDrawerTitle({
   const backLabel =
     step === "confirm"
       ? "Back to payment"
-      : initialContact
+      : preselectedParty
       ? "Close"
       : "Back to contacts";
 

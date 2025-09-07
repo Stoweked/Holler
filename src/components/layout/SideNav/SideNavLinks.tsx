@@ -14,8 +14,6 @@ import LienWaiversDrawer from "@/features/waivers/components/LienWaiversDrawer";
 import { useState, useEffect } from "react";
 import ConnectedBanksDrawer from "@/features/banks/components/ConnectedBanksDrawer";
 import ContactsDrawer from "@/features/contacts/components/ContactsDrawer";
-import TransactionDrawer from "@/features/wallet/components/actions/TransactionDrawer";
-import { TransactionActionType } from "@/features/wallet/types/wallet";
 import ContactModal from "@/features/contacts/components/ContactModal";
 import { Contact } from "@/features/contacts/types/contact";
 import SettingsDrawer from "@/features/settings/components/SettingsDrawer";
@@ -26,8 +24,6 @@ interface SideNavLinksProps {
 
 export default function SideNavLinks({ closeMobileNav }: SideNavLinksProps) {
   const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
-  const [transactionType, setTransactionType] =
-    useState<TransactionActionType>("send");
   const [initialSettingsTab, setInitialSettingsTab] = useState("account");
 
   const [
@@ -55,16 +51,10 @@ export default function SideNavLinks({ closeMobileNav }: SideNavLinksProps) {
     { open: openProfileDrawer, close: closeProfileDrawer },
   ] = useDisclosure(false);
 
-  const [
-    openedTransactionDrawer,
-    { open: openTransactionDrawer, close: closeTransactionDrawer },
-  ] = useDisclosure(false);
-
   useEffect(() => {
     const handleOpenContacts = () => openContactsDrawer();
     const handleOpenBanks = () => openConnectedBanksDrawer();
 
-    // Handler for opening settings with a specific tab from Spotlight
     const handleOpenSettings = (event: Event) => {
       const customEvent = event as CustomEvent;
       const tab = customEvent.detail?.tab || "account";
@@ -87,16 +77,6 @@ export default function SideNavLinks({ closeMobileNav }: SideNavLinksProps) {
     setSelectedContact(contact);
     openProfileDrawer();
     closeMobileNav();
-  };
-
-  const handleTransactionStart = (
-    contact: Contact,
-    type: TransactionActionType
-  ) => {
-    setSelectedContact(contact);
-    setTransactionType(type);
-    closeProfileDrawer();
-    openTransactionDrawer();
     closeContactsDrawer();
   };
 
@@ -192,18 +172,11 @@ export default function SideNavLinks({ closeMobileNav }: SideNavLinksProps) {
         close={closeSettingsDrawer}
         initialTab={initialSettingsTab}
       />
+
       <ContactModal
         opened={openedProfileDrawer}
         close={closeProfileDrawer}
         contact={selectedContact}
-        onSendClick={(contact) => handleTransactionStart(contact, "send")}
-        onRequestClick={(contact) => handleTransactionStart(contact, "request")}
-      />
-      <TransactionDrawer
-        opened={openedTransactionDrawer}
-        close={closeTransactionDrawer}
-        initialContact={selectedContact}
-        transactionType={transactionType}
       />
     </div>
   );

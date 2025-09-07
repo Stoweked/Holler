@@ -1,4 +1,3 @@
-// src/features/contacts/components/ContactModal.tsx
 import {
   Stack,
   Avatar,
@@ -11,15 +10,15 @@ import {
 import { StarIcon } from "hugeicons-react";
 import { Contact } from "../types/contact";
 import { getInitials } from "@/lib/hooks/getInitials";
-import { useFavorites } from "@/contexts/FavoritesContext"; // Update the import path
+import { useFavorites } from "@/contexts/FavoritesContext";
+import { useWallet } from "@/contexts/WalletContext";
+import { TransactionParty } from "@/features/transactions/types/transactionParty";
 
 interface ContactModalProps {
   opened: boolean;
   close: () => void;
   contact: Contact | null;
   showButtons?: boolean;
-  onSendClick?: (contact: Contact) => void;
-  onRequestClick?: (contact: Contact) => void;
 }
 
 interface ContactModalContentProps extends Omit<ContactModalProps, "contact"> {
@@ -29,10 +28,10 @@ interface ContactModalContentProps extends Omit<ContactModalProps, "contact"> {
 function ContactModalContent({
   contact,
   showButtons,
-  onSendClick,
-  onRequestClick,
+  close,
 }: ContactModalContentProps) {
   const { favoriteContacts, toggleFavorite } = useFavorites();
+  const { openActionDrawer } = useWallet();
   const isFavorite = favoriteContacts.has(contact.id);
 
   const handleToggleFavorite = () => {
@@ -40,15 +39,15 @@ function ContactModalContent({
   };
 
   const handleSend = () => {
-    if (onSendClick && contact) {
-      onSendClick(contact);
-    }
+    const party: TransactionParty = { type: "contact", data: contact };
+    openActionDrawer("send", party);
+    close(); // Close the modal after opening the drawer
   };
 
   const handleRequest = () => {
-    if (onRequestClick && contact) {
-      onRequestClick(contact);
-    }
+    const party: TransactionParty = { type: "contact", data: contact };
+    openActionDrawer("request", party);
+    close(); // Close the modal after opening the drawer
   };
 
   return (
@@ -62,7 +61,6 @@ function ContactModalContent({
         >
           <Title order={1}>{getInitials(contact.full_name)}</Title>
         </Avatar>
-
         <Button
           variant="default"
           size="compact-md"
@@ -109,8 +107,6 @@ export default function ContactModal({
   close,
   contact,
   showButtons = true,
-  onSendClick,
-  onRequestClick,
 }: ContactModalProps) {
   return (
     <Modal
@@ -127,8 +123,6 @@ export default function ContactModal({
           opened={opened}
           close={close}
           showButtons={showButtons}
-          onSendClick={onSendClick}
-          onRequestClick={onRequestClick}
         />
       )}
     </Modal>
