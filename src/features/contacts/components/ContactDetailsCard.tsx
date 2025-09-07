@@ -3,10 +3,10 @@ import {
   Group,
   Stack,
   Text,
-  Paper,
   Menu,
   ActionIcon,
   Tooltip,
+  Card,
 } from "@mantine/core";
 import classes from "./Contacts.module.css";
 import {
@@ -31,8 +31,8 @@ export default function ContactDetailsCard({
   onViewProfile,
 }: ContactDetailsCardProps) {
   return (
-    <Paper withBorder radius="lg" p="xs" w="100%">
-      <Group gap="xs" className={classes.recipientContainer}>
+    <Card withBorder radius="lg" p="xs" w="100%">
+      <Group gap="xs" className={classes.recipientContainer} wrap="nowrap">
         <Group wrap="nowrap" gap={8} className={classes.recipientDetailsGroup}>
           <Avatar
             src={contact?.avatar_url}
@@ -60,35 +60,41 @@ export default function ContactDetailsCard({
             </Text>
           </Stack>
         </Group>
-        <Menu shadow="md" width={155} position="bottom-end" radius="md">
-          <Menu.Target>
-            <Tooltip position="left" label="Options">
-              <ActionIcon
-                aria-label="Options"
-                size="lg"
-                variant="subtle"
-                color="grey"
-              >
-                <MoreVerticalCircle01Icon size={24} />
-              </ActionIcon>
-            </Tooltip>
-          </Menu.Target>
-          <Menu.Dropdown>
-            <Menu.Item
-              leftSection={<PencilEdit02Icon size={16} />}
-              onClick={onEdit}
-            >
-              Edit recipient
-            </Menu.Item>
-            <Menu.Item
-              leftSection={<UserIcon size={16} />}
-              onClick={onViewProfile}
-            >
-              View profile
-            </Menu.Item>
-          </Menu.Dropdown>
-        </Menu>
+        {(onEdit || onViewProfile) && (
+          <Menu shadow="md" width={155} position="bottom-end" radius="md">
+            <Menu.Target>
+              <Tooltip position="left" label="Options">
+                <ActionIcon
+                  aria-label="Options"
+                  size="lg"
+                  variant="subtle"
+                  color="gray"
+                >
+                  <MoreVerticalCircle01Icon size={24} />
+                </ActionIcon>
+              </Tooltip>
+            </Menu.Target>
+            <Menu.Dropdown>
+              {onEdit && (
+                <Menu.Item
+                  leftSection={<PencilEdit02Icon size={16} />}
+                  onClick={onEdit}
+                >
+                  Edit recipient
+                </Menu.Item>
+              )}
+              {onViewProfile && (
+                <Menu.Item
+                  leftSection={<UserIcon size={16} />}
+                  onClick={onViewProfile}
+                >
+                  View profile
+                </Menu.Item>
+              )}
+            </Menu.Dropdown>
+          </Menu>
+        )}
       </Group>
-    </Paper>
+    </Card>
   );
 }

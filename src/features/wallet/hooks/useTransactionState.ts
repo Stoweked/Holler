@@ -1,13 +1,10 @@
 import { useState, useEffect, useCallback } from "react";
 import { Waiver } from "@/features/waivers/types/waiver";
 import { mockBanks } from "@/mockData/mockBanks";
-import {
-  TransactionActionType,
-  TransactionStep,
-  TransactionParty,
-} from "../types/wallet";
+import { TransactionActionType, TransactionStep } from "../types/wallet";
 import { Contact } from "@/features/contacts/types/contact";
 import { Bank } from "@/features/banks/types/bank";
+import { TransactionParty } from "@/features/transactions/types/transactionParty";
 
 export function useTransactionState(
   opened: boolean,

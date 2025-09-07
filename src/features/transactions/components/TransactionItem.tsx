@@ -12,6 +12,9 @@ import {
   UnstyledButton,
 } from "@mantine/core";
 import classes from "./Transactions.module.css";
+import { getInitials } from "@/lib/hooks/getInitials";
+import { useProfile } from "@/contexts/ProfileContext";
+import { getPartyName } from "../types/transactionParty";
 
 interface TransactionItemProps {
   transaction: Transaction;
@@ -22,12 +25,10 @@ export default function TransactionItem({
   transaction,
   onClick,
 }: TransactionItemProps) {
-  const { amount, date, status, type, sender, receiver, avatar } = transaction;
+  const { profile } = useProfile();
+  const { amount, date, status, type, from, to } = transaction;
 
-  // --- Dynamic Values for Display ---
-  // Determine if the transaction is a credit (money in) or debit (money out)
   const isCredit = type === "Received" || type === "Deposited";
-  // Format the amount with a +/- sign and currency symbol
   const formattedAmount = `${isCredit ? "+" : "-"} $${amount.toLocaleString(
     "en-US",
     {
@@ -35,20 +36,46 @@ export default function TransactionItem({
       maximumFractionDigits: 2,
     }
   )}`;
-  // Set the color based on credit or debit
   const amountColor = isCredit ? "lime" : "inherit";
 
-  // Set the description text based on the transaction type
-  const description = type === "Sent" ? `To: ${receiver}` : `From: ${sender}`;
+  const description =
+    type === "Sent" || type === "Transferred"
+      ? `To: ${getPartyName(to)}`
+      : `From: ${getPartyName(from)}`;
 
-  // Map status to a specific badge color
+  const getAvatarContent = () => {
+    const relevantParty = type === "Sent" || type === "Transferred" ? to : from;
+    switch (relevantParty.type) {
+      case "self":
+        return {
+          src: profile?.avatar_url,
+          children: getInitials(profile?.full_name),
+        };
+      case "contact":
+        return {
+          src: relevantParty.data.avatar_url,
+          children: getInitials(relevantParty.data.full_name),
+        };
+      case "bank":
+        return {
+          src: undefined,
+          children: getInitials(relevantParty.data.name),
+        };
+      default:
+        return {
+          src: undefined,
+        };
+    }
+  };
+
+  const avatarContent = getAvatarContent();
+
   const statusColors: Record<TransactionStatus, string> = {
     Completed: "lime",
     Pending: "yellow",
     Failed: "red",
   };
 
-  // Format the date for better readability (e.g., "Aug 24")
   const formattedDate = new Date(date).toLocaleDateString("en-US", {
     month: "short",
     day: "numeric",
@@ -62,24 +89,21 @@ export default function TransactionItem({
     >
       <Group gap="xs" wrap="nowrap">
         <Avatar
+          src={avatarContent.src}
           variant="light"
           color="gray"
           radius="100%"
           size={48}
           visibleFrom="xs"
-          src={avatar}
         >
-          {avatar}
+          {avatarContent.children}
         </Avatar>
-
-        {/* Primary info */}
         <Stack gap={4} w="100%">
           <Group justify="space-between" gap={4} w="100%">
             <Group gap={8}>
               <Title order={3} c={amountColor} lh={1.2}>
                 {formattedAmount}
               </Title>
-
               {status !== "Completed" && (
                 <Badge
                   color={statusColors[status]}
@@ -91,13 +115,10 @@ export default function TransactionItem({
                 </Badge>
               )}
             </Group>
-
-            {/* Date */}
             <Badge variant="default" style={{ cursor: "pointer" }}>
               {formattedDate}
             </Badge>
           </Group>
-
           <Text size="md" c="dimmed" fw={500} lh={1.2}>
             {description}
           </Text>

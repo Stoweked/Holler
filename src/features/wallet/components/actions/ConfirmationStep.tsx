@@ -21,11 +21,96 @@ import { useDisclosure } from "@mantine/hooks";
 import { BankIcon, File01Icon } from "hugeicons-react";
 import classes from "./Actions.module.css";
 import { useWallet } from "@/contexts/WalletContext";
-import { TransactionActionType, TransactionParty } from "../../types/wallet";
+import { TransactionActionType } from "../../types/wallet";
 import TermsConditionsModal from "@/components/modals/TermsConditionsModal";
 import PrivacyPolicyModal from "@/components/modals/PrivacyPolicyModal";
 import { getInitials } from "@/lib/hooks/getInitials";
 import { Bank } from "@/features/banks/types/bank";
+import { TransactionParty } from "@/features/transactions/types/transactionParty";
+
+// Helper component to display party details
+const PartyInfoCard = ({
+  label,
+  party,
+}: {
+  label: string;
+  party: TransactionParty;
+}) => {
+  let name: string | undefined = "";
+  let details: string | undefined = "";
+  let avatarSrc: string | undefined = "";
+  let avatarChildren: React.ReactNode = null;
+  let isBank = false;
+  let isWallet = false;
+  const { balance } = useWallet();
+
+  switch (party.type) {
+    case "contact":
+      name = party.data.full_name;
+      details = party.data.email || party.data.phone_number;
+      avatarSrc = party.data.avatar_url;
+      avatarChildren = getInitials(party.data.full_name);
+      break;
+    case "business":
+      name = party.data.business_name;
+      details = party.data.email || party.data.phone_number;
+      avatarChildren = getInitials(party.data.business_name);
+      break;
+    case "bank":
+      name = party.data.name;
+      details = party.data.details;
+      isBank = true;
+      break;
+    case "wallet":
+      name = party.name;
+      details = ` ${balance.toLocaleString("en-US", {
+        style: "currency",
+        currency: "USD",
+      })}`;
+      isWallet = true;
+      break;
+    default:
+      name = "name" in party ? party.name : "";
+  }
+
+  return (
+    <Group gap="xs" wrap="nowrap" justify="space-between">
+      <Stack gap={0} miw={1} style={{ flex: 1 }}>
+        <Text c="dimmed">{label}</Text>
+        <Title order={4} lineClamp={3} lh={1.2}>
+          {name}
+        </Title>
+        <Text size="xs" c="dimmed" lineClamp={1} truncate="end">
+          {details}
+        </Text>
+      </Stack>
+      {isWallet ? (
+        <ThemeIcon variant="default" radius="xl" size={44}>
+          <Image
+            aria-label="Holler logo"
+            w={20}
+            h="auto"
+            src="/images/logomark.svg"
+          />
+        </ThemeIcon>
+      ) : isBank ? (
+        <ThemeIcon variant="default" radius="xl" size={44}>
+          <BankIcon size={24} />
+        </ThemeIcon>
+      ) : (
+        <Avatar
+          src={avatarSrc}
+          variant="light"
+          color="lime"
+          size={44}
+          radius="xl"
+        >
+          {avatarChildren}
+        </Avatar>
+      )}
+    </Group>
+  );
+};
 
 interface ConfirmationStepProps {
   party: TransactionParty | null;
@@ -47,7 +132,6 @@ export default function ConfirmationStep({
   waiver,
 }: ConfirmationStepProps) {
   const [opened, { open, close }] = useDisclosure(false);
-  const { balance } = useWallet();
   const numericAmount =
     typeof amount === "string" ? parseFloat(amount) : amount;
   const formattedAmount = (numericAmount || 0).toLocaleString("en-US", {
@@ -84,137 +168,31 @@ export default function ConfirmationStep({
 
   const { to, from, button } = getActionLabels();
 
-  const isTransfer = actionType === "transfer";
-  const isDeposit = actionType === "deposit";
-
   if (!party) return null;
 
-  const toPartyDetails =
-    party.type === "contact"
-      ? {
-          name: party.data.full_name || "Unknown Contact",
-          details: party.data.email || party.data.phone_number || "",
-          avatar: party.data.avatar_url || getInitials(party.data.full_name),
-        }
-      : party.type === "business"
-      ? {
-          name: party.data.business_name,
-          details: party.data.email || party.data.phone_number || "",
-          avatar: getInitials(party.data.business_name),
-        }
-      : {
-          name: party.data.name,
-          details: party.data.details,
-          avatar: party.data.avatar,
-        };
+  const toParty: TransactionParty =
+    actionType === "deposit"
+      ? { type: "wallet", name: "Holler Wallet" }
+      : actionType === "transfer"
+      ? { type: "bank", data: bank }
+      : party;
 
-  const fromParty = isTransfer
-    ? {
-        name: "Holler wallet",
-        details: balance.toLocaleString("en-US", {
-          style: "currency",
-          currency: "USD",
-        }),
-        avatar: "", // Not needed for wallet
-      }
-    : bank;
+  const fromParty: TransactionParty =
+    actionType === "transfer"
+      ? {
+          type: "wallet",
+          name: "Holler Wallet",
+        }
+      : { type: "bank", data: bank };
 
   return (
     <>
       <Stack justify="space-between" gap="lg">
         <Card withBorder p="lg" radius="lg" w="100%">
           <Stack>
-            {/* "To" Section */}
-            <Group gap="xs" wrap="nowrap" justify="space-between">
-              <Stack gap={0} miw={1} style={{ flex: 1 }}>
-                <Text c="dimmed">{to}</Text>
-                <Title order={4} lineClamp={3} lh={1.2}>
-                  {toPartyDetails.name}
-                </Title>
-                <Text
-                  size="xs"
-                  c="dimmed"
-                  lineClamp={1}
-                  style={{
-                    whiteSpace: "nowrap",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                  }}
-                >
-                  {toPartyDetails.details}
-                </Text>
-              </Stack>
-              {isDeposit ? (
-                <ThemeIcon variant="default" radius="xl" size={44}>
-                  <Image
-                    aria-label="Holler logo"
-                    w={20}
-                    h="auto"
-                    src="/images/logomark.svg"
-                  />
-                </ThemeIcon>
-              ) : isTransfer ? (
-                <ThemeIcon variant="default" radius="xl" size={44}>
-                  <BankIcon size={24} />
-                </ThemeIcon>
-              ) : (
-                <Avatar
-                  src={
-                    party.type === "contact" ? party.data.avatar_url : undefined
-                  }
-                  alt={
-                    party.type === "contact"
-                      ? party.data.full_name
-                      : party.type === "business"
-                      ? party.data.business_name
-                      : "Avatar"
-                  }
-                  variant="light"
-                  color="lime"
-                  size={44}
-                >
-                  {toPartyDetails.avatar}
-                </Avatar>
-              )}
-            </Group>
-
+            <PartyInfoCard label={to} party={toParty} />
             <Divider />
-
-            {/* "From" Section */}
-            <Group gap="xs" wrap="nowrap" justify="space-between">
-              <Stack gap={0} miw={1} style={{ flex: 1 }}>
-                <Text c="dimmed">{from}</Text>
-                <Title order={4} lineClamp={3} lh={1.2}>
-                  {fromParty.name}
-                </Title>
-                <Text
-                  size="xs"
-                  c="dimmed"
-                  lineClamp={1}
-                  style={{
-                    whiteSpace: "nowrap",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                  }}
-                >
-                  {fromParty.details}
-                </Text>
-              </Stack>
-              {isTransfer ? (
-                <ThemeIcon variant="default" radius="xl" size={44}>
-                  <Image
-                    aria-label="Holler logo"
-                    w={20}
-                    h="auto"
-                    src="/images/logomark.svg"
-                  />
-                </ThemeIcon>
-              ) : (
-                <ThemeIcon variant="default" radius="xl" size={44}>
-                  <BankIcon size={24} />
-                </ThemeIcon>
-              )}
-            </Group>
+            <PartyInfoCard label={from} party={fromParty} />
 
             {note && (
               <>

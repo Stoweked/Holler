@@ -3,10 +3,10 @@ import {
   Stack,
   Text,
   ThemeIcon,
-  Paper,
   Menu,
   ActionIcon,
   Tooltip,
+  Card,
 } from "@mantine/core";
 import classes from "./Banks.module.css";
 import {
@@ -28,7 +28,7 @@ export default function BankDetailsCard({
   onEdit,
 }: BankDetailsCardProps) {
   return (
-    <Paper withBorder radius="lg" p="xs" w="100%">
+    <Card withBorder radius="lg" p="xs" w="100%">
       <Group gap="xs" className={classes.recipientContainer}>
         <Group wrap="nowrap" gap={8} className={classes.recipientDetailsGroup}>
           <ThemeIcon variant="default" radius="xl" size="lg">
@@ -51,29 +51,32 @@ export default function BankDetailsCard({
             </Text>
           </Stack>
         </Group>
-        <Menu shadow="md" width={150} position="bottom-end" radius="md">
-          <Menu.Target>
-            <Tooltip position="left" label="Options">
-              <ActionIcon
-                aria-label="Options"
-                size="lg"
-                variant="subtle"
-                color="grey"
+
+        {onEdit && (
+          <Menu shadow="md" width={150} position="bottom-end" radius="md">
+            <Menu.Target>
+              <Tooltip position="left" label="Options">
+                <ActionIcon
+                  aria-label="Options"
+                  size="lg"
+                  variant="subtle"
+                  color="grey"
+                >
+                  <MoreVerticalCircle01Icon size={24} />
+                </ActionIcon>
+              </Tooltip>
+            </Menu.Target>
+            <Menu.Dropdown>
+              <Menu.Item
+                leftSection={<PencilEdit02Icon size={16} />}
+                onClick={onEdit}
               >
-                <MoreVerticalCircle01Icon size={24} />
-              </ActionIcon>
-            </Tooltip>
-          </Menu.Target>
-          <Menu.Dropdown>
-            <Menu.Item
-              leftSection={<PencilEdit02Icon size={16} />}
-              onClick={onEdit}
-            >
-              Change bank
-            </Menu.Item>
-          </Menu.Dropdown>
-        </Menu>
+                Change bank
+              </Menu.Item>
+            </Menu.Dropdown>
+          </Menu>
+        )}
       </Group>
-    </Paper>
+    </Card>
   );
 }

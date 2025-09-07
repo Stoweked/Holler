@@ -1,10 +1,8 @@
-// src/features/transactions/components/TransactionDetailsDrawer.tsx
 import {
-  Anchor,
   Avatar,
   Badge,
   Button,
-  Divider,
+  Card,
   Drawer,
   Group,
   Space,
@@ -27,59 +25,49 @@ import { useState } from "react";
 import { useDisclosure } from "@mantine/hooks";
 import ContactModal from "@/features/contacts/components/ContactModal";
 import { Contact } from "@/features/contacts/types/contact";
-import { useContacts } from "@/features/contacts/hooks/useContacts";
 import { getInitials } from "@/lib/hooks/getInitials";
 import { useProfile } from "@/contexts/ProfileContext";
+import ContactDetailsCard from "@/features/contacts/components/ContactDetailsCard";
+import BankDetailsCard from "@/features/banks/components/BankDetailsCard";
+import TransactionTimeline from "./TransactionTimeline";
+import { TransactionParty } from "../types/transactionParty";
 
 // Helper component to render the correct avatar for each party
-const TransactionPartyAvatar = ({ partyName }: { partyName: string }) => {
+const TransactionPartyAvatar = ({ party }: { party: TransactionParty }) => {
   const { profile } = useProfile();
-  const { contacts } = useContacts();
 
-  if (partyName === "You") {
-    return (
-      <Avatar
-        src={profile?.avatar_url}
-        variant="default"
-        size={80}
-        radius="50%"
-      >
-        {getInitials(profile?.full_name)}
-      </Avatar>
-    );
+  switch (party.type) {
+    case "self":
+      return (
+        <Avatar
+          src={profile?.avatar_url}
+          variant="default"
+          size={80}
+          radius="50%"
+        >
+          {getInitials(profile?.full_name)}
+        </Avatar>
+      );
+    case "contact":
+      return (
+        <Avatar
+          src={party.data.avatar_url}
+          variant="default"
+          size={80}
+          radius="50%"
+        >
+          {getInitials(party.data.full_name)}
+        </Avatar>
+      );
+    case "bank":
+      return (
+        <ThemeIcon size={80} radius="50%" variant="default">
+          <BankIcon size={40} />
+        </ThemeIcon>
+      );
+    default:
+      return <Avatar color="gray" size={80} radius="50%" variant="default" />;
   }
-
-  if (["Business Savings", "Chase Checking"].includes(partyName)) {
-    return (
-      <ThemeIcon size={80} radius="50%" variant="default">
-        <BankIcon size={40} />
-      </ThemeIcon>
-    );
-  }
-
-  const contactDetails = contacts.find(
-    (contact) => contact.full_name === partyName
-  );
-
-  if (contactDetails) {
-    return (
-      <Avatar
-        src={contactDetails.avatar_url}
-        variant="default"
-        size={80}
-        radius="50%"
-      >
-        {getInitials(contactDetails.full_name)}
-      </Avatar>
-    );
-  }
-
-  // Fallback for other parties like "Stripe" or "Client Payment"
-  return (
-    <Avatar color="gray" size={80} radius="50%" variant="default">
-      {getInitials(partyName)}
-    </Avatar>
-  );
 };
 
 interface TransactionDetailsDrawerProps {
@@ -98,42 +86,17 @@ export default function TransactionDetailsDrawer({
     { open: openContactModal, close: closeContactModal },
   ] = useDisclosure(false);
   const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
-  const { contacts, loading: contactsLoading } = useContacts();
+  const { profile } = useProfile();
 
   if (!transaction) {
     return null;
   }
 
-  const { amount, date, status, type, sender, receiver, bankAccount } =
-    transaction;
+  const { amount, date, status, type, from, to, bankAccount } = transaction;
 
-  const handleViewProfile = (contactName: string) => {
-    const contactDetails = contacts.find(
-      (contact) => contact.full_name === contactName
-    );
-    if (contactDetails) {
-      setSelectedContact(contactDetails);
-      openContactModal();
-    }
-  };
-
-  const renderParty = (partyName: string) => {
-    const isContact =
-      !contactsLoading &&
-      partyName !== "You" &&
-      !["Business Savings", "Stripe", "Client Payment"].includes(partyName) &&
-      contacts.some((contact) => contact.full_name === partyName);
-
-    if (isContact) {
-      return (
-        <Anchor onClick={() => handleViewProfile(partyName)}>
-          <Title order={4} c="lime.6">
-            {partyName}
-          </Title>
-        </Anchor>
-      );
-    }
-    return <Title order={4}>{partyName}</Title>;
+  const handleViewProfile = (contact: Contact) => {
+    setSelectedContact(contact);
+    openContactModal();
   };
 
   const isCredit = type === "Received" || type === "Deposited";
@@ -157,6 +120,51 @@ export default function TransactionDetailsDrawer({
     hour: "numeric",
     minute: "2-digit",
   });
+
+  const renderPartyDetails = (
+    party: TransactionParty,
+    label: "From" | "To"
+  ) => {
+    switch (party.type) {
+      case "contact":
+        return (
+          <ContactDetailsCard
+            contact={party.data}
+            label={label}
+            onViewProfile={() => handleViewProfile(party.data)}
+          />
+        );
+      case "bank":
+        return <BankDetailsCard bank={party.data} label={label} />;
+      case "self":
+        if (profile) {
+          const selfAsContact: Contact = {
+            id: profile.id,
+            full_name: profile.full_name || "You",
+            email: profile.email,
+            avatar_url: profile.avatar_url,
+            type: "profile",
+          };
+          return <ContactDetailsCard contact={selfAsContact} label={label} />;
+        }
+        // Fallback while profile is loading
+        return (
+          <Stack gap={0}>
+            <Text c="dimmed">{label}</Text>
+            <Title order={4}>{party.name}</Title>
+          </Stack>
+        );
+      case "external":
+        return (
+          <Stack gap={0}>
+            <Text c="dimmed">{label}</Text>
+            <Title order={4}>{party.name}</Title>
+          </Stack>
+        );
+      default:
+        return null;
+    }
+  };
 
   return (
     <>
@@ -189,16 +197,21 @@ export default function TransactionDetailsDrawer({
           </Group>
 
           <Stack align="center" py="md">
-            {/* --- New Avatar Diagram --- */}
             <Group align="center" justify="center" wrap="nowrap">
-              <TransactionPartyAvatar partyName={sender} />
+              <TransactionPartyAvatar party={from} />
               <ArrowRight02Icon size={32} color="var(--mantine-color-gray-6)" />
-              <TransactionPartyAvatar partyName={receiver} />
+              <TransactionPartyAvatar party={to} />
             </Group>
 
-            <Title order={1} c={amountColor}>
-              {formattedAmount}
-            </Title>
+            <Stack gap={0} ta="center">
+              <Text c="dimmed" ta="center">
+                {formattedDate}
+              </Text>
+
+              <Title order={1} c={amountColor} ta="center">
+                {formattedAmount}
+              </Title>
+            </Stack>
             <Badge
               color={statusColors[status]}
               variant="dot"
@@ -209,39 +222,32 @@ export default function TransactionDetailsDrawer({
             </Badge>
           </Stack>
 
-          <Divider />
-
           <Stack>
-            <Stack gap={0}>
-              <Text c="dimmed">Date</Text>
-              <Title order={4}>{formattedDate}</Title>
-            </Stack>
+            {renderPartyDetails(from, "From")}
+            {renderPartyDetails(to, "To")}
 
-            <Stack gap={0}>
-              <Text c="dimmed">From</Text>
-              {renderParty(sender)}
-            </Stack>
+            <Card withBorder radius="lg" p="lg">
+              <Stack>
+                <Stack gap={0}>
+                  <Text c="dimmed">Account</Text>
+                  <Title order={5}>{bankAccount}</Title>
+                </Stack>
 
-            <Stack gap={0}>
-              <Text c="dimmed">To</Text>
-              {renderParty(receiver)}
-            </Stack>
+                <Stack gap={0}>
+                  <Text c="dimmed">Type</Text>
+                  <Title order={5}>{type}</Title>
+                </Stack>
 
-            <Stack gap={0}>
-              <Text c="dimmed">Account</Text>
-              <Title order={4}>{bankAccount}</Title>
-            </Stack>
-
-            <Stack gap={0}>
-              <Text c="dimmed">Type</Text>
-              <Title order={4}>{type}</Title>
-            </Stack>
-
-            <Stack gap={0}>
-              <Text c="dimmed">Transaction ID</Text>
-              <Title order={4}>{transaction.id}</Title>
-            </Stack>
+                <Stack gap={0}>
+                  <Text c="dimmed">Transaction ID</Text>
+                  <Title order={5}>{transaction.id}</Title>
+                </Stack>
+              </Stack>
+            </Card>
           </Stack>
+
+          <TransactionTimeline />
+
           <Space h={100} />
         </Stack>
       </Drawer>

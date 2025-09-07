@@ -2,12 +2,9 @@
 
 import { notifications } from "@mantine/notifications";
 import { Waiver } from "@/features/waivers/types/waiver";
-import {
-  TransactionActionType,
-  TransactionStep,
-  TransactionParty,
-} from "../types/wallet";
+import { TransactionActionType, TransactionStep } from "../types/wallet";
 import { Bank } from "@/features/banks/types/bank";
+import { TransactionParty } from "@/features/transactions/types/transactionParty";
 
 interface ConfirmationParams {
   transactionType: TransactionActionType;

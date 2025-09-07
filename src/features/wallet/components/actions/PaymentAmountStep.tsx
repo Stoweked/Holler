@@ -10,8 +10,9 @@ import LienWaiverDetailsCard from "@/features/waivers/components/LienWaiverDetai
 import ProfileModal from "@/features/contacts/components/ContactModal";
 import AmountInput from "./AmountInput";
 import { useWallet } from "@/contexts/WalletContext";
-import { TransactionActionType, TransactionParty } from "../../types/wallet";
+import { TransactionActionType } from "../../types/wallet";
 import { Bank } from "@/features/banks/types/bank";
+import { TransactionParty } from "@/features/transactions/types/transactionParty";
 
 interface PaymentAmountStepProps {
   party: TransactionParty | null;

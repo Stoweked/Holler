@@ -1,4 +1,3 @@
-// src/features/transactions/hooks/useTransactionFilters.ts
 import { useState } from "react";
 import {
   DateFilter,
@@ -9,6 +8,7 @@ import {
 } from "@/features/transactions/types/transaction";
 import dayjs from "dayjs";
 import isBetween from "dayjs/plugin/isBetween";
+import { getPartyName } from "../types/transactionParty";
 
 dayjs.extend(isBetween);
 
@@ -37,8 +37,8 @@ export const useTransactionFilters = (initialTransactions: Transaction[]) => {
     .filter((transaction) => {
       if (activeContactFilter === "All") return true;
       return (
-        transaction.sender === activeContactFilter ||
-        transaction.receiver === activeContactFilter
+        getPartyName(transaction.from) === activeContactFilter ||
+        getPartyName(transaction.to) === activeContactFilter
       );
     })
     .filter((transaction) => {
@@ -49,8 +49,10 @@ export const useTransactionFilters = (initialTransactions: Transaction[]) => {
     })
     .filter((transaction) => {
       if (searchQuery.length === 0) return true;
-      const searchableText =
-        `${transaction.sender} ${transaction.receiver} ${transaction.bankAccount}`.toLowerCase();
+      // Updated to use the getPartyName helper
+      const searchableText = `${getPartyName(transaction.from)} ${getPartyName(
+        transaction.to
+      )} ${transaction.bankAccount}`.toLowerCase();
       return searchQuery.every((keyword) =>
         searchableText.includes(keyword.toLowerCase())
       );

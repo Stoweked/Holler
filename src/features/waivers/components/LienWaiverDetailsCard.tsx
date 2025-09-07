@@ -3,7 +3,6 @@
 import { Waiver } from "@/features/waivers/types/waiver";
 import {
   Group,
-  Paper,
   Stack,
   Text,
   ThemeIcon,
@@ -19,6 +18,7 @@ import {
   Button,
   Modal,
   Menu,
+  Card,
 } from "@mantine/core";
 import {
   ClipboardIcon,
@@ -93,7 +93,7 @@ export default function LienWaiverDetailsCard({
         }}
       >
         <Combobox.Target>
-          <Paper withBorder radius="lg" p="xs" w="100%">
+          <Card withBorder radius="lg" p="xs" w="100%">
             <Group
               gap="sm"
               wrap={!selectedWaiver ? "nowrap" : "wrap"}
@@ -225,7 +225,7 @@ export default function LienWaiverDetailsCard({
                 </Button>
               )}
             </Group>
-          </Paper>
+          </Card>
         </Combobox.Target>
 
         <Combobox.Dropdown

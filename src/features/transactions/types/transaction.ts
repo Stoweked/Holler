@@ -1,29 +1,23 @@
-// src/types/transactions.ts
+import { TransactionParty } from "./transactionParty";
 
 export type TransactionStatus = "Completed" | "Pending" | "Failed";
-
 export type TransactionType = "Sent" | "Received" | "Deposited" | "Transferred";
-
 export type TransactionStatusFilter = TransactionStatus | "All";
-
 export type TransactionTypeFilter = TransactionType | "All";
-
 export type SortOption =
   | "Newest first"
   | "Oldest first"
   | "Amount (High to Low)"
   | "Amount (Low to High)";
-
 export type DateFilter = "All" | "Today" | "This week" | "This month";
-
 export interface Transaction {
   id: string;
   amount: number;
   date: string;
   status: TransactionStatus;
   type: TransactionType;
-  sender: string;
-  receiver: string;
+  from: TransactionParty;
+  to: TransactionParty;
   bankAccount: string;
-  avatar: string;
+  avatar?: string;
 }
