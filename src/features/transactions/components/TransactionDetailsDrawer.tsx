@@ -1,3 +1,4 @@
+// src/features/transactions/components/TransactionDetailsDrawer.tsx
 import {
   Anchor,
   Avatar,
@@ -9,18 +10,72 @@ import {
   Space,
   Stack,
   Text,
+  ThemeIcon,
   Title,
 } from "@mantine/core";
 import {
   Transaction,
   TransactionStatus,
 } from "@/features/transactions/types/transaction";
-import { Download02Icon, PrinterIcon } from "hugeicons-react";
+import {
+  ArrowRight02Icon,
+  BankIcon,
+  Download02Icon,
+  PrinterIcon,
+} from "hugeicons-react";
 import { useState } from "react";
 import { useDisclosure } from "@mantine/hooks";
 import ContactModal from "@/features/contacts/components/ContactModal";
 import { Contact } from "@/features/contacts/types/contact";
-import { useContacts } from "@/features/contacts/hooks/useContacts"; // Import useContacts hook
+import { useContacts } from "@/features/contacts/hooks/useContacts";
+import { getInitials } from "@/lib/hooks/getInitials";
+import { useProfile } from "@/contexts/ProfileContext";
+
+// Helper component to render the correct avatar for each party
+const TransactionPartyAvatar = ({ partyName }: { partyName: string }) => {
+  const { profile } = useProfile();
+  const { contacts } = useContacts();
+
+  if (partyName === "You") {
+    return (
+      <Avatar src={profile?.avatar_url} color="lime" size={80} radius="50%">
+        {getInitials(profile?.full_name)}
+      </Avatar>
+    );
+  }
+
+  if (["Business Savings", "Chase Checking"].includes(partyName)) {
+    return (
+      <ThemeIcon size={80} radius="50%" variant="light">
+        <BankIcon size={40} />
+      </ThemeIcon>
+    );
+  }
+
+  const contactDetails = contacts.find(
+    (contact) => contact.full_name === partyName
+  );
+
+  if (contactDetails) {
+    return (
+      <Avatar
+        src={contactDetails.avatar_url}
+        color="lime"
+        size={80}
+        radius="50%"
+      >
+        {getInitials(contactDetails.full_name)}
+      </Avatar>
+    );
+  }
+
+  // Fallback for other parties like "Stripe" or "Client Payment"
+  return (
+    <Avatar color="gray" size={80} radius="50%">
+      {getInitials(partyName)}
+    </Avatar>
+  );
+};
 
 interface TransactionDetailsDrawerProps {
   opened: boolean;
@@ -38,13 +93,13 @@ export default function TransactionDetailsDrawer({
     { open: openContactModal, close: closeContactModal },
   ] = useDisclosure(false);
   const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
-  const { contacts, loading: contactsLoading } = useContacts(); // Fetch live contacts
+  const { contacts, loading: contactsLoading } = useContacts();
 
   if (!transaction) {
     return null;
   }
 
-  const { amount, date, status, type, sender, receiver, avatar, bankAccount } =
+  const { amount, date, status, type, sender, receiver, bankAccount } =
     transaction;
 
   const handleViewProfile = (contactName: string) => {
@@ -128,10 +183,17 @@ export default function TransactionDetailsDrawer({
             </Button>
           </Group>
 
-          <Stack align="center">
-            <Avatar color="lime" size={80} radius="50%">
-              <Title order={2}>{avatar}</Title>
-            </Avatar>
+          <Stack align="center" py="md">
+            {/* --- New Avatar Diagram --- */}
+            <Group align="center" justify="center" wrap="nowrap">
+              <TransactionPartyAvatar partyName={sender} />
+              <ArrowRight02Icon size={32} color="var(--mantine-color-gray-5)" />
+              <TransactionPartyAvatar partyName={receiver} />
+            </Group>
+
+            <Title order={1} c={amountColor}>
+              {formattedAmount}
+            </Title>
             <Badge
               color={statusColors[status]}
               variant="light"
@@ -140,11 +202,6 @@ export default function TransactionDetailsDrawer({
             >
               {status}
             </Badge>
-            <Stack align="center" gap={4}>
-              <Title order={1} c={amountColor}>
-                {formattedAmount}
-              </Title>
-            </Stack>
           </Stack>
 
           <Divider />

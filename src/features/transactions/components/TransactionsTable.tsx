@@ -1,5 +1,5 @@
 // stoweked/holler/Holler-main/src/features/transactions/components/TransactionsTable.tsx
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Button, Center, Space, Stack, Text, Title } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import TransactionFilters from "./filters/TransactionFilters";
@@ -9,12 +9,28 @@ import { Search01Icon } from "hugeicons-react";
 import TransactionDetailsDrawer from "./TransactionDetailsDrawer";
 import { mockTransactions } from "@/mockData/mockTransactions";
 import { useTransactionFilters } from "../hooks/useTransactionFilters";
+import { useProfile } from "@/contexts/ProfileContext";
+import { getInitials } from "@/lib/hooks/getInitials";
 
 export default function TransactionsTable() {
   const [drawerOpened, { open: openDrawer, close: closeDrawer }] =
     useDisclosure(false);
   const [selectedTransaction, setSelectedTransaction] =
     useState<Transaction | null>(null);
+  const { profile } = useProfile();
+
+  const transactionsWithUserAvatar = useMemo(() => {
+    if (!profile) return mockTransactions;
+    return mockTransactions.map((transaction) => {
+      if (transaction.receiver === "You") {
+        return {
+          ...transaction,
+          avatar: profile.avatar_url || getInitials(profile.full_name),
+        };
+      }
+      return transaction;
+    });
+  }, [profile]);
 
   const {
     activeStatusFilter,
@@ -33,7 +49,7 @@ export default function TransactionsTable() {
     setSearchQuery,
     processedTransactions,
     resetFilters,
-  } = useTransactionFilters(mockTransactions);
+  } = useTransactionFilters(transactionsWithUserAvatar);
 
   const handleTransactionClick = (transaction: Transaction) => {
     setSelectedTransaction(transaction);

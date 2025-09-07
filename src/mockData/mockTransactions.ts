@@ -98,7 +98,8 @@ export const mockTransactions: Transaction[] = [
     sender: "You",
     receiver: "Business Savings",
     bankAccount: "Chase Checking",
-    avatar: "MV",
+    avatar:
+      "https://lh3.googleusercontent.com/a/ACg8ocJ6eH_b3sFh6qyyMfXpvuZEJtM_r922jyWQrCw-50_DoIK08-ht=s96-c",
   },
   {
     id: "10",
@@ -208,7 +209,8 @@ export const mockTransactions: Transaction[] = [
     sender: "Client Payment",
     receiver: "You",
     bankAccount: "Business Savings",
-    avatar: "CP",
+    avatar:
+      "https://lh3.googleusercontent.com/a/ACg8ocJ6eH_b3sFh6qyyMfXpvuZEJtM_r922jyWQrCw-50_DoIK08-ht=s96-c",
   },
   {
     id: "20",

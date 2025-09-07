@@ -67,6 +67,7 @@ export default function TransactionItem({
           radius="100%"
           size={48}
           visibleFrom="xs"
+          src={avatar}
         >
           {avatar}
         </Avatar>

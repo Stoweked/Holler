@@ -3,7 +3,6 @@
 
 import {
   Anchor,
-  Avatar,
   Button,
   Divider,
   Paper,
@@ -14,7 +13,6 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { signup } from "@/features/auth/actions/signup";
-import { UserIcon } from "hugeicons-react";
 import { useState } from "react";
 import { OAuthButtons } from "@/features/auth/components";
 import { notifications } from "@mantine/notifications";
@@ -73,9 +71,6 @@ export default function SignUpForm() {
     >
       <Paper withBorder shadow="lg" p="lg" radius="lg" maw={420} w="100%">
         <Stack gap="lg">
-          <Avatar variant="default" size="md">
-            <UserIcon size={20} />
-          </Avatar>
           <Stack gap={0}>
             <Title order={2}>Create an account</Title>
             <Text c="dimmed">Enter your email to get started.</Text>
