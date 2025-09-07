@@ -201,7 +201,7 @@ export default function TransactionDetailsDrawer({
             </Title>
             <Badge
               color={statusColors[status]}
-              variant="light"
+              variant="dot"
               size="xl"
               radius="xl"
             >
