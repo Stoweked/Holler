@@ -54,7 +54,12 @@ function ContactModalContent({
   return (
     <Stack gap="xl" pb="sm">
       <Stack align="center" gap="sm">
-        <Avatar src={contact.avatar_url} color="lime" size={100} radius="50%">
+        <Avatar
+          src={contact.avatar_url}
+          variant="default"
+          size={100}
+          radius="50%"
+        >
           <Title order={1}>{getInitials(contact.full_name)}</Title>
         </Avatar>
 

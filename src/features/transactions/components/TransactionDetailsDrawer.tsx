@@ -38,7 +38,12 @@ const TransactionPartyAvatar = ({ partyName }: { partyName: string }) => {
 
   if (partyName === "You") {
     return (
-      <Avatar src={profile?.avatar_url} color="lime" size={80} radius="50%">
+      <Avatar
+        src={profile?.avatar_url}
+        variant="default"
+        size={80}
+        radius="50%"
+      >
         {getInitials(profile?.full_name)}
       </Avatar>
     );
@@ -46,7 +51,7 @@ const TransactionPartyAvatar = ({ partyName }: { partyName: string }) => {
 
   if (["Business Savings", "Chase Checking"].includes(partyName)) {
     return (
-      <ThemeIcon size={80} radius="50%" variant="light">
+      <ThemeIcon size={80} radius="50%" variant="default">
         <BankIcon size={40} />
       </ThemeIcon>
     );
@@ -60,7 +65,7 @@ const TransactionPartyAvatar = ({ partyName }: { partyName: string }) => {
     return (
       <Avatar
         src={contactDetails.avatar_url}
-        color="lime"
+        variant="default"
         size={80}
         radius="50%"
       >
@@ -71,7 +76,7 @@ const TransactionPartyAvatar = ({ partyName }: { partyName: string }) => {
 
   // Fallback for other parties like "Stripe" or "Client Payment"
   return (
-    <Avatar color="gray" size={80} radius="50%">
+    <Avatar color="gray" size={80} radius="50%" variant="default">
       {getInitials(partyName)}
     </Avatar>
   );
@@ -187,7 +192,7 @@ export default function TransactionDetailsDrawer({
             {/* --- New Avatar Diagram --- */}
             <Group align="center" justify="center" wrap="nowrap">
               <TransactionPartyAvatar partyName={sender} />
-              <ArrowRight02Icon size={32} color="var(--mantine-color-gray-5)" />
+              <ArrowRight02Icon size={32} color="var(--mantine-color-gray-6)" />
               <TransactionPartyAvatar partyName={receiver} />
             </Group>
 
@@ -244,7 +249,7 @@ export default function TransactionDetailsDrawer({
         opened={contactModalOpened}
         close={closeContactModal}
         contact={selectedContact}
-        showButtons={false}
+        showButtons={true}
       />
     </>
   );
