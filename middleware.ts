@@ -37,14 +37,19 @@ export async function middleware(request: NextRequest) {
     "/login",
     "/signup",
     "/signup/multi-step",
-    "/auth/confirm",
+    "/auth/confirm", // This is for email confirm, not OAuth
     "/forgot-password",
     "/reset-password",
+    "/callback", // Add the OAuth callback path here
   ];
   const isPublicPath = publicPaths.includes(request.nextUrl.pathname);
 
   // if user is signed in and the current path is public, redirect to dashboard
   if (user && isPublicPath) {
+    // Exclude the callback route from this redirect logic
+    if (request.nextUrl.pathname === "/callback") {
+      return response;
+    }
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
