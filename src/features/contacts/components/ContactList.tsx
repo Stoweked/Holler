@@ -18,8 +18,7 @@ import {
   Search01Icon,
   UserMultiple02Icon,
 } from "hugeicons-react";
-import { Contact } from "../types/contact";
-import { getInitials } from "@/lib/hooks/getInitials";
+import { Contact, ContactType } from "../types/contact";
 import { useFavorites } from "@/contexts/FavoritesContext";
 import { useContacts } from "../hooks/useContacts";
 
@@ -43,12 +42,15 @@ export default function ContactsList({ onContactClick }: ContactsListProps) {
 
   const filteredContacts = contacts.filter((contact) => {
     const searchTerm = searchValue.toLowerCase();
-    const fullName = contact.full_name?.toLowerCase() || "";
+    const name =
+      contact.contactType === ContactType.Person
+        ? contact.full_name
+        : contact.business_name;
     const email = contact.email?.toLowerCase() || "";
     const phone = contact.phone_number || "";
 
     return (
-      fullName.includes(searchTerm) ||
+      name?.toLowerCase().includes(searchTerm) ||
       email.includes(searchTerm) ||
       phone.includes(searchTerm)
     );
@@ -60,7 +62,11 @@ export default function ContactsList({ onContactClick }: ContactsListProps) {
   );
 
   const groupedContacts = otherContacts.reduce((acc, contact) => {
-    const firstLetter = (contact.full_name || "#")[0].toUpperCase();
+    const name =
+      contact.contactType === ContactType.Person
+        ? contact.full_name
+        : contact.business_name;
+    const firstLetter = (name || "#")[0].toUpperCase();
     if (!acc[firstLetter]) {
       acc[firstLetter] = [];
     }
@@ -122,11 +128,7 @@ export default function ContactsList({ onContactClick }: ContactsListProps) {
                 {favorites.map((contact) => (
                   <ContactItem
                     key={contact.id}
-                    avatar={
-                      contact.avatar_url || getInitials(contact.full_name)
-                    }
-                    name={contact.full_name || "Unknown"}
-                    details={contact.email || contact.phone_number || ""}
+                    contact={contact}
                     onClick={() => handleContactClick(contact)}
                   />
                 ))}
@@ -148,11 +150,7 @@ export default function ContactsList({ onContactClick }: ContactsListProps) {
                     {groupedContacts[letter].map((contact) => (
                       <ContactItem
                         key={contact.id}
-                        avatar={
-                          contact.avatar_url || getInitials(contact.full_name)
-                        }
-                        name={contact.full_name || "Unknown"}
-                        details={contact.email || contact.phone_number || ""}
+                        contact={contact}
                         onClick={() => handleContactClick(contact)}
                       />
                     ))}

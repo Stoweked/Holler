@@ -1,8 +1,12 @@
-// src/features/contacts/hooks/useContacts.ts
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useProfile } from "@/contexts/ProfileContext";
-import { Contact } from "../types/contact";
+import {
+  Contact,
+  ContactType,
+  PersonContact,
+  BusinessContact,
+} from "../types/contact";
 
 const supabase = createClient();
 
@@ -48,24 +52,38 @@ export function useContacts() {
         userBusinesses.map((ub) => ub.business_id)
       );
 
-      const profileContacts: Contact[] =
+      const profileContacts: PersonContact[] =
         profiles?.map((p) => ({
-          ...p,
-          type: "profile", // Add type for profiles
+          id: p.id,
+          contactType: ContactType.Person,
+          full_name: p.full_name,
+          email: p.email,
+          phone_number: p.phone_number,
+          avatar_url: p.avatar_url,
         })) || [];
 
-      const businessContacts: Contact[] =
+      const businessContacts: BusinessContact[] =
         businesses
           ?.filter((b) => !userBusinessIds.has(b.id))
           .map((b) => ({
-            ...b,
-            full_name: b.business_name,
-            type: "business", // Add type for businesses
+            id: b.id,
+            contactType: ContactType.Business,
+            business_name: b.business_name,
+            email: b.email,
+            phone_number: b.phone_number,
+            avatar_url: b.avatar_url,
           })) || [];
 
-      const allContacts = [...profileContacts, ...businessContacts].sort(
-        (a, b) => (a.full_name || "").localeCompare(b.full_name || "")
-      );
+      const allContacts: Contact[] = [
+        ...profileContacts,
+        ...businessContacts,
+      ].sort((a, b) => {
+        const nameA =
+          a.contactType === ContactType.Person ? a.full_name : a.business_name;
+        const nameB =
+          b.contactType === ContactType.Person ? b.full_name : b.business_name;
+        return (nameA || "").localeCompare(nameB || "");
+      });
 
       setContacts(allContacts);
       setLoading(false);

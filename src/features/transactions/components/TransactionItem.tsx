@@ -15,6 +15,7 @@ import classes from "../Transactions.module.css";
 import { getInitials } from "@/lib/hooks/getInitials";
 import { useProfile } from "@/contexts/ProfileContext";
 import { getPartyName } from "../types/transactionParty";
+import { ContactType } from "@/features/contacts/types/contact";
 
 interface TransactionItemProps {
   transaction: Transaction;
@@ -52,9 +53,13 @@ export default function TransactionItem({
           children: getInitials(profile?.full_name),
         };
       case "contact":
+        const name =
+          relevantParty.data.contactType === ContactType.Person
+            ? relevantParty.data.full_name
+            : relevantParty.data.business_name;
         return {
           src: relevantParty.data.avatar_url,
-          children: getInitials(relevantParty.data.full_name),
+          children: getInitials(name),
         };
       case "bank":
         return {

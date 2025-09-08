@@ -24,7 +24,7 @@ import {
 import { useState } from "react";
 import { useDisclosure } from "@mantine/hooks";
 import ContactModal from "@/features/contacts/components/ContactModal";
-import { Contact } from "@/features/contacts/types/contact";
+import { Contact, ContactType } from "@/features/contacts/types/contact";
 import { getInitials } from "@/lib/hooks/getInitials";
 import { useProfile } from "@/contexts/ProfileContext";
 import ContactDetailsCard from "@/features/contacts/components/ContactDetailsCard";
@@ -49,6 +49,10 @@ const TransactionPartyAvatar = ({ party }: { party: TransactionParty }) => {
         </Avatar>
       );
     case "contact":
+      const name =
+        party.data.contactType === ContactType.Person
+          ? party.data.full_name
+          : party.data.business_name;
       return (
         <Avatar
           src={party.data.avatar_url}
@@ -56,7 +60,7 @@ const TransactionPartyAvatar = ({ party }: { party: TransactionParty }) => {
           size={80}
           radius="50%"
         >
-          {getInitials(party.data.full_name)}
+          {getInitials(name)}
         </Avatar>
       );
     case "bank":
@@ -127,16 +131,11 @@ export default function TransactionDetailsDrawer({
   ) => {
     switch (party.type) {
       case "contact":
-        // Correctly assign the type from the transaction party to the contact object
-        const contactWithCorrectType: Contact = {
-          ...party.data,
-          type: "profile",
-        };
         return (
           <ContactDetailsCard
-            contact={contactWithCorrectType}
+            contact={party.data}
             label={label}
-            onViewProfile={() => handleViewProfile(contactWithCorrectType)}
+            onViewProfile={() => handleViewProfile(party.data)}
           />
         );
       case "bank":
@@ -145,10 +144,10 @@ export default function TransactionDetailsDrawer({
         if (profile) {
           const selfAsContact: Contact = {
             id: profile.id,
+            contactType: ContactType.Person,
             full_name: profile.full_name || "You",
             email: profile.email,
             avatar_url: profile.avatar_url,
-            type: "profile",
           };
           return <ContactDetailsCard contact={selfAsContact} label={label} />;
         }

@@ -1,5 +1,3 @@
-// src/features/transactions/filters/TransactionFiltersDrawer.tsx
-
 import {
   TransactionStatusFilter,
   TransactionTypeFilter,
@@ -31,7 +29,8 @@ import dayjs from "dayjs";
 import { useState } from "react";
 import { mockContacts } from "@/mockData/mockContacts";
 import { Search01Icon } from "hugeicons-react";
-import { Contact } from "@/features/contacts/types/contact";
+import { Contact, ContactType } from "@/features/contacts/types/contact";
+import { getInitials } from "@/lib/hooks/getInitials";
 
 const statusFilters: TransactionStatusFilter[] = [
   "All",
@@ -130,27 +129,37 @@ export default function TransactionFiltersDrawer({
     )
   );
 
-  const filteredContacts = mockContacts.filter((contact: Contact) =>
-    contact.full_name?.toLowerCase().includes(contactSearch.toLowerCase())
-  );
+  const filteredContacts = mockContacts.filter((contact: Contact) => {
+    const name =
+      contact.contactType === ContactType.Person
+        ? contact.full_name
+        : contact.business_name;
+    return name?.toLowerCase().includes(contactSearch.toLowerCase());
+  });
 
-  const contactOptions = filteredContacts.map((item) => (
-    <Combobox.Option value={item.full_name || ""} key={item.id}>
-      <Group>
-        <Avatar color="lime" radius="xl" size="md">
-          {item.avatar_url || getInitials(item.full_name)}
-        </Avatar>
-        <Stack gap={0}>
-          <Text size="md" fw="bold">
-            {item.full_name}
-          </Text>
-          <Text size="sm" c="dimmed">
-            {item.email || item.phone_number}
-          </Text>
-        </Stack>
-      </Group>
-    </Combobox.Option>
-  ));
+  const contactOptions = filteredContacts.map((item) => {
+    const name =
+      item.contactType === ContactType.Person
+        ? item.full_name
+        : item.business_name;
+    return (
+      <Combobox.Option value={name || ""} key={item.id}>
+        <Group>
+          <Avatar color="lime" radius="xl" size="md">
+            {item.avatar_url || getInitials(name)}
+          </Avatar>
+          <Stack gap={0}>
+            <Text size="md" fw="bold">
+              {name}
+            </Text>
+            <Text size="sm" c="dimmed">
+              {item.email || item.phone_number}
+            </Text>
+          </Stack>
+        </Group>
+      </Combobox.Option>
+    );
+  });
 
   return (
     <>
@@ -369,13 +378,3 @@ export default function TransactionFiltersDrawer({
     </>
   );
 }
-
-// Helper function to get initials from a name
-const getInitials = (name: string | undefined) => {
-  if (!name) return "";
-  const words = name.split(" ");
-  if (words.length > 1) {
-    return words[0][0] + words[words.length - 1][0];
-  }
-  return name.substring(0, 2);
-};

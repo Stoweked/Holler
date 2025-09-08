@@ -1,4 +1,3 @@
-// src/features/wallet/components/actions/ConfirmationStep.tsx
 import { Waiver } from "@/features/waivers/types/waiver";
 import {
   Avatar,
@@ -26,7 +25,11 @@ import TermsConditionsModal from "@/components/modals/TermsConditionsModal";
 import PrivacyPolicyModal from "@/components/modals/PrivacyPolicyModal";
 import { getInitials } from "@/lib/hooks/getInitials";
 import { Bank } from "@/features/banks/types/bank";
-import { TransactionParty } from "@/features/transactions/types/transactionParty";
+import {
+  TransactionParty,
+  getPartyName,
+} from "@/features/transactions/types/transactionParty";
+import { ContactType } from "@/features/contacts/types/contact";
 
 // Helper component to display party details
 const PartyInfoCard = ({
@@ -46,15 +49,10 @@ const PartyInfoCard = ({
 
   switch (party.type) {
     case "contact":
-      name = party.data.full_name;
+      name = getPartyName(party);
       details = party.data.email || party.data.phone_number;
       avatarSrc = party.data.avatar_url;
-      avatarChildren = getInitials(party.data.full_name);
-      break;
-    case "business":
-      name = party.data.business_name;
-      details = party.data.email || party.data.phone_number;
-      avatarChildren = getInitials(party.data.business_name);
+      avatarChildren = getInitials(name);
       break;
     case "bank":
       name = party.data.name;

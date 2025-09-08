@@ -1,4 +1,3 @@
-// src/features/transactions/filters/ContactFilter.tsx
 import {
   Menu,
   Indicator,
@@ -14,7 +13,7 @@ import {
 import { UserMultiple02Icon, Search01Icon } from "hugeicons-react";
 import { mockContacts } from "@/mockData/mockContacts";
 import { useState } from "react";
-import { Contact } from "@/features/contacts/types/contact";
+import { Contact, ContactType } from "@/features/contacts/types/contact";
 import { getInitials } from "@/lib/hooks/getInitials";
 
 interface ContactFilterProps {
@@ -29,10 +28,20 @@ export function ContactFilter({
   const [searchValue, setSearchValue] = useState("");
 
   const filteredContacts = mockContacts
-    .filter((contact: Contact) =>
-      contact.full_name?.toLowerCase().includes(searchValue.toLowerCase())
-    )
-    .sort((a, b) => a.full_name?.localeCompare(b.full_name || "") || 0);
+    .filter((contact: Contact) => {
+      const name =
+        contact.contactType === ContactType.Person
+          ? contact.full_name
+          : contact.business_name;
+      return name?.toLowerCase().includes(searchValue.toLowerCase());
+    })
+    .sort((a, b) => {
+      const nameA =
+        a.contactType === ContactType.Person ? a.full_name : a.business_name;
+      const nameB =
+        b.contactType === ContactType.Person ? b.full_name : b.business_name;
+      return (nameA || "").localeCompare(nameB || "");
+    });
 
   const isContactFilterActive = activeContactFilter !== "All";
 
@@ -82,27 +91,33 @@ export function ContactFilter({
           }
         />
         <ScrollArea h={300}>
-          {filteredContacts.map((contact) => (
-            <Menu.Item
-              key={contact.id}
-              onClick={() => onContactFilterChange(contact.full_name || "")}
-              styles={{ item: { paddingLeft: "6px", paddingRight: "6px" } }}
-            >
-              <Group wrap="nowrap" gap="xs">
-                <Avatar color="lime" radius="xl" size="md">
-                  {contact.avatar_url || getInitials(contact.full_name)}
-                </Avatar>
-                <Stack gap={0}>
-                  <Text size="sm" fw="bold">
-                    {contact.full_name}
-                  </Text>
-                  <Text size="xs" c="dimmed">
-                    {contact.email || contact.phone_number}
-                  </Text>
-                </Stack>
-              </Group>
-            </Menu.Item>
-          ))}
+          {filteredContacts.map((contact) => {
+            const name =
+              contact.contactType === ContactType.Person
+                ? contact.full_name
+                : contact.business_name;
+            return (
+              <Menu.Item
+                key={contact.id}
+                onClick={() => onContactFilterChange(name || "")}
+                styles={{ item: { paddingLeft: "6px", paddingRight: "6px" } }}
+              >
+                <Group wrap="nowrap" gap="xs">
+                  <Avatar color="lime" radius="xl" size="md">
+                    {contact.avatar_url || getInitials(name)}
+                  </Avatar>
+                  <Stack gap={0}>
+                    <Text size="sm" fw="bold">
+                      {name}
+                    </Text>
+                    <Text size="xs" c="dimmed">
+                      {contact.email || contact.phone_number}
+                    </Text>
+                  </Stack>
+                </Group>
+              </Menu.Item>
+            );
+          })}
         </ScrollArea>
       </Menu.Dropdown>
     </Menu>

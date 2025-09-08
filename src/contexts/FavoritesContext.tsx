@@ -11,7 +11,7 @@ import { createClient } from "@/lib/supabase/client";
 import { useProfile } from "./ProfileContext";
 import { notifications } from "@mantine/notifications";
 import { CheckIcon } from "@mantine/core";
-import { Contact } from "@/features/contacts/types/contact";
+import { Contact, ContactType } from "@/features/contacts/types/contact";
 
 interface FavoritesContextType {
   favoriteContacts: Set<string>;
@@ -60,10 +60,16 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
 
   const toggleFavorite = useCallback(
     async (contact: Contact) => {
-      if (!user || !contact.type) return;
+      if (!user) return;
 
       const isCurrentlyFavorite = favoriteContacts.has(contact.id);
       const newFavorites = new Set(favoriteContacts);
+      const favorited_type =
+        contact.contactType === ContactType.Person ? "profile" : "business";
+      const name =
+        contact.contactType === ContactType.Person
+          ? contact.full_name
+          : contact.business_name;
 
       if (isCurrentlyFavorite) {
         newFavorites.delete(contact.id);
@@ -75,7 +81,7 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
           .match({
             user_id: user.id,
             favorited_id: contact.id,
-            favorited_type: contact.type,
+            favorited_type: favorited_type,
           });
 
         if (error) {
@@ -89,7 +95,7 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
         } else {
           notifications.show({
             title: "Success",
-            message: `${contact.full_name} removed from favorites.`,
+            message: `${name} removed from favorites.`,
             color: "lime",
             icon: <CheckIcon size={16} />,
           });
@@ -104,7 +110,7 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
           {
             user_id: user.id,
             favorited_id: contact.id,
-            favorited_type: contact.type,
+            favorited_type: favorited_type,
           },
         ]);
 
@@ -119,7 +125,7 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
         } else {
           notifications.show({
             title: "Success",
-            message: `${contact.full_name} added to favorites.`,
+            message: `${name} added to favorites.`,
             color: "lime",
             icon: <CheckIcon size={16} />,
           });

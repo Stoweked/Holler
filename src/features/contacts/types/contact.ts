@@ -1,21 +1,25 @@
-// src/features/contacts/types/contact.ts
-export interface Contact {
-  id: string;
-  email: string;
-  first_name?: string;
-  last_name?: string;
-  full_name?: string;
-  phone_number?: string;
-  username?: string;
-  avatar_url?: string;
-  phone?: string;
-  dob?: string;
-  gender?: string;
-  address1?: string;
-  address2?: string;
-  city?: string;
-  state?: string;
-  zip?: string;
-  favorite?: boolean;
-  type?: "profile" | "business";
+export enum ContactType {
+  Person = "person",
+  Business = "business",
 }
+
+export interface BaseContact {
+  id: string;
+  contactType: ContactType;
+  email: string;
+  phone_number?: string;
+  avatar_url?: string;
+  favorite?: boolean;
+}
+
+export interface PersonContact extends BaseContact {
+  contactType: ContactType.Person;
+  full_name?: string;
+}
+
+export interface BusinessContact extends BaseContact {
+  contactType: ContactType.Business;
+  business_name?: string;
+}
+
+export type Contact = PersonContact | BusinessContact;

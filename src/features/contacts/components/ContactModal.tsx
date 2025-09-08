@@ -8,7 +8,7 @@ import {
   Modal,
 } from "@mantine/core";
 import { StarIcon } from "hugeicons-react";
-import { Contact } from "../types/contact";
+import { Contact, ContactType } from "../types/contact";
 import { getInitials } from "@/lib/hooks/getInitials";
 import { useFavorites } from "@/contexts/FavoritesContext";
 import { useWallet } from "@/contexts/WalletContext";
@@ -33,6 +33,11 @@ function ContactModalContent({
   const { favoriteContacts, toggleFavorite } = useFavorites();
   const { openActionDrawer } = useWallet();
   const isFavorite = favoriteContacts.has(contact.id);
+
+  const name =
+    contact.contactType === ContactType.Person
+      ? contact.full_name
+      : contact.business_name;
 
   const handleToggleFavorite = () => {
     toggleFavorite(contact);
@@ -59,7 +64,7 @@ function ContactModalContent({
           size={100}
           radius="50%"
         >
-          <Title order={1}>{getInitials(contact.full_name)}</Title>
+          <Title order={1}>{getInitials(name)}</Title>
         </Avatar>
         <Button
           variant="default"
@@ -77,7 +82,7 @@ function ContactModalContent({
         </Button>
         <Stack align="center" gap={4}>
           <Title order={2} ta="center">
-            {contact.full_name}
+            {name}
           </Title>
           <Text c="dimmed" ta="center">
             {contact.email || contact.phone_number}

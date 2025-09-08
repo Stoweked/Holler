@@ -14,7 +14,7 @@ import {
   PencilEdit02Icon,
   UserIcon,
 } from "hugeicons-react";
-import { Contact } from "../types/contact";
+import { Contact, ContactType } from "../types/contact";
 import { getInitials } from "@/lib/hooks/getInitials";
 
 interface ContactDetailsCardProps {
@@ -30,25 +30,29 @@ export default function ContactDetailsCard({
   onEdit,
   onViewProfile,
 }: ContactDetailsCardProps) {
+  const name =
+    contact.contactType === ContactType.Person
+      ? contact.full_name
+      : contact.business_name;
   return (
     <Card withBorder radius="lg" p="xs" w="100%">
       <Group gap="xs" className={classes.recipientContainer} wrap="nowrap">
         <Group wrap="nowrap" gap={8} className={classes.recipientDetailsGroup}>
           <Avatar
             src={contact?.avatar_url}
-            variant="light"
+            variant="default"
             color="lime"
             radius="xl"
             size={34}
           >
-            {getInitials(contact?.full_name)}
+            {getInitials(name)}
           </Avatar>
           <Stack gap={0} className={classes.recipientTextContainer}>
             <Text size="sm" c="dimmed">
               {label}
             </Text>
             <Text fw="bold" lineClamp={2} lh={1.2}>
-              {contact.full_name}
+              {name}
             </Text>
             <Text
               size="xs"

@@ -9,20 +9,20 @@ import {
 } from "@mantine/core";
 import { ArrowRight01Icon } from "hugeicons-react";
 import classes from "./Contacts.module.css";
+import { Contact, ContactType } from "../types/contact";
+import { getInitials } from "@/lib/hooks/getInitials";
 
 interface ContactItemProps {
-  avatar: string;
-  name: string;
-  details: string;
+  contact: Contact;
   onClick?: () => void;
 }
 
-export default function ContactItem({
-  avatar,
-  name,
-  details,
-  onClick,
-}: ContactItemProps) {
+export default function ContactItem({ contact, onClick }: ContactItemProps) {
+  const name =
+    contact.contactType === ContactType.Person
+      ? contact.full_name
+      : contact.business_name;
+
   return (
     <UnstyledButton className={classes.item} onClick={onClick}>
       <Group justify="space-between" wrap="nowrap">
@@ -32,8 +32,14 @@ export default function ContactItem({
           className={classes.details}
           gap="xs"
         >
-          <Avatar variant="light" radius="xl" size={44} color="lime">
-            {avatar}
+          <Avatar
+            src={contact.avatar_url}
+            variant="light"
+            radius="xl"
+            size={44}
+            color="lime"
+          >
+            {getInitials(name)}
           </Avatar>
 
           <Stack gap={0} style={{ overflow: "hidden" }}>
@@ -41,7 +47,7 @@ export default function ContactItem({
               {name}
             </Title>
             <Text size="sm" c="dimmed" w="100%" className={classes.detailsText}>
-              {details}
+              {contact.email || contact.phone_number || ""}
             </Text>
           </Stack>
         </Group>
