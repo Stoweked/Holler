@@ -6,8 +6,8 @@ export function BusinessSettings() {
   return (
     <Stack gap="lg">
       <SectionHeader
-        heading="Your business"
-        subHeading="Manage your Holler business profile."
+        heading="Business"
+        subHeading="Manage your Holler business account and profile."
       />
       <BusinessProfileCard />
       <Space h={100} />

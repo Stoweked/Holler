@@ -1,4 +1,5 @@
-// src/features/settings/components/sections/business/BusinessProfileView.tsx
+"use client";
+
 import {
   Avatar,
   Button,
@@ -7,38 +8,61 @@ import {
   Stack,
   Text,
   Title,
+  Center,
+  Loader,
+  Badge,
 } from "@mantine/core";
 import { Location01Icon, TelephoneIcon } from "hugeicons-react";
 import { getInitials } from "@/lib/hooks/getInitials";
-import { Profile } from "@/features/settings/types/account";
+import { useBusinessProfile } from "../hooks/useBusinessProfile";
 
-interface ProfileViewProps {
-  profile: Profile | null;
+interface BusinessProfileViewProps {
   onEdit: () => void;
 }
 
 export default function BusinessProfileView({
-  profile,
   onEdit,
-}: ProfileViewProps) {
-  const initials = getInitials(profile?.business_name);
+}: BusinessProfileViewProps) {
+  const { businessProfile, userRole, loading } = useBusinessProfile();
+
+  if (loading) {
+    return (
+      <Center>
+        <Loader size="md" />
+      </Center>
+    );
+  }
+
+  const initials = getInitials(businessProfile?.business_name);
 
   return (
     <Stack>
       <Group align="center" justify="space-between" wrap="nowrap">
-        <Title order={5}>Business Profile</Title>
+        <Group>
+          <Title order={5}>Business</Title>
+          {userRole && (
+            <Badge variant="default" style={{ textTransform: "capitalize" }}>
+              {userRole.role}
+            </Badge>
+          )}
+        </Group>
         <Button size="compact-sm" variant="subtle" onClick={onEdit}>
           Edit
         </Button>
       </Group>
       <Group>
-        <Avatar src={profile?.avatar_url} color="lime" size="lg" radius="xl">
+        <Avatar
+          src={businessProfile?.avatar_url}
+          color="lime"
+          size="lg"
+          radius="xl"
+        >
           {initials}
         </Avatar>
         <Stack gap={0}>
-          <Title order={3}>{profile?.business_name}</Title>
+          <Title order={3}>{businessProfile?.business_name}</Title>
           <Group gap="xs">
-            <Text size="sm">{profile?.email}</Text>
+            <Text size="sm">{businessProfile?.email}</Text>
           </Group>
         </Stack>
       </Group>
@@ -49,7 +73,9 @@ export default function BusinessProfileView({
             <Text size="sm" c="dimmed">
               Phone
             </Text>
-            <Text fw={500}>{profile?.phone_number || "Not provided"}</Text>
+            <Text fw={500}>
+              {businessProfile?.phone_number || "Not provided"}
+            </Text>
           </Stack>
         </Group>
         <Group gap="sm" wrap="nowrap">
@@ -59,8 +85,8 @@ export default function BusinessProfileView({
               Address
             </Text>
             <Text fw={500}>
-              {profile?.address1
-                ? `${profile.address1}, ${profile.city}, ${profile.state} ${profile.zip}`
+              {businessProfile?.address1
+                ? `${businessProfile.address1}, ${businessProfile.city}, ${businessProfile.state} ${businessProfile.zip}`
                 : "Not provided"}
             </Text>
           </Stack>

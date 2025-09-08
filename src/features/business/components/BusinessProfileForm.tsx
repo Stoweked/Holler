@@ -1,4 +1,3 @@
-// src/features/settings/components/sections/business/BusinessProfileForm.tsx
 "use client";
 
 import {
@@ -10,13 +9,14 @@ import {
   Stack,
   TextInput,
   Title,
+  Badge,
 } from "@mantine/core";
 import { PatternFormat } from "react-number-format";
 import { usStates } from "@/lib/data/usStates";
-import { useProfileForm } from "@/features/settings/hooks/useProfileForm";
 import AvatarUpload from "@/features/settings/components/sections/account/profile/AvatarUpload";
+import { useBusinessProfileForm } from "../hooks/useBusinessProfileForm";
 
-interface ProfileFormProps {
+interface BusinessProfileFormProps {
   onCancel: () => void;
   onSaveSuccess: () => void;
 }
@@ -24,16 +24,23 @@ interface ProfileFormProps {
 export default function BusinessProfileForm({
   onCancel,
   onSaveSuccess,
-}: ProfileFormProps) {
-  const { form, loading, handleSubmit, handleAvatarUploadAction } =
-    useProfileForm({
+}: BusinessProfileFormProps) {
+  const { form, loading, handleSubmit, handleAvatarUploadAction, userRole } =
+    useBusinessProfileForm({
       onSaveSuccess,
     });
 
   return (
     <Stack>
       <Group align="center" justify="space-between" wrap="nowrap">
-        <Title order={5}>Business Profile</Title>
+        <Group>
+          <Title order={5}>Business</Title>
+          {userRole && (
+            <Badge variant="default" style={{ textTransform: "capitalize" }}>
+              {userRole}
+            </Badge>
+          )}
+        </Group>
         <Button size="compact-sm" variant="subtle" disabled>
           Editing
         </Button>

@@ -67,6 +67,7 @@ function ContactModalContent({
           leftSection={
             <StarIcon
               size={16}
+              color={isFavorite ? "gold" : "black"}
               style={{ fill: isFavorite ? "currentColor" : "none" }}
             />
           }
