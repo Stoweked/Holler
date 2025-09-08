@@ -32,31 +32,31 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
   const { user } = useProfile();
 
-  useEffect(() => {
-    const fetchFavorites = async () => {
-      if (!user) {
-        setLoading(false);
-        return;
-      }
-      setLoading(true);
-      const { data, error } = await supabase
-        .from("favorite_contacts")
-        .select("favorited_id")
-        .eq("user_id", user.id);
-
-      if (error) {
-        console.error("Error fetching favorites:", error);
-        setLoading(false);
-        return;
-      }
-
-      const favoriteSet = new Set(data.map((fav) => fav.favorited_id));
-      setFavoriteContacts(favoriteSet);
+  const fetchFavorites = useCallback(async () => {
+    if (!user) {
       setLoading(false);
-    };
+      return;
+    }
+    setLoading(true);
+    const { data, error } = await supabase
+      .from("favorite_contacts")
+      .select("favorited_id")
+      .eq("user_id", user.id);
 
-    fetchFavorites();
+    if (error) {
+      console.error("Error fetching favorites:", error);
+      setLoading(false);
+      return;
+    }
+
+    const favoriteSet = new Set(data.map((fav) => fav.favorited_id));
+    setFavoriteContacts(favoriteSet);
+    setLoading(false);
   }, [user]);
+
+  useEffect(() => {
+    fetchFavorites();
+  }, [fetchFavorites]);
 
   const toggleFavorite = useCallback(
     async (contact: Contact) => {
@@ -93,6 +93,8 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
             color: "lime",
             icon: <CheckIcon size={16} />,
           });
+          // This call ensures all components are synced
+          fetchFavorites();
         }
       } else {
         newFavorites.add(contact.id);
@@ -121,10 +123,12 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
             color: "lime",
             icon: <CheckIcon size={16} />,
           });
+          // This call ensures all components are synced
+          fetchFavorites();
         }
       }
     },
-    [user, favoriteContacts]
+    [user, favoriteContacts, fetchFavorites]
   );
 
   return (

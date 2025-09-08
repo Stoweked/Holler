@@ -2,7 +2,7 @@
 
 Holler provides secure and efficient mobile payments designed for construction trades, helping you get paid faster on the job.
 
-![Holler Application OG Cover](stoweked/holler/Holler-main/public/images/og-cover.png)
+![Holler Application OG Cover](/public/images/og-cover.png)
 
 ## ✨ Features
 

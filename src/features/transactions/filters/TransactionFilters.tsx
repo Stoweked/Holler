@@ -1,4 +1,5 @@
-// stoweked/holler/Holler-main/src/features/transactions/components/filters/TransactionFilters.tsx
+// src/features/transactions/filters/TransactionFilters.tsx
+
 import {
   Group,
   Stack,
@@ -17,7 +18,7 @@ import {
   SortOption,
   TransactionStatusFilter,
   TransactionTypeFilter,
-} from "../../types/transaction";
+} from "../types/transaction";
 import { TypeFilter } from "./TypeFilter";
 import { StatusFilter } from "./StatusFilter";
 import { DateFilterComponent } from "./DateFilter";

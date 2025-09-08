@@ -1,4 +1,4 @@
-// src/features/transactions/components/filters/AmountFilter.tsx
+// src/features/transactions/filters/AmountFilter.tsx
 import {
   Menu,
   Indicator,

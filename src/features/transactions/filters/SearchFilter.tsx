@@ -1,4 +1,5 @@
-// stoweked/holler/Holler-main/src/features/transactions/components/filters/SearchFilter.tsx
+// src/features/transactions/filters/SearchFilter.tsx
+
 import { Button, Indicator, Menu, Stack, TagsInput } from "@mantine/core";
 import { Search01Icon } from "hugeicons-react";
 

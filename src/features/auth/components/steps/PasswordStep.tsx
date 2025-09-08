@@ -1,4 +1,5 @@
-// stoweked/holler/Holler-main/src/features/auth/components/PasswordStep.tsx
+// src/features/auth/components/steps/PasswordStep.tsx
+
 import { Button, PasswordInput, Stack, Text, Title } from "@mantine/core";
 import { useState } from "react";
 import { PasswordStrengthMeter } from "./PasswordStrengthMeter";

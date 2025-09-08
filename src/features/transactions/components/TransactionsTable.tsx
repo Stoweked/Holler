@@ -1,23 +1,19 @@
 import { useState } from "react";
 import { Button, Center, Space, Stack, Text, Title } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import TransactionFilters from "./filters/TransactionFilters";
+import TransactionFilters from "../filters/TransactionFilters";
 import TransactionItem from "./TransactionItem";
 import { Transaction } from "@/features/transactions/types/transaction";
 import { Search01Icon } from "hugeicons-react";
 import TransactionDetailsDrawer from "./TransactionDetailsDrawer";
 import { mockTransactions } from "@/mockData/mockTransactions";
 import { useTransactionFilters } from "../hooks/useTransactionFilters";
-import { TransactionParty } from "../types/transactionParty";
-import { Contact } from "@/features/contacts/types/contact";
-import { useWallet } from "@/contexts/WalletContext";
 
 export default function TransactionsTable() {
   const [drawerOpened, { open: openDrawer, close: closeDrawer }] =
     useDisclosure(false);
   const [selectedTransaction, setSelectedTransaction] =
     useState<Transaction | null>(null);
-  const { openActionDrawer } = useWallet();
 
   const {
     activeStatusFilter,

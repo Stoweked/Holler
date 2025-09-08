@@ -1,4 +1,4 @@
-// src/features/transactions/components/filters/ContactFilter.tsx
+// src/features/transactions/filters/ContactFilter.tsx
 import {
   Menu,
   Indicator,

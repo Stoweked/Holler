@@ -11,7 +11,7 @@ export const mockTransactions: Transaction[] = [
     status: "Completed",
     type: "Sent",
     from: { type: "self", name: "You" },
-    to: { type: "contact", data: mockContacts[0] }, // Layton Construction
+    to: { type: "contact", data: { ...mockContacts[0], type: "profile" } }, // Layton Construction
     bankAccount: "Chase Checking",
   },
   {
@@ -20,7 +20,7 @@ export const mockTransactions: Transaction[] = [
     date: "2025-08-23T15:30:00Z",
     status: "Completed",
     type: "Received",
-    from: { type: "contact", data: mockContacts[1] }, // J2 Homes
+    from: { type: "contact", data: { ...mockContacts[1], type: "profile" } }, // J2 Homes
     to: { type: "self", name: "You" },
     bankAccount: "Business Savings",
   },

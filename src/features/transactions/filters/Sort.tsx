@@ -1,6 +1,8 @@
+// src/features/transactions/filters/SortOption.tsx
+
 import { Menu, Indicator, Button } from "@mantine/core";
 import { SortByDown01Icon, SortByUp01Icon } from "hugeicons-react";
-import { SortOption } from "../../types/transaction";
+import { SortOption } from "../types/transaction";
 
 interface SortProps {
   activeSortOption: SortOption;

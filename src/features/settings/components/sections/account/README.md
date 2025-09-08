@@ -1,13 +1,13 @@
 # Account & Settings Feature
 
-This directory contains all components, hooks, and types related to user account management and application settings. The primary entry point is the `AccountDrawer`, which serves as a comprehensive settings panel for the user.
+This directory contains all components, hooks, and types related to user account management and application settings. The primary entry point is the `SettingsDrawer`, which serves as a comprehensive settings panel for the user.
 
 ### Key Directories & Components
 
 - **/components**: Contains all UI components for this feature.
 
-  - `AccountDrawer.tsx`: The main drawer component that houses all user settings, organized into navigable tabs like "Account," "Business," and "Billing."
-  - **/tabs**: Holds the components for each main section within the `AccountDrawer`.
+  - `SettingsDrawer.tsx`: The main drawer component that houses all user settings, organized into navigable tabs like "Account," "Business," and "Billing."
+  - **/tabs**: Holds the components for each main section within the `SettingsDrawer`.
     - **/profile**: Contains the refactored components for managing the user's profile.
       - `Account.tsx`: A wrapper component that aggregates the various cards related to the user's account, such as the profile, color mode, and security settings.
       - `ProfileCard.tsx`: The container component responsible for managing the view/edit state of the user's profile information.

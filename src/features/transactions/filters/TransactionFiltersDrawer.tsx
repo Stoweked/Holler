@@ -1,4 +1,5 @@
-// stoweked/holler/Holler-main/src/features/transactions/components/filters/TransactionFiltersDrawer.tsx
+// src/features/transactions/filters/TransactionFiltersDrawer.tsx
+
 import {
   TransactionStatusFilter,
   TransactionTypeFilter,

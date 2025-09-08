@@ -47,7 +47,7 @@ export default function ContactDetailsCard({
             <Text size="sm" c="dimmed">
               {label}
             </Text>
-            <Text fw={500} lineClamp={2} lh={1.2}>
+            <Text fw="bold" lineClamp={2} lh={1.2}>
               {contact.full_name}
             </Text>
             <Text

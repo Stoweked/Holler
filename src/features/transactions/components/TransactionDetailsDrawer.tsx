@@ -127,11 +127,16 @@ export default function TransactionDetailsDrawer({
   ) => {
     switch (party.type) {
       case "contact":
+        // Correctly assign the type from the transaction party to the contact object
+        const contactWithCorrectType: Contact = {
+          ...party.data,
+          type: "profile",
+        };
         return (
           <ContactDetailsCard
-            contact={party.data}
+            contact={contactWithCorrectType}
             label={label}
-            onViewProfile={() => handleViewProfile(party.data)}
+            onViewProfile={() => handleViewProfile(contactWithCorrectType)}
           />
         );
       case "bank":

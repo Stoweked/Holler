@@ -21,11 +21,7 @@ export default function TransactionTimeline() {
         >
           <Timeline.Item bullet={<Mail01Icon size={16} />} title="Sent payment">
             <Text c="dimmed" size="sm">
-              You&apos;ve created new branch{" "}
-              <Text variant="link" component="span" inherit>
-                fix-notifications
-              </Text>{" "}
-              from master
+              Your payment was sent.
             </Text>
 
             <Text size="xs" mt={4}>
@@ -38,10 +34,7 @@ export default function TransactionTimeline() {
             title="Processing"
           >
             <Text c="dimmed" size="sm">
-              You&apos;ve pushed 23 commits to
-              <Text variant="link" component="span" inherit>
-                fix-notifications branch
-              </Text>
+              Payment went through processing.
             </Text>
 
             <Text size="xs" mt={4}>
@@ -55,10 +48,7 @@ export default function TransactionTimeline() {
             lineVariant="dashed"
           >
             <Text c="dimmed" size="sm">
-              You&apos;ve submitted a pull request
-              <Text variant="link" component="span" inherit>
-                Fix incorrect notification message (#187)
-              </Text>
+              Payment received.
             </Text>
 
             <Text size="xs" mt={4}>
@@ -68,10 +58,7 @@ export default function TransactionTimeline() {
 
           <Timeline.Item title="Transferred" bullet={<BankIcon size={16} />}>
             <Text c="dimmed" size="sm">
-              <Text variant="link" component="span" inherit>
-                Robert Gluesticker
-              </Text>{" "}
-              left a code review on your pull request
+              The payment was transferred to your account.
             </Text>
 
             <Text size="xs" mt={4}>

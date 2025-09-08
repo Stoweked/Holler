@@ -1,4 +1,5 @@
-// stoweked/holler/Holler-main/src/features/auth/components/PasswordStrengthMeter.tsx
+// src/features/auth/components/steps/PasswordStrengthMeter.tsx
+
 import { Box, Progress, Text, Popover, Group } from "@mantine/core";
 import { Cancel01Icon, CheckmarkCircle02Icon } from "hugeicons-react";
 import React, { useState } from "react";

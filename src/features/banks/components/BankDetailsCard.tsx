@@ -38,7 +38,7 @@ export default function BankDetailsCard({
             <Text size="sm" c="dimmed">
               {label}
             </Text>
-            <Text fw={500} lineClamp={3} lh={1.2}>
+            <Text fw="bold" lineClamp={3} lh={1.2}>
               {bank.name}
             </Text>
             <Text
