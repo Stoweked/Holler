@@ -24,6 +24,8 @@ export default function LienWaiversDrawer({
     setWaiverTitle,
     waiverType,
     setWaiverType,
+    waiverPayment_type,
+    setWaiverPayment_type,
     editor,
     editorMode,
     handleCreateNew,
@@ -104,6 +106,8 @@ export default function LienWaiversDrawer({
           onWaiverTitleChange={setWaiverTitle}
           waiverType={waiverType}
           onWaiverTypeChange={setWaiverType}
+          waiverPaymentType={waiverPayment_type}
+          onWaiverPaymentTypeChange={setWaiverPayment_type}
           editor={editor}
           editorMode={editorMode}
           onSave={handleSave}

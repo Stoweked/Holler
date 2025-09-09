@@ -21,6 +21,9 @@ export function useWaiver(closeDrawer: () => void) {
   const [waiverType, setWaiverType] = useState<"conditional" | "unconditional">(
     "conditional"
   );
+  const [waiverPayment_type, setWaiverPayment_type] = useState<
+    "progress" | "final"
+  >("progress");
   const [editorMode, setEditorMode] = useState<EditorMode>("new");
   const [selectedWaiver, setSelectedWaiver] = useState<Waiver | null>(null);
   const [isSaving, setIsSaving] = useState(false);
@@ -42,6 +45,7 @@ export function useWaiver(closeDrawer: () => void) {
   const handleCreateNew = () => {
     setWaiverTitle("");
     setWaiverType("conditional");
+    setWaiverPayment_type("progress");
     editor?.commands.setContent("");
     setPreviousStep("initial");
     setEditorMode("new");
@@ -51,6 +55,7 @@ export function useWaiver(closeDrawer: () => void) {
   const handleSelectTemplate = (content: string, name: string) => {
     setWaiverTitle(name);
     setWaiverType("conditional");
+    setWaiverPayment_type("progress");
     editor?.commands.setContent(content);
     setPreviousStep("templates");
     setEditorMode("template");
@@ -61,6 +66,7 @@ export function useWaiver(closeDrawer: () => void) {
     setSelectedWaiver(waiver);
     setWaiverTitle(waiver.title);
     setWaiverType(waiver.type);
+    setWaiverPayment_type(waiver.payment_type);
     editor?.commands.setContent(waiver.content);
     setPreviousStep("initial");
     setEditorMode("edit");
@@ -83,6 +89,7 @@ export function useWaiver(closeDrawer: () => void) {
       setStep("initial");
       setWaiverTitle("");
       setWaiverType("conditional");
+      setWaiverPayment_type("progress");
       editor?.commands.setContent("");
     }, 200);
   };
@@ -105,6 +112,7 @@ export function useWaiver(closeDrawer: () => void) {
             title: waiverTitle,
             content: editor?.getHTML(),
             type: waiverType,
+            payment_type: waiverPayment_type,
             updated_at: new Date().toISOString(),
           })
           .eq("id", selectedWaiver.id);
@@ -116,6 +124,7 @@ export function useWaiver(closeDrawer: () => void) {
             title: waiverTitle,
             content: editor?.getHTML(),
             type: waiverType,
+            payment_type: waiverPayment_type,
           },
         ]);
         if (error) throw error;
@@ -191,6 +200,8 @@ export function useWaiver(closeDrawer: () => void) {
     setWaiverTitle,
     waiverType,
     setWaiverType,
+    waiverPayment_type,
+    setWaiverPayment_type,
     editor,
     editorMode,
     waivers,

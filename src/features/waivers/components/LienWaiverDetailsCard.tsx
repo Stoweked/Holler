@@ -109,7 +109,9 @@ export default function LienWaiverDetailsCard({
                   <Stack gap={0}>
                     <Text size="sm" c="dimmed">
                       {selectedWaiver
-                        ? capitalize(selectedWaiver.type)
+                        ? `${capitalize(selectedWaiver.type)} • ${capitalize(
+                            selectedWaiver.payment_type
+                          )}`
                         : "Optional"}
                     </Text>
                     {/* Title */}

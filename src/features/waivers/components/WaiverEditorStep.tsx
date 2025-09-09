@@ -8,6 +8,8 @@ interface WaiverEditorStepProps {
   onWaiverTitleChange: (newTitle: string) => void;
   waiverType: "conditional" | "unconditional";
   onWaiverTypeChange: (type: "conditional" | "unconditional") => void;
+  waiverPaymentType: "progress" | "final";
+  onWaiverPaymentTypeChange: (paymentType: "progress" | "final") => void;
   editor: Editor | null;
   onSave: () => void;
   onArchive: () => void;
@@ -21,6 +23,8 @@ export default function WaiverEditorStep({
   onWaiverTitleChange,
   waiverType,
   onWaiverTypeChange,
+  waiverPaymentType,
+  onWaiverPaymentTypeChange,
   editor,
   editorMode,
   onSave,
@@ -42,7 +46,7 @@ export default function WaiverEditorStep({
 
       <Stack gap={4}>
         <Select
-          label="Waiver type"
+          label="Waiver Type"
           size="lg"
           radius="md"
           placeholder="Select waiver type"
@@ -56,8 +60,29 @@ export default function WaiverEditorStep({
           }
         />
         <Text c="dimmed" size="xs">
-          Attach conditional waivers (effective upon payment) or unconditional
-          waivers (effective immediately).
+          Conditional waivers are effective upon payment, while unconditional
+          waivers are effective immediately.
+        </Text>
+      </Stack>
+
+      <Stack gap={4}>
+        <Select
+          label="Payment Type"
+          size="lg"
+          radius="md"
+          placeholder="Select payment type"
+          data={[
+            { value: "progress", label: "Progress" },
+            { value: "final", label: "Final" },
+          ]}
+          value={waiverPaymentType}
+          onChange={(value) =>
+            onWaiverPaymentTypeChange(value as "progress" | "final")
+          }
+        />
+        <Text c="dimmed" size="xs">
+          Progress payments are for ongoing work, while final payments are for
+          completed projects.
         </Text>
       </Stack>
 
