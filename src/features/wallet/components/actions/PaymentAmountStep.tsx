@@ -27,7 +27,6 @@ interface PaymentAmountStepProps {
   actionType: TransactionActionType;
   selectedWaiver: Waiver | null;
   setSelectedWaiver: (waiver: Waiver | null) => void;
-  isSend: boolean;
 }
 
 export default function PaymentAmountStep({
@@ -43,9 +42,11 @@ export default function PaymentAmountStep({
   actionType,
   selectedWaiver,
   setSelectedWaiver,
-  isSend,
 }: PaymentAmountStepProps) {
   const inputRef = useRef<HTMLInputElement>(null);
+  const isSend = actionType === "send";
+  const showWaiverInput = actionType === "send" || "request";
+
   const [
     openedProfileModal,
     { open: openProfileModal, close: closeProfileModal },
@@ -117,7 +118,7 @@ export default function PaymentAmountStep({
         <Stack>
           {renderRecipientDetails()}
 
-          {isSend && (
+          {showWaiverInput && (
             <LienWaiverDetailsCard
               selectedWaiver={selectedWaiver}
               setSelectedWaiver={setSelectedWaiver}

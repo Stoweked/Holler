@@ -85,7 +85,6 @@ export default function TransactionDrawerContent({
               actionType={actionType}
               selectedWaiver={selectedWaiver}
               setSelectedWaiver={setSelectedWaiver}
-              isSend={actionType === "send"}
             />
           );
         }
