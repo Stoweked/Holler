@@ -1,5 +1,6 @@
-import { Skeleton, Space, Stack } from "@mantine/core";
+import { Space, Stack } from "@mantine/core";
 import SectionHeader from "../SectionHeader";
+import AccountNotificationsCard from "./AccountNotificationsCard";
 
 export function NotificationsSettings() {
   return (
@@ -8,9 +9,7 @@ export function NotificationsSettings() {
         heading="Notifications"
         subHeading="Manage your notification preferences."
       />
-      <Skeleton height={200} radius="lg" />
-      <Skeleton height={200} radius="lg" />
-      <Skeleton height={200} radius="lg" />
+      <AccountNotificationsCard />
       <Space h={100} />
     </Stack>
   );

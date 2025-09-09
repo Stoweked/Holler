@@ -76,3 +76,21 @@
     padding-right: 0 !important;
   }
 }
+
+/* Notifications */
+.notificationLabel {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+@media (max-width: 949px) {
+  .switchesGroup {
+    flex-direction: column;
+    --group-align: flex-start !important;
+  }
+  .switchesWrapper {
+    flex-direction: row;
+    width: 100%;
+    --stack-gap: var(--mantine-spacing-xl) !important;
+  }
+}
