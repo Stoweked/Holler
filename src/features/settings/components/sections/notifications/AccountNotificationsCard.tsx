@@ -27,7 +27,7 @@ export default function AccountNotificationsCard() {
           <Card withBorder shadow="none" radius="lg">
             <Group justify="space-between" className={classes.switchesGroup}>
               <Stack gap="xs">
-                <Money01Icon size={24} />
+                <Money01Icon size={24} color="gray" />
                 <Stack gap={0}>
                   <Title order={5}>Payments</Title>
                   <Text c="dimmed" fz={14}>
@@ -69,7 +69,7 @@ export default function AccountNotificationsCard() {
           <Card withBorder shadow="none" radius="lg">
             <Group justify="space-between" className={classes.switchesGroup}>
               <Stack gap="xs">
-                <Payment01Icon size={24} />
+                <Payment01Icon size={24} color="gray" />
                 <Stack gap={0}>
                   <Title order={5}>Payment requests</Title>
                   <Text c="dimmed" fz={14}>
@@ -112,7 +112,7 @@ export default function AccountNotificationsCard() {
           <Card withBorder shadow="none" radius="lg">
             <Group justify="space-between" className={classes.switchesGroup}>
               <Stack gap="xs">
-                <BankIcon size={24} />
+                <BankIcon size={24} color="gray" />
                 <Stack gap={0}>
                   <Title order={5}>Transfers & deposits</Title>
                   <Text c="dimmed" fz={14}>
@@ -155,7 +155,7 @@ export default function AccountNotificationsCard() {
           <Card withBorder shadow="none" radius="lg">
             <Group justify="space-between" className={classes.switchesGroup}>
               <Stack gap="xs">
-                <ClipboardIcon size={24} />
+                <ClipboardIcon size={24} color="gray" />
                 <Stack gap={0}>
                   <Title order={5}>Lien waivers</Title>
                   <Text c="dimmed" fz={14}>
