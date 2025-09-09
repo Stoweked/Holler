@@ -12,7 +12,6 @@ import {
 import WaiverItem from "./WaiverItem";
 import {
   Cancel01Icon,
-  DocumentValidationIcon,
   PlusSignIcon,
   Search01Icon,
   ClipboardIcon,
@@ -124,13 +123,8 @@ export default function WaiverInitialStep({
       <Group grow className={classes.buttonGroup}>
         <OptionButton
           icon={<PlusSignIcon size={24} />}
-          label="Create new waiver"
+          label="Add new waiver"
           onClick={onNew}
-        />
-        <OptionButton
-          icon={<DocumentValidationIcon size={24} />}
-          label="Start from template"
-          onClick={onTemplate}
         />
       </Group>
     </Stack>
