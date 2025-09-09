@@ -54,3 +54,50 @@
     max-width: none;
   }
 }
+
+/* Rich text content */
+.renderedContent {
+  color: var(--mantine-color-text);
+  font-size: var(--mantine-font-size-md);
+  line-height: var(--mantine-line-height);
+}
+
+.renderedContent h1,
+.renderedContent h2,
+.renderedContent h3,
+.renderedContent h4 {
+  font-family: var(--mantine-font-family-headings);
+  font-weight: bold;
+  margin-top: var(--mantine-spacing-lg);
+  margin-bottom: var(--mantine-spacing-sm);
+}
+
+.renderedContent h2 {
+  font-size: var(--mantine-font-size-h2);
+}
+
+.renderedContent p {
+  margin-top: 0;
+  margin-bottom: var(--mantine-spacing-md);
+}
+
+.renderedContent blockquote {
+  padding: var(--mantine-spacing-sm) var(--mantine-spacing-lg);
+  margin-left: 0;
+  margin-right: 0;
+  border-left: 4px solid
+    light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+  color: var(--mantine-color-dimmed);
+}
+
+.renderedContent u {
+  text-decoration: underline;
+}
+
+.renderedContent em {
+  font-style: italic;
+}
+
+.renderedContent strong {
+  font-weight: bold;
+}

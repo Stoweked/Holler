@@ -15,7 +15,7 @@ import {
   UserIcon,
 } from "hugeicons-react";
 import { Contact, ContactType } from "../types/contact";
-import { getInitials } from "@/lib/hooks/getInitials";
+import { getInitials } from "@/lib/hooks/textUtils";
 
 interface ContactDetailsCardProps {
   contact: Contact;

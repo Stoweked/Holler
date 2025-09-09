@@ -1,4 +1,13 @@
-// src/lib/utils.ts
+// src/lib/utils/textUtils.ts
+/**
+ * Capitalizes the first letter of a string.
+ * @param s - The string to capitalize.
+ * @returns The capitalized string.
+ */
+export const capitalize = (s: string) => {
+  if (!s) return "";
+  return s.charAt(0).toUpperCase() + s.slice(1);
+};
 
 /**
  * Generates initials from a full name.

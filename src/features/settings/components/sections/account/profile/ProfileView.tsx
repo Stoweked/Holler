@@ -16,7 +16,7 @@ import {
   UserStar01Icon,
 } from "hugeicons-react";
 import { useFormattedDate } from "@/lib/hooks/useFormattedDate";
-import { getInitials } from "@/lib/hooks/getInitials";
+import { getInitials } from "@/lib/hooks/textUtils";
 import { Profile } from "@/features/settings/types/account";
 
 interface ProfileViewProps {

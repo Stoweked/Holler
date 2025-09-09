@@ -23,7 +23,7 @@ import { useWallet } from "@/contexts/WalletContext";
 import { TransactionActionType } from "../../types/wallet";
 import TermsConditionsModal from "@/components/modals/TermsConditionsModal";
 import PrivacyPolicyModal from "@/components/modals/PrivacyPolicyModal";
-import { getInitials } from "@/lib/hooks/getInitials";
+import { getInitials } from "@/lib/hooks/textUtils";
 import { Bank } from "@/features/banks/types/bank";
 import {
   TransactionParty,

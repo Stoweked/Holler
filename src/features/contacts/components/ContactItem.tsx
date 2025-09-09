@@ -10,7 +10,7 @@ import {
 import { ArrowRight01Icon } from "hugeicons-react";
 import classes from "./Contacts.module.css";
 import { Contact, ContactType } from "../types/contact";
-import { getInitials } from "@/lib/hooks/getInitials";
+import { getInitials } from "@/lib/hooks/textUtils";
 
 interface ContactItemProps {
   contact: Contact;

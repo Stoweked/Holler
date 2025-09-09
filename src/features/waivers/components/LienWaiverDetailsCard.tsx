@@ -16,7 +16,6 @@ import {
   HoverCard,
   ActionIcon,
   Button,
-  Modal,
   Menu,
   Card,
 } from "@mantine/core";
@@ -34,6 +33,8 @@ import { useState } from "react";
 import WaiverSelectItem from "./WaiverSelectItem";
 import { useDisclosure } from "@mantine/hooks";
 import { useFetchWaivers } from "../hooks/useFetchWaivers";
+import { capitalize } from "@/lib/hooks/textUtils";
+import LienWaiverModal from "./LienWaiverModal";
 
 interface LienWaiverDetailsCardProps {
   selectedWaiver: Waiver | null;
@@ -55,11 +56,6 @@ export default function LienWaiverDetailsCard({
     waiver.title.toLowerCase().includes(search.toLowerCase().trim())
   );
 
-  const capitalize = (s: string) => {
-    if (!s) return "";
-    return s.charAt(0).toUpperCase() + s.slice(1);
-  };
-
   const options = filteredWaivers.map((waiver, index) => (
     <Stack gap={4} key={waiver.id} style={{ paddingTop: index > 0 ? 4 : 0 }}>
       <Combobox.Option value={waiver.id} style={{ borderRadius: 8 }}>
@@ -72,14 +68,11 @@ export default function LienWaiverDetailsCard({
   return (
     <>
       {selectedWaiver && (
-        <Modal
+        <LienWaiverModal
           opened={opened}
           onClose={close}
-          title="Attached lien waiver"
-          centered
-        >
-          <div dangerouslySetInnerHTML={{ __html: selectedWaiver.content }} />
-        </Modal>
+          waiver={selectedWaiver}
+        />
       )}
 
       <Combobox

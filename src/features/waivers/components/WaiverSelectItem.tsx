@@ -1,5 +1,6 @@
 // src/features/waivers/components/WaiverSelectItem.tsx
 import { Waiver } from "@/features/waivers/types/waiver";
+import { capitalize } from "@/lib/hooks/textUtils";
 import { Badge, Group, Stack, Title } from "@mantine/core";
 import { PlusSignIcon } from "hugeicons-react";
 
@@ -8,11 +9,6 @@ interface WaiverSelectItemProps {
 }
 
 export default function WaiverSelectItem({ waiver }: WaiverSelectItemProps) {
-  const capitalize = (s: string) => {
-    if (!s) return "";
-    return s.charAt(0).toUpperCase() + s.slice(1);
-  };
-
   return (
     <Group wrap="nowrap" gap="xs" justify="space-between">
       <Stack gap={8}>

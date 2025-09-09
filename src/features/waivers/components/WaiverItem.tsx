@@ -12,6 +12,7 @@ import classes from "./Waivers.module.css";
 import { Waiver } from "../types/waiver";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { capitalize } from "@/lib/hooks/textUtils";
 
 dayjs.extend(relativeTime);
 
@@ -21,10 +22,6 @@ interface WaiverItemProps {
 }
 
 export default function WaiverItem({ waiver, onEdit }: WaiverItemProps) {
-  const capitalize = (s: string) => {
-    if (!s) return "";
-    return s.charAt(0).toUpperCase() + s.slice(1);
-  };
   return (
     <UnstyledButton
       key={waiver.id}

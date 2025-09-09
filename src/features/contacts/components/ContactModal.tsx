@@ -9,7 +9,7 @@ import {
 } from "@mantine/core";
 import { StarIcon } from "hugeicons-react";
 import { Contact, ContactType } from "../types/contact";
-import { getInitials } from "@/lib/hooks/getInitials";
+import { getInitials } from "@/lib/hooks/textUtils";
 import { useFavorites } from "@/contexts/FavoritesContext";
 import { useWallet } from "@/contexts/WalletContext";
 import { TransactionParty } from "@/features/transactions/types/transactionParty";
@@ -72,7 +72,7 @@ function ContactModalContent({
           leftSection={
             <StarIcon
               size={16}
-              color={isFavorite ? "gold" : "black"}
+              color={isFavorite ? "gold" : "gray"}
               style={{ fill: isFavorite ? "currentColor" : "none" }}
             />
           }

@@ -12,7 +12,7 @@ import {
   UnstyledButton,
 } from "@mantine/core";
 import classes from "../Transactions.module.css";
-import { getInitials } from "@/lib/hooks/getInitials";
+import { getInitials } from "@/lib/hooks/textUtils";
 import { useProfile } from "@/contexts/ProfileContext";
 import { getPartyName } from "../types/transactionParty";
 import { ContactType } from "@/features/contacts/types/contact";

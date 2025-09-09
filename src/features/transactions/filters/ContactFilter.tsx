@@ -14,7 +14,7 @@ import { UserMultiple02Icon, Search01Icon } from "hugeicons-react";
 import { mockContacts } from "@/mockData/mockContacts";
 import { useState } from "react";
 import { Contact, ContactType } from "@/features/contacts/types/contact";
-import { getInitials } from "@/lib/hooks/getInitials";
+import { getInitials } from "@/lib/hooks/textUtils";
 
 interface ContactFilterProps {
   activeContactFilter: string;

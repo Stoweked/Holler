@@ -3,7 +3,7 @@
 
 import { Group, Avatar, FileButton, Button, Text, Stack } from "@mantine/core";
 import { useProfile } from "@/contexts/ProfileContext";
-import { getInitials } from "@/lib/hooks/getInitials";
+import { getInitials } from "@/lib/hooks/textUtils";
 
 export default function AvatarUpload({
   onFileSelect,

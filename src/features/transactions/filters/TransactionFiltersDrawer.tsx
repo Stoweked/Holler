@@ -30,7 +30,7 @@ import { useState } from "react";
 import { mockContacts } from "@/mockData/mockContacts";
 import { Search01Icon } from "hugeicons-react";
 import { Contact, ContactType } from "@/features/contacts/types/contact";
-import { getInitials } from "@/lib/hooks/getInitials";
+import { getInitials } from "@/lib/hooks/textUtils";
 
 const statusFilters: TransactionStatusFilter[] = [
   "All",

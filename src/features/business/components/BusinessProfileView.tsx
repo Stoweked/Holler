@@ -13,7 +13,7 @@ import {
   Badge,
 } from "@mantine/core";
 import { Location01Icon, TelephoneIcon } from "hugeicons-react";
-import { getInitials } from "@/lib/hooks/getInitials";
+import { getInitials } from "@/lib/hooks/textUtils";
 import { useBusinessProfile } from "../hooks/useBusinessProfile";
 
 interface BusinessProfileViewProps {
