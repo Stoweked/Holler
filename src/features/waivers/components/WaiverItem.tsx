@@ -21,6 +21,10 @@ interface WaiverItemProps {
 }
 
 export default function WaiverItem({ waiver, onEdit }: WaiverItemProps) {
+  const capitalize = (s: string) => {
+    if (!s) return "";
+    return s.charAt(0).toUpperCase() + s.slice(1);
+  };
   return (
     <UnstyledButton
       key={waiver.id}
@@ -35,12 +39,22 @@ export default function WaiverItem({ waiver, onEdit }: WaiverItemProps) {
 
           {/* Title */}
           <Stack gap={8}>
-            <Badge
-              variant="light"
-              color={waiver.type === "conditional" ? "cyan" : "orange"}
-            >
-              {waiver.type}
-            </Badge>
+            <Group gap="xs">
+              <Badge
+                variant="light"
+                size="sm"
+                color={waiver.type === "conditional" ? "cyan" : "orange"}
+              >
+                {capitalize(waiver.type)}
+              </Badge>
+              <Badge
+                variant="light"
+                size="sm"
+                color={waiver.payment_type === "progress" ? "indigo" : "red"}
+              >
+                {capitalize(waiver.payment_type)}
+              </Badge>
+            </Group>
             <Stack gap={4} style={{ overflow: "hidden" }}>
               <Title order={5} lineClamp={2} lh={1.2}>
                 {waiver.title}
