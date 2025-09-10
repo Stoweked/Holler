@@ -17,9 +17,9 @@ import { DateInput } from "@mantine/dates";
 import { PatternFormat } from "react-number-format";
 import { Calendar02Icon } from "hugeicons-react";
 import { usStates } from "@/lib/data/usStates";
-import AvatarUpload from "./AvatarUpload";
-import { useProfileForm } from "@/features/settings/hooks/useProfileForm";
+import { useProfileForm } from "@/features/account/hooks/useProfileForm";
 import { getInitials } from "@/lib/hooks/textUtils";
+import AvatarUpload from "@/features/settings/components/AvatarUpload";
 
 interface ProfileFormProps {
   onCancel: () => void;

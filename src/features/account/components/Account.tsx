@@ -3,7 +3,7 @@ import ProfileCard from "./profile/ProfileCard";
 import ColorModeCard from "./ColorModeCard";
 import ResetPasswordCard from "./ResetPasswordCard";
 import DeleteAccountCard from "./DeleteAccountCard";
-import SectionHeader from "../SectionHeader";
+import SectionHeader from "../../settings/components/SectionHeader";
 
 export default function Account() {
   return (

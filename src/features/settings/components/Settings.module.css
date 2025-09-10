@@ -77,12 +77,6 @@
   }
 }
 
-/* Notifications */
-.notificationLabel {
-  font-size: 14px;
-  font-weight: 500;
-}
-
 @media (max-width: 949px) {
   .switchesGroup {
     flex-direction: column;

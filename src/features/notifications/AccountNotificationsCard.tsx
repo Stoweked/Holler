@@ -4,7 +4,7 @@
 //mantine
 import { Card, Group, Paper, Stack, Switch, Text, Title } from "@mantine/core";
 //styles
-import classes from "../../Settings.module.css";
+import classes from "./Notifications.module.css";
 import {
   BankIcon,
   ClipboardIcon,

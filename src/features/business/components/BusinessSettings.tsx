@@ -1,6 +1,6 @@
 import { Space, Stack } from "@mantine/core";
-import SectionHeader from "../SectionHeader";
 import BusinessProfileCard from "@/features/business/components/BusinessProfileCard";
+import SectionHeader from "@/features/settings/components/SectionHeader";
 
 export function BusinessSettings() {
   return (

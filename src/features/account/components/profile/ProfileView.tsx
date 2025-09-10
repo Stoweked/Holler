@@ -17,7 +17,7 @@ import {
 } from "hugeicons-react";
 import { useFormattedDate } from "@/lib/hooks/useFormattedDate";
 import { getInitials } from "@/lib/hooks/textUtils";
-import { Profile } from "@/features/settings/types/account";
+import { Profile } from "@/features/account/types/account";
 
 interface ProfileViewProps {
   profile: Profile | null;

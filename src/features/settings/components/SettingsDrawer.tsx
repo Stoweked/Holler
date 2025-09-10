@@ -24,10 +24,10 @@ import { useEffect, useState } from "react";
 import { useViewportSize } from "@mantine/hooks";
 import { useProfile } from "@/contexts/ProfileContext";
 import OptionButton from "@/components/shared/OptionButton/OptionButton";
-import Account from "./sections/account/Account";
-import { BillingSettings } from "./sections/billing/BillingSettings";
-import { NotificationsSettings } from "./sections/notifications/NotificationsSettings";
-import { BusinessSettings } from "./sections/business/BusinessSettings";
+import { BillingSettings } from "../../billing/components/BillingSettings";
+import Account from "@/features/account/components/Account";
+import { BusinessSettings } from "@/features/business/components/BusinessSettings";
+import { NotificationsSettings } from "../../notifications/NotificationsSettings";
 
 interface SettingsDrawerProps {
   opened: boolean;

@@ -1,6 +1,6 @@
 "use client";
 
-import { ActionIcon, Box, Group } from "@mantine/core";
+import { ActionIcon, Box, Group, Tooltip } from "@mantine/core";
 import { Provider } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/client";
 import {
@@ -37,33 +37,37 @@ export function OAuthButtons() {
       </ActionIcon>
 
       {/* Facebook */}
-      <ActionIcon
-        disabled
-        aria-label="Log in with Facebook"
-        size="xl"
-        radius="xl"
-        variant="default"
-        onClick={() => handleOAuthLogin("facebook")}
-      >
-        <FacebookLogo />
-      </ActionIcon>
+      <Tooltip label="Coming soon">
+        <ActionIcon
+          disabled
+          aria-label="Log in with Facebook"
+          size="xl"
+          radius="xl"
+          variant="default"
+          onClick={() => handleOAuthLogin("facebook")}
+        >
+          <FacebookLogo />
+        </ActionIcon>
+      </Tooltip>
 
       {/* Apple */}
-      <ActionIcon
-        disabled
-        aria-label="Log in with Apple"
-        size="xl"
-        radius="xl"
-        variant="default"
-        onClick={() => handleOAuthLogin("apple")}
-      >
-        <Box darkHidden>
-          <AppleLogoLight />
-        </Box>
-        <Box lightHidden>
-          <AppleLogoDark />
-        </Box>
-      </ActionIcon>
+      <Tooltip label="Coming soon">
+        <ActionIcon
+          disabled
+          aria-label="Log in with Apple"
+          size="xl"
+          radius="xl"
+          variant="default"
+          onClick={() => handleOAuthLogin("apple")}
+        >
+          <Box darkHidden>
+            <AppleLogoLight />
+          </Box>
+          <Box lightHidden>
+            <AppleLogoDark />
+          </Box>
+        </ActionIcon>
+      </Tooltip>
     </Group>
   );
 }
