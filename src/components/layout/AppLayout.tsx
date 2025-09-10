@@ -7,7 +7,7 @@ import { useDisclosure } from "@mantine/hooks";
 import { SideNav } from "@/components/layout/SideNav";
 import TopNav from "@/components/layout/TopNav/TopNav";
 import { ProfileProvider, useProfile } from "@/contexts/ProfileContext";
-import { getSpotlightActions } from "@/components/layout/TopNav/SpotlightSearch/spotlightActions";
+import { getSpotlightActions } from "@/features/spotlight/spotlightActions";
 import { useRouter } from "next/navigation";
 import { Spotlight } from "@mantine/spotlight";
 import { Search01Icon } from "hugeicons-react";

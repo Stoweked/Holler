@@ -149,8 +149,15 @@ export const getSpotlightActions = (
       {
         id: "billing",
         label: "Billing",
-        description: "Manage your billing and payment methods",
-        keywords: ["payment", "subscription", "credit card", "plans"],
+        description: "Review your monthly statements and transaction fees.",
+        keywords: [
+          "payment",
+          "subscription",
+          "credit card",
+          "plans",
+          "fees",
+          "statements",
+        ],
         onClick: () =>
           window.dispatchEvent(
             new CustomEvent("open-settings", { detail: { tab: "billing" } })

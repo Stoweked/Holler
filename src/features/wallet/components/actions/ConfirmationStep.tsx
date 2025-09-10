@@ -15,9 +15,11 @@ import {
   UnstyledButton,
   Tooltip,
   Image,
+  HoverCard,
+  ActionIcon,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { BankIcon, File01Icon } from "hugeicons-react";
+import { BankIcon, File01Icon, InformationCircleIcon } from "hugeicons-react";
 import classes from "./Actions.module.css";
 import { useWallet } from "@/contexts/WalletContext";
 import { TransactionActionType } from "../../types/wallet";
@@ -29,7 +31,6 @@ import {
   TransactionParty,
   getPartyName,
 } from "@/features/transactions/types/transactionParty";
-import { ContactType } from "@/features/contacts/types/contact";
 
 // Helper component to display party details
 const PartyInfoCard = ({
@@ -98,7 +99,7 @@ const PartyInfoCard = ({
       ) : (
         <Avatar
           src={avatarSrc}
-          variant="light"
+          variant="default"
           color="lime"
           size={44}
           radius="xl"
@@ -130,6 +131,7 @@ export default function ConfirmationStep({
   waiver,
 }: ConfirmationStepProps) {
   const [opened, { open, close }] = useDisclosure(false);
+  const showTransactionFee = actionType === "send" || actionType === "request";
   const numericAmount =
     typeof amount === "string" ? parseFloat(amount) : amount;
   const formattedAmount = (numericAmount || 0).toLocaleString("en-US", {
@@ -148,23 +150,39 @@ export default function ConfirmationStep({
   const getActionLabels = () => {
     switch (actionType) {
       case "send":
-        return { to: "Send to", from: "Pay from", button: "Send" };
+        return {
+          to: "Send to",
+          from: "Pay from",
+          button: "Send",
+          amount: "Amount to send",
+        };
       case "request":
-        return { to: "Request from", from: "Deposit into", button: "Request" };
+        return {
+          to: "Request from",
+          from: "Deposit into",
+          button: "Request",
+          amount: "Amount requested",
+        };
       case "deposit":
-        return { to: "Deposit to", from: "Withdraw from", button: "Deposit" };
+        return {
+          to: "Deposit to",
+          from: "Withdraw from",
+          button: "Deposit",
+          amount: "Amount to deposit",
+        };
       case "transfer":
         return {
           to: "Transfer to",
           from: "Transfer from",
           button: "Transfer",
+          amount: "Amount to transfer",
         };
       default:
-        return { to: "", from: "", button: "" };
+        return { to: "", from: "", button: "", amount: "Amount" };
     }
   };
 
-  const { to, from, button } = getActionLabels();
+  const { to, from, button, amount: amountLabel } = getActionLabels();
 
   if (!party) return null;
 
@@ -205,7 +223,7 @@ export default function ConfirmationStep({
             <Divider />
 
             <Stack gap={0}>
-              <Text c="dimmed">Amount</Text>
+              <Text c="dimmed">{amountLabel}</Text>
               <Title order={4}>{formattedAmount}</Title>
             </Stack>
 
@@ -237,6 +255,42 @@ export default function ConfirmationStep({
                   </Tooltip>
                 </Stack>
               </Alert>
+            )}
+
+            {showTransactionFee && (
+              <>
+                <Divider />
+                <Stack gap={0}>
+                  <Group wrap="nowrap" gap={4}>
+                    <Text c="dimmed">Transaction fee</Text>
+                    <HoverCard width={310} shadow="md" position="bottom">
+                      <HoverCard.Target>
+                        <ActionIcon
+                          aria-label="Info"
+                          size="sm"
+                          radius="xl"
+                          variant="subtle"
+                          color="gray"
+                          c="dimmed"
+                        >
+                          <InformationCircleIcon size={16} />
+                        </ActionIcon>
+                      </HoverCard.Target>
+                      <HoverCard.Dropdown>
+                        <Text size="sm">
+                          A small fee is applied to each transaction to cover
+                          processing costs and help us operate the Holler
+                          platform.
+                        </Text>
+                      </HoverCard.Dropdown>
+                    </HoverCard>
+                  </Group>
+                  <Group wrap="nowrap" justify="space-between">
+                    <Title order={4}>$2.14</Title>
+                    <Text c="dimmed">0.25%</Text>
+                  </Group>
+                </Stack>
+              </>
             )}
           </Stack>
         </Card>
