@@ -285,10 +285,7 @@ export default function ConfirmationStep({
                       </HoverCard.Dropdown>
                     </HoverCard>
                   </Group>
-                  <Group wrap="nowrap" justify="space-between">
-                    <Title order={4}>$2.14</Title>
-                    <Text c="dimmed">0.25%</Text>
-                  </Group>
+                  <Title order={4}>$2.14</Title>
                 </Stack>
               </>
             )}
