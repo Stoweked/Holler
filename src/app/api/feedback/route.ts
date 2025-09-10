@@ -3,12 +3,21 @@ import { createServer } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
-  const { formEmail, formRating, formMessage } = await req.json();
+  const { formEmail, formRating, formMessage, formType, canContact } =
+    await req.json();
   const supabase = await createServer();
 
   const { data, error } = await supabase
     .from("feedback")
-    .insert([{ email: formEmail, rating: formRating, message: formMessage }])
+    .insert([
+      {
+        email: formEmail,
+        rating: formRating,
+        message: formMessage,
+        type: formType,
+        can_contact: canContact,
+      },
+    ])
     .select();
 
   if (error) {

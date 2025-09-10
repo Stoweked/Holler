@@ -5,9 +5,11 @@ import { useEffect, useState } from "react";
 import {
   Button,
   CheckIcon,
+  Checkbox,
   Group,
   Modal,
   Rating,
+  SegmentedControl,
   Stack,
   TextInput,
   Textarea,
@@ -33,6 +35,8 @@ export default function FeedbackModal({
       formEmail: profile?.email || "",
       formRating: 0,
       formMessage: "",
+      formType: "feature",
+      canContact: false,
     },
   });
 
@@ -60,6 +64,8 @@ export default function FeedbackModal({
         formEmail: form.values.formEmail,
         formRating: form.values.formRating,
         formMessage: form.values.formMessage,
+        formType: form.values.formType,
+        canContact: form.values.canContact,
       }),
     });
     const data = await res.json();
@@ -96,6 +102,15 @@ export default function FeedbackModal({
       <Modal opened={opened} onClose={close} title="Share feedback" centered>
         <form onSubmit={submitFeedback}>
           <Stack>
+            <SegmentedControl
+              fullWidth
+              radius="xl"
+              data={[
+                { label: "Feature request", value: "feature" },
+                { label: "Bug report", value: "bug" },
+              ]}
+              {...form.getInputProps("formType")}
+            />
             <TextInput
               size="md"
               type="email"
@@ -108,7 +123,11 @@ export default function FeedbackModal({
                 w="100%"
                 size="md"
                 radius="md"
-                placeholder="Your feedback..."
+                placeholder={
+                  form.values.formType === "feature"
+                    ? "What feature would you like to see added to Holler?"
+                    : "Describe the bug and how we can reproduce it."
+                }
                 autosize
                 minRows={5}
                 maxRows={10}
@@ -118,6 +137,12 @@ export default function FeedbackModal({
                 }
               />
             </Stack>
+
+            <Checkbox
+              label="I'm open to being contacted by the team for follow-up questions about this feedback."
+              {...form.getInputProps("canContact", { type: "checkbox" })}
+            />
+
             <Group align="center" justify="space-between">
               <Rating
                 size="lg"
@@ -126,7 +151,7 @@ export default function FeedbackModal({
               <Button
                 type="submit"
                 loading={loading}
-                disabled={!form.isDirty()}
+                disabled={!form.values.formMessage.trim()}
               >
                 Send
               </Button>

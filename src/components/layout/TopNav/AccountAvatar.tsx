@@ -5,7 +5,7 @@ import {
   PencilEdit01Icon,
   UserCircleIcon,
 } from "hugeicons-react";
-import FeedbackModal from "./FeedbackModal";
+import FeedbackModal from "../../modals/FeedbackModal";
 import { ColorSchemeMenuItem } from "./ColorSchemeMenuItem";
 import { logout } from "@/features/auth/actions/logout";
 import { useProfile } from "@/contexts/ProfileContext";
