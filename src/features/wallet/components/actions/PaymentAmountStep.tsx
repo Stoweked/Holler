@@ -109,6 +109,7 @@ export default function PaymentAmountStep({
     <>
       <Stack justify="space-between" gap={30} pt="lg">
         <AmountInput
+          ref={inputRef}
           amount={amount}
           setAmount={setAmount}
           initialBalance={balance}
