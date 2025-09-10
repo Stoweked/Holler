@@ -1,10 +1,12 @@
 import {
+  ActionIcon,
   Avatar,
   Badge,
   Button,
   Card,
   Drawer,
   Group,
+  HoverCard,
   Space,
   Stack,
   Text,
@@ -19,6 +21,7 @@ import {
   ArrowRight02Icon,
   BankIcon,
   Download02Icon,
+  InformationCircleIcon,
   PrinterIcon,
 } from "hugeicons-react";
 import { useState } from "react";
@@ -245,6 +248,34 @@ export default function TransactionDetailsDrawer({
                 <Stack gap={0}>
                   <Text c="dimmed">Transaction ID</Text>
                   <Title order={5}>{transaction.id}</Title>
+                </Stack>
+
+                <Stack gap={0}>
+                  <Group wrap="nowrap" gap={4}>
+                    <Text c="dimmed">Transaction fee</Text>
+                    <HoverCard width={310} shadow="md" position="bottom">
+                      <HoverCard.Target>
+                        <ActionIcon
+                          aria-label="Info"
+                          size="sm"
+                          radius="xl"
+                          variant="subtle"
+                          color="gray"
+                          c="dimmed"
+                        >
+                          <InformationCircleIcon size={16} />
+                        </ActionIcon>
+                      </HoverCard.Target>
+                      <HoverCard.Dropdown>
+                        <Text size="sm">
+                          A small fee is applied to each transaction to cover
+                          processing costs and help us operate the Holler
+                          platform.
+                        </Text>
+                      </HoverCard.Dropdown>
+                    </HoverCard>
+                  </Group>
+                  <Title order={4}>$2.14</Title>
                 </Stack>
               </Stack>
             </Card>
