@@ -25,10 +25,18 @@ const AuthenticatedLayout = ({ children }: { children: React.ReactNode }) => {
   const { openActionDrawer } = useWallet();
 
   // Waivers
-  const { drawerOpened, closeDrawer } = useWaivers();
+  const {
+    drawerOpened,
+    closeDrawer,
+    openDrawer: openWaiversDrawer,
+  } = useWaivers();
 
   // Pass the router and the openActionDrawer function to getSpotlightActions
-  const actions = getSpotlightActions(router, openActionDrawer);
+  const actions = getSpotlightActions(
+    router,
+    openActionDrawer,
+    openWaiversDrawer
+  );
 
   if (loading) {
     return (

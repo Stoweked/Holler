@@ -25,6 +25,7 @@ import {
   Book01Icon,
   LegalDocument01Icon,
   StarsIcon,
+  ClipboardIcon,
 } from "hugeicons-react";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { logout } from "@/features/auth/actions/logout";
@@ -34,7 +35,8 @@ type OpenActionDrawerFunc = (type: TransactionActionType) => void;
 
 export const getSpotlightActions = (
   router: AppRouterInstance,
-  openActionDrawer: OpenActionDrawerFunc // Accept the function as an argument
+  openActionDrawer: OpenActionDrawerFunc,
+  openWaiversDrawer: () => void
 ): (SpotlightActionGroupData | SpotlightActionData)[] => [
   {
     group: "Navigation",
@@ -71,6 +73,14 @@ export const getSpotlightActions = (
         onClick: () =>
           window.dispatchEvent(new CustomEvent("open-notifications")),
         leftSection: <InboxIcon size={24} />,
+      },
+      {
+        id: "waivers",
+        label: "Lien waivers",
+        description: "View, create, and manage your lien waivers",
+        keywords: ["lien", "waiver", "document", "legal", "manage", "create"],
+        onClick: openWaiversDrawer,
+        leftSection: <ClipboardIcon size={24} />,
       },
     ],
   },
