@@ -58,6 +58,14 @@ export const getSpotlightActions = (
         leftSection: <UserMultiple02Icon size={24} />,
       },
       {
+        id: "waivers",
+        label: "Lien waivers",
+        description: "View, create, and manage your lien waivers",
+        keywords: ["lien", "waiver", "document", "legal", "manage", "create"],
+        onClick: openWaiversDrawer,
+        leftSection: <ClipboardIcon size={24} />,
+      },
+      {
         id: "banks",
         label: "Bank accounts",
         description: "Manage your connected bank accounts",
@@ -73,14 +81,6 @@ export const getSpotlightActions = (
         onClick: () =>
           window.dispatchEvent(new CustomEvent("open-notifications")),
         leftSection: <InboxIcon size={24} />,
-      },
-      {
-        id: "waivers",
-        label: "Lien waivers",
-        description: "View, create, and manage your lien waivers",
-        keywords: ["lien", "waiver", "document", "legal", "manage", "create"],
-        onClick: openWaiversDrawer,
-        leftSection: <ClipboardIcon size={24} />,
       },
     ],
   },
