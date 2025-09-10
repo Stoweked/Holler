@@ -19,6 +19,7 @@ import { Calendar02Icon } from "hugeicons-react";
 import { usStates } from "@/lib/data/usStates";
 import AvatarUpload from "./AvatarUpload";
 import { useProfileForm } from "@/features/settings/hooks/useProfileForm";
+import { getInitials } from "@/lib/hooks/textUtils";
 
 interface ProfileFormProps {
   onCancel: () => void;
@@ -47,6 +48,7 @@ export default function ProfileForm({
           <AvatarUpload
             onFileSelect={handleAvatarUploadAction}
             avatarPreviewUrl={form.values.avatarPreviewUrl}
+            initials={getInitials(profile?.full_name)}
           />
 
           <SimpleGrid

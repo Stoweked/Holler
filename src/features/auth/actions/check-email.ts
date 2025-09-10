@@ -1,10 +1,10 @@
 // src/features/auth/actions/check-email.ts
 "use server";
 
-import { createClient } from "@/lib/supabase/server";
+import { createServer } from "@/lib/supabase/server";
 
 export async function checkEmailExists(email: string): Promise<boolean> {
-  const supabase = await createClient();
+  const supabase = await createServer();
 
   const { data, error } = await supabase.rpc("user_exists", {
     email_address: email,

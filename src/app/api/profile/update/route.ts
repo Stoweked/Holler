@@ -1,6 +1,6 @@
 // src/app/api/profile/update/route.ts
+import { createServer } from "@/lib/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
 
 export async function PUT(request: NextRequest) {
   const body = await request.json();
@@ -17,7 +17,7 @@ export async function PUT(request: NextRequest) {
     formZip,
   } = body;
 
-  const supabase = await createClient();
+  const supabase = await createServer();
 
   const {
     data: { user },

@@ -1,11 +1,11 @@
 // app/auth/logout/actions.ts
 "use server";
 
-import { createClient } from "@/lib/supabase/server";
+import { createServer } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 
 export async function logout() {
-  const supabase = await createClient();
+  const supabase = await createServer();
   await supabase.auth.signOut();
   return redirect("/");
 }

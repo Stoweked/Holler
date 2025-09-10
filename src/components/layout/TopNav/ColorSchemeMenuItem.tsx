@@ -1,3 +1,4 @@
+// src/components/layout/TopNav/ColorSchemeMenuItem.tsx
 "use client";
 
 import {
@@ -6,7 +7,6 @@ import {
   useComputedColorScheme,
 } from "@mantine/core";
 import { Sun03Icon, Moon02Icon } from "hugeicons-react";
-import { useState, useEffect } from "react";
 
 export function ColorSchemeMenuItem() {
   const { setColorScheme } = useMantineColorScheme();
@@ -14,14 +14,7 @@ export function ColorSchemeMenuItem() {
     getInitialValueInEffect: true,
   });
 
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  // Determine the current scheme, defaulting to 'light' on the server
-  const scheme = mounted ? computedColorScheme : "light";
-  const isLight = scheme === "light";
+  const isLight = computedColorScheme === "light";
 
   return (
     <Menu.Item

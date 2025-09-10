@@ -1,20 +1,17 @@
-// src/features/settings/components/tabs/account/profile/AvatarUpload.tsx
+// src/features/settings/components/sections/account/profile/AvatarUpload.tsx
 "use client";
 
 import { Group, Avatar, FileButton, Button, Text, Stack } from "@mantine/core";
-import { useProfile } from "@/contexts/ProfileContext";
-import { getInitials } from "@/lib/hooks/textUtils";
 
 export default function AvatarUpload({
   onFileSelect,
   avatarPreviewUrl,
+  initials,
 }: {
   onFileSelect: (file: File | null) => void;
   avatarPreviewUrl: string;
+  initials: string;
 }) {
-  const { profile } = useProfile();
-  const initials = getInitials(profile?.full_name);
-
   return (
     <Group>
       <Avatar src={avatarPreviewUrl} color="lime" size="lg" radius="xl">

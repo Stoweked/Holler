@@ -1,10 +1,10 @@
 // src/app/api/feedback/route.ts
-import { createClient } from "@/lib/supabase/server";
+import { createServer } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   const { formEmail, formRating, formMessage } = await req.json();
-  const supabase = await createClient();
+  const supabase = await createServer();
 
   const { data, error } = await supabase
     .from("feedback")

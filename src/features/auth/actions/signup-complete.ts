@@ -1,7 +1,7 @@
 // src/features/auth/actions/signup-complete.ts
 "use server";
 
-import { createClient } from "@/lib/supabase/server";
+import { createServer } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 
 export async function signupComplete(formData: FormData) {
@@ -15,7 +15,7 @@ export async function signupComplete(formData: FormData) {
     phoneNumber = null;
   }
 
-  const supabase = await createClient();
+  const supabase = await createServer();
 
   const {
     data: { user },

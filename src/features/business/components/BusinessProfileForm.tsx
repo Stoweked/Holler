@@ -15,6 +15,7 @@ import { PatternFormat } from "react-number-format";
 import { usStates } from "@/lib/data/usStates";
 import AvatarUpload from "@/features/settings/components/sections/account/profile/AvatarUpload";
 import { useBusinessProfileForm } from "../hooks/useBusinessProfileForm";
+import { getInitials } from "@/lib/hooks/textUtils";
 
 interface BusinessProfileFormProps {
   onCancel: () => void;
@@ -29,6 +30,8 @@ export default function BusinessProfileForm({
     useBusinessProfileForm({
       onSaveSuccess,
     });
+
+  const initials = getInitials(form.values.formName);
 
   return (
     <Stack>
@@ -50,6 +53,7 @@ export default function BusinessProfileForm({
           <AvatarUpload
             onFileSelect={handleAvatarUploadAction}
             avatarPreviewUrl={form.values.avatarPreviewUrl}
+            initials={initials}
           />
 
           <SimpleGrid

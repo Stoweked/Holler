@@ -1,13 +1,13 @@
 // src/features/auth/actions/signup.ts
 "use server";
 
-import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { checkEmailExists } from "./check-email";
+import { createServer } from "@/lib/supabase/server";
 
 export async function signup(formData: FormData) {
   const email = formData.get("email") as string;
-  const supabase = await createClient();
+  const supabase = await createServer();
 
   const emailExists = await checkEmailExists(email);
 
