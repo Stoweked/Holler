@@ -38,11 +38,12 @@ export default function AccountNotificationsCard() {
               <Stack className={classes.switchesWrapper}>
                 <Switch
                   color="green"
-                  size="md"
+                  size="lg"
                   onLabel="ON"
                   offLabel="OFF"
                   value="email"
                   label="Email"
+                  withThumbIndicator={false}
                   defaultChecked
                   labelPosition="right"
                   classNames={{
@@ -51,11 +52,12 @@ export default function AccountNotificationsCard() {
                 />
                 <Switch
                   color="green"
-                  size="md"
+                  size="lg"
                   onLabel="ON"
                   offLabel="OFF"
                   value="inapp"
                   label="In app"
+                  withThumbIndicator={false}
                   defaultChecked
                   labelPosition="right"
                   classNames={{
@@ -81,11 +83,12 @@ export default function AccountNotificationsCard() {
               <Stack className={classes.switchesWrapper}>
                 <Switch
                   color="green"
-                  size="md"
+                  size="lg"
                   onLabel="ON"
                   offLabel="OFF"
                   value="email"
                   label="Email"
+                  withThumbIndicator={false}
                   defaultChecked
                   labelPosition="right"
                   classNames={{
@@ -94,11 +97,12 @@ export default function AccountNotificationsCard() {
                 />
                 <Switch
                   color="green"
-                  size="md"
+                  size="lg"
                   onLabel="ON"
                   offLabel="OFF"
                   value="inapp"
                   label="In app"
+                  withThumbIndicator={false}
                   defaultChecked
                   labelPosition="right"
                   classNames={{
@@ -124,11 +128,12 @@ export default function AccountNotificationsCard() {
               <Stack className={classes.switchesWrapper}>
                 <Switch
                   color="green"
-                  size="md"
+                  size="lg"
                   onLabel="ON"
                   offLabel="OFF"
                   value="email"
                   label="Email"
+                  withThumbIndicator={false}
                   defaultChecked
                   labelPosition="right"
                   classNames={{
@@ -137,11 +142,12 @@ export default function AccountNotificationsCard() {
                 />
                 <Switch
                   color="green"
-                  size="md"
+                  size="lg"
                   onLabel="ON"
                   offLabel="OFF"
                   value="inapp"
                   label="In app"
+                  withThumbIndicator={false}
                   defaultChecked
                   labelPosition="right"
                   classNames={{
@@ -166,11 +172,12 @@ export default function AccountNotificationsCard() {
               <Stack className={classes.switchesWrapper}>
                 <Switch
                   color="green"
-                  size="md"
+                  size="lg"
                   onLabel="ON"
                   offLabel="OFF"
                   value="email"
                   label="Email"
+                  withThumbIndicator={false}
                   defaultChecked
                   labelPosition="right"
                   classNames={{
@@ -179,11 +186,12 @@ export default function AccountNotificationsCard() {
                 />
                 <Switch
                   color="green"
-                  size="md"
+                  size="lg"
                   onLabel="ON"
                   offLabel="OFF"
                   value="inapp"
                   label="In app"
+                  withThumbIndicator={false}
                   defaultChecked
                   labelPosition="right"
                   classNames={{
