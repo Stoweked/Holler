@@ -89,8 +89,8 @@ export default function WaiverInitialStep({
         <Center>
           <Stack align="center" my="xl" gap="lg">
             <ClipboardIcon size={40} color="grey" />
-            <Stack gap={0} align="center">
-              <Title order={3} ta="center">
+            <Stack gap={4} align="center">
+              <Title order={2} ta="center">
                 Lien waivers made easy
               </Title>
               <Text c="dimmed" ta="center" maw={400}>

@@ -13,14 +13,19 @@ import { Spotlight } from "@mantine/spotlight";
 import { Search01Icon } from "hugeicons-react";
 import { WalletProvider, useWallet } from "@/contexts/WalletContext";
 import { FavoritesProvider } from "@/contexts/FavoritesContext";
+import { useWaivers, WaiversProvider } from "@/contexts/WaiversContext";
+import LienWaiversDrawer from "@/features/waivers/components/LienWaiversDrawer";
 
 const AuthenticatedLayout = ({ children }: { children: React.ReactNode }) => {
   const { user, loading } = useProfile();
   const [opened, { toggle, close }] = useDisclosure();
   const router = useRouter();
 
-  // Get the openActionDrawer function from the WalletContext
+  //Wallet
   const { openActionDrawer } = useWallet();
+
+  // Waivers
+  const { drawerOpened, closeDrawer } = useWaivers();
 
   // Pass the router and the openActionDrawer function to getSpotlightActions
   const actions = getSpotlightActions(router, openActionDrawer);
@@ -74,6 +79,8 @@ const AuthenticatedLayout = ({ children }: { children: React.ReactNode }) => {
           {children}
         </AppShell.Main>
       </AppShell>
+
+      <LienWaiversDrawer opened={drawerOpened} close={closeDrawer} />
     </>
   );
 };
@@ -92,9 +99,11 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <ProfileProvider>
       <WalletProvider>
-        <FavoritesProvider>
-          <AuthenticatedLayout>{children}</AuthenticatedLayout>
-        </FavoritesProvider>
+        <WaiversProvider>
+          <FavoritesProvider>
+            <AuthenticatedLayout>{children}</AuthenticatedLayout>
+          </FavoritesProvider>
+        </WaiversProvider>
       </WalletProvider>
     </ProfileProvider>
   );

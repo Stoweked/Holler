@@ -18,6 +18,7 @@ import {
   Button,
   Menu,
   Card,
+  Title,
 } from "@mantine/core";
 import {
   ClipboardIcon,
@@ -32,9 +33,9 @@ import classes from "./Waivers.module.css";
 import { useState } from "react";
 import WaiverSelectItem from "./WaiverSelectItem";
 import { useDisclosure } from "@mantine/hooks";
-import { useFetchWaivers } from "../hooks/useFetchWaivers";
 import { capitalize } from "@/lib/hooks/textUtils";
 import LienWaiverModal from "./LienWaiverModal";
+import { useWaivers } from "@/contexts/WaiversContext";
 
 interface LienWaiverDetailsCardProps {
   selectedWaiver: Waiver | null;
@@ -49,8 +50,14 @@ export default function LienWaiverDetailsCard({
     onDropdownClose: () => combobox.resetSelectedOption(),
   });
   const [search, setSearch] = useState("");
-  const [opened, { open, close }] = useDisclosure(false);
-  const { waivers: userWaivers, loading: waiversLoading } = useFetchWaivers();
+  const [modalOpened, { open: openModal, close: closeModal }] =
+    useDisclosure(false);
+
+  const {
+    waivers: userWaivers,
+    loading: waiversLoading,
+    openDrawer,
+  } = useWaivers();
 
   const filteredWaivers = userWaivers.filter((waiver) =>
     waiver.title.toLowerCase().includes(search.toLowerCase().trim())
@@ -69,8 +76,8 @@ export default function LienWaiverDetailsCard({
     <>
       {selectedWaiver && (
         <LienWaiverModal
-          opened={opened}
-          onClose={close}
+          opened={modalOpened}
+          onClose={closeModal}
           waiver={selectedWaiver}
         />
       )}
@@ -160,7 +167,7 @@ export default function LienWaiverDetailsCard({
                       <Menu.Item
                         leftSection={<ViewIcon size={16} />}
                         aria-label="View lien waiver"
-                        onClick={open}
+                        onClick={openModal}
                       >
                         View lien waiver
                       </Menu.Item>
@@ -209,7 +216,7 @@ export default function LienWaiverDetailsCard({
                 // STATE 1: No waiver selected, show the "Add" Button
                 <Button
                   style={{ flexShrink: 0 }}
-                  variant="light"
+                  variant="outline"
                   size="sm"
                   leftSection={<PlusSignIcon size={16} />}
                   onClick={() => combobox.openDropdown()}
@@ -230,21 +237,32 @@ export default function LienWaiverDetailsCard({
             borderRadius: "var(--mantine-radius-md)",
           }}
         >
-          <Combobox.Search
-            size="lg"
-            value={search}
-            onChange={(event) => setSearch(event.currentTarget.value)}
-            placeholder="Search your waivers"
-            leftSection={<Search01Icon size={16} />}
-          />
+          {userWaivers.length > 0 && (
+            <Combobox.Search
+              size="lg"
+              value={search}
+              onChange={(event) => setSearch(event.currentTarget.value)}
+              placeholder="Search your waivers"
+              leftSection={<Search01Icon size={16} />}
+            />
+          )}
           <Combobox.Options>
             <ScrollArea.Autosize type="scroll" mah={200}>
               {options.length > 0 ? (
                 options
               ) : (
-                <Combobox.Empty>
-                  <Text size="lg">No waivers found</Text>
-                </Combobox.Empty>
+                <Stack align="center" p="md" gap="sm">
+                  <Title order={5}>No waivers found</Title>
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      openDrawer();
+                      combobox.closeDropdown();
+                    }}
+                  >
+                    Create new waiver
+                  </Button>
+                </Stack>
               )}
             </ScrollArea.Autosize>
           </Combobox.Options>

@@ -83,6 +83,7 @@ export default function LienWaiversDrawer({
 
   return (
     <Drawer
+      zIndex={300}
       opened={opened}
       onClose={handleClose}
       title={drawerTitle}

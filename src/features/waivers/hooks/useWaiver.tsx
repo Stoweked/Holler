@@ -1,4 +1,3 @@
-// features/waivers/hooks/useWaiver.tsx
 import { useState } from "react";
 import { useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
@@ -9,7 +8,7 @@ import Placeholder from "@tiptap/extension-placeholder";
 import { notifications } from "@mantine/notifications";
 import { CheckIcon } from "@mantine/core";
 import { AlertCircleIcon } from "hugeicons-react";
-import { useFetchWaivers } from "./useFetchWaivers";
+import { useWaivers } from "@/contexts/WaiversContext";
 
 type WaiverStep = "initial" | "templates" | "editor";
 type EditorMode = "new" | "edit" | "template";
@@ -29,7 +28,7 @@ export function useWaiver(closeDrawer: () => void) {
   const [isSaving, setIsSaving] = useState(false);
   const [isArchiving, setIsArchiving] = useState(false);
 
-  const { waivers, refetchWaivers } = useFetchWaivers();
+  const { waivers, refetchWaivers } = useWaivers();
   const supabase = createClient();
 
   const editor = useEditor({
@@ -47,6 +46,7 @@ export function useWaiver(closeDrawer: () => void) {
     setWaiverType("conditional");
     setWaiverPayment_type("progress");
     editor?.commands.setContent("");
+    setSelectedWaiver(null);
     setPreviousStep("initial");
     setEditorMode("new");
     setStep("editor");
@@ -57,6 +57,7 @@ export function useWaiver(closeDrawer: () => void) {
     setWaiverType("conditional");
     setWaiverPayment_type("progress");
     editor?.commands.setContent(content);
+    setSelectedWaiver(null);
     setPreviousStep("templates");
     setEditorMode("template");
     setStep("editor");
@@ -91,6 +92,7 @@ export function useWaiver(closeDrawer: () => void) {
       setWaiverType("conditional");
       setWaiverPayment_type("progress");
       editor?.commands.setContent("");
+      setSelectedWaiver(null);
     }, 200);
   };
 
