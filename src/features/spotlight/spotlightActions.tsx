@@ -24,6 +24,7 @@ import {
   Shield01Icon,
   Book01Icon,
   LegalDocument01Icon,
+  StarsIcon,
 } from "hugeicons-react";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { logout } from "@/features/auth/actions/logout";
@@ -202,6 +203,22 @@ export const getSpotlightActions = (
   {
     group: "Resources",
     actions: [
+      {
+        id: "whats-new",
+        label: "What’s new",
+        description: "See the latest product updates and announcements",
+        keywords: [
+          "whats new",
+          "changelog",
+          "release notes",
+          "updates",
+          "new features",
+          "product updates",
+          "announcements",
+        ],
+        onClick: () => window.dispatchEvent(new CustomEvent("open-whats-new")),
+        leftSection: <StarsIcon size={24} />,
+      },
       {
         id: "terms",
         label: "Terms & conditions",

@@ -3,6 +3,7 @@ import { useDisclosure } from "@mantine/hooks";
 import {
   Logout02Icon,
   PencilEdit01Icon,
+  StarsIcon,
   UserCircleIcon,
 } from "hugeicons-react";
 import FeedbackModal from "../../modals/FeedbackModal";
@@ -12,6 +13,7 @@ import { useProfile } from "@/contexts/ProfileContext";
 import { useEffect } from "react";
 import { getInitials } from "@/lib/hooks/textUtils";
 import SettingsDrawer from "@/features/settings/components/SettingsDrawer";
+import WhatsNewModal from "@/components/modals/WhatsNewModal";
 
 export default function AccountAvatar() {
   const { profile, loading } = useProfile();
@@ -25,18 +27,27 @@ export default function AccountAvatar() {
     { open: openProfileDrawer, close: closeProfileDrawer },
   ] = useDisclosure(false);
 
+  const [
+    openedWhatsNewModal,
+    { open: openWhatsNewModal, close: closeWhatsNewModal },
+  ] = useDisclosure(false);
+
   useEffect(() => {
     const handleOpenAccount = () => openProfileDrawer();
     const handleOpenFeedback = () => openFeedbackModal();
+    const handleOpenWhatsNew = () => openWhatsNewModal();
 
     window.addEventListener("open-account", handleOpenAccount);
     window.addEventListener("open-feedback", handleOpenFeedback);
+    window.addEventListener("open-whats-new", handleOpenWhatsNew);
 
     return () => {
       window.removeEventListener("open-account", handleOpenAccount);
       window.removeEventListener("open-feedback", handleOpenFeedback);
+      window.removeEventListener("open-whats-new", handleOpenWhatsNew);
     };
-  }, [openProfileDrawer, openFeedbackModal]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <>
@@ -67,13 +78,25 @@ export default function AccountAvatar() {
           >
             Your profile
           </Menu.Item>
+
+          <ColorSchemeMenuItem />
+
+          <Menu.Divider />
+
           <Menu.Item
             leftSection={<PencilEdit01Icon size={16} />}
             onClick={openFeedbackModal}
           >
             Share feedback
           </Menu.Item>
-          <ColorSchemeMenuItem />
+
+          <Menu.Item
+            leftSection={<StarsIcon size={16} />}
+            onClick={openWhatsNewModal}
+          >
+            What&apos;s new
+          </Menu.Item>
+
           <Menu.Divider />
 
           <Menu.Item leftSection={<Logout02Icon size={16} />} onClick={logout}>
@@ -83,6 +106,8 @@ export default function AccountAvatar() {
       </Menu>
 
       <FeedbackModal opened={openedFeedbackModal} close={closeFeedbackModal} />
+
+      <WhatsNewModal opened={openedWhatsNewModal} close={closeWhatsNewModal} />
 
       <SettingsDrawer
         opened={openedProfileDrawer}
