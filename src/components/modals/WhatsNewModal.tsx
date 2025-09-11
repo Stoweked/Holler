@@ -58,7 +58,7 @@ export default function WhatsNewModal({
                 <Title order={2} lh={1.2} ta="center">
                   {colorScheme === "dark"
                     ? "Hello darkness, our new friend"
-                    : "Introducing dark mode"}
+                    : "Dark mode"}
                 </Title>
 
                 <Text c="dimmed" ta="center">
