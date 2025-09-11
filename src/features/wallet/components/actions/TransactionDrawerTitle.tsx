@@ -22,14 +22,14 @@ export default function TransactionDrawerTitle({
         return {
           main: "Add money to Holler",
           review: "Review deposit",
-          amount: "Enter amount",
+          amount: "Deposit amount",
           bank: "Select deposit account",
         };
       case "send":
         return {
           main: "Send payment",
           review: "Review send",
-          amount: "Enter amount to send",
+          amount: "Amount to send",
           bank: "Select payment account",
         };
       case "request":
@@ -43,7 +43,7 @@ export default function TransactionDrawerTitle({
         return {
           main: "Transfer to your bank",
           review: "Review transfer",
-          amount: "Enter amount",
+          amount: "Tansfer amount",
           bank: "Transfer to your bank",
         };
       default:

@@ -1,0 +1,13 @@
+.drawerBody {
+  padding: "var(--mantine-spacing-md)";
+}
+
+.drawerContent {
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  box-shadow: var(--mantine-shadow-xl);
+  box-shadow: 0 -4px 20px -4px rgba(0, 0, 0, 0.1);
+  border: 1px solid
+    light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+  border-bottom: none;
+}
