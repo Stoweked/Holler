@@ -12,6 +12,7 @@ export const mockTransactions: Transaction[] = [
     from: { type: "self", name: "You" },
     to: { type: "contact", data: mockContacts[0] }, // Layton
     bankAccount: "Chase Checking",
+    project: "Canyon Residence",
   },
   {
     id: "2",
@@ -22,6 +23,7 @@ export const mockTransactions: Transaction[] = [
     from: { type: "contact", data: mockContacts[7] }, // Ezra lee
     to: { type: "self", name: "You" },
     bankAccount: "Business Savings",
+    project: "Millcreek Office Build",
   },
   {
     id: "4",
@@ -42,6 +44,7 @@ export const mockTransactions: Transaction[] = [
     from: { type: "self", name: "You" },
     to: { type: "bank", data: mockBanks[1] }, // Bank of America
     bankAccount: "Chase Checking",
+    project: "Park City Home",
   },
   // Add more mock transactions here following the new structure
 ];

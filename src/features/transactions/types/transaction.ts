@@ -19,4 +19,5 @@ export interface Transaction {
   from: TransactionParty;
   to: TransactionParty;
   bankAccount: string;
+  project?: string; //temporary?
 }

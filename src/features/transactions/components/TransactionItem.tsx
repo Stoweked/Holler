@@ -16,6 +16,7 @@ import { getInitials } from "@/lib/hooks/textUtils";
 import { useProfile } from "@/contexts/ProfileContext";
 import { getPartyName } from "../types/transactionParty";
 import { ContactType } from "@/features/contacts/types/contact";
+import { House03Icon } from "hugeicons-react";
 
 interface TransactionItemProps {
   transaction: Transaction;
@@ -27,7 +28,7 @@ export default function TransactionItem({
   onClick,
 }: TransactionItemProps) {
   const { profile } = useProfile();
-  const { amount, date, status, type, from, to } = transaction;
+  const { amount, date, status, type, from, to, project } = transaction;
 
   const isCredit = type === "Received" || type === "Deposited";
   const formattedAmount = `${isCredit ? "+" : "-"} $${amount.toLocaleString(
@@ -120,13 +121,24 @@ export default function TransactionItem({
                 </Badge>
               )}
             </Group>
+
             <Badge variant="default" style={{ cursor: "pointer" }}>
               {formattedDate}
             </Badge>
           </Group>
-          <Text size="md" c="dimmed" fw={500} lh={1.2}>
-            {description}
-          </Text>
+          <Group justify="space-between" gap={4} w="100%">
+            <Text size="md" c="dimmed" fw={500} lh={1.2}>
+              {description}
+            </Text>
+            {project && (
+              <Group gap={4} wrap="nowrap">
+                <House03Icon size={16} color="gray" />
+                <Text size="md" c="dimmed" fw={500} lh={1.2}>
+                  {project}
+                </Text>
+              </Group>
+            )}
+          </Group>
         </Stack>
       </Group>
     </UnstyledButton>
