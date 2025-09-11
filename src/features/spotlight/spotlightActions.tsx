@@ -36,7 +36,8 @@ type OpenActionDrawerFunc = (type: TransactionActionType) => void;
 export const getSpotlightActions = (
   router: AppRouterInstance,
   openActionDrawer: OpenActionDrawerFunc,
-  openWaiversDrawer: () => void
+  openWaiversDrawer: () => void,
+  closeNav: () => void // Add closeNav parameter
 ): (SpotlightActionGroupData | SpotlightActionData)[] => [
   {
     group: "Navigation",
@@ -46,7 +47,10 @@ export const getSpotlightActions = (
         label: "Dashboard",
         description: "View your account summary and recent activity",
         keywords: ["home", "main", "overview", "activity", "feed"],
-        onClick: () => router.push("/dashboard"),
+        onClick: () => {
+          router.push("/dashboard");
+          closeNav();
+        },
         leftSection: <DashboardCircleIcon size={24} />,
       },
       {
@@ -54,7 +58,10 @@ export const getSpotlightActions = (
         label: "Contacts",
         description: "View and manage your contacts",
         keywords: ["people", "customers", "clients", "vendors"],
-        onClick: () => window.dispatchEvent(new CustomEvent("open-contacts")),
+        onClick: () => {
+          window.dispatchEvent(new CustomEvent("open-contacts"));
+          closeNav();
+        },
         leftSection: <UserMultiple02Icon size={24} />,
       },
       {
@@ -62,7 +69,10 @@ export const getSpotlightActions = (
         label: "Lien waivers",
         description: "View, create, and manage your lien waivers",
         keywords: ["lien", "waiver", "document", "legal", "manage", "create"],
-        onClick: openWaiversDrawer,
+        onClick: () => {
+          openWaiversDrawer();
+          closeNav();
+        },
         leftSection: <ClipboardIcon size={24} />,
       },
       {
@@ -70,7 +80,10 @@ export const getSpotlightActions = (
         label: "Bank accounts",
         description: "Manage your connected bank accounts",
         keywords: ["payment methods", "financial", "link bank"],
-        onClick: () => window.dispatchEvent(new CustomEvent("open-banks")),
+        onClick: () => {
+          window.dispatchEvent(new CustomEvent("open-banks"));
+          closeNav();
+        },
         leftSection: <BankIcon size={24} />,
       },
       {
@@ -78,8 +91,10 @@ export const getSpotlightActions = (
         label: "Notifications",
         description: "View your recent notifications",
         keywords: ["activity", "alerts", "inbox", "messages"],
-        onClick: () =>
-          window.dispatchEvent(new CustomEvent("open-notifications")),
+        onClick: () => {
+          window.dispatchEvent(new CustomEvent("open-notifications"));
+          closeNav();
+        },
         leftSection: <InboxIcon size={24} />,
       },
     ],
@@ -92,7 +107,10 @@ export const getSpotlightActions = (
         label: "Deposit",
         description: "Add money to your Holler account",
         keywords: ["add funds", "load money", "transfer in"],
-        onClick: () => openActionDrawer("deposit"),
+        onClick: () => {
+          openActionDrawer("deposit");
+          closeNav();
+        },
         leftSection: <PlusSignIcon size={24} />,
       },
       {
@@ -100,7 +118,10 @@ export const getSpotlightActions = (
         label: "Send",
         description: "Send a payment to a contact",
         keywords: ["send money", "pay", "payout"],
-        onClick: () => openActionDrawer("send"),
+        onClick: () => {
+          openActionDrawer("send");
+          closeNav();
+        },
         leftSection: <ArrowUp02Icon size={24} />,
       },
       {
@@ -108,7 +129,10 @@ export const getSpotlightActions = (
         label: "Request",
         description: "Request a payment from a contact",
         keywords: ["request money", "invoice", "bill"],
-        onClick: () => openActionDrawer("request"),
+        onClick: () => {
+          openActionDrawer("request");
+          closeNav();
+        },
         leftSection: <ArrowDown02Icon size={24} />,
       },
       {
@@ -116,7 +140,10 @@ export const getSpotlightActions = (
         label: "Transfer",
         description: "Transfer funds between your accounts",
         keywords: ["move money", "internal transfer"],
-        onClick: () => openActionDrawer("transfer"),
+        onClick: () => {
+          openActionDrawer("transfer");
+          closeNav();
+        },
         leftSection: <ArrowLeftRightIcon size={24} />,
       },
     ],
@@ -129,10 +156,12 @@ export const getSpotlightActions = (
         label: "Settings",
         description: "Open your account and app settings",
         keywords: ["preferences", "options", "configuration"],
-        onClick: () =>
+        onClick: () => {
           window.dispatchEvent(
             new CustomEvent("open-settings", { detail: { tab: "account" } })
-          ),
+          );
+          closeNav();
+        },
         leftSection: <Settings01Icon size={24} />,
       },
       {
@@ -140,10 +169,12 @@ export const getSpotlightActions = (
         label: "Profile",
         description: "Manage your personal information and avatar",
         keywords: ["user", "account", "avatar", "photo", "personal"],
-        onClick: () =>
+        onClick: () => {
           window.dispatchEvent(
             new CustomEvent("open-settings", { detail: { tab: "account" } })
-          ),
+          );
+          closeNav();
+        },
         leftSection: <UserIcon size={24} />,
       },
       {
@@ -151,10 +182,12 @@ export const getSpotlightActions = (
         label: "Business",
         description: "Manage your business profile",
         keywords: ["company", "organization", "work"],
-        onClick: () =>
+        onClick: () => {
           window.dispatchEvent(
             new CustomEvent("open-settings", { detail: { tab: "business" } })
-          ),
+          );
+          closeNav();
+        },
         leftSection: <OfficeIcon size={24} />,
       },
       {
@@ -169,10 +202,12 @@ export const getSpotlightActions = (
           "fees",
           "statements",
         ],
-        onClick: () =>
+        onClick: () => {
           window.dispatchEvent(
             new CustomEvent("open-settings", { detail: { tab: "billing" } })
-          ),
+          );
+          closeNav();
+        },
         leftSection: <CreditCardIcon size={24} />,
       },
       {
@@ -180,12 +215,14 @@ export const getSpotlightActions = (
         label: "Notification preferences",
         description: "Manage your notification preferences",
         keywords: ["alerts", "emails", "messages"],
-        onClick: () =>
+        onClick: () => {
           window.dispatchEvent(
             new CustomEvent("open-settings", {
               detail: { tab: "notifications" },
             })
-          ),
+          );
+          closeNav();
+        },
         leftSection: <Notification01Icon size={24} />,
       },
       {
@@ -193,10 +230,12 @@ export const getSpotlightActions = (
         label: "Appearance",
         description: "Change the app theme (light/dark mode)",
         keywords: ["theme", "dark mode", "light mode", "color"],
-        onClick: () =>
+        onClick: () => {
           window.dispatchEvent(
             new CustomEvent("open-settings", { detail: { tab: "account" } })
-          ),
+          );
+          closeNav();
+        },
         leftSection: <Sun03Icon size={24} />,
       },
       {
@@ -204,12 +243,14 @@ export const getSpotlightActions = (
         label: "Reset password",
         description: "Reset your account password",
         keywords: ["change password", "update password", "forgot password"],
-        onClick: () => router.push("/reset-password"),
+        onClick: () => {
+          router.push("/reset-password");
+          closeNav();
+        },
         leftSection: <Shield01Icon size={24} />,
       },
     ],
   },
-
   {
     group: "Resources",
     actions: [
@@ -226,7 +267,10 @@ export const getSpotlightActions = (
           "product updates",
           "announcements",
         ],
-        onClick: () => window.dispatchEvent(new CustomEvent("open-whats-new")),
+        onClick: () => {
+          window.dispatchEvent(new CustomEvent("open-whats-new"));
+          closeNav();
+        },
         leftSection: <StarsIcon size={24} />,
       },
       {
@@ -234,7 +278,10 @@ export const getSpotlightActions = (
         label: "Terms & conditions",
         description: "View the terms and conditions",
         keywords: ["terms", "conditions", "legal", "tos"],
-        onClick: () => window.dispatchEvent(new CustomEvent("open-terms")),
+        onClick: () => {
+          window.dispatchEvent(new CustomEvent("open-terms"));
+          closeNav();
+        },
         leftSection: <LegalDocument01Icon size={24} />,
       },
       {
@@ -242,7 +289,10 @@ export const getSpotlightActions = (
         label: "Privacy policy",
         description: "View the privacy policy",
         keywords: ["privacy", "policy", "legal"],
-        onClick: () => window.dispatchEvent(new CustomEvent("open-privacy")),
+        onClick: () => {
+          window.dispatchEvent(new CustomEvent("open-privacy"));
+          closeNav();
+        },
         leftSection: <Book01Icon size={24} />,
       },
       {
@@ -250,7 +300,10 @@ export const getSpotlightActions = (
         label: "Share feedback",
         description: "Let us know how we can improve",
         keywords: ["suggestions", "report bug", "help"],
-        onClick: () => window.dispatchEvent(new CustomEvent("open-feedback")),
+        onClick: () => {
+          window.dispatchEvent(new CustomEvent("open-feedback"));
+          closeNav();
+        },
         leftSection: <PencilEdit01Icon size={24} />,
       },
       {
@@ -258,7 +311,10 @@ export const getSpotlightActions = (
         label: "Support",
         description: "Get help and support",
         keywords: ["contact us", "customer service", "faq"],
-        onClick: () => console.log("Support action triggered"),
+        onClick: () => {
+          console.log("Support action triggered");
+          closeNav();
+        },
         leftSection: <Message01Icon size={24} />,
       },
       {
@@ -266,7 +322,10 @@ export const getSpotlightActions = (
         label: "Logout",
         description: "Sign out of your account",
         keywords: ["sign out", "exit", "quit"],
-        onClick: logout,
+        onClick: () => {
+          logout();
+          closeNav();
+        },
         leftSection: <Logout02Icon size={24} />,
       },
     ],

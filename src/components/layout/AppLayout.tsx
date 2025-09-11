@@ -35,7 +35,8 @@ const AuthenticatedLayout = ({ children }: { children: React.ReactNode }) => {
   const actions = getSpotlightActions(
     router,
     openActionDrawer,
-    openWaiversDrawer
+    openWaiversDrawer,
+    close
   );
 
   if (loading) {
