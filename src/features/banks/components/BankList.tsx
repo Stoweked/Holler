@@ -74,8 +74,7 @@ export default function BankList({
             {filteredBanks.map((bank) => (
               <BankItem
                 key={bank.name}
-                name={bank.name}
-                details={bank.details}
+                bank={bank}
                 onClick={() => handleBankClick(bank)}
               />
             ))}

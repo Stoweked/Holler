@@ -2,11 +2,11 @@ import {
   Group,
   Stack,
   Text,
-  ThemeIcon,
   Menu,
   ActionIcon,
   Tooltip,
   Card,
+  Avatar,
 } from "@mantine/core";
 import classes from "./Banks.module.css";
 import {
@@ -31,9 +31,9 @@ export default function BankDetailsCard({
     <Card withBorder radius="lg" p="xs" w="100%">
       <Group gap="xs" className={classes.recipientContainer}>
         <Group wrap="nowrap" gap={8} className={classes.recipientDetailsGroup}>
-          <ThemeIcon variant="default" radius="xl" size="lg">
+          <Avatar src={bank.avatar_url} variant="default" radius="xl" size={34}>
             <BankIcon size={18} />
-          </ThemeIcon>
+          </Avatar>
           <Stack gap={0} className={classes.recipientTextContainer}>
             <Text size="sm" c="dimmed">
               {label}

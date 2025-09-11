@@ -63,7 +63,7 @@ export default function TransactionItem({
         };
       case "bank":
         return {
-          src: undefined,
+          src: relevantParty.data.avatar_url,
           children: getInitials(relevantParty.data.name),
         };
       default:

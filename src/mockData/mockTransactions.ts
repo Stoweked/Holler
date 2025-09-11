@@ -19,7 +19,7 @@ export const mockTransactions: Transaction[] = [
     date: "2025-08-23T15:30:00Z",
     status: "Completed",
     type: "Received",
-    from: { type: "contact", data: mockContacts[1] }, // J2 Homes
+    from: { type: "contact", data: mockContacts[7] }, // Ezra lee
     to: { type: "self", name: "You" },
     bankAccount: "Business Savings",
   },

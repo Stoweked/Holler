@@ -1,22 +1,23 @@
 import {
   ActionIcon,
+  Avatar,
   Group,
   Stack,
   Text,
-  ThemeIcon,
   Title,
   UnstyledButton,
 } from "@mantine/core";
 import { ArrowRight01Icon, BankIcon } from "hugeicons-react";
 import classes from "./Banks.module.css";
+import { Bank } from "../types/bank";
 
 interface BankItemProps {
-  name: string;
-  details: string;
+  bank: Bank;
   onClick?: () => void;
 }
 
-export default function BankItem({ name, details, onClick }: BankItemProps) {
+export default function BankItem({ bank, onClick }: BankItemProps) {
+  const { name, details, avatar_url } = bank;
   return (
     <UnstyledButton className={classes.item} onClick={onClick}>
       <Group justify="space-between" wrap="nowrap">
@@ -26,9 +27,9 @@ export default function BankItem({ name, details, onClick }: BankItemProps) {
           className={classes.details}
           gap="xs"
         >
-          <ThemeIcon variant="default" radius="xl" size={44}>
+          <Avatar src={avatar_url} variant="default" radius="xl" size={44}>
             <BankIcon size={24} />
-          </ThemeIcon>
+          </Avatar>
 
           <Stack gap={0} style={{ overflow: "hidden" }}>
             <Title order={5} lineClamp={2} lh={1.2}>

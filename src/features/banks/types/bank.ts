@@ -5,4 +5,5 @@ export interface Bank {
   name: string;
   details: string; // e.g., "**** 1234"
   avatar: string; // e.g., "CH" for Chase
+  avatar_url?: string;
 }

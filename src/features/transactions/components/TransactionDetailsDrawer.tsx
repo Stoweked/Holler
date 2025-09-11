@@ -68,9 +68,9 @@ const TransactionPartyAvatar = ({ party }: { party: TransactionParty }) => {
       );
     case "bank":
       return (
-        <ThemeIcon size={80} radius="50%" variant="default">
+        <Avatar src={party.data.avatar_url} size={80} radius="50%">
           <BankIcon size={40} />
-        </ThemeIcon>
+        </Avatar>
       );
     default:
       return <Avatar color="gray" size={80} radius="50%" variant="default" />;
