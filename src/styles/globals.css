@@ -30,3 +30,13 @@
     var(--mantine-color-lime-8)
   );
 }
+
+/* Badge */
+.sentence-case-badge-label {
+  text-transform: lowercase; /* First, make everything lowercase */
+  letter-spacing: 0;
+}
+
+.sentence-case-badge-label::first-letter {
+  text-transform: uppercase; /* Then, make the first letter uppercase */
+}

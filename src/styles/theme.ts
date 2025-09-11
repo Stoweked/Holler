@@ -13,8 +13,8 @@ export const theme = createTheme({
       },
     },
     Badge: {
-      styles: {
-        label: { textTransform: "capitalize", letterSpacing: "0" },
+      classNames: {
+        label: "sentence-case-badge-label",
       },
     },
     ActionIcon: {
