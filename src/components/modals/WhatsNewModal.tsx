@@ -4,12 +4,9 @@ import {
   Title,
   Text,
   Button,
-  Card,
-  Center,
   Badge,
   useMantineColorScheme,
 } from "@mantine/core";
-import { Moon02Icon } from "hugeicons-react";
 
 export default function WhatsNewModal({
   opened,
@@ -44,48 +41,42 @@ export default function WhatsNewModal({
       size="md"
       radius="lg"
     >
-      <Stack gap="lg">
-        <Card withBorder radius="lg" p="lg">
-          <Center>
-            <Stack align="center" gap="lg">
-              <Moon02Icon size={40} />
+      <Stack gap="lg" p="md">
+        <Stack align="center" gap="lg">
+          <Stack gap="xs" align="center">
+            <Badge variant="light" size="lg">
+              New
+            </Badge>
 
-              <Stack gap="xs" align="center">
-                <Badge variant="light" size="lg">
-                  New feature
-                </Badge>
+            <Title order={2} lh={1.2} ta="center">
+              {colorScheme === "dark"
+                ? "Hello darkness, our new friend"
+                : "Dark mode"}
+            </Title>
 
-                <Title order={2} lh={1.2} ta="center">
-                  {colorScheme === "dark"
-                    ? "Hello darkness, our new friend"
-                    : "Dark mode"}
-                </Title>
+            <Text c="dimmed" ta="center">
+              {colorScheme === "dark"
+                ? "Enjoy the new look! You can switch back anytime in your account settings."
+                : "Holler is now available in a sleek new dark mode. It's perfect for low-light environments and designed to be easier on your eyes."}
+            </Text>
+          </Stack>
 
-                <Text c="dimmed" ta="center">
-                  {colorScheme === "dark"
-                    ? "Enjoy the new look! You can switch back anytime in your account settings."
-                    : "Holler is now available in a sleek new dark mode. It's perfect for low-light environments and designed to be easier on your eyes."}
-                </Text>
-              </Stack>
-
-              {/* Conditionally render the button based on the color scheme */}
-              {colorScheme === "light" ? (
-                <Button onClick={handleSwitchToDark} size="lg" fullWidth>
-                  Try it out
-                </Button>
-              ) : (
-                <Button
-                  onClick={handleOpenSettings}
-                  size="lg"
-                  fullWidth
-                  variant="default"
-                >
-                  Open account settings
-                </Button>
-              )}
-            </Stack>
-          </Center>
-        </Card>
+          {/* Conditionally render the button based on the color scheme */}
+          {colorScheme === "light" ? (
+            <Button onClick={handleSwitchToDark} size="lg" fullWidth>
+              Try it out
+            </Button>
+          ) : (
+            <Button
+              onClick={handleOpenSettings}
+              size="lg"
+              fullWidth
+              variant="default"
+            >
+              Open account settings
+            </Button>
+          )}
+        </Stack>
       </Stack>
     </Modal>
   );
