@@ -1,4 +1,4 @@
-import { Stack, Title, Text, Modal, ThemeIcon, Button } from "@mantine/core";
+import { Stack, Title, Text, Modal, Button, Avatar } from "@mantine/core";
 import { BankIcon } from "hugeicons-react";
 import { Bank } from "../types/bank";
 
@@ -21,16 +21,21 @@ export default function BankProfileModal({
     <Modal
       opened={opened}
       onClose={close}
-      title="Bank Details"
+      title="Connected account"
       padding="lg"
       size="md"
       centered
     >
       <Stack gap="xl">
         <Stack align="center" gap="sm">
-          <ThemeIcon size={100} radius="50%" variant="default">
+          <Avatar
+            src={bank.avatar_url}
+            size={100}
+            radius="50%"
+            variant="default"
+          >
             <BankIcon size={48} />
-          </ThemeIcon>
+          </Avatar>
           <Stack align="center" gap={4}>
             <Title order={2} ta="center">
               {bank.name}

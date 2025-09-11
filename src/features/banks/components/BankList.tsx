@@ -69,7 +69,7 @@ export default function BankList({
 
       {filteredBanks.length > 0 ? (
         <Stack>
-          <Title order={4}>Your connected accounts</Title>
+          <Title order={4}>Your accounts</Title>
           <Stack gap={0}>
             {filteredBanks.map((bank) => (
               <BankItem
