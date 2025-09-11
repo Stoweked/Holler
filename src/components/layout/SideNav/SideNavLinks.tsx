@@ -4,6 +4,7 @@ import {
   ArrowRight01Icon,
   BankIcon,
   ClipboardIcon,
+  House03Icon,
   Message01Icon,
   UserIcon,
   UserMultiple02Icon,
@@ -115,6 +116,16 @@ export default function SideNavLinks({ closeMobileNav }: SideNavLinksProps) {
       />
 
       <NavLink
+        label="Projects"
+        leftSection={<House03Icon size={24} color="gray" />}
+        rightSection={
+          <ArrowRight01Icon size={32} color="var(--mantine-color-lime-4)" />
+        }
+        className={classes.navLink}
+        classNames={{ label: classes.label }}
+      />
+
+      <NavLink
         label={
           <Group wrap="nowrap" gap="xs">
             Bank accounts
@@ -143,7 +154,7 @@ export default function SideNavLinks({ closeMobileNav }: SideNavLinksProps) {
         onClick={handleLienWaiversClick}
       />
 
-      <NavLink
+      {/* <NavLink
         label="Your account"
         leftSection={<UserIcon size={24} color="gray" />}
         rightSection={
@@ -152,9 +163,9 @@ export default function SideNavLinks({ closeMobileNav }: SideNavLinksProps) {
         className={classes.navLink}
         classNames={{ label: classes.label }}
         onClick={handleSettingsClick}
-      />
+      /> */}
 
-      <NavLink
+      {/* <NavLink
         label="Support"
         leftSection={<Message01Icon size={24} color="gray" />}
         rightSection={
@@ -162,7 +173,7 @@ export default function SideNavLinks({ closeMobileNav }: SideNavLinksProps) {
         }
         className={classes.navLink}
         classNames={{ label: classes.label }}
-      />
+      /> */}
 
       <ContactsDrawer
         opened={openedContactsDrawer}

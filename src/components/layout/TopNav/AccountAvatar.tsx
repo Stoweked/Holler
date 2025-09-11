@@ -1,6 +1,7 @@
 import { ActionIcon, Avatar, Menu } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import {
+  HelpCircleIcon,
   Logout02Icon,
   PencilEdit01Icon,
   StarsIcon,
@@ -75,6 +76,7 @@ export default function AccountAvatar() {
           <Menu.Item
             leftSection={<UserCircleIcon size={16} />}
             onClick={openProfileDrawer}
+            aria-label="Your profile"
           >
             Your profile
           </Menu.Item>
@@ -86,6 +88,7 @@ export default function AccountAvatar() {
           <Menu.Item
             leftSection={<PencilEdit01Icon size={16} />}
             onClick={openFeedbackModal}
+            aria-label="Share feedback"
           >
             Share feedback
           </Menu.Item>
@@ -93,13 +96,25 @@ export default function AccountAvatar() {
           <Menu.Item
             leftSection={<StarsIcon size={16} />}
             onClick={openWhatsNewModal}
+            aria-label="What's new"
           >
             What&apos;s new
           </Menu.Item>
 
+          <Menu.Item
+            leftSection={<HelpCircleIcon size={16} />}
+            aria-label="Support"
+          >
+            Support
+          </Menu.Item>
+
           <Menu.Divider />
 
-          <Menu.Item leftSection={<Logout02Icon size={16} />} onClick={logout}>
+          <Menu.Item
+            leftSection={<Logout02Icon size={16} />}
+            onClick={logout}
+            aria-label="Log out"
+          >
             Log out
           </Menu.Item>
         </Menu.Dropdown>
