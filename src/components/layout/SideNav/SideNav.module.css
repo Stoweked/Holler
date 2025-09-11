@@ -1,6 +1,6 @@
 .navLink {
   padding: 1rem 1rem;
-  border-bottom: 1px solid var(--app-shell-border-color);
+  /* border-bottom: 1px solid var(--app-shell-border-color); */
 }
 
 .label {

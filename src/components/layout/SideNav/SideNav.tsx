@@ -38,9 +38,15 @@ export function SideNav({ closeMobileNav }: SideNavProps) {
 
   return (
     <>
-      <Stack gap={0}>
-        {!isMobile && <PrimaryActionsCard />}
-        <SideNavLinks closeMobileNav={closeMobileNav} />
+      <Stack
+        gap={0}
+        justify="space-between"
+        style={{ minHeight: "calc(100vh - 60px)" }}
+      >
+        <Stack gap={0}>
+          {!isMobile && <PrimaryActionsCard />}
+          <SideNavLinks closeMobileNav={closeMobileNav} />
+        </Stack>
         <Text c="dimmed" size="xs" p="md" ta="center">
           All rights reserved Holler, LLC®{" "}
           <Anchor
@@ -50,7 +56,6 @@ export function SideNav({ closeMobileNav }: SideNavProps) {
             Terms & Conditions
           </Anchor>
         </Text>
-        <Space h={100} />
       </Stack>
       <TermsConditionsModal opened={openedTermsModal} close={closeTermsModal} />
       <PrivacyPolicyModal

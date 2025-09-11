@@ -72,7 +72,7 @@ export default function WaiverEditorStep({
           radius="md"
           placeholder="Select payment type"
           data={[
-            { value: "progress", label: "Progress" },
+            { value: "progress", label: "In progress" },
             { value: "final", label: "Final" },
           ]}
           value={waiverPaymentType}

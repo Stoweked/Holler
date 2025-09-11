@@ -1,4 +1,4 @@
-import { UnstyledButton, Stack, Text } from "@mantine/core";
+import { UnstyledButton, Stack, Text, Title } from "@mantine/core";
 import { ReactNode } from "react";
 import classes from "./OptionButton.module.css";
 
@@ -21,7 +21,9 @@ export default function OptionButton({
     >
       <Stack gap="xs" align="center">
         {icon}
-        <Text ta="center">{label}</Text>
+        <Title order={5} ta="center">
+          {label}
+        </Title>
       </Stack>
     </UnstyledButton>
   );
