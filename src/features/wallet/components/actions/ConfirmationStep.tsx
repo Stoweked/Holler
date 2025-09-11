@@ -58,6 +58,7 @@ const PartyInfoCard = ({
     case "bank":
       name = party.data.name;
       details = party.data.details;
+      avatarSrc = party.data.avatar_url;
       isBank = true;
       break;
     case "wallet":
@@ -93,9 +94,9 @@ const PartyInfoCard = ({
           />
         </ThemeIcon>
       ) : isBank ? (
-        <ThemeIcon variant="default" radius="xl" size={44}>
+        <Avatar src={avatarSrc} variant="default" radius="xl" size={44}>
           <BankIcon size={24} />
-        </ThemeIcon>
+        </Avatar>
       ) : (
         <Avatar
           src={avatarSrc}
