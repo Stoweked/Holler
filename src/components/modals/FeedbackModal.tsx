@@ -101,7 +101,7 @@ export default function FeedbackModal({
     <>
       <Modal opened={opened} onClose={close} title="Share feedback" centered>
         <form onSubmit={submitFeedback}>
-          <Stack>
+          <Stack gap="lg">
             <SegmentedControl
               fullWidth
               radius="xl"
