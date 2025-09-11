@@ -1,9 +1,9 @@
 .navLink {
-  padding: 1rem 1rem;
-  /* border-bottom: 1px solid var(--app-shell-border-color); */
+  padding: 1rem 1.4rem;
+  border-bottom: 1px solid var(--app-shell-border-color);
 }
 
 .label {
-  font-weight: 500;
+  font-weight: 700;
   font-size: var(--mantine-font-size-md);
 }

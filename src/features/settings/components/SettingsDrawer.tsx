@@ -131,28 +131,28 @@ export default function SettingsDrawer({
                 <Stack gap="sm">
                   <Tabs.Tab
                     value="account"
-                    leftSection={<UserIcon size={16} />}
+                    leftSection={<UserIcon size={24} color="gray" />}
                     aria-label="Account"
                   >
                     Account
                   </Tabs.Tab>
                   <Tabs.Tab
                     value="business"
-                    leftSection={<OfficeIcon size={16} />}
+                    leftSection={<OfficeIcon size={24} color="gray" />}
                     aria-label="Business"
                   >
                     Business
                   </Tabs.Tab>
                   <Tabs.Tab
                     value="notifications"
-                    leftSection={<Notification01Icon size={16} />}
+                    leftSection={<Notification01Icon size={24} color="gray" />}
                     aria-label="Notifications"
                   >
                     Notifications
                   </Tabs.Tab>
                   <Tabs.Tab
                     value="billing"
-                    leftSection={<CreditCardIcon size={16} />}
+                    leftSection={<CreditCardIcon size={24} color="gray" />}
                     aria-label="Billing"
                   >
                     Billing

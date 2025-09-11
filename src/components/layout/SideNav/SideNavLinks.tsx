@@ -105,8 +105,10 @@ export default function SideNavLinks({ closeMobileNav }: SideNavLinksProps) {
     <div>
       <NavLink
         label="Contacts"
-        leftSection={<UserMultiple02Icon size={20} />}
-        rightSection={<ArrowRight01Icon size={24} color="grey" />}
+        leftSection={<UserMultiple02Icon size={24} color="gray" />}
+        rightSection={
+          <ArrowRight01Icon size={32} color="var(--mantine-color-lime-4)" />
+        }
         className={classes.navLink}
         classNames={{ label: classes.label }}
         onClick={handleContactsClick}
@@ -116,13 +118,15 @@ export default function SideNavLinks({ closeMobileNav }: SideNavLinksProps) {
         label={
           <Group wrap="nowrap" gap="xs">
             Bank accounts
-            <Badge variant="default" size="sm">
+            {/* <Badge variant="default" size="lg">
               3
-            </Badge>
+            </Badge> */}
           </Group>
         }
-        leftSection={<BankIcon size={20} />}
-        rightSection={<ArrowRight01Icon size={24} color="grey" />}
+        leftSection={<BankIcon size={24} color="gray" />}
+        rightSection={
+          <ArrowRight01Icon size={32} color="var(--mantine-color-lime-4)" />
+        }
         className={classes.navLink}
         classNames={{ label: classes.label }}
         onClick={handleBankAccountsClick}
@@ -130,8 +134,10 @@ export default function SideNavLinks({ closeMobileNav }: SideNavLinksProps) {
 
       <NavLink
         label="Lien waivers"
-        leftSection={<ClipboardIcon size={20} />}
-        rightSection={<ArrowRight01Icon size={24} color="grey" />}
+        leftSection={<ClipboardIcon size={24} color="gray" />}
+        rightSection={
+          <ArrowRight01Icon size={32} color="var(--mantine-color-lime-4)" />
+        }
         className={classes.navLink}
         classNames={{ label: classes.label }}
         onClick={handleLienWaiversClick}
@@ -139,17 +145,21 @@ export default function SideNavLinks({ closeMobileNav }: SideNavLinksProps) {
 
       <NavLink
         label="Your account"
-        leftSection={<UserIcon size={20} />}
-        rightSection={<ArrowRight01Icon size={24} color="grey" />}
+        leftSection={<UserIcon size={24} color="gray" />}
+        rightSection={
+          <ArrowRight01Icon size={32} color="var(--mantine-color-lime-4)" />
+        }
         className={classes.navLink}
         classNames={{ label: classes.label }}
         onClick={handleSettingsClick}
       />
 
       <NavLink
-        label="Get support"
-        leftSection={<Message01Icon size={20} />}
-        rightSection={<ArrowRight01Icon size={24} color="grey" />}
+        label="Support"
+        leftSection={<Message01Icon size={24} color="gray" />}
+        rightSection={
+          <ArrowRight01Icon size={32} color="var(--mantine-color-lime-4)" />
+        }
         className={classes.navLink}
         classNames={{ label: classes.label }}
       />

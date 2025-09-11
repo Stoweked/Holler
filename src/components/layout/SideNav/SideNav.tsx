@@ -1,7 +1,7 @@
 // src/components/layout/SideNav/SideNav.tsx
 "use client";
 
-import { Anchor, Space, Stack, Text } from "@mantine/core";
+import { Anchor, Stack, Text } from "@mantine/core";
 import SideNavLinks from "./SideNavLinks";
 import PrimaryActionsCard from "../../../features/wallet/components/PrimaryActionsCard";
 import { useDisclosure, useViewportSize } from "@mantine/hooks";
