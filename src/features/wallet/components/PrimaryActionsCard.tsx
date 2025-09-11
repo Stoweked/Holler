@@ -13,6 +13,19 @@ export default function PrimaryActionsCard() {
     openActionDrawer(type);
   };
 
+  // Determine font size based on the length of the balance
+  const balanceIntegerPart = Math.floor(balance);
+  const balanceLength = String(balanceIntegerPart).length;
+  let fontSize = "3rem"; // Default size (48px)
+
+  if (balanceLength > 9) {
+    // For balances in the billions (e.g., 1,000,000,000)
+    fontSize = "2rem";
+  } else if (balanceLength > 7) {
+    // For balances in the tens of millions (e.g., 10,000,000)
+    fontSize = "2.5rem";
+  }
+
   return (
     <Card w="100%" py={48} className={classes.card}>
       <Stack align="center" gap="xl">
@@ -22,7 +35,7 @@ export default function PrimaryActionsCard() {
             <Text size="sm" c="dimmed">
               Current balance
             </Text>
-            <Title order={1} size={48}>
+            <Title order={1} style={{ fontSize, whiteSpace: "nowrap" }}>
               {`$${balance.toLocaleString("en-US", {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2,
