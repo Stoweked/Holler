@@ -19,5 +19,4 @@ export interface Transaction {
   from: TransactionParty;
   to: TransactionParty;
   bankAccount: string;
-  avatar?: string;
 }

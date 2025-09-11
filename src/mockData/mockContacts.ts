@@ -7,7 +7,8 @@ export const mockContacts: Contact[] = [
     business_name: "Layton Construction",
     email: "contact@layton.com",
     phone_number: "(512) 555-0101",
-    avatar_url: "",
+    avatar_url:
+      "https://ktfbrtlurpvwysgrfshk.supabase.co/storage/v1/object/public/business_avatars/layton-logo.jpg",
   },
   {
     id: "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12",
@@ -31,7 +32,8 @@ export const mockContacts: Contact[] = [
     business_name: "Urban Alfandre",
     email: "info@urbanalfandre.com",
     phone_number: "",
-    avatar_url: "",
+    avatar_url:
+      "https://ktfbrtlurpvwysgrfshk.supabase.co/storage/v1/object/public/business_avatars/ua-logo.png",
   },
   {
     id: "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a15",
@@ -63,7 +65,8 @@ export const mockContacts: Contact[] = [
     business_name: "Ezra Lee Design",
     email: "contact@ezralee.com",
     phone_number: "(512) 555-0103",
-    avatar_url: "",
+    avatar_url:
+      "https://ktfbrtlurpvwysgrfshk.supabase.co/storage/v1/object/public/business_avatars/ezralee-logo.jpg",
   },
   {
     id: "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a19",
@@ -87,6 +90,7 @@ export const mockContacts: Contact[] = [
     business_name: "Edge Home",
     email: "contact@edgehome.com",
     phone_number: "",
-    avatar_url: "",
+    avatar_url:
+      "https://ktfbrtlurpvwysgrfshk.supabase.co/storage/v1/object/public/business_avatars/edgehome-logo.jpg",
   },
 ];

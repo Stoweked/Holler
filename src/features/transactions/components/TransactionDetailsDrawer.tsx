@@ -124,8 +124,6 @@ export default function TransactionDetailsDrawer({
     year: "numeric",
     month: "long",
     day: "numeric",
-    hour: "numeric",
-    minute: "2-digit",
   });
 
   const renderPartyDetails = (
@@ -210,23 +208,24 @@ export default function TransactionDetailsDrawer({
               <TransactionPartyAvatar party={to} />
             </Group>
 
-            <Stack gap={0} ta="center">
-              <Text c="dimmed" ta="center">
+            <Stack gap="xs" ta="center" align="center">
+              <Text size="lg" c="dimmed" ta="center">
                 {formattedDate}
               </Text>
+
+              <Badge
+                color={statusColors[status]}
+                variant="dot"
+                size="lg"
+                radius="xl"
+              >
+                {status}
+              </Badge>
 
               <Title order={1} c={amountColor} ta="center">
                 {formattedAmount}
               </Title>
             </Stack>
-            <Badge
-              color={statusColors[status]}
-              variant="dot"
-              size="xl"
-              radius="xl"
-            >
-              {status}
-            </Badge>
           </Stack>
 
           <Stack>

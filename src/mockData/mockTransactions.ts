@@ -10,7 +10,7 @@ export const mockTransactions: Transaction[] = [
     status: "Completed",
     type: "Sent",
     from: { type: "self", name: "You" },
-    to: { type: "contact", data: mockContacts[0] }, // Layton Construction
+    to: { type: "contact", data: mockContacts[0] }, // Layton
     bankAccount: "Chase Checking",
   },
   {
