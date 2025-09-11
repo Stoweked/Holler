@@ -10,7 +10,6 @@ import {
   Space,
   Stack,
   Text,
-  ThemeIcon,
   Title,
 } from "@mantine/core";
 import {
@@ -209,7 +208,7 @@ export default function TransactionDetailsDrawer({
             </Group>
 
             <Stack gap="xs" ta="center" align="center">
-              <Text size="lg" c="dimmed" ta="center">
+              <Text size="lg" c="dimmed" ta="center" fw="bold">
                 {formattedDate}
               </Text>
 

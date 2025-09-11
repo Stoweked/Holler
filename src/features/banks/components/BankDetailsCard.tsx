@@ -42,7 +42,7 @@ export default function BankDetailsCard({
               {bank.name}
             </Text>
             <Text
-              size="xs"
+              size="sm"
               c="dimmed"
               lineClamp={1}
               className={classes.detailsText}
