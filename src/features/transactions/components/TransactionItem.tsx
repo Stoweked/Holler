@@ -126,7 +126,12 @@ export default function TransactionItem({
               {formattedDate}
             </Badge>
           </Group>
-          <Group justify="space-between" gap={4} w="100%">
+          <Group
+            justify="space-between"
+            gap={4}
+            w="100%"
+            className={classes.metaDataGroup}
+          >
             <Text size="md" c="dimmed" fw={500} lh={1.2}>
               {description}
             </Text>
