@@ -3,6 +3,7 @@
 
 import { resetPassword } from "@/features/auth/actions/reset-password";
 import {
+  ActionIcon,
   Anchor,
   Button,
   Paper,
@@ -10,11 +11,15 @@ import {
   Stack,
   Text,
   Title,
+  Tooltip,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
+import { ArrowLeft02Icon } from "hugeicons-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function ResetPasswordPage() {
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -55,6 +60,18 @@ export default function ResetPasswordPage() {
     >
       <Paper withBorder shadow="lg" p="lg" radius="lg" maw={420} w="100%">
         <Stack gap="lg">
+          <Tooltip label="Back" position="right">
+            <ActionIcon
+              onClick={() => router.push("/dashboard")}
+              variant="default"
+              c="gray"
+              aria-label="Go back"
+              type="button"
+            >
+              <ArrowLeft02Icon size={24} />
+            </ActionIcon>
+          </Tooltip>
+
           <Stack gap={0}>
             <Title order={2}>Reset your password</Title>
             <Text c="dimmed">Enter a new password for your account.</Text>
