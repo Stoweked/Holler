@@ -121,6 +121,7 @@ export default function SideNavLinks({ closeMobileNav }: SideNavLinksProps) {
         rightSection={
           <ArrowRight01Icon size={32} color="var(--mantine-color-lime-4)" />
         }
+        description="Coming soon"
         className={classes.navLink}
         classNames={{ label: classes.label }}
       />
