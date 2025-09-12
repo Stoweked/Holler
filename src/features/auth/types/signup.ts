@@ -3,6 +3,7 @@ import { UseFormReturnType } from "@mantine/form";
 export interface MultiStepSignupFormValues {
   email: string;
   full_name: string;
+  username: string;
   password: string;
   confirmPassword: string;
   phone_number: string;

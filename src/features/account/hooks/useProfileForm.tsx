@@ -1,4 +1,4 @@
-// src/features/settings/hooks/useProfileForm.ts
+// src/features/account/hooks/useProfileForm.tsx
 "use client";
 
 import { useState, useEffect } from "react";
@@ -9,6 +9,7 @@ import { CheckmarkCircle02Icon, AlertCircleIcon } from "hugeicons-react";
 import dayjs from "dayjs";
 import { useProfile } from "@/contexts/ProfileContext";
 import { createClient } from "@/lib/supabase/client";
+import { checkUsernameExists } from "@/features/auth/actions/check-username";
 
 export function useProfileForm({
   onSaveSuccess,
@@ -25,6 +26,7 @@ export function useProfileForm({
     initialValues: {
       formName: profile?.full_name || "",
       formEmail: profile?.email || "",
+      formUsername: profile?.username || "",
       formPhone: profile?.phone_number || "",
       formDob: profile?.dob ? dayjs(profile.dob).toDate() : null,
       formGender: profile?.gender || null,
@@ -40,6 +42,10 @@ export function useProfileForm({
     validate: {
       formName: hasLength({ min: 2 }, "Name must have at least 2 letters"),
       formEmail: isEmail("Invalid email"),
+      formUsername: (value) =>
+        value && value.length < 3
+          ? "Username must be at least 3 characters"
+          : null,
       formPhone: (value: string) => {
         if (value && value.replace(/\D/g, "").length !== 11) {
           return "Invalid phone number";
@@ -58,6 +64,7 @@ export function useProfileForm({
       form.setValues({
         formName: profile.full_name || "",
         formEmail: profile.email || "",
+        formUsername: profile.username || "",
         formPhone: profile.phone_number || "",
         formDob: profile.dob ? dayjs(profile.dob).toDate() : null,
         formGender: profile.gender || null,
@@ -76,6 +83,17 @@ export function useProfileForm({
 
   const handleSubmit = async (values: typeof form.values) => {
     setLoading(true);
+
+    // Check if username is dirty and if it exists
+    if (form.isDirty("formUsername") && values.formUsername) {
+      const usernameExists = await checkUsernameExists(values.formUsername);
+      if (usernameExists) {
+        form.setFieldError("formUsername", "Username is already taken");
+        setLoading(false);
+        return;
+      }
+    }
+
     let finalAvatarUrl = values.avatar_url;
 
     if (values.newAvatarFile) {
@@ -116,6 +134,7 @@ export function useProfileForm({
       .from("profiles")
       .update({
         full_name: values.formName,
+        username: values.formUsername || null,
         phone_number: values.formPhone || null,
         dob: dobString,
         gender: values.formGender || null,

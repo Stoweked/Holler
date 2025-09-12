@@ -15,7 +15,7 @@ export async function updateProfile(formData: FormData) {
     return redirect("/login");
   }
 
-  const businessName = formData.get("business_name") as string;
+  const username = formData.get("username") as string;
   let phoneNumber = formData.get("phone_number") as string | null;
 
   // If the phone number is an empty string, set it to null
@@ -26,8 +26,8 @@ export async function updateProfile(formData: FormData) {
   const { error } = await supabase
     .from("profiles")
     .update({
-      business_name: businessName,
-      phone_number: phoneNumber, // This will now be null if it was empty
+      phone_number: phoneNumber,
+      username: username,
     })
     .eq("id", user.id);
 

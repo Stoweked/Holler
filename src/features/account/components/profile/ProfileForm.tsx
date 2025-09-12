@@ -102,6 +102,16 @@ export default function ProfileForm({
               radius="md"
               {...form.getInputProps("formPhone")}
             />
+
+            <TextInput
+              label="Username"
+              size="lg"
+              radius="md"
+              placeholder="Enter a username"
+              {...form.getInputProps("formUsername")}
+              autoComplete="username"
+            />
+
             <DateInput
               label="Date of birth"
               {...form.getInputProps("formDob")}

@@ -14,6 +14,7 @@ import { ArrowLeft02Icon } from "hugeicons-react";
 import { useMultiStepSignupForm } from "../../hooks/useMultiStepSignupForm";
 import { ProfileInfoStep } from "./ProfileInfoStep";
 import { PasswordStep } from "./PasswordStep";
+import { checkUsernameExists } from "../../actions/check-username";
 
 export default function MultiStepSignUpForm() {
   const {
@@ -52,9 +53,14 @@ export default function MultiStepSignUpForm() {
         w="100%"
       >
         <form
-          onSubmit={form.onSubmit((values) => {
+          onSubmit={form.onSubmit(async (values) => {
             if (step === "profileInfo") {
-              setStep("password");
+              const usernameExists = await checkUsernameExists(values.username);
+              if (usernameExists) {
+                form.setFieldError("username", "Username is already taken");
+              } else {
+                setStep("password");
+              }
             } else {
               handleFinalSubmit(values);
             }

@@ -28,7 +28,16 @@ export function ProfileInfoStep({
         size="lg"
         radius="md"
       />
+      <TextInput
+        required
+        label="Username"
+        name="username"
+        {...form.getInputProps("username")}
+        size="lg"
+        radius="md"
+      />
       <PatternFormat
+        required
         customInput={TextInput}
         label="Phone number"
         name="phone_number"

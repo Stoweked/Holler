@@ -8,7 +8,7 @@ export async function signupComplete(formData: FormData) {
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
   const fullName = formData.get("full_name") as string;
-  const businessName = formData.get("business_name") as string;
+  const username = formData.get("username") as string;
   let phoneNumber = formData.get("phone_number") as string | null;
 
   if (phoneNumber === "") {
@@ -26,6 +26,7 @@ export async function signupComplete(formData: FormData) {
     options: {
       data: {
         full_name: fullName,
+        username: username,
       },
     },
   });
@@ -46,8 +47,8 @@ export async function signupComplete(formData: FormData) {
     const { error: profileError } = await supabase
       .from("profiles")
       .update({
-        business_name: businessName,
         phone_number: phoneNumber,
+        username: username,
       })
       .eq("id", user.id);
 

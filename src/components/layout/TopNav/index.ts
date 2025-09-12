@@ -1,5 +1,5 @@
 export * from "./TopNav";
-export * from "./AccountAvatar";
+export * from "../../../features/account/components/AccountDropdown";
 export * from "./ColorSchemeMenuItem";
 export * from "../../modals/FeedbackModal";
 export * from "./Notifications/NotificationDrawer";

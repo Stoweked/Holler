@@ -20,6 +20,7 @@ export function useMultiStepSignupForm() {
     initialValues: {
       email: emailFromQuery,
       full_name: "",
+      username: "",
       password: "",
       confirmPassword: "",
       phone_number: "",
@@ -29,6 +30,10 @@ export function useMultiStepSignupForm() {
         return {
           full_name:
             values.full_name.trim().length < 2 ? "Full name is required" : null,
+          username:
+            values.username.trim().length < 3
+              ? "Username must be at least 3 characters"
+              : null,
         };
       }
       if (step === "password") {
@@ -66,6 +71,7 @@ export function useMultiStepSignupForm() {
           form.setValues({
             email: profileData.email || "",
             full_name: profileData.full_name || "",
+            username: profileData.username || "",
             phone_number: profileData.phone_number || "",
           });
         }
@@ -84,7 +90,6 @@ export function useMultiStepSignupForm() {
     }
   };
 
-  // --- THIS IS THE ONLY MODIFIED FUNCTION ---
   const handleFinalSubmit = async (values: typeof form.values) => {
     setLoading(true);
     const formData = new FormData();

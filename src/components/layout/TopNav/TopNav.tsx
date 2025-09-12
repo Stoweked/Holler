@@ -13,11 +13,11 @@ import {
 } from "@mantine/core";
 import { InboxIcon, Search01Icon } from "hugeicons-react";
 import React, { useEffect } from "react";
-import AccountAvatar from "./AccountAvatar";
 import { useDisclosure } from "@mantine/hooks";
 import NotificationDrawer from "./Notifications/NotificationDrawer";
 import classes from "./TopNav.module.css";
 import { spotlight } from "@mantine/spotlight";
+import AccountDropdown from "../../../features/account/components/AccountDropdown";
 
 interface TopNavProps {
   opened: boolean;
@@ -91,7 +91,7 @@ export default function TopNav({ opened, toggle }: TopNavProps) {
               <InboxIcon size={20} />
             </ActionIcon>
           </Indicator>
-          <AccountAvatar />
+          <AccountDropdown />
         </Group>
       </Group>
 

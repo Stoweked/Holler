@@ -46,9 +46,12 @@ export default function ProfileView({
           {initials}
         </Avatar>
         <Stack gap={0}>
+          <Text c="dimmed" size="sm" lineClamp={1}>
+            @{profile?.username}
+          </Text>
           <Title order={3}>{profile?.full_name}</Title>
           <Group gap="xs">
-            <Text size="sm">{profile?.email}</Text>
+            <Text>{profile?.email}</Text>
             {emailPending && (
               <Badge variant="outline" color="yellow" size="xs">
                 Validation pending

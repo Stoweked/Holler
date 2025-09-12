@@ -1,4 +1,4 @@
-import { ActionIcon, Avatar, Menu } from "@mantine/core";
+import { ActionIcon, Avatar, Menu, Text } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import {
   HelpCircleIcon,
@@ -7,8 +7,8 @@ import {
   StarsIcon,
   UserCircleIcon,
 } from "hugeicons-react";
-import FeedbackModal from "../../modals/FeedbackModal";
-import { ColorSchemeMenuItem } from "./ColorSchemeMenuItem";
+import FeedbackModal from "../../../components/modals/FeedbackModal";
+import { ColorSchemeMenuItem } from "../../../components/layout/TopNav/ColorSchemeMenuItem";
 import { logout } from "@/features/auth/actions/logout";
 import { useProfile } from "@/contexts/ProfileContext";
 import { useEffect } from "react";
@@ -16,7 +16,7 @@ import { getInitials } from "@/lib/hooks/textUtils";
 import SettingsDrawer from "@/features/settings/components/SettingsDrawer";
 import WhatsNewModal from "@/components/modals/WhatsNewModal";
 
-export default function AccountAvatar() {
+export default function AccountDropdown() {
   const { profile, loading } = useProfile();
   const [
     openedFeedbackModal,
@@ -73,6 +73,12 @@ export default function AccountAvatar() {
         </Menu.Target>
 
         <Menu.Dropdown>
+          {profile?.username && (
+            <Text size="xs" c="dimmed" px={12} py={6} lineClamp={1}>
+              @{profile?.username}
+            </Text>
+          )}
+
           <Menu.Item
             leftSection={<UserCircleIcon size={16} />}
             onClick={openProfileDrawer}
