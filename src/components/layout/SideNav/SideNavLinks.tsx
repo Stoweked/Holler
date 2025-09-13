@@ -134,6 +134,17 @@ export default function SideNavLinks({ closeMobileNav }: SideNavLinksProps) {
       />
 
       <NavLink
+        label="Lien waivers"
+        leftSection={<ClipboardIcon size={24} color="gray" />}
+        rightSection={
+          <ArrowRight01Icon size={32} color="var(--mantine-color-lime-4)" />
+        }
+        className={classes.navLink}
+        classNames={{ label: classes.label }}
+        onClick={handleLienWaiversClick}
+      />
+
+      <NavLink
         label={
           <Group wrap="nowrap" gap="xs">
             Bank accounts
@@ -149,17 +160,6 @@ export default function SideNavLinks({ closeMobileNav }: SideNavLinksProps) {
         className={classes.navLink}
         classNames={{ label: classes.label }}
         onClick={handleBankAccountsClick}
-      />
-
-      <NavLink
-        label="Lien waivers"
-        leftSection={<ClipboardIcon size={24} color="gray" />}
-        rightSection={
-          <ArrowRight01Icon size={32} color="var(--mantine-color-lime-4)" />
-        }
-        className={classes.navLink}
-        classNames={{ label: classes.label }}
-        onClick={handleLienWaiversClick}
       />
 
       {/* <NavLink
