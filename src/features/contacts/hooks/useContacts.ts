@@ -1,3 +1,4 @@
+// src/features/contacts/hooks/useContacts.ts
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useProfile } from "@/contexts/ProfileContext";
@@ -26,12 +27,12 @@ export function useContacts() {
 
       const { data: profiles, error: profileError } = await supabase
         .from("profiles")
-        .select("id, full_name, email, phone_number, avatar_url")
+        .select("id, full_name, email, phone_number, avatar_url, username")
         .neq("id", user.id);
 
       const { data: businesses, error: businessError } = await supabase
         .from("businesses")
-        .select("id, business_name, email, phone_number, avatar_url");
+        .select("id, business_name, email, phone_number, avatar_url, username");
 
       const { data: userBusinesses, error: userBusinessError } = await supabase
         .from("business_admins")
@@ -60,6 +61,7 @@ export function useContacts() {
           email: p.email,
           phone_number: p.phone_number,
           avatar_url: p.avatar_url,
+          username: p.username,
         })) || [];
 
       const businessContacts: BusinessContact[] =
@@ -72,6 +74,7 @@ export function useContacts() {
             email: b.email,
             phone_number: b.phone_number,
             avatar_url: b.avatar_url,
+            username: b.username,
           })) || [];
 
       const allContacts: Contact[] = [

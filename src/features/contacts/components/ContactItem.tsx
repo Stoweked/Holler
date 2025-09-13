@@ -46,9 +46,16 @@ export default function ContactItem({ contact, onClick }: ContactItemProps) {
             <Title order={5} lineClamp={2} lh={1.2}>
               {name}
             </Title>
-            <Text size="sm" c="dimmed" w="100%" className={classes.detailsText}>
-              {contact.email || contact.phone_number || ""}
-            </Text>
+            {contact.username && (
+              <Text
+                size="sm"
+                c="dimmed"
+                w="100%"
+                className={classes.detailsText}
+              >
+                @{contact.username}
+              </Text>
+            )}
           </Stack>
         </Group>
 

@@ -54,14 +54,17 @@ export default function ContactDetailsCard({
             <Text fw="bold" lineClamp={2} lh={1.2}>
               {name}
             </Text>
-            <Text
-              size="sm"
-              c="dimmed"
-              lineClamp={1}
-              className={classes.detailsText}
-            >
-              {contact.email || contact.phone_number || ""}
-            </Text>
+
+            {contact.username && (
+              <Text
+                size="sm"
+                c="dimmed"
+                lineClamp={1}
+                className={classes.detailsText}
+              >
+                @{contact.username}
+              </Text>
+            )}
           </Stack>
         </Group>
         {(onEdit || onViewProfile) && (

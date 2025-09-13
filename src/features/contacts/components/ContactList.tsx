@@ -48,11 +48,13 @@ export default function ContactsList({ onContactClick }: ContactsListProps) {
         : contact.business_name;
     const email = contact.email?.toLowerCase() || "";
     const phone = contact.phone_number || "";
+    const username = contact.username || "";
 
     return (
       name?.toLowerCase().includes(searchTerm) ||
       email.includes(searchTerm) ||
-      phone.includes(searchTerm)
+      phone.includes(searchTerm) ||
+      username.toLowerCase().includes(searchTerm)
     );
   });
 

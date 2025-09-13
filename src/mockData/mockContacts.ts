@@ -1,3 +1,4 @@
+// src/mockData/mockContacts.ts
 import { Contact, ContactType } from "@/features/contacts/types/contact";
 
 export const mockContacts: Contact[] = [
@@ -9,6 +10,7 @@ export const mockContacts: Contact[] = [
     phone_number: "(512) 555-0101",
     avatar_url:
       "https://ktfbrtlurpvwysgrfshk.supabase.co/storage/v1/object/public/business_avatars/layton-logo.jpg",
+    username: "Layton",
   },
   {
     id: "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12",
@@ -17,6 +19,7 @@ export const mockContacts: Contact[] = [
     email: "contact@j2homes.com",
     phone_number: "",
     avatar_url: "",
+    username: "J2Homes",
   },
   {
     id: "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a13",
@@ -25,6 +28,7 @@ export const mockContacts: Contact[] = [
     email: "office@wasatchdrywall.co",
     phone_number: "",
     avatar_url: "",
+    username: "Wasatch_drywall",
   },
   {
     id: "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a14",
@@ -34,6 +38,7 @@ export const mockContacts: Contact[] = [
     phone_number: "",
     avatar_url:
       "https://ktfbrtlurpvwysgrfshk.supabase.co/storage/v1/object/public/business_avatars/ua-logo.png",
+    username: "urban_alfandre",
   },
   {
     id: "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a15",
@@ -42,6 +47,7 @@ export const mockContacts: Contact[] = [
     email: "contact@slateplumbing.com",
     phone_number: "(512) 555-0102",
     avatar_url: "",
+    username: "slate_plumbing",
   },
   {
     id: "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a16",
@@ -50,6 +56,7 @@ export const mockContacts: Contact[] = [
     email: "contact@midwaypainting.com",
     phone_number: "",
     avatar_url: "",
+    username: "MidwayPaintingCo",
   },
   {
     id: "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a17",
@@ -58,6 +65,7 @@ export const mockContacts: Contact[] = [
     email: "accounts@frontierbuilding.inc",
     phone_number: "",
     avatar_url: "",
+    username: "frontier_building",
   },
   {
     id: "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a18",
@@ -67,6 +75,7 @@ export const mockContacts: Contact[] = [
     phone_number: "(512) 555-0103",
     avatar_url:
       "https://ktfbrtlurpvwysgrfshk.supabase.co/storage/v1/object/public/business_avatars/ezralee-logo.jpg",
+    username: "ezralee",
   },
   {
     id: "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a19",
@@ -75,6 +84,7 @@ export const mockContacts: Contact[] = [
     email: "contact@cascadesiding.com",
     phone_number: "",
     avatar_url: "",
+    username: "CascadeSiding",
   },
   {
     id: "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a20",
@@ -83,6 +93,7 @@ export const mockContacts: Contact[] = [
     email: "info@kingsmountain.com",
     phone_number: "",
     avatar_url: "",
+    username: "KingsMountainBuilders",
   },
   {
     id: "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a21",
@@ -92,5 +103,6 @@ export const mockContacts: Contact[] = [
     phone_number: "",
     avatar_url:
       "https://ktfbrtlurpvwysgrfshk.supabase.co/storage/v1/object/public/business_avatars/edgehome-logo.jpg",
+    username: "edgehomes",
   },
 ];

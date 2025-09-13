@@ -57,7 +57,7 @@ export const getSpotlightActions = (
         id: "contacts",
         label: "Contacts",
         description: "View and manage your contacts",
-        keywords: ["people", "customers", "clients", "vendors"],
+        keywords: ["people", "customers", "clients", "vendors", "username"],
         onClick: () => {
           window.dispatchEvent(new CustomEvent("open-contacts"));
           closeNav();
@@ -168,7 +168,14 @@ export const getSpotlightActions = (
         id: "profile",
         label: "Profile",
         description: "Manage your personal information and avatar",
-        keywords: ["user", "account", "avatar", "photo", "personal"],
+        keywords: [
+          "user",
+          "account",
+          "avatar",
+          "photo",
+          "personal",
+          "username",
+        ],
         onClick: () => {
           window.dispatchEvent(
             new CustomEvent("open-settings", { detail: { tab: "account" } })

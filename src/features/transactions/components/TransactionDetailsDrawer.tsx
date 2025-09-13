@@ -148,6 +148,7 @@ export default function TransactionDetailsDrawer({
             full_name: profile.full_name || "You",
             email: profile.email,
             avatar_url: profile.avatar_url,
+            username: profile.username,
           };
           return <ContactDetailsCard contact={selfAsContact} label={label} />;
         }

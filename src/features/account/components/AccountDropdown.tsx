@@ -74,7 +74,7 @@ export default function AccountDropdown() {
 
         <Menu.Dropdown>
           {profile?.username && (
-            <Text size="xs" c="dimmed" px={12} py={6} lineClamp={1}>
+            <Text size="sm" c="dimmed" px={12} py={6} lineClamp={1}>
               @{profile?.username}
             </Text>
           )}

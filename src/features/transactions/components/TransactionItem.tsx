@@ -29,7 +29,6 @@ export default function TransactionItem({
 }: TransactionItemProps) {
   const { profile } = useProfile();
   const { amount, date, status, type, from, to, project } = transaction;
-
   const isCredit = type === "Received" || type === "Deposited";
   const formattedAmount = `${isCredit ? "+" : "-"} $${amount.toLocaleString(
     "en-US",

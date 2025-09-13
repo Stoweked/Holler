@@ -85,7 +85,7 @@ function ContactModalContent({
             {name}
           </Title>
           <Text c="dimmed" ta="center">
-            {contact.email || contact.phone_number}
+            @{contact.username}
           </Text>
         </Stack>
       </Stack>

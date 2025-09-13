@@ -10,6 +10,7 @@ export interface BaseContact {
   phone_number?: string;
   avatar_url?: string;
   favorite?: boolean;
+  username?: string;
 }
 
 export interface PersonContact extends BaseContact {
