@@ -15,6 +15,8 @@ import { WalletProvider, useWallet } from "@/contexts/WalletContext";
 import { FavoritesProvider } from "@/contexts/FavoritesContext";
 import { useWaivers, WaiversProvider } from "@/contexts/WaiversContext";
 import LienWaiversDrawer from "@/features/waivers/components/LienWaiversDrawer";
+import { ProjectsProvider, useProjects } from "@/contexts/ProjectsContext";
+import ProjectsDrawer from "@/features/projects/components/ProjectsDrawer";
 
 const AuthenticatedLayout = ({ children }: { children: React.ReactNode }) => {
   const { user, loading } = useProfile();
@@ -31,11 +33,14 @@ const AuthenticatedLayout = ({ children }: { children: React.ReactNode }) => {
     openDrawer: openWaiversDrawer,
   } = useWaivers();
 
+  const { openDrawer: openProjectsDrawer } = useProjects();
+
   // Pass the router and the openActionDrawer function to getSpotlightActions
   const actions = getSpotlightActions(
     router,
     openActionDrawer,
     openWaiversDrawer,
+    openProjectsDrawer,
     close
   );
 
@@ -90,6 +95,7 @@ const AuthenticatedLayout = ({ children }: { children: React.ReactNode }) => {
       </AppShell>
 
       <LienWaiversDrawer opened={drawerOpened} close={closeDrawer} />
+      <ProjectsDrawer />
     </>
   );
 };
@@ -109,9 +115,11 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     <ProfileProvider>
       <WalletProvider>
         <WaiversProvider>
-          <FavoritesProvider>
-            <AuthenticatedLayout>{children}</AuthenticatedLayout>
-          </FavoritesProvider>
+          <ProjectsProvider>
+            <FavoritesProvider>
+              <AuthenticatedLayout>{children}</AuthenticatedLayout>
+            </FavoritesProvider>
+          </ProjectsProvider>
         </WaiversProvider>
       </WalletProvider>
     </ProfileProvider>

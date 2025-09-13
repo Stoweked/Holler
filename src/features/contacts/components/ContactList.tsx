@@ -94,7 +94,7 @@ export default function ContactsList({ onContactClick }: ContactsListProps) {
   return (
     <Stack gap="lg">
       <Input
-        placeholder="Search name, email, or number"
+        placeholder="Search contacts"
         leftSection={<Search01Icon size={20} />}
         radius="xl"
         size="xl"

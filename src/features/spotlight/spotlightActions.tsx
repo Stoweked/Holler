@@ -26,6 +26,7 @@ import {
   LegalDocument01Icon,
   StarsIcon,
   ClipboardIcon,
+  House03Icon,
 } from "hugeicons-react";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { logout } from "@/features/auth/actions/logout";
@@ -37,7 +38,8 @@ export const getSpotlightActions = (
   router: AppRouterInstance,
   openActionDrawer: OpenActionDrawerFunc,
   openWaiversDrawer: () => void,
-  closeNav: () => void // Add closeNav parameter
+  openProjectsDrawer: () => void,
+  closeNav: () => void
 ): (SpotlightActionGroupData | SpotlightActionData)[] => [
   {
     group: "Navigation",
@@ -63,6 +65,17 @@ export const getSpotlightActions = (
           closeNav();
         },
         leftSection: <UserMultiple02Icon size={24} />,
+      },
+      {
+        id: "projects",
+        label: "Projects",
+        description: "View and manage your projects",
+        keywords: ["jobs", "work", "sites"],
+        onClick: () => {
+          openProjectsDrawer();
+          closeNav();
+        },
+        leftSection: <House03Icon size={24} />,
       },
       {
         id: "waivers",

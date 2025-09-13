@@ -23,7 +23,7 @@ export default function ContactsDrawer({
     <Drawer
       opened={opened}
       onClose={close}
-      title="Your contacts"
+      title="Holler contacts"
       padding="lg"
       size="md"
     >

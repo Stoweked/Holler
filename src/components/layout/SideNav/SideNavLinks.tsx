@@ -18,6 +18,7 @@ import ContactsDrawer from "@/features/contacts/components/ContactsDrawer";
 import ContactModal from "@/features/contacts/components/ContactModal";
 import { Contact } from "@/features/contacts/types/contact";
 import SettingsDrawer from "@/features/settings/components/SettingsDrawer";
+import { useProjects } from "@/contexts/ProjectsContext";
 
 interface SideNavLinksProps {
   closeMobileNav: () => void;
@@ -26,6 +27,7 @@ interface SideNavLinksProps {
 export default function SideNavLinks({ closeMobileNav }: SideNavLinksProps) {
   const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
   const [initialSettingsTab, setInitialSettingsTab] = useState("account");
+  const { openDrawer: openProjectsDrawer } = useProjects();
 
   const [
     openedContactsDrawer,
@@ -86,6 +88,11 @@ export default function SideNavLinks({ closeMobileNav }: SideNavLinksProps) {
     openContactsDrawer();
   };
 
+  const handleProjectsClick = () => {
+    closeMobileNav();
+    openProjectsDrawer();
+  };
+
   const handleBankAccountsClick = () => {
     closeMobileNav();
     openConnectedBanksDrawer();
@@ -121,9 +128,9 @@ export default function SideNavLinks({ closeMobileNav }: SideNavLinksProps) {
         rightSection={
           <ArrowRight01Icon size={32} color="var(--mantine-color-lime-4)" />
         }
-        description="Coming soon"
         className={classes.navLink}
         classNames={{ label: classes.label }}
+        onClick={handleProjectsClick}
       />
 
       <NavLink

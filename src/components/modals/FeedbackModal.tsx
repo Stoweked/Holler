@@ -105,6 +105,7 @@ export default function FeedbackModal({
             <SegmentedControl
               fullWidth
               radius="xl"
+              size="md"
               data={[
                 { label: "Feature request", value: "feature" },
                 { label: "Bug report", value: "bug" },
