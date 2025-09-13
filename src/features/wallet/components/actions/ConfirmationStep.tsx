@@ -51,7 +51,7 @@ const PartyInfoCard = ({
   switch (party.type) {
     case "contact":
       name = getPartyName(party);
-      details = party.data.email || party.data.phone_number;
+      details = `@${party.data.username}`;
       avatarSrc = party.data.avatar_url;
       avatarChildren = getInitials(name);
       break;
@@ -80,7 +80,7 @@ const PartyInfoCard = ({
         <Title order={4} lineClamp={3} lh={1.2}>
           {name}
         </Title>
-        <Text size="xs" c="dimmed" lineClamp={1} truncate="end">
+        <Text size="sm" c="dimmed" lineClamp={1} truncate="end">
           {details}
         </Text>
       </Stack>
