@@ -88,7 +88,7 @@ export default function LienWaiversDrawer({
       onClose={handleClose}
       title={drawerTitle}
       padding="lg"
-      size="lg"
+      size="md"
     >
       {step === "initial" && (
         <WaiverInitialStep
