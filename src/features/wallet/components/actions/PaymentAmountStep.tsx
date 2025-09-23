@@ -1,3 +1,4 @@
+// src/features/wallet/components/actions/PaymentAmountStep.tsx
 import { Button, Stack, Text, Textarea } from "@mantine/core";
 import { useEffect, useRef } from "react";
 import { Alert02Icon } from "hugeicons-react";
@@ -13,6 +14,7 @@ import { useWallet } from "@/contexts/WalletContext";
 import { TransactionActionType } from "../../types/wallet";
 import { Bank } from "@/features/banks/types/bank";
 import { TransactionParty } from "@/features/transactions/types/transactionParty";
+import { useWaivers } from "@/contexts/WaiversContext";
 
 interface PaymentAmountStepProps {
   party: TransactionParty | null;
@@ -52,6 +54,14 @@ export default function PaymentAmountStep({
     { open: openProfileModal, close: closeProfileModal },
   ] = useDisclosure(false);
   const { balance } = useWallet();
+  const { newlyCreatedWaiver, setNewlyCreatedWaiver, waivers } = useWaivers();
+
+  useEffect(() => {
+    if (newlyCreatedWaiver && waivers.length === 1) {
+      setSelectedWaiver(newlyCreatedWaiver);
+      setNewlyCreatedWaiver(null); // Clear it after using it
+    }
+  }, [newlyCreatedWaiver, waivers, setSelectedWaiver, setNewlyCreatedWaiver]);
 
   useEffect(() => {
     inputRef.current?.focus();

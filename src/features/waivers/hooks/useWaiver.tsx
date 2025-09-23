@@ -1,3 +1,4 @@
+// src/features/waivers/hooks/useWaiver.tsx
 import { useState } from "react";
 import { useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
@@ -28,7 +29,7 @@ export function useWaiver(closeDrawer: () => void) {
   const [isSaving, setIsSaving] = useState(false);
   const [isArchiving, setIsArchiving] = useState(false);
 
-  const { waivers, refetchWaivers } = useWaivers();
+  const { waivers, refetchWaivers, setNewlyCreatedWaiver } = useWaivers();
   const supabase = createClient();
 
   const editor = useEditor({
@@ -109,6 +110,7 @@ export function useWaiver(closeDrawer: () => void) {
     }
 
     try {
+      let newWaiverId = null;
       if (editorMode === "edit" && selectedWaiver) {
         const { error } = await supabase
           .from("lien_waivers")
@@ -122,16 +124,21 @@ export function useWaiver(closeDrawer: () => void) {
           .eq("id", selectedWaiver.id);
         if (error) throw error;
       } else {
-        const { error } = await supabase.from("lien_waivers").insert([
-          {
-            user_id: user.id,
-            title: waiverTitle,
-            content: editor?.getHTML(),
-            type: waiverType,
-            payment_type: waiverPayment_type,
-          },
-        ]);
+        const { data, error } = await supabase
+          .from("lien_waivers")
+          .insert([
+            {
+              user_id: user.id,
+              title: waiverTitle,
+              content: editor?.getHTML(),
+              type: waiverType,
+              payment_type: waiverPayment_type,
+            },
+          ])
+          .select("id")
+          .single();
         if (error) throw error;
+        newWaiverId = data.id;
       }
 
       notifications.show({
@@ -141,7 +148,13 @@ export function useWaiver(closeDrawer: () => void) {
         icon: <CheckIcon size={16} />,
       });
 
-      refetchWaivers();
+      const allWaivers = await refetchWaivers();
+      if (allWaivers && allWaivers.length === 1 && newWaiverId) {
+        const newWaiver = allWaivers.find((w) => w.id === newWaiverId);
+        if (newWaiver) {
+          setNewlyCreatedWaiver(newWaiver);
+        }
+      }
       handleClose();
     } catch (error) {
       console.error("Error saving waiver:", error);

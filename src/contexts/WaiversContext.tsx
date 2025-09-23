@@ -1,3 +1,4 @@
+// src/contexts/WaiversContext.tsx
 "use client";
 
 import {
@@ -16,10 +17,12 @@ import { useDisclosure } from "@mantine/hooks";
 interface WaiversContextType {
   waivers: Waiver[];
   loading: boolean;
-  refetchWaivers: () => void;
+  refetchWaivers: () => Promise<Waiver[] | null>;
   drawerOpened: boolean;
   openDrawer: () => void;
   closeDrawer: () => void;
+  newlyCreatedWaiver: Waiver | null;
+  setNewlyCreatedWaiver: (waiver: Waiver | null) => void;
 }
 
 const WaiversContext = createContext<WaiversContextType | undefined>(undefined);
@@ -29,6 +32,9 @@ export function WaiversProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [drawerOpened, { open: openDrawer, close: closeDrawer }] =
     useDisclosure(false);
+  const [newlyCreatedWaiver, setNewlyCreatedWaiver] = useState<Waiver | null>(
+    null
+  );
   const supabase = createClient();
 
   const fetchWaivers = useCallback(async () => {
@@ -42,10 +48,13 @@ export function WaiversProvider({ children }: { children: ReactNode }) {
     if (error) {
       console.error("Error fetching waivers:", error);
       setWaivers([]);
+      setLoading(false);
+      return null;
     } else {
       setWaivers(data || []);
+      setLoading(false);
+      return data;
     }
-    setLoading(false);
   }, [supabase]);
 
   useEffect(() => {
@@ -60,8 +69,18 @@ export function WaiversProvider({ children }: { children: ReactNode }) {
       drawerOpened,
       openDrawer,
       closeDrawer,
+      newlyCreatedWaiver,
+      setNewlyCreatedWaiver,
     }),
-    [waivers, loading, fetchWaivers, drawerOpened, openDrawer, closeDrawer]
+    [
+      waivers,
+      loading,
+      fetchWaivers,
+      drawerOpened,
+      openDrawer,
+      closeDrawer,
+      newlyCreatedWaiver,
+    ]
   );
 
   return (
