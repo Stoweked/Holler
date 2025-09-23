@@ -1,4 +1,6 @@
-// app/api/contacts/route.ts
+// src/features/contacts/actions/getContacts.ts
+"use server";
+
 import { createServer } from "@/lib/supabase/server";
 import {
   Contact,
@@ -6,16 +8,15 @@ import {
   PersonContact,
   BusinessContact,
 } from "@/features/contacts/types/contact";
-import { NextResponse } from "next/server";
 
-export async function GET() {
+export async function getContacts(): Promise<Contact[]> {
   const supabase = await createServer();
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    throw new Error("Unauthorized");
   }
 
   const { data: profiles, error: profileError } = await supabase
@@ -37,13 +38,12 @@ export async function GET() {
       "Error fetching contacts:",
       profileError || businessError || userBusinessError
     );
-    return NextResponse.json(
-      { error: "Failed to fetch contacts" },
-      { status: 500 }
-    );
+    throw new Error("Failed to fetch contacts");
   }
 
-  const userBusinessIds = new Set(userBusinesses.map((ub) => ub.business_id));
+  const userBusinessIds = new Set(
+    (userBusinesses || []).map((ub) => ub.business_id)
+  );
 
   const profileContacts: PersonContact[] =
     profiles?.map((p) => ({
@@ -79,5 +79,5 @@ export async function GET() {
     }
   );
 
-  return NextResponse.json(allContacts);
+  return allContacts;
 }

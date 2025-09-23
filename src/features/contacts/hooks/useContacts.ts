@@ -1,6 +1,9 @@
 // src/features/contacts/hooks/useContacts.ts
+"use client";
+
 import { useState, useEffect } from "react";
 import { Contact } from "../types/contact";
+import { getContacts } from "../actions/getContacts";
 
 export function useContacts() {
   const [contacts, setContacts] = useState<Contact[]>([]);
@@ -9,15 +12,15 @@ export function useContacts() {
   useEffect(() => {
     const fetchContacts = async () => {
       setLoading(true);
-      const response = await fetch("/api/contacts");
-      const data = await response.json();
-      if (response.ok) {
+      try {
+        const data = await getContacts();
         setContacts(data);
-      } else {
-        console.error("Failed to fetch contacts:", data.error);
+      } catch (error) {
+        console.error("Failed to fetch contacts:", error);
         setContacts([]);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
 
     fetchContacts();

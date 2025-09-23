@@ -41,7 +41,11 @@ const AuthenticatedLayout = ({ children }: { children: React.ReactNode }) => {
     openDrawer: openWaiversDrawer,
   } = useWaivers();
 
-  const { openDrawer: openProjectsDrawer } = useProjects();
+  const {
+    drawerOpened: projectsDrawerOpened,
+    closeDrawer: closeProjectsDrawer,
+    openDrawer: openProjectsDrawer,
+  } = useProjects();
 
   useEffect(() => {
     if (!loading && user && profile) {
@@ -110,7 +114,10 @@ const AuthenticatedLayout = ({ children }: { children: React.ReactNode }) => {
       </AppShell>
 
       <LienWaiversDrawer opened={drawerOpened} close={closeDrawer} />
-      <ProjectsDrawer />
+      <ProjectsDrawer
+        opened={projectsDrawerOpened}
+        close={closeProjectsDrawer}
+      />
     </>
   );
 };

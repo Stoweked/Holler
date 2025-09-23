@@ -1,37 +1,79 @@
-import { Button, Drawer, Stack, Text, Title } from "@mantine/core";
-import { House03Icon } from "hugeicons-react";
-import { useProjects } from "@/contexts/ProjectsContext";
+// src/features/projects/components/ProjectsDrawer.tsx
+"use client";
 
-export default function ProjectsDrawer() {
-  const { drawerOpened, closeDrawer } = useProjects();
+import { ActionIcon, Drawer, Group, Space, Text, Tooltip } from "@mantine/core";
+import { ArrowLeft02Icon } from "hugeicons-react";
+import ProjectInitialStep from "./ProjectInitialStep";
+import ProjectEditorStep from "./ProjectEditorStep";
+import { useProject } from "../hooks/useProject";
 
-  const handleOpenFeedback = () => {
-    window.dispatchEvent(new CustomEvent("open-feedback"));
-    closeDrawer();
-  };
+interface ProjectsDrawerProps {
+  opened: boolean;
+  close: () => void;
+}
+
+export default function ProjectsDrawer({ opened, close }: ProjectsDrawerProps) {
+  const {
+    step,
+    editorMode,
+    form,
+    handleCreateNew,
+    handleEditProject,
+    handleBack,
+    handleClose,
+    handleSave,
+    handleArchive,
+    projects,
+    isSaving,
+    isArchiving,
+  } = useProject(close);
+
+  const drawerTitle =
+    step === "initial" ? (
+      "Projects"
+    ) : (
+      <Group gap="xs">
+        <Tooltip label="Back" position="right">
+          <ActionIcon
+            onClick={handleBack}
+            variant="subtle"
+            color="gray"
+            aria-label="Go back"
+          >
+            <ArrowLeft02Icon size={24} />
+          </ActionIcon>
+        </Tooltip>
+        <Text>{editorMode === "new" ? "New project" : "Edit project"}</Text>
+      </Group>
+    );
 
   return (
     <Drawer
-      opened={drawerOpened}
-      onClose={closeDrawer}
-      title="Projects"
-      padding="md"
+      zIndex={300}
+      opened={opened}
+      onClose={handleClose}
+      title={drawerTitle}
+      padding="lg"
       size="lg"
     >
-      <Stack align="center" mt="xl" gap="lg">
-        <House03Icon size={40} color="grey" />
-        <Stack gap={0} align="center">
-          <Title order={3} ta="center">
-            Coming soon
-          </Title>
-          <Text c="dimmed" ta="center" size="lg">
-            Have ideas on how we can design and build this feature?
-          </Text>
-          <Button onClick={handleOpenFeedback} mt="lg" size="lg">
-            Give us feedback
-          </Button>
-        </Stack>
-      </Stack>
+      {step === "initial" && (
+        <ProjectInitialStep
+          onNew={handleCreateNew}
+          onEditProject={handleEditProject}
+          projects={projects}
+        />
+      )}
+      {step === "editor" && (
+        <ProjectEditorStep
+          form={form}
+          onSave={handleSave}
+          isSaving={isSaving}
+          onArchive={handleArchive}
+          isArchiving={isArchiving}
+          editorMode={editorMode}
+        />
+      )}
+      <Space h={100} />
     </Drawer>
   );
 }

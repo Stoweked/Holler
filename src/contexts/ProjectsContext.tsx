@@ -1,3 +1,4 @@
+// src/contexts/ProjectsContext.tsx
 "use client";
 
 import {
@@ -12,7 +13,6 @@ import {
 import { createClient } from "@/lib/supabase/client";
 import { Project } from "@/features/projects/types/project";
 import { useDisclosure } from "@mantine/hooks";
-import { mockProjects } from "@/mockData/mockProjects";
 
 interface ProjectsContextType {
   projects: Project[];
@@ -36,10 +36,19 @@ export function ProjectsProvider({ children }: { children: ReactNode }) {
 
   const fetchProjects = useCallback(async () => {
     setLoading(true);
-    // TODO: Replace with actual Supabase call
-    setProjects(mockProjects);
+    const { data, error } = await supabase
+      .from("projects")
+      .select("*")
+      .eq("archived", false);
+
+    if (error) {
+      console.error("Error fetching projects:", error);
+      setProjects([]);
+    } else {
+      setProjects(data || []);
+    }
     setLoading(false);
-  }, []);
+  }, [supabase]);
 
   useEffect(() => {
     fetchProjects();
