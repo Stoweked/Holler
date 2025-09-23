@@ -2,6 +2,7 @@
 
 import { Button, Indicator, Menu, Stack, TagsInput } from "@mantine/core";
 import { Search01Icon } from "hugeicons-react";
+import { useEffect, useRef, useState } from "react";
 
 interface SearchFilterProps {
   searchQuery: string[];
@@ -13,9 +14,21 @@ export function SearchFilter({
   onSearchQueryChange,
 }: SearchFilterProps) {
   const isSearchFilterActive = searchQuery.length > 0;
+  const [opened, setOpened] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (opened) {
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 50);
+    }
+  }, [opened]);
 
   return (
     <Menu
+      opened={opened}
+      onChange={setOpened}
       shadow="md"
       width={310}
       radius="md"
@@ -35,13 +48,14 @@ export function SearchFilter({
             variant="default"
             leftSection={<Search01Icon size={16} />}
           >
-            Search
+            Keywords
           </Button>
         </Indicator>
       </Menu.Target>
       <Menu.Dropdown>
         <Stack p="xs" gap="xs">
           <TagsInput
+            ref={inputRef}
             leftSection={<Search01Icon size={16} />}
             placeholder="Enter keyword"
             value={searchQuery}

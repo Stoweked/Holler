@@ -33,7 +33,9 @@ export function useWaiver(closeDrawer: () => void) {
 
   const editor = useEditor({
     extensions: [
-      StarterKit,
+      StarterKit.configure({
+        link: false,
+      }),
       Link,
       Placeholder.configure({ placeholder: "Enter waiver content here..." }),
     ],
