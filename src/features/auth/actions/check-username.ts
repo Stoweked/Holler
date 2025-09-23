@@ -24,7 +24,6 @@ export async function checkUsernameExists(
 
   if (error && error.code !== "PGRST116") {
     // PGRST116 means no rows were found, which is not an error here.
-    console.error("Error checking username:", error.message);
     throw new Error("A server error occurred while checking the username.");
   }
 

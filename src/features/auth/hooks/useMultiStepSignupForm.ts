@@ -32,9 +32,6 @@ export function useMultiStepSignupForm() {
         return {
           full_name:
             values.full_name.trim().length < 2 ? "Full name is required" : null,
-          username: /^[a-zA-Z0-9._]{3,20}$/.test(values.username)
-            ? null
-            : "Username must be 3-20 characters and can only contain letters, numbers, underscores, and periods.",
         };
       }
       if (step === "password") {

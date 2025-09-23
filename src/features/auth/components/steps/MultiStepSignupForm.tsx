@@ -87,6 +87,8 @@ export default function MultiStepSignUpForm() {
                 isAuthenticated={isAuthenticated}
                 profile={profile}
                 loading={loading}
+                isCheckingUsername={isCheckingUsername}
+                setIsCheckingUsername={setIsCheckingUsername}
               />
             )}
 

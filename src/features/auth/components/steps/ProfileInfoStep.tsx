@@ -3,7 +3,7 @@ import { Button, Stack, Text, TextInput, Title, Loader } from "@mantine/core";
 import { SignupFormType } from "../../types/signup";
 import { PatternFormat } from "react-number-format";
 import { Profile } from "@/features/account/types/account";
-import { useState } from "react";
+import { Dispatch, SetStateAction } from "react";
 import { checkUsernameExists } from "../../actions/check-username";
 
 interface ProfileInfoStepProps {
@@ -11,6 +11,8 @@ interface ProfileInfoStepProps {
   isAuthenticated: boolean;
   profile: Profile | null;
   loading: boolean;
+  isCheckingUsername: boolean;
+  setIsCheckingUsername: Dispatch<SetStateAction<boolean>>;
 }
 
 export function ProfileInfoStep({
@@ -18,12 +20,14 @@ export function ProfileInfoStep({
   isAuthenticated,
   profile,
   loading,
+  isCheckingUsername,
+  setIsCheckingUsername,
 }: ProfileInfoStepProps) {
   const isOAuth = isAuthenticated && profile?.auth_provider === "google";
-  const [isCheckingUsername, setIsCheckingUsername] = useState(false);
 
   const handleUsernameBlur = async () => {
     const username = form.values.username;
+
     // Clear previous async error before re-validating
     if (form.errors.username === "Username is already taken") {
       form.clearFieldError("username");
