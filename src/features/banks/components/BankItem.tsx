@@ -10,13 +10,14 @@ import {
 import { ArrowRight01Icon, BankIcon } from "hugeicons-react";
 import classes from "./Banks.module.css";
 import { Bank } from "../types/bank";
+import React from "react";
 
 interface BankItemProps {
   bank: Bank;
   onClick?: () => void;
 }
 
-export default function BankItem({ bank, onClick }: BankItemProps) {
+function BankItem({ bank, onClick }: BankItemProps) {
   const { name, details, avatar_url } = bank;
   return (
     <UnstyledButton className={classes.item} onClick={onClick}>
@@ -54,3 +55,5 @@ export default function BankItem({ bank, onClick }: BankItemProps) {
     </UnstyledButton>
   );
 }
+
+export default React.memo(BankItem);

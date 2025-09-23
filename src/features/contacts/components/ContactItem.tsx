@@ -11,13 +11,14 @@ import { ArrowRight01Icon } from "hugeicons-react";
 import classes from "./Contacts.module.css";
 import { Contact, ContactType } from "../types/contact";
 import { getInitials } from "@/lib/hooks/textUtils";
+import React from "react";
 
 interface ContactItemProps {
   contact: Contact;
   onClick?: () => void;
 }
 
-export default function ContactItem({ contact, onClick }: ContactItemProps) {
+function ContactItem({ contact, onClick }: ContactItemProps) {
   const name =
     contact.contactType === ContactType.Person
       ? contact.full_name
@@ -72,3 +73,5 @@ export default function ContactItem({ contact, onClick }: ContactItemProps) {
     </UnstyledButton>
   );
 }
+
+export default React.memo(ContactItem);

@@ -17,16 +17,14 @@ import { useProfile } from "@/contexts/ProfileContext";
 import { getPartyName } from "../types/transactionParty";
 import { ContactType } from "@/features/contacts/types/contact";
 import { House03Icon } from "hugeicons-react";
+import React from "react";
 
 interface TransactionItemProps {
   transaction: Transaction;
   onClick: () => void;
 }
 
-export default function TransactionItem({
-  transaction,
-  onClick,
-}: TransactionItemProps) {
+function TransactionItem({ transaction, onClick }: TransactionItemProps) {
   const { profile } = useProfile();
   const { amount, date, status, type, from, to, project } = transaction;
   const isCredit = type === "Received" || type === "Deposited";
@@ -148,3 +146,5 @@ export default function TransactionItem({
     </UnstyledButton>
   );
 }
+
+export default React.memo(TransactionItem);

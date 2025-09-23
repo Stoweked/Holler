@@ -14,9 +14,17 @@ import { Search01Icon } from "hugeicons-react";
 import { WalletProvider, useWallet } from "@/contexts/WalletContext";
 import { FavoritesProvider } from "@/contexts/FavoritesContext";
 import { useWaivers, WaiversProvider } from "@/contexts/WaiversContext";
-import LienWaiversDrawer from "@/features/waivers/components/LienWaiversDrawer";
 import { ProjectsProvider, useProjects } from "@/contexts/ProjectsContext";
-import ProjectsDrawer from "@/features/projects/components/ProjectsDrawer";
+import dynamic from "next/dynamic";
+
+const LienWaiversDrawer = dynamic(
+  () => import("@/features/waivers/components/LienWaiversDrawer"),
+  { ssr: false }
+);
+const ProjectsDrawer = dynamic(
+  () => import("@/features/projects/components/ProjectsDrawer"),
+  { ssr: false }
+);
 
 const AuthenticatedLayout = ({ children }: { children: React.ReactNode }) => {
   const { user, loading } = useProfile();
