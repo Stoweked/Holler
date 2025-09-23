@@ -1,0 +1,104 @@
+/* src/features/projects/components/Projects.module.css */
+.item {
+  border-radius: var(--mantine-radius-lg);
+  width: 100%;
+  transition: all 200ms ease-in-out;
+  padding: var(--mantine-spacing-md);
+  border: 1px solid
+    light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-5));
+  background-color: light-dark(
+    var(--mantine-color-white),
+    var(--mantine-color-dark-6)
+  );
+}
+
+.item:hover {
+  background-color: light-dark(
+    var(--mantine-color-gray-0),
+    var(--mantine-color-dark-8)
+  );
+  border-color: var(--mantine-color-lime-5);
+  cursor: pointer;
+}
+
+.createButton {
+  border-radius: var(--mantine-radius-lg);
+  width: 100%;
+  transition: all 200ms ease-in-out;
+  padding: var(--mantine-spacing-md);
+  border: 1px solid
+    light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-5));
+  background-color: light-dark(
+    var(--mantine-color-white),
+    var(--mantine-color-dark-6)
+  );
+}
+.createButton:hover {
+  background-color: light-dark(
+    var(--mantine-color-gray-0),
+    var(--mantine-color-dark-8)
+  );
+  border-color: var(--mantine-color-lime-5);
+  cursor: pointer;
+}
+
+.waiverInputWrapper {
+  height: auto !important;
+}
+
+@media (max-width: 450px) {
+  .buttonGroup {
+    flex-direction: column;
+  }
+  .createButton {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+/* Rich text content */
+.renderedContent {
+  color: var(--mantine-color-text);
+  font-size: var(--mantine-font-size-md);
+  line-height: var(--mantine-line-height);
+}
+
+.renderedContent h1,
+.renderedContent h2,
+.renderedContent h3,
+.renderedContent h4 {
+  font-family: var(--mantine-font-family-headings);
+  font-weight: bold;
+  margin-top: var(--mantine-spacing-lg);
+  margin-bottom: var(--mantine-spacing-sm);
+}
+
+.renderedContent h2 {
+  font-size: var(--mantine-font-size-h2);
+}
+
+.renderedContent p {
+  margin-top: 0;
+  margin-bottom: var(--mantine-spacing-md);
+}
+
+.renderedContent blockquote {
+  padding: var(--mantine-spacing-sm) var(--mantine-spacing-lg);
+  margin-left: 0;
+  margin-right: 0;
+  border-left: 4px solid
+    light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+  color: var(--mantine-color-dimmed);
+}
+
+.renderedContent u {
+  text-decoration: underline;
+}
+
+.renderedContent em {
+  font-style: italic;
+}
+
+.renderedContent strong {
+  font-weight: bold;
+}

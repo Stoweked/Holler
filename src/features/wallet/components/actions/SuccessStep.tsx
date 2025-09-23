@@ -12,6 +12,8 @@ import {
 import classes from "./Actions.module.css";
 import { useEffect, useState } from "react";
 import { TransactionActionType } from "../../types/wallet";
+import ProjectDetailsCard from "@/features/projects/components/ProjectDetailsCard";
+import { Project } from "@/features/projects/types/project";
 
 interface SuccessStepProps {
   transactionType: TransactionActionType;
@@ -25,10 +27,14 @@ export default function SuccessStep({
   onStartOver,
 }: SuccessStepProps) {
   const [mounted, setMounted] = useState(false);
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  const showProjectDetails =
+    transactionType === "send" || transactionType === "request";
 
   const getSuccessMessages = () => {
     switch (transactionType) {
@@ -63,33 +69,35 @@ export default function SuccessStep({
   const { title, message } = getSuccessMessages();
 
   return (
-    <Stack align="center" justify="center" h="100%" gap="lg" px="md">
-      <Transition
-        mounted={mounted}
-        transition="fade"
-        duration={800}
-        timingFunction="ease"
-      >
-        {(styles) => (
-          <Box className={classes.coinContainer} mt={-100} style={styles}>
-            <Image
-              src="/images/success-step/coins.png"
-              h="auto"
-              w="100%"
-              alt="Coins graphic"
-            />
-            <Image
-              src="/images/success-step/coins-fade.svg"
-              h="auto"
-              w="100%"
-              alt="Fade overlay"
-              className={classes.coinOverlay}
-            />
-          </Box>
-        )}
-      </Transition>
-
+    <Stack align="center" justify="center" gap="lg" px="md">
       <Stack gap="xl" w="100%" style={{ zIndex: 9 }}>
+        {/* Coin image */}
+        <Transition
+          mounted={mounted}
+          transition="fade"
+          duration={800}
+          timingFunction="ease"
+        >
+          {(styles) => (
+            <Box className={classes.coinContainer} mt={-100} style={styles}>
+              <Image
+                src="/images/success-step/coins.png"
+                h="auto"
+                w="100%"
+                alt="Coins graphic"
+              />
+              <Image
+                src="/images/success-step/coins-fade.svg"
+                h="auto"
+                w="100%"
+                alt="Fade overlay"
+                className={classes.coinOverlay}
+              />
+            </Box>
+          )}
+        </Transition>
+
+        {/* Title and subheading */}
         <Transition
           mounted={mounted}
           transition="slide-up"
@@ -107,7 +115,10 @@ export default function SuccessStep({
             </Stack>
           )}
         </Transition>
+      </Stack>
 
+      {/* Project details card */}
+      {showProjectDetails && (
         <Transition
           mounted={mounted}
           transition="slide-up"
@@ -115,17 +126,36 @@ export default function SuccessStep({
           timingFunction="ease"
         >
           {(styles) => (
-            <Stack align="center" w="100%" style={styles}>
-              <Button onClick={onStartOver} size="lg" fullWidth>
-                Start a new transaction
-              </Button>
-              <Button onClick={onDone} size="lg" variant="outline" fullWidth>
+            <Stack align="center" w="100%" gap="lg" style={styles}>
+              <ProjectDetailsCard
+                selectedProject={selectedProject}
+                setSelectedProject={setSelectedProject}
+              />
+              <Button onClick={onDone} size="lg" fullWidth>
                 Done
               </Button>
             </Stack>
           )}
         </Transition>
-      </Stack>
+      )}
+
+      {/* Button */}
+      {!showProjectDetails && (
+        <Transition
+          mounted={mounted}
+          transition="slide-up"
+          duration={1200}
+          timingFunction="ease"
+        >
+          {(styles) => (
+            <Stack align="center" w="100%" gap="lg" style={styles}>
+              <Button onClick={onDone} size="lg" fullWidth>
+                Done
+              </Button>
+            </Stack>
+          )}
+        </Transition>
+      )}
     </Stack>
   );
 }

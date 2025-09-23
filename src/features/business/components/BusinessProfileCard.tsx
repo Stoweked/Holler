@@ -1,10 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { Paper, Center, Loader } from "@mantine/core";
+import { Paper, Center, Loader, Group } from "@mantine/core";
 import BusinessProfileForm from "./BusinessProfileForm";
 import BusinessProfileView from "./BusinessProfileView";
 import { useBusinessProfile } from "../hooks/useBusinessProfile";
+import OptionButton from "@/components/shared/OptionButton/OptionButton";
+import { PlusSignIcon, Search01Icon } from "hugeicons-react";
 
 export default function BusinessProfileCard() {
   const { businessProfile, loading } = useBusinessProfile();
@@ -22,11 +24,18 @@ export default function BusinessProfileCard() {
 
   if (!businessProfile) {
     return (
-      <Paper withBorder radius="lg" shadow="xs" p="md">
-        <Center>
-          <p>No business profile found</p>
-        </Center>
-      </Paper>
+      <Group w="100%" wrap="nowrap">
+        <OptionButton
+          icon={<PlusSignIcon />}
+          label="Create business profile"
+          onClick={() => console.log("clicked")}
+        />
+        <OptionButton
+          icon={<Search01Icon />}
+          label="Search business profiles"
+          onClick={() => console.log("clicked")}
+        />
+      </Group>
     );
   }
 
