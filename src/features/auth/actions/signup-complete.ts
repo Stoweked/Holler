@@ -3,6 +3,7 @@
 
 import { createServer } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import { checkUsernameExists } from "./check-username";
 
 export async function signupComplete(formData: FormData) {
   const email = formData.get("email") as string;
@@ -13,6 +14,14 @@ export async function signupComplete(formData: FormData) {
 
   if (phoneNumber === "") {
     phoneNumber = null;
+  }
+
+  // Server-side validation before sign-up
+  if (username) {
+    const usernameExists = await checkUsernameExists(username);
+    if (usernameExists) {
+      return { error: "Username is already taken" };
+    }
   }
 
   const supabase = await createServer();
@@ -32,13 +41,11 @@ export async function signupComplete(formData: FormData) {
   });
 
   if (signUpError) {
-    // Special case: If user exists, redirect to login with a message.
     if (signUpError.message.includes("User already registered")) {
       return redirect(
         `/login?message=An account with this email already exists. Please log in.`
       );
     }
-    // For other errors, return an error object
     console.error("Supabase signup error:", signUpError.message);
     return { error: signUpError.message };
   }
@@ -58,6 +65,5 @@ export async function signupComplete(formData: FormData) {
     }
   }
 
-  // Only redirect on success
   return redirect("/dashboard");
 }

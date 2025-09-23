@@ -13,6 +13,7 @@ import { Waiver } from "../types/waiver";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { capitalize } from "@/lib/hooks/textUtils";
+import React from "react";
 
 dayjs.extend(relativeTime);
 
@@ -21,7 +22,7 @@ interface WaiverItemProps {
   onEdit: (waiver: Waiver) => void;
 }
 
-export default function WaiverItem({ waiver, onEdit }: WaiverItemProps) {
+function WaiverItem({ waiver, onEdit }: WaiverItemProps) {
   return (
     <UnstyledButton
       key={waiver.id}
@@ -68,3 +69,5 @@ export default function WaiverItem({ waiver, onEdit }: WaiverItemProps) {
     </UnstyledButton>
   );
 }
+
+export default React.memo(WaiverItem);

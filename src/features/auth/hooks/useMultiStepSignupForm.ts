@@ -32,10 +32,9 @@ export function useMultiStepSignupForm() {
         return {
           full_name:
             values.full_name.trim().length < 2 ? "Full name is required" : null,
-          username:
-            values.username.trim().length < 3
-              ? "Username must be at least 3 characters"
-              : null,
+          username: /^[a-zA-Z0-9._]{3,20}$/.test(values.username)
+            ? null
+            : "Username must be 3-20 characters and can only contain letters, numbers, underscores, and periods.",
         };
       }
       if (step === "password") {
@@ -102,20 +101,25 @@ export function useMultiStepSignupForm() {
       formData.append(key, values[key as keyof typeof values]);
     });
 
+    let result;
     if (isAuthenticated) {
-      await updateProfile(formData);
+      result = await updateProfile(formData);
     } else {
-      const result = await signupComplete(formData);
+      result = await signupComplete(formData);
+    }
 
-      if (result?.error) {
+    if (result?.error) {
+      if (result.error === "Username is already taken") {
+        form.setFieldError("username", result.error);
+      } else {
         notifications.show({
-          title: "Sign up failed",
+          title: "Error",
           message: result.error,
           color: "red",
         });
-        setLoading(false);
       }
     }
+    setLoading(false);
   };
 
   return {

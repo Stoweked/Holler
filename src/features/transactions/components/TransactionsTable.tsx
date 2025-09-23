@@ -5,9 +5,13 @@ import TransactionFilters from "../filters/TransactionFilters";
 import TransactionItem from "./TransactionItem";
 import { Transaction } from "@/features/transactions/types/transaction";
 import { Search01Icon } from "hugeicons-react";
-import TransactionDetailsDrawer from "./TransactionDetailsDrawer";
-import { mockTransactions } from "@/mockData/mockTransactions";
+import dynamic from "next/dynamic";
 import { useTransactionFilters } from "../hooks/useTransactionFilters";
+
+const TransactionDetailsDrawer = dynamic(
+  () => import("./TransactionDetailsDrawer"),
+  { ssr: false }
+);
 
 export default function TransactionsTable() {
   const [drawerOpened, { open: openDrawer, close: closeDrawer }] =
@@ -32,7 +36,7 @@ export default function TransactionsTable() {
     setSearchQuery,
     processedTransactions,
     resetFilters,
-  } = useTransactionFilters(mockTransactions);
+  } = useTransactionFilters();
 
   const handleTransactionClick = (transaction: Transaction) => {
     setSelectedTransaction(transaction);

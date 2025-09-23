@@ -3,6 +3,7 @@
 
 import { createServer } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import { checkUsernameExists } from "./check-username";
 
 export async function updateProfile(formData: FormData) {
   const supabase = await createServer();
@@ -12,15 +13,22 @@ export async function updateProfile(formData: FormData) {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return redirect("/login");
+    return { error: "You must be logged in to update a profile." };
   }
 
   const username = formData.get("username") as string;
   let phoneNumber = formData.get("phone_number") as string | null;
 
-  // If the phone number is an empty string, set it to null
   if (phoneNumber === "") {
     phoneNumber = null;
+  }
+
+  // Final server-side validation before attempting the update
+  if (username) {
+    const usernameExists = await checkUsernameExists(username, user.id);
+    if (usernameExists) {
+      return { error: "Username is already taken" };
+    }
   }
 
   const { error } = await supabase
@@ -33,10 +41,13 @@ export async function updateProfile(formData: FormData) {
 
   if (error) {
     console.error("Error updating profile:", error);
-    return redirect(
-      `/signup/multi-step?error=${encodeURIComponent(error.message)}`
-    );
+    // Check for the specific unique constraint violation error
+    if (error.code === "23505") {
+      // "23505" is the PostgreSQL error code for unique_violation
+      return { error: "Username is already taken" };
+    }
+    return { error: "Could not update profile. Please try again." };
   }
 
-  return redirect("/dashboard");
+  redirect("/dashboard");
 }

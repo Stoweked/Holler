@@ -14,10 +14,10 @@ import {
 import { InboxIcon, Search01Icon } from "hugeicons-react";
 import React, { useEffect } from "react";
 import { useDisclosure } from "@mantine/hooks";
-import NotificationDrawer from "./Notifications/NotificationDrawer";
 import classes from "./TopNav.module.css";
 import { spotlight } from "@mantine/spotlight";
 import AccountDropdown from "../../../features/account/components/AccountDropdown";
+import NotificationDrawer from "@/features/notifications/NotificationDrawer";
 
 interface TopNavProps {
   opened: boolean;

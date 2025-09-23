@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   DateFilter,
   SortOption,
@@ -6,120 +6,100 @@ import {
   TransactionStatusFilter,
   TransactionTypeFilter,
 } from "@/features/transactions/types/transaction";
-import dayjs from "dayjs";
-import isBetween from "dayjs/plugin/isBetween";
-import { getPartyName } from "../types/transactionParty";
+import { useRouter, useSearchParams } from "next/navigation";
 
-dayjs.extend(isBetween);
+export const useTransactionFilters = () => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [loading, setLoading] = useState(true);
 
-export const useTransactionFilters = (initialTransactions: Transaction[]) => {
-  const [activeStatusFilter, setActiveStatusFilter] =
-    useState<TransactionStatusFilter>("All");
-  const [activeTypeFilter, setActiveTypeFilter] =
-    useState<TransactionTypeFilter>("All");
-  const [sortOption, setSortOption] = useState<SortOption>("Newest first");
-  const [dateFilter, setDateFilter] = useState<DateFilter | [Date, Date]>(
-    "All"
+  const activeStatusFilter = (searchParams.get("status") ||
+    "All") as TransactionStatusFilter;
+  const activeTypeFilter = (searchParams.get("type") ||
+    "All") as TransactionTypeFilter;
+  const sortOption = (searchParams.get("sortBy") ||
+    "Newest first") as SortOption;
+  const dateFilter: DateFilter | [Date, Date] =
+    searchParams.get("startDate") && searchParams.get("endDate")
+      ? [
+          new Date(searchParams.get("startDate")!),
+          new Date(searchParams.get("endDate")!),
+        ]
+      : (searchParams.get("dateFilter") as DateFilter) || "All";
+  const amountRange: [number, number] = [
+    Number(searchParams.get("minAmount")) || 0,
+    Number(searchParams.get("maxAmount")) || 999999,
+  ];
+  const activeContactFilter = searchParams.get("contact") || "All";
+  const searchQuery = searchParams.get("search")?.split(" ") || [];
+
+  const updateParams = useCallback(
+    (newParams: Record<string, string>) => {
+      const params = new URLSearchParams(searchParams.toString());
+      Object.entries(newParams).forEach(([key, value]) => {
+        if (value) {
+          params.set(key, value);
+        } else {
+          params.delete(key);
+        }
+      });
+      router.push(`?${params.toString()}`);
+    },
+    [searchParams, router]
   );
-  const [amountRange, setAmountRange] = useState<[number, number]>([0, 999999]);
-  const [activeContactFilter, setActiveContactFilter] = useState<string>("All");
-  const [searchQuery, setSearchQuery] = useState<string[]>([]);
 
-  const processedTransactions = initialTransactions
-    .filter((transaction) => {
-      if (activeStatusFilter === "All") return true;
-      return transaction.status === activeStatusFilter;
-    })
-    .filter((transaction) => {
-      if (activeTypeFilter === "All") return true;
-      return transaction.type === activeTypeFilter;
-    })
-    .filter((transaction) => {
-      if (activeContactFilter === "All") return true;
-      return (
-        getPartyName(transaction.from) === activeContactFilter ||
-        getPartyName(transaction.to) === activeContactFilter
-      );
-    })
-    .filter((transaction) => {
-      return (
-        transaction.amount >= amountRange[0] &&
-        transaction.amount <= amountRange[1]
-      );
-    })
-    .filter((transaction) => {
-      if (searchQuery.length === 0) return true;
-      // Updated to use the getPartyName helper
-      const searchableText = `${getPartyName(transaction.from)} ${getPartyName(
-        transaction.to
-      )} ${transaction.bankAccount}`.toLowerCase();
-      return searchQuery.every((keyword) =>
-        searchableText.includes(keyword.toLowerCase())
-      );
-    })
-    .filter((transaction) => {
-      const transactionDate = dayjs(transaction.date);
-      if (dateFilter === "All") return true;
-      if (dateFilter === "Today") {
-        return transactionDate.isSame(dayjs(), "day");
-      }
-      if (dateFilter === "This week") {
-        const startOfWeek = dayjs().startOf("week");
-        const endOfWeek = dayjs().endOf("week");
-        return transactionDate.isBetween(startOfWeek, endOfWeek, null, "[]");
-      }
-      if (dateFilter === "This month") {
-        const startOfMonth = dayjs().startOf("month");
-        const endOfMonth = dayjs().endOf("month");
-        return transactionDate.isBetween(startOfMonth, endOfMonth, null, "[]");
-      }
-      if (Array.isArray(dateFilter)) {
-        const startDate = dayjs(dateFilter[0]).startOf("day");
-        const endDate = dayjs(dateFilter[1]).endOf("day");
-        return transactionDate.isBetween(startDate, endDate, null, "[]");
-      }
-      return true;
-    })
-    .sort((a, b) => {
-      switch (sortOption) {
-        case "Oldest first":
-          return new Date(a.date).getTime() - new Date(b.date).getTime();
-        case "Amount (High to Low)":
-          return b.amount - a.amount;
-        case "Amount (Low to High)":
-          return a.amount - b.amount;
-        case "Newest first":
-        default:
-          return new Date(b.date).getTime() - new Date(a.date).getTime();
-      }
-    });
+  useEffect(() => {
+    const fetchTransactions = async () => {
+      setLoading(true);
+      const params = new URLSearchParams(searchParams.toString());
+      const response = await fetch(`/api/transactions?${params.toString()}`);
+      const data = await response.json();
+      setTransactions(data);
+      setLoading(false);
+    };
+
+    fetchTransactions();
+  }, [searchParams]);
 
   const resetFilters = () => {
-    setActiveStatusFilter("All");
-    setActiveTypeFilter("All");
-    setDateFilter("All");
-    setSortOption("Newest first");
-    setAmountRange([0, 999999]);
-    setActiveContactFilter("All");
-    setSearchQuery([]);
+    router.push("?");
   };
 
   return {
     activeStatusFilter,
-    setActiveStatusFilter,
+    setActiveStatusFilter: (status: TransactionStatusFilter) =>
+      updateParams({ status }),
     activeTypeFilter,
-    setActiveTypeFilter,
+    setActiveTypeFilter: (type: TransactionTypeFilter) =>
+      updateParams({ type }),
     sortOption,
-    setSortOption,
+    setSortOption: (sort: SortOption) => updateParams({ sortBy: sort }),
     dateFilter,
-    setDateFilter,
+    setDateFilter: (date: DateFilter | [Date, Date]) => {
+      if (Array.isArray(date)) {
+        updateParams({
+          startDate: date[0].toISOString(),
+          endDate: date[1].toISOString(),
+          dateFilter: "",
+        });
+      } else {
+        updateParams({ dateFilter: date, startDate: "", endDate: "" });
+      }
+    },
     amountRange,
-    setAmountRange,
+    setAmountRange: (range: [number, number]) =>
+      updateParams({
+        minAmount: String(range[0]),
+        maxAmount: String(range[1]),
+      }),
     activeContactFilter,
-    setActiveContactFilter,
+    setActiveContactFilter: (contact: string) => updateParams({ contact }),
     searchQuery,
-    setSearchQuery,
-    processedTransactions,
+    setSearchQuery: (query: string[]) =>
+      updateParams({ search: query.join(" ") }),
+    processedTransactions: transactions,
     resetFilters,
+    loading,
   };
 };

@@ -14,7 +14,7 @@ import { ArrowLeft02Icon } from "hugeicons-react";
 import { useMultiStepSignupForm } from "../../hooks/useMultiStepSignupForm";
 import { ProfileInfoStep } from "./ProfileInfoStep";
 import { PasswordStep } from "./PasswordStep";
-import { checkUsernameExists } from "../../actions/check-username";
+import { useState } from "react";
 
 export default function MultiStepSignUpForm() {
   const {
@@ -27,8 +27,9 @@ export default function MultiStepSignUpForm() {
     handleFinalSubmit,
     profile,
   } = useMultiStepSignupForm();
+  const [isCheckingUsername, setIsCheckingUsername] = useState(false);
 
-  if (loading) {
+  if (loading && !form.isDirty()) {
     return (
       <Center mih="100vh">
         <Loader size="xl" />
@@ -56,20 +57,14 @@ export default function MultiStepSignUpForm() {
         <form
           onSubmit={form.onSubmit(async (values) => {
             if (step === "profileInfo") {
-              const usernameExists = await checkUsernameExists(values.username);
-              if (usernameExists) {
-                form.setFieldError("username", "Username is already taken");
-                return;
-              }
-              // If user is authenticated via OAuth, submit the form directly.
-              // Otherwise, proceed to the password step.
+              if (form.errors.username || isCheckingUsername) return; // Prevent submission if username is invalid or checking
               if (isAuthenticated) {
-                handleFinalSubmit(values);
+                await handleFinalSubmit(values);
               } else {
                 setStep("password");
               }
             } else {
-              handleFinalSubmit(values);
+              await handleFinalSubmit(values);
             }
           })}
         >
@@ -91,6 +86,7 @@ export default function MultiStepSignUpForm() {
                 form={form}
                 isAuthenticated={isAuthenticated}
                 profile={profile}
+                loading={loading}
               />
             )}
 

@@ -3,3 +3,22 @@
   font-size: 14px;
   font-weight: 500;
 }
+
+.notificationButton {
+  padding: var(--mantine-spacing-sm) var(--mantine-spacing-sm);
+  width: 100%;
+
+  background-color: light-dark(
+    var(--mantine-color-white),
+    var(--mantine-color-dark-7)
+  );
+  transition: all 200ms ease-in-out;
+  border-radius: 16px;
+}
+
+.notificationButton:hover {
+  background-color: light-dark(
+    var(--mantine-color-gray-0),
+    var(--mantine-color-dark-6)
+  );
+}

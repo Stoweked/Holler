@@ -27,7 +27,7 @@ const ProjectsDrawer = dynamic(
 );
 
 const AuthenticatedLayout = ({ children }: { children: React.ReactNode }) => {
-  const { user, loading } = useProfile();
+  const { user, profile, loading } = useProfile();
   const [opened, { toggle, close }] = useDisclosure();
   const router = useRouter();
 
@@ -43,7 +43,14 @@ const AuthenticatedLayout = ({ children }: { children: React.ReactNode }) => {
 
   const { openDrawer: openProjectsDrawer } = useProjects();
 
-  // Pass the router and the openActionDrawer function to getSpotlightActions
+  useEffect(() => {
+    if (!loading && user && profile) {
+      if (!profile.username || !profile.phone_number) {
+        router.push("/signup/multi-step");
+      }
+    }
+  }, [user, profile, loading, router]);
+
   const actions = getSpotlightActions(
     router,
     openActionDrawer,
@@ -52,7 +59,7 @@ const AuthenticatedLayout = ({ children }: { children: React.ReactNode }) => {
     close
   );
 
-  if (loading) {
+  if (loading || !profile) {
     return (
       <Center style={{ height: "100vh" }}>
         <Loader size="xl" />

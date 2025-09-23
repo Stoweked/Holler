@@ -8,7 +8,7 @@ import {
   Indicator,
 } from "@mantine/core";
 import classes from "./Notifications.module.css";
-import { ReactNode } from "react";
+import { ReactNode, memo } from "react";
 
 interface NotificationItemProps {
   icon: ReactNode;
@@ -19,7 +19,7 @@ interface NotificationItemProps {
   onClick?: () => void;
 }
 
-export default function NotificationItem({
+function NotificationItem({
   icon,
   title,
   description,
@@ -62,3 +62,5 @@ export default function NotificationItem({
     </UnstyledButton>
   );
 }
+
+export default memo(NotificationItem);

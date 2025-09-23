@@ -3,18 +3,30 @@
 
 import { createServer } from "@/lib/supabase/server";
 
-export async function checkUsernameExists(username: string): Promise<boolean> {
+export async function checkUsernameExists(
+  username: string,
+  currentUserId?: string
+): Promise<boolean> {
   const supabase = await createServer();
 
-  const { data, error } = await supabase.rpc("username_exists", {
-    username_text: username,
-  });
+  let query = supabase
+    .from("profiles")
+    .select("id")
+    .ilike("username", username); // Case-insensitive check
 
-  if (error) {
+  // If a user ID is provided, exclude it from the search
+  if (currentUserId) {
+    query = query.neq("id", currentUserId);
+  }
+
+  // Finalize the query after all filters are applied
+  const { data, error } = await query.limit(1).single();
+
+  if (error && error.code !== "PGRST116") {
+    // PGRST116 means no rows were found, which is not an error here.
     console.error("Error checking username:", error.message);
-    // Throw an error that the next action can catch
     throw new Error("A server error occurred while checking the username.");
   }
 
-  return data;
+  return !!data;
 }

@@ -43,21 +43,6 @@ export async function middleware(request: NextRequest) {
   ];
   const isPublicPath = publicPaths.includes(request.nextUrl.pathname);
 
-  if (user) {
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("username, phone_number")
-      .eq("id", user.id)
-      .single();
-
-    if (
-      (!profile?.username || !profile?.phone_number) &&
-      request.nextUrl.pathname !== "/signup/multi-step"
-    ) {
-      return NextResponse.redirect(new URL("/signup/multi-step", request.url));
-    }
-  }
-
   if (user && isPublicPath) {
     if (request.nextUrl.pathname === "/callback") {
       return response;
