@@ -1,4 +1,4 @@
-// app/auth/logout/actions.ts
+// src/features/auth/actions/logout.ts
 "use server";
 
 import { createServer } from "@/lib/supabase/server";

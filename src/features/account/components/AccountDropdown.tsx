@@ -1,3 +1,4 @@
+// src/features/account/components/AccountDropdown.tsx
 import { ActionIcon, Avatar, Menu, Text } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import {
@@ -15,9 +16,11 @@ import { useEffect } from "react";
 import { getInitials } from "@/lib/hooks/textUtils";
 import SettingsDrawer from "@/features/settings/components/SettingsDrawer";
 import WhatsNewModal from "@/components/modals/WhatsNewModal";
+import { useRouter } from "next/navigation";
 
 export default function AccountDropdown() {
   const { profile, loading } = useProfile();
+  const router = useRouter();
   const [
     openedFeedbackModal,
     { open: openFeedbackModal, close: closeFeedbackModal },
@@ -49,6 +52,11 @@ export default function AccountDropdown() {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const handleLogout = async () => {
+    await logout();
+    router.refresh();
+  };
 
   return (
     <>
@@ -118,7 +126,7 @@ export default function AccountDropdown() {
 
           <Menu.Item
             leftSection={<Logout02Icon size={16} />}
-            onClick={logout}
+            onClick={handleLogout}
             aria-label="Log out"
           >
             Log out

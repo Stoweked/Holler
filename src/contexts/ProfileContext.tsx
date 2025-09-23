@@ -82,7 +82,7 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
       if (event === "SIGNED_OUT") {
         setUser(null);
         setProfile(null);
-        router.push("/");
+        router.refresh();
       } else if (session) {
         setUser(session.user);
         fetchProfile();
