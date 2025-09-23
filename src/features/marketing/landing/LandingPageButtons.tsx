@@ -10,11 +10,8 @@ export default function LandingPageButtons() {
   const router = useRouter();
   const { user, loading } = useProfile();
 
-  if (loading) {
-    return null;
-  }
-
-  if (user) {
+  // Only show the Dashboard button if loading is complete AND the user exists.
+  if (!loading && user) {
     return (
       <Button component={Link} href="/dashboard" size="lg" miw={120}>
         Dashboard
@@ -22,6 +19,7 @@ export default function LandingPageButtons() {
     );
   }
 
+  // In all other cases (including the loading state), show the login/signup buttons.
   return (
     <Group gap="lg">
       <Button size="lg" onClick={() => router.push("/signup")} miw={120}>

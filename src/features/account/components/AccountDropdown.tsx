@@ -16,11 +16,9 @@ import { useEffect } from "react";
 import { getInitials } from "@/lib/hooks/textUtils";
 import SettingsDrawer from "@/features/settings/components/SettingsDrawer";
 import WhatsNewModal from "@/components/modals/WhatsNewModal";
-import { useRouter } from "next/navigation";
 
 export default function AccountDropdown() {
   const { profile, loading } = useProfile();
-  const router = useRouter();
   const [
     openedFeedbackModal,
     { open: openFeedbackModal, close: closeFeedbackModal },
@@ -52,11 +50,6 @@ export default function AccountDropdown() {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const handleLogout = async () => {
-    await logout();
-    router.refresh();
-  };
 
   return (
     <>
@@ -126,7 +119,7 @@ export default function AccountDropdown() {
 
           <Menu.Item
             leftSection={<Logout02Icon size={16} />}
-            onClick={handleLogout}
+            onClick={() => logout()}
             aria-label="Log out"
           >
             Log out
