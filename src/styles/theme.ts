@@ -35,6 +35,9 @@ export const theme = createTheme({
       },
     },
     Drawer: {
+      defaultProps: {
+        trapFocus: false,
+      },
       styles: {
         close: {
           borderRadius: "var(--mantine-radius-xl)",
@@ -45,6 +48,7 @@ export const theme = createTheme({
     },
     Modal: {
       defaultProps: {
+        trapFocus: false,
         radius: "lg",
       },
       styles: {

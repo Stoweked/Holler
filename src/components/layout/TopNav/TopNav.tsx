@@ -1,4 +1,6 @@
 // src/components/layout/TopNav/TopNav.tsx
+"use client";
+
 import {
   ActionIcon,
   Box,
