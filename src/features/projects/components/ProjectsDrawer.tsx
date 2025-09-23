@@ -54,7 +54,7 @@ export default function ProjectsDrawer({ opened, close }: ProjectsDrawerProps) {
       onClose={handleClose}
       title={drawerTitle}
       padding="lg"
-      size="lg"
+      size="md"
     >
       {step === "initial" && (
         <ProjectInitialStep
