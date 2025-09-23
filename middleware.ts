@@ -27,7 +27,6 @@ export async function middleware(request: NextRequest) {
     }
   );
 
-  // Refresh session before checking auth. Supabase Auth helpers do this automatically.
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -37,23 +36,35 @@ export async function middleware(request: NextRequest) {
     "/login",
     "/signup",
     "/signup/multi-step",
-    "/auth/confirm", // This is for email confirm, not OAuth
+    "/auth/confirm",
     "/forgot-password",
     "/reset-password",
-    "/callback", // Add the OAuth callback path here
+    "/callback",
   ];
   const isPublicPath = publicPaths.includes(request.nextUrl.pathname);
 
-  // if user is signed in and the current path is public, redirect to dashboard
+  if (user) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("username, phone_number")
+      .eq("id", user.id)
+      .single();
+
+    if (
+      (!profile?.username || !profile?.phone_number) &&
+      request.nextUrl.pathname !== "/signup/multi-step"
+    ) {
+      return NextResponse.redirect(new URL("/signup/multi-step", request.url));
+    }
+  }
+
   if (user && isPublicPath) {
-    // Exclude the callback route from this redirect logic
     if (request.nextUrl.pathname === "/callback") {
       return response;
     }
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
-  // if user is not signed in and the current path is not public, redirect to landing
   if (!user && !isPublicPath) {
     return NextResponse.redirect(new URL("/", request.url));
   }
@@ -63,13 +74,6 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * Feel free to modify this pattern to include more paths.
-     */
     "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
 };

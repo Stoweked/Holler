@@ -61,6 +61,18 @@ CREATE TYPE "public"."business_role" AS ENUM (
 ALTER TYPE "public"."business_role" OWNER TO "postgres";
 
 
+CREATE OR REPLACE FUNCTION "public"."business_username_exists"("username_text" "text") RETURNS boolean
+    LANGUAGE "sql"
+    AS $$
+  SELECT EXISTS(
+    SELECT 1 FROM public.businesses WHERE username = username_text
+  );
+$$;
+
+
+ALTER FUNCTION "public"."business_username_exists"("username_text" "text") OWNER TO "postgres";
+
+
 CREATE OR REPLACE FUNCTION "public"."compute_contract_agreements_table_row_hash"() RETURNS "trigger"
     LANGUAGE "plpgsql"
     AS $$
@@ -169,7 +181,7 @@ CREATE OR REPLACE FUNCTION "public"."handle_new_user"() RETURNS "trigger"
     LANGUAGE "plpgsql" SECURITY DEFINER
     AS $$
 BEGIN
-  INSERT INTO public.profiles (id, email, full_name, first_name, last_name, avatar_url)
+  INSERT INTO public.profiles (id, email, full_name, first_name, last_name, avatar_url, auth_provider)
   VALUES (
     new.id,
     new.email,
@@ -178,7 +190,8 @@ BEGIN
     SPLIT_PART(new.raw_user_meta_data->>'full_name', ' ', 1),
     -- Split the full_name to get the last name
     SUBSTRING(new.raw_user_meta_data->>'full_name' FROM POSITION(' ' IN new.raw_user_meta_data->>'full_name') + 1),
-    new.raw_user_meta_data->>'avatar_url'
+    new.raw_user_meta_data->>'avatar_url',
+    new.raw_app_meta_data->>'provider' -- Add this line
   );
   RETURN new;
 END;
@@ -222,6 +235,7 @@ ALTER FUNCTION "public"."handle_updated_at"() OWNER TO "postgres";
 
 CREATE OR REPLACE FUNCTION "public"."is_business_admin_or_owner"("p_business_id" "uuid") RETURNS boolean
     LANGUAGE "plpgsql" SECURITY DEFINER
+    SET "search_path" TO ''
     AS $$
 DECLARE
     is_admin_or_owner BOOLEAN;
@@ -304,6 +318,18 @@ $$;
 
 ALTER FUNCTION "public"."user_exists"("email_address" "text") OWNER TO "postgres";
 
+
+CREATE OR REPLACE FUNCTION "public"."username_exists"("username_text" "text") RETURNS boolean
+    LANGUAGE "sql"
+    AS $$
+  SELECT EXISTS(
+    SELECT 1 FROM public.profiles WHERE username = username_text
+  );
+$$;
+
+
+ALTER FUNCTION "public"."username_exists"("username_text" "text") OWNER TO "postgres";
+
 SET default_tablespace = '';
 
 SET default_table_access_method = "heap";
@@ -332,12 +358,18 @@ ALTER TABLE "public"."business_admins" OWNER TO "postgres";
 
 CREATE TABLE IF NOT EXISTS "public"."businesses" (
     "id" "uuid" DEFAULT "extensions"."uuid_generate_v4"() NOT NULL,
-    "business_name" "text" NOT NULL,
     "email" "text",
     "phone_number" "text",
     "avatar_url" "text",
     "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
-    "updated_at" timestamp with time zone DEFAULT "now"() NOT NULL
+    "updated_at" timestamp with time zone DEFAULT "now"() NOT NULL,
+    "address1" "text",
+    "address2" "text",
+    "city" "text",
+    "state" "text",
+    "zip" "text",
+    "business_name" "text",
+    "username" "text"
 );
 
 
@@ -410,11 +442,21 @@ CREATE TABLE IF NOT EXISTS "public"."feedback" (
     "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
     "email" "text",
     "rating" smallint,
-    "message" "text"
+    "message" "text",
+    "type" "text",
+    "can_contact" boolean DEFAULT false
 );
 
 
 ALTER TABLE "public"."feedback" OWNER TO "postgres";
+
+
+COMMENT ON COLUMN "public"."feedback"."type" IS 'Bug report or feature request';
+
+
+
+COMMENT ON COLUMN "public"."feedback"."can_contact" IS 'Does this user consent to being contacted as a follow-up to this feedback?';
+
 
 
 ALTER TABLE "public"."feedback" ALTER COLUMN "id" ADD GENERATED ALWAYS AS IDENTITY (
@@ -436,7 +478,9 @@ CREATE TABLE IF NOT EXISTS "public"."lien_waivers" (
     "type" "text" NOT NULL,
     "archived" boolean DEFAULT false NOT NULL,
     "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
-    "updated_at" timestamp with time zone DEFAULT "now"() NOT NULL
+    "updated_at" timestamp with time zone DEFAULT "now"() NOT NULL,
+    "payment_type" "text" DEFAULT 'progress'::"text" NOT NULL,
+    CONSTRAINT "lien_waivers_payment_type_check" CHECK (("payment_type" = ANY (ARRAY['progress'::"text", 'final'::"text"])))
 );
 
 
@@ -483,7 +527,6 @@ CREATE TABLE IF NOT EXISTS "public"."profiles" (
     "full_name" "text",
     "avatar_url" "text",
     "email" "text",
-    "business_name" "text",
     "dob" "date",
     "gender" "text",
     "address1" "text",
@@ -520,6 +563,11 @@ ALTER TABLE ONLY "public"."businesses"
 
 ALTER TABLE ONLY "public"."businesses"
     ADD CONSTRAINT "businesses_pkey" PRIMARY KEY ("id");
+
+
+
+ALTER TABLE ONLY "public"."businesses"
+    ADD CONSTRAINT "businesses_username_key" UNIQUE ("username");
 
 
 
@@ -697,6 +745,10 @@ ALTER TABLE ONLY "public"."lien_waivers"
 
 ALTER TABLE ONLY "public"."profiles"
     ADD CONSTRAINT "profiles_id_fkey" FOREIGN KEY ("id") REFERENCES "auth"."users"("id") ON DELETE CASCADE;
+
+
+
+CREATE POLICY "Admins or owners can update their business." ON "public"."businesses" FOR UPDATE USING ("public"."is_business_admin_or_owner"("id"));
 
 
 
@@ -1015,6 +1067,12 @@ GRANT USAGE ON SCHEMA "public" TO "service_role";
 
 
 
+GRANT ALL ON FUNCTION "public"."business_username_exists"("username_text" "text") TO "anon";
+GRANT ALL ON FUNCTION "public"."business_username_exists"("username_text" "text") TO "authenticated";
+GRANT ALL ON FUNCTION "public"."business_username_exists"("username_text" "text") TO "service_role";
+
+
+
 GRANT ALL ON FUNCTION "public"."compute_contract_agreements_table_row_hash"() TO "anon";
 GRANT ALL ON FUNCTION "public"."compute_contract_agreements_table_row_hash"() TO "authenticated";
 GRANT ALL ON FUNCTION "public"."compute_contract_agreements_table_row_hash"() TO "service_role";
@@ -1090,6 +1148,12 @@ GRANT ALL ON FUNCTION "public"."reject_update_delete_on_pending_payments"() TO "
 GRANT ALL ON FUNCTION "public"."user_exists"("email_address" "text") TO "anon";
 GRANT ALL ON FUNCTION "public"."user_exists"("email_address" "text") TO "authenticated";
 GRANT ALL ON FUNCTION "public"."user_exists"("email_address" "text") TO "service_role";
+
+
+
+GRANT ALL ON FUNCTION "public"."username_exists"("username_text" "text") TO "anon";
+GRANT ALL ON FUNCTION "public"."username_exists"("username_text" "text") TO "authenticated";
+GRANT ALL ON FUNCTION "public"."username_exists"("username_text" "text") TO "service_role";
 
 
 

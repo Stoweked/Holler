@@ -6,13 +6,15 @@ import { updateProfile } from "@/features/auth/actions/update-profile";
 import { createClient } from "@/lib/supabase/client";
 import { signupComplete } from "@/features/auth/actions/signup-complete";
 import { MultiStepSignupFormValues } from "../types/signup";
-import { notifications } from "@mantine/notifications"; // Import notifications
+import { notifications } from "@mantine/notifications";
+import { Profile } from "@/features/account/types/account";
 
 export function useMultiStepSignupForm() {
   const router = useRouter();
   const [step, setStep] = useState("profileInfo");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [profile, setProfile] = useState<Profile | null>(null);
   const searchParams = useSearchParams();
   const emailFromQuery = searchParams.get("email") || "";
 
@@ -68,19 +70,22 @@ export function useMultiStepSignupForm() {
           .eq("id", session.user.id)
           .single();
         if (profileData) {
+          setProfile(profileData);
           form.setValues({
             email: profileData.email || "",
             full_name: profileData.full_name || "",
             username: profileData.username || "",
             phone_number: profileData.phone_number || "",
           });
+          if (profileData.username && profileData.phone_number) {
+            router.push("/dashboard");
+          }
         }
       }
       setLoading(false);
     };
     checkAuthAndFetchProfile();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [router]);
 
   const handleBack = () => {
     if (step === "password") {
@@ -121,5 +126,6 @@ export function useMultiStepSignupForm() {
     form,
     handleBack,
     handleFinalSubmit,
+    profile,
   };
 }

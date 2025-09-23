@@ -25,6 +25,7 @@ export default function MultiStepSignUpForm() {
     form,
     handleBack,
     handleFinalSubmit,
+    profile,
   } = useMultiStepSignupForm();
 
   if (loading) {
@@ -58,6 +59,12 @@ export default function MultiStepSignUpForm() {
               const usernameExists = await checkUsernameExists(values.username);
               if (usernameExists) {
                 form.setFieldError("username", "Username is already taken");
+                return;
+              }
+              // If user is authenticated via OAuth, submit the form directly.
+              // Otherwise, proceed to the password step.
+              if (isAuthenticated) {
+                handleFinalSubmit(values);
               } else {
                 setStep("password");
               }
@@ -80,10 +87,14 @@ export default function MultiStepSignUpForm() {
             </Tooltip>
 
             {step === "profileInfo" && (
-              <ProfileInfoStep form={form} isAuthenticated={isAuthenticated} />
+              <ProfileInfoStep
+                form={form}
+                isAuthenticated={isAuthenticated}
+                profile={profile}
+              />
             )}
 
-            {step === "password" && (
+            {step === "password" && !isAuthenticated && (
               <PasswordStep form={form} loading={loading} />
             )}
           </Stack>

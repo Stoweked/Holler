@@ -2,21 +2,26 @@
 import { Button, Stack, Text, TextInput, Title } from "@mantine/core";
 import { SignupFormType } from "../../types/signup";
 import { PatternFormat } from "react-number-format";
+import { Profile } from "@/features/account/types/account";
 
 interface ProfileInfoStepProps {
   form: SignupFormType;
   isAuthenticated: boolean;
+  profile: Profile | null;
 }
 
 export function ProfileInfoStep({
   form,
   isAuthenticated,
+  profile,
 }: ProfileInfoStepProps) {
+  const isOAuth = isAuthenticated && profile?.auth_provider === "google";
+
   return (
     <>
       <Stack gap={0}>
         <Title order={2}>
-          {isAuthenticated ? "Update your profile" : "Create your account"}
+          {isAuthenticated ? "Complete your profile" : "Create your account"}
         </Title>
         <Text c="dimmed">Add your details to continue.</Text>
       </Stack>
@@ -27,6 +32,10 @@ export function ProfileInfoStep({
         {...form.getInputProps("full_name")}
         size="lg"
         radius="md"
+        disabled={isOAuth}
+        description={
+          isOAuth ? "Your name is linked to your Google account." : ""
+        }
       />
       <TextInput
         required
