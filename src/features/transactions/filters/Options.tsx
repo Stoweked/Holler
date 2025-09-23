@@ -29,7 +29,7 @@ export function Options({ resetFilters, isAnyFilterActive }: OptionsProps) {
         </Tooltip>
       </Menu.Target>
       <Menu.Dropdown>
-        <Menu.Label>Options</Menu.Label>
+        <Menu.Label>Transaction options</Menu.Label>
         <Menu.Item leftSection={<FileExportIcon size={16} />}>
           Export as PDF
         </Menu.Item>

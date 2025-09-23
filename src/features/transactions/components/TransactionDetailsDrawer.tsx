@@ -234,6 +234,8 @@ export default function TransactionDetailsDrawer({
 
             <Card withBorder radius="lg" p="lg">
               <Stack>
+                <Title order={5}>Details</Title>
+
                 <Stack gap={0}>
                   <Text c="dimmed">Account</Text>
                   <Title order={5}>{bankAccount}</Title>
