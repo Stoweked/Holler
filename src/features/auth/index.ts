@@ -1,9 +1,5 @@
-export * from "./actions/forgot-password";
-export * from "./actions/login";
-export * from "./actions/logout";
-export * from "./actions/signup-complete";
-export * from "./actions/signup";
-export * from "./actions/update-profile";
+// src/features/auth/index.ts
+export * from "./actions";
 export * from "./components";
 export * from "./hooks/useMultiStepSignupForm";
 export * from "./types/signup";

@@ -3,5 +3,5 @@
 export * from "./TransactionDetailsDrawer";
 export * from "./TransactionItem";
 export * from "./TransactionsTable";
-export * from "./filters/TransactionFilters";
+export * from "./filters";
 export * from "./TransactionTimeline";

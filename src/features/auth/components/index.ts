@@ -1,7 +1,6 @@
+// src/features/auth/components/index.ts
 export * from "./OAuthButtons";
 export * from "./SocialLogos";
-export * from "./steps/MultiStepSignupForm";
-export * from "./steps/PasswordStep";
-export * from "./steps/PasswordStrengthMeter";
-export * from "./steps/ProfileInfoStep";
 export * from "./SignupForm";
+export * from "./LoginForm";
+export * from "./steps";

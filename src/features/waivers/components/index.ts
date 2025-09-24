@@ -6,3 +6,4 @@ export * from "./WaiverItem";
 export * from "./WaiverEditor";
 export * from "./LienWaiverDetailsCard";
 export * from "./WaiverSelectItem";
+export * from "./LienWaiverModal";

@@ -87,10 +87,10 @@ export default function ProjectInitialStep({
             <House03Icon size={40} color="grey" />
             <Stack gap={4} align="center">
               <Title order={2} ta="center">
-                Organize payments with projects
+                Stay organized with projects
               </Title>
               <Text c="dimmed" ta="center" maw={400}>
-                Create projects to track transactions for specific jobs.
+                Organize transactions for specific jobs.
               </Text>
             </Stack>
           </Stack>
