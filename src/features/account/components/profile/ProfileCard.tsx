@@ -1,30 +1,42 @@
-// src/features/settings/components/tabs/account/profile/ProfileCard.tsx
-
+// src/features/account/components/profile/ProfileCard.tsx
 "use client";
 
 import { useState } from "react";
 import { Paper } from "@mantine/core";
-import { useProfile } from "@/contexts/ProfileContext";
 import ProfileView from "./ProfileView";
-import ProfileForm from "./ProfileForm";
+import ProfileForm, { ProfileFormValues } from "./ProfileForm";
+import { useProfileForm } from "../../hooks/useProfileForm";
+import { useProfile } from "@/contexts/ProfileContext";
 
-export default function AccountCard() {
+export default function ProfileCard() {
   const { profile } = useProfile();
   const [isEditing, setIsEditing] = useState(false);
-  const [emailPending, setEmailPending] = useState(false);
 
-  const handleSaveSuccess = () => {
-    // Check if email was changed to update pending status
-    // This logic can be refined in the useProfileForm hook
-    setIsEditing(false);
+  const {
+    form,
+    loading,
+    emailPending,
+    handleSubmit,
+    handleAvatarUploadAction,
+  } = useProfileForm();
+
+  const handleSaveSuccess = async (values: ProfileFormValues) => {
+    await handleSubmit(values);
+    // This check ensures we only exit edit mode if the form is now valid
+    if (Object.keys(form.errors).length === 0) {
+      setIsEditing(false);
+    }
   };
 
   return (
     <Paper withBorder radius="lg" shadow="xs" p="md">
       {isEditing ? (
         <ProfileForm
+          form={form}
+          loading={loading}
+          handleSubmit={handleSaveSuccess}
+          handleAvatarUploadAction={handleAvatarUploadAction}
           onCancel={() => setIsEditing(false)}
-          onSaveSuccess={handleSaveSuccess}
         />
       ) : (
         <ProfileView

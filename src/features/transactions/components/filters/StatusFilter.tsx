@@ -2,7 +2,7 @@
 
 import { Menu, Indicator, Button, Badge, Group } from "@mantine/core";
 import { CheckmarkCircle02Icon } from "hugeicons-react";
-import { TransactionStatusFilter } from "../types/transaction";
+import { TransactionStatusFilter } from "../../types/transaction";
 
 interface StatusFilterProps {
   activeStatusFilter: TransactionStatusFilter;

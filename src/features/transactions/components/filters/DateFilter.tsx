@@ -16,7 +16,7 @@ import { useDisclosure } from "@mantine/hooks";
 import { Calendar02Icon } from "hugeicons-react";
 import { useState, useEffect } from "react";
 import dayjs from "dayjs";
-import { DateFilter } from "../types/transaction";
+import { DateFilter } from "../../types/transaction";
 
 interface DateFilterProps {
   activeDateFilter: DateFilter | [Date, Date];

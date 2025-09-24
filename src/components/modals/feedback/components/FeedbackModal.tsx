@@ -1,3 +1,4 @@
+// src/components/modals/FeedbackModal.tsx
 "use client";
 
 import { useEffect, useState } from "react";
@@ -19,6 +20,7 @@ import { useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
 import { useProfile } from "@/contexts/ProfileContext";
 import { AlertCircleIcon } from "hugeicons-react";
+import { submitFeedback as submitFeedbackAction } from "@/components/modals/feedback/actions/submit-feedback";
 
 export default function FeedbackModal({
   opened,
@@ -35,42 +37,31 @@ export default function FeedbackModal({
       formEmail: profile?.email || "",
       formRating: 0,
       formMessage: "",
-      formType: "feature",
+      formType: "feature" as "feature" | "bug",
       canContact: false,
     },
   });
 
   //Add email to profile data if exists
   useEffect(() => {
-    form.setValues({
-      formEmail: profile?.email || "",
-    });
-    form.resetDirty();
-    form.resetTouched();
+    if (profile?.email) {
+      form.setFieldValue("formEmail", profile.email);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile?.email]);
 
   //SEND FEEDBACK
-  const submitFeedback = async (
-    e: React.FormEvent<HTMLFormElement>
-  ): Promise<void> => {
-    e.preventDefault();
-
+  const handleSubmit = async (values: typeof form.values) => {
     setLoading(true);
-    const res: Response = await fetch("/api/feedback", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        formEmail: form.values.formEmail,
-        formRating: form.values.formRating,
-        formMessage: form.values.formMessage,
-        formType: form.values.formType,
-        canContact: form.values.canContact,
-      }),
-    });
-    const data = await res.json();
-    if (res.ok) {
-      setLoading(false);
+    try {
+      await submitFeedbackAction({
+        formEmail: values.formEmail,
+        formRating: values.formRating,
+        formMessage: values.formMessage,
+        formType: values.formType,
+        canContact: values.canContact,
+      });
+
       close();
       form.reset();
       notifications.show({
@@ -82,9 +73,11 @@ export default function FeedbackModal({
         withCloseButton: true,
         autoClose: 2000,
       });
-    } else {
-      setLoading(false); //remove button loading state
-      const errorMessage = "Your feedback failed to submit";
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "Your feedback failed to submit";
       notifications.show({
         color: "red",
         title: "Error",
@@ -93,14 +86,16 @@ export default function FeedbackModal({
         withCloseButton: true,
         autoClose: 2000,
       });
-      console.log(data.error.message);
+      console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <>
       <Modal opened={opened} onClose={close} title="Share feedback" centered>
-        <form onSubmit={submitFeedback}>
+        <form onSubmit={form.onSubmit(handleSubmit)}>
           <Stack gap="lg">
             <SegmentedControl
               fullWidth
@@ -132,10 +127,7 @@ export default function FeedbackModal({
                 autosize
                 minRows={5}
                 maxRows={10}
-                value={form.values.formMessage}
-                onChange={(event) =>
-                  form.setFieldValue("formMessage", event.currentTarget.value)
-                }
+                {...form.getInputProps("formMessage")}
               />
             </Stack>
 
@@ -145,10 +137,7 @@ export default function FeedbackModal({
             />
 
             <Group align="center" justify="space-between">
-              <Rating
-                size="lg"
-                onChange={(value) => form.setFieldValue("formRating", value)}
-              />
+              <Rating size="lg" {...form.getInputProps("formRating")} />
               <Button
                 type="submit"
                 loading={loading}

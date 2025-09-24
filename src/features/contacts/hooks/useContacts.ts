@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from "react";
 import { Contact } from "../types/contact";
-import { getContacts } from "../actions/getContacts";
+import { getContacts } from "../actions/get-contacts";
 
 export function useContacts() {
   const [contacts, setContacts] = useState<Contact[]>([]);

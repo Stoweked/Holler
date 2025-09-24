@@ -1,4 +1,7 @@
-import { useState, useEffect, useCallback } from "react";
+// src/features/transactions/hooks/useTransactionFilters.ts
+"use client";
+
+import { useState, useEffect, useCallback, useMemo } from "react";
 import {
   DateFilter,
   SortOption,
@@ -7,6 +10,7 @@ import {
   TransactionTypeFilter,
 } from "@/features/transactions/types/transaction";
 import { useRouter, useSearchParams } from "next/navigation";
+import { getTransactions } from "../actions/get-transactions";
 
 export const useTransactionFilters = () => {
   const router = useRouter();
@@ -14,26 +18,44 @@ export const useTransactionFilters = () => {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const activeStatusFilter = (searchParams.get("status") ||
-    "All") as TransactionStatusFilter;
-  const activeTypeFilter = (searchParams.get("type") ||
-    "All") as TransactionTypeFilter;
-  const sortOption = (searchParams.get("sortBy") ||
-    "Newest first") as SortOption;
-  const dateFilter: DateFilter | [Date, Date] =
-    searchParams.get("startDate") && searchParams.get("endDate")
-      ? [
-          new Date(searchParams.get("startDate")!),
-          new Date(searchParams.get("endDate")!),
-        ]
-      : (searchParams.get("dateFilter") as DateFilter) || "All";
-  const amountRange: [number, number] = [
-    Number(searchParams.get("minAmount")) || 0,
-    Number(searchParams.get("maxAmount")) || 999999,
-  ];
-  const activeContactFilter = searchParams.get("contact") || "All";
-  const searchQuery = searchParams.get("search")?.split(" ") || [];
+  // Memoize all derived state from searchParams to prevent re-renders
+  const {
+    activeStatusFilter,
+    activeTypeFilter,
+    sortOption,
+    dateFilter,
+    amountRange,
+    activeContactFilter,
+    searchQuery,
+  } = useMemo(() => {
+    const status = (searchParams.get("status") ||
+      "All") as TransactionStatusFilter;
+    const type = (searchParams.get("type") || "All") as TransactionTypeFilter;
+    const sortBy = (searchParams.get("sortBy") || "Newest first") as SortOption;
+    const startDate = searchParams.get("startDate");
+    const endDate = searchParams.get("endDate");
+    const date: DateFilter | [Date, Date] =
+      startDate && endDate
+        ? [new Date(startDate), new Date(endDate)]
+        : (searchParams.get("dateFilter") as DateFilter) || "All";
+    const range: [number, number] = [
+      Number(searchParams.get("minAmount")) || 0,
+      Number(searchParams.get("maxAmount")) || 999999,
+    ];
+    const contact = searchParams.get("contact") || "All";
+    const search = searchParams.get("search") || "";
+    return {
+      activeStatusFilter: status,
+      activeTypeFilter: type,
+      sortOption: sortBy,
+      dateFilter: date,
+      amountRange: range,
+      activeContactFilter: contact,
+      searchQuery: search,
+    };
+  }, [searchParams]);
 
+  // Function to update URL search params
   const updateParams = useCallback(
     (newParams: Record<string, string>) => {
       const params = new URLSearchParams(searchParams.toString());
@@ -52,15 +74,36 @@ export const useTransactionFilters = () => {
   useEffect(() => {
     const fetchTransactions = async () => {
       setLoading(true);
-      const params = new URLSearchParams(searchParams.toString());
-      const response = await fetch(`/api/transactions?${params.toString()}`);
-      const data = await response.json();
-      setTransactions(data);
-      setLoading(false);
+      try {
+        const data = await getTransactions({
+          status: activeStatusFilter,
+          type: activeTypeFilter,
+          sortBy: sortOption,
+          dateFilter: dateFilter,
+          minAmount: amountRange[0],
+          maxAmount: amountRange[1],
+          contact: activeContactFilter,
+          search: searchQuery,
+        });
+        setTransactions(data);
+      } catch (error) {
+        console.error("Failed to fetch transactions:", error);
+        setTransactions([]);
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchTransactions();
-  }, [searchParams]);
+  }, [
+    activeStatusFilter,
+    activeTypeFilter,
+    sortOption,
+    dateFilter,
+    amountRange,
+    activeContactFilter,
+    searchQuery,
+  ]);
 
   const resetFilters = () => {
     router.push("?");
@@ -95,7 +138,7 @@ export const useTransactionFilters = () => {
       }),
     activeContactFilter,
     setActiveContactFilter: (contact: string) => updateParams({ contact }),
-    searchQuery,
+    searchQuery: searchQuery.split(" ").filter(Boolean),
     setSearchQuery: (query: string[]) =>
       updateParams({ search: query.join(" ") }),
     processedTransactions: transactions,

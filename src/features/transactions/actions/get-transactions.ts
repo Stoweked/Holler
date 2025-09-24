@@ -1,26 +1,45 @@
-// app/api/transactions/route.ts
-import { NextRequest, NextResponse } from "next/server";
+// src/features/transactions/actions/getTransactions.ts
+"use server";
+
 import { mockTransactions } from "@/mockData/mockTransactions";
 import dayjs from "dayjs";
 import isBetween from "dayjs/plugin/isBetween";
 import { getPartyName } from "@/features/transactions/types/transactionParty";
+import {
+  Transaction,
+  TransactionStatusFilter,
+  TransactionTypeFilter,
+  DateFilter,
+  SortOption,
+} from "../types/transaction";
 
 dayjs.extend(isBetween);
 
-export async function GET(request: NextRequest) {
-  const { searchParams } = new URL(request.url);
-  const status = searchParams.get("status") || "All";
-  const type = searchParams.get("type") || "All";
-  const contact = searchParams.get("contact") || "All";
-  const minAmount = Number(searchParams.get("minAmount")) || 0;
-  const maxAmount = Number(searchParams.get("maxAmount")) || 999999;
-  const search = searchParams.get("search") || "";
-  const dateFilter = searchParams.get("dateFilter") || "All";
-  const startDate = searchParams.get("startDate");
-  const endDate = searchParams.get("endDate");
-  const sortBy = searchParams.get("sortBy") || "Newest first";
+interface GetTransactionsParams {
+  status: TransactionStatusFilter;
+  type: TransactionTypeFilter;
+  contact: string;
+  minAmount: number;
+  maxAmount: number;
+  search: string;
+  dateFilter: DateFilter | [Date, Date];
+  sortBy: SortOption;
+}
 
-  const processedTransactions = mockTransactions
+export async function getTransactions({
+  status = "All",
+  type = "All",
+  contact = "All",
+  minAmount = 0,
+  maxAmount = 999999,
+  search = "",
+  dateFilter = "All",
+  sortBy = "Newest first",
+}: Partial<GetTransactionsParams>): Promise<Transaction[]> {
+  // Directly use the mock data as if it were a database response
+  const transactions = mockTransactions;
+
+  const processedTransactions = transactions
     .filter((transaction) => {
       if (status === "All") return true;
       return transaction.status === status;
@@ -51,21 +70,9 @@ export async function GET(request: NextRequest) {
     })
     .filter((transaction) => {
       const transactionDate = dayjs(transaction.date);
-      if (dateFilter === "All") return true;
-      if (dateFilter === "Today") {
-        return transactionDate.isSame(dayjs(), "day");
-      }
-      if (dateFilter === "This week") {
-        const startOfWeek = dayjs().startOf("week");
-        const endOfWeek = dayjs().endOf("week");
-        return transactionDate.isBetween(startOfWeek, endOfWeek, null, "[]");
-      }
-      if (dateFilter === "This month") {
-        const startOfMonth = dayjs().startOf("month");
-        const endOfMonth = dayjs().endOf("month");
-        return transactionDate.isBetween(startOfMonth, endOfMonth, null, "[]");
-      }
-      if (startDate && endDate) {
+
+      if (Array.isArray(dateFilter)) {
+        const [startDate, endDate] = dateFilter;
         return transactionDate.isBetween(
           dayjs(startDate).startOf("day"),
           dayjs(endDate).endOf("day"),
@@ -73,7 +80,28 @@ export async function GET(request: NextRequest) {
           "[]"
         );
       }
-      return true;
+
+      switch (dateFilter) {
+        case "All":
+          return true;
+        case "Today":
+          return transactionDate.isSame(dayjs(), "day");
+        case "This week":
+          const startOfWeek = dayjs().startOf("week");
+          const endOfWeek = dayjs().endOf("week");
+          return transactionDate.isBetween(startOfWeek, endOfWeek, null, "[]");
+        case "This month":
+          const startOfMonth = dayjs().startOf("month");
+          const endOfMonth = dayjs().endOf("month");
+          return transactionDate.isBetween(
+            startOfMonth,
+            endOfMonth,
+            null,
+            "[]"
+          );
+        default:
+          return true;
+      }
     })
     .sort((a, b) => {
       switch (sortBy) {
@@ -89,5 +117,5 @@ export async function GET(request: NextRequest) {
       }
     });
 
-  return NextResponse.json(processedTransactions);
+  return processedTransactions;
 }

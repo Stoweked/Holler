@@ -4,8 +4,6 @@ import {
   Drawer,
   Group,
   ScrollArea,
-  Skeleton,
-  Space,
   Stack,
   Tabs,
   Title,
@@ -27,7 +25,7 @@ import OptionButton from "@/components/shared/OptionButton/OptionButton";
 import { BillingSettings } from "../../billing/components/BillingSettings";
 import Account from "@/features/account/components/Account";
 import { BusinessSettings } from "@/features/business/components/BusinessSettings";
-import { NotificationsSettings } from "../../notifications/NotificationsSettings";
+import { NotificationsSettings } from "@/features/notifications/components/NotificationsSettings";
 
 interface SettingsDrawerProps {
   opened: boolean;

@@ -2,7 +2,7 @@
 
 import { Menu, Indicator, Button, Badge, Group } from "@mantine/core";
 import { ArrowLeftRightIcon } from "hugeicons-react";
-import { TransactionTypeFilter } from "../types/transaction";
+import { TransactionTypeFilter } from "../../types/transaction";
 
 interface TypeFilterProps {
   activeTypeFilter: TransactionTypeFilter;

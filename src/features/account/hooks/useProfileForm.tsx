@@ -8,18 +8,14 @@ import { rem } from "@mantine/core";
 import { CheckmarkCircle02Icon, AlertCircleIcon } from "hugeicons-react";
 import dayjs from "dayjs";
 import { useProfile } from "@/contexts/ProfileContext";
-import { createClient } from "@/lib/supabase/client";
 import { checkUsernameExists } from "@/features/auth/actions/check-username";
+import { uploadAvatar } from "../actions/upload-avatar";
+import { updateProfile } from "../actions/update-profile";
 
-export function useProfileForm({
-  onSaveSuccess,
-}: {
-  onSaveSuccess: () => void;
-}) {
+export function useProfileForm() {
   const { profile, fetchProfile } = useProfile();
   const [loading, setLoading] = useState(false);
   const [emailPending, setEmailPending] = useState(false);
-  const supabase = createClient();
 
   const form = useForm({
     validateInputOnChange: true,
@@ -58,8 +54,6 @@ export function useProfileForm({
   });
 
   useEffect(() => {
-    // This is the key change: Only set form values if the form is not dirty.
-    // This prevents the context from overwriting the user's changes, including the avatar preview.
     if (profile && !form.isDirty()) {
       form.setValues({
         formName: profile.full_name || "",
@@ -83,79 +77,51 @@ export function useProfileForm({
 
   const handleSubmit = async (values: typeof form.values) => {
     setLoading(true);
-
-    // Check if username is dirty and if it exists
-    if (form.isDirty("formUsername") && values.formUsername) {
-      const usernameExists = await checkUsernameExists(values.formUsername);
-      if (usernameExists) {
-        form.setFieldError("formUsername", "Username is already taken");
-        setLoading(false);
-        return;
-      }
-    }
-
-    let finalAvatarUrl = values.avatar_url;
-
-    if (values.newAvatarFile) {
-      const formData = new FormData();
-      formData.append("file", values.newAvatarFile);
-
-      try {
-        const response = await fetch("/api/profile/avatar", {
-          method: "POST",
-          body: formData,
-        });
-
-        if (!response.ok) {
-          const { error } = await response.json();
-          throw new Error(error || "Failed to upload avatar");
+    try {
+      if (form.isDirty("formUsername") && values.formUsername) {
+        const usernameExists = await checkUsernameExists(values.formUsername);
+        if (usernameExists) {
+          form.setFieldError("formUsername", "Username is already taken");
+          setLoading(false);
+          return;
         }
-
-        const { publicUrl } = await response.json();
-        finalAvatarUrl = publicUrl;
-      } catch (error) {
-        setLoading(false);
-        const errorMessage =
-          error instanceof Error ? error.message : "An unknown error occurred";
-        notifications.show({
-          title: "Error",
-          message: errorMessage,
-          color: "red",
-        });
-        return;
       }
-    }
 
-    const dobString = values.formDob
-      ? dayjs(values.formDob).format("YYYY-MM-DD")
-      : null;
+      let finalAvatarUrl = values.avatar_url;
 
-    const { error: updateError } = await supabase
-      .from("profiles")
-      .update({
+      if (values.newAvatarFile) {
+        const formData = new FormData();
+        formData.append("file", values.newAvatarFile);
+        const { publicUrl } = await uploadAvatar(formData);
+        finalAvatarUrl = publicUrl;
+      }
+
+      const dobString = values.formDob
+        ? dayjs(values.formDob).format("YYYY-MM-DD")
+        : null;
+
+      await updateProfile({
         full_name: values.formName,
-        username: values.formUsername || null,
-        phone_number: values.formPhone || null,
-        dob: dobString,
-        gender: values.formGender || null,
-        address1: values.formAddress1 || null,
-        address2: values.formAddress2 || null,
-        city: values.formCity || null,
-        state: values.formState || null,
-        zip: values.formZip || null,
+        email: values.formEmail,
+        username: values.formUsername || undefined,
+        phone_number: values.formPhone || undefined,
+        dob: dobString || undefined,
+        gender: values.formGender || undefined,
+        address1: values.formAddress1 || undefined,
+        address2: values.formAddress2 || undefined,
+        city: values.formCity || undefined,
+        state: values.formState || undefined,
+        zip: values.formZip || undefined,
         avatar_url: finalAvatarUrl,
-      })
-      .eq("id", profile?.id);
+      });
 
-    setLoading(false);
-
-    if (!updateError) {
       if (values.formEmail !== profile?.email) {
         setEmailPending(true);
       }
-      fetchProfile();
-      onSaveSuccess();
+
+      await fetchProfile();
       form.resetDirty();
+
       notifications.show({
         title: "Profile updated",
         message: "Your profile has been updated successfully.",
@@ -163,12 +129,17 @@ export function useProfileForm({
           <CheckmarkCircle02Icon style={{ width: rem(18), height: rem(18) }} />
         ),
       });
-    } else {
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : "An unknown error occurred";
       notifications.show({
         title: "Error",
-        message: updateError.message || "Your profile failed to update.",
+        message: errorMessage,
+        color: "red",
         icon: <AlertCircleIcon style={{ width: rem(18), height: rem(18) }} />,
       });
+    } finally {
+      setLoading(false);
     }
   };
 

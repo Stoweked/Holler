@@ -1,8 +1,9 @@
-// src/app/api/profile/avatar/route.ts
-import { createServer } from "@/lib/supabase/server";
-import { NextRequest, NextResponse } from "next/server";
+// src/features/account/actions/uploadAvatar.ts
+"use server";
 
-export async function POST(request: NextRequest) {
+import { createServer } from "@/lib/supabase/server";
+
+export async function uploadAvatar(formData: FormData) {
   const supabase = await createServer();
 
   const {
@@ -10,14 +11,13 @@ export async function POST(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    throw new Error("Unauthorized");
   }
 
-  const formData = await request.formData();
   const file = formData.get("file") as File | null;
 
   if (!file) {
-    return NextResponse.json({ error: "No file provided" }, { status: 400 });
+    throw new Error("No file provided");
   }
 
   const fileExt = file.name.split(".").pop();
@@ -29,13 +29,12 @@ export async function POST(request: NextRequest) {
     .upload(filePath, file);
 
   if (uploadError) {
-    return NextResponse.json({ error: uploadError.message }, { status: 500 });
+    throw new Error(uploadError.message);
   }
 
   const {
     data: { publicUrl },
   } = supabase.storage.from("avatars").getPublicUrl(filePath);
 
-  // The route now only returns the URL
-  return NextResponse.json({ publicUrl });
+  return { publicUrl };
 }

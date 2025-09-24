@@ -8,7 +8,7 @@ import {
   StarsIcon,
   UserCircleIcon,
 } from "hugeicons-react";
-import FeedbackModal from "../../../components/modals/FeedbackModal";
+import FeedbackModal from "../../../components/modals/feedback/components/FeedbackModal";
 import { ColorSchemeMenuItem } from "../../../components/layout/TopNav/ColorSchemeMenuItem";
 import { logout } from "@/features/auth/actions/logout";
 import { useProfile } from "@/contexts/ProfileContext";

@@ -19,7 +19,7 @@ import { useDisclosure } from "@mantine/hooks";
 import classes from "./TopNav.module.css";
 import { spotlight } from "@mantine/spotlight";
 import AccountDropdown from "../../../features/account/components/AccountDropdown";
-import NotificationDrawer from "@/features/notifications/NotificationDrawer";
+import NotificationDrawer from "@/features/notifications/components/NotificationDrawer";
 
 interface TopNavProps {
   opened: boolean;

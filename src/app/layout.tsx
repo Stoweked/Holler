@@ -11,6 +11,11 @@ export const metadata: Metadata = {
   description:
     "Get paid faster on the job. Holler provides secure mobile payments designed for construction trades.",
   metadataBase: new URL("https://holler-build.vercel.app/"),
+  icons: {
+    icon: "/icon.svg", // Default icon
+    shortcut: "/favicon.ico", // for .ico formats
+    apple: "/apple-icon.png", // for apple-touch-icon
+  },
   openGraph: {
     title: "Holler",
     description:

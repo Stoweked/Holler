@@ -1,4 +1,4 @@
-// src/features/settings/components/tabs/account/profile/ProfileForm.tsx
+// src/features/account/components/profile/ProfileForm.tsx
 "use client";
 
 import {
@@ -17,23 +17,45 @@ import { DateInput } from "@mantine/dates";
 import { PatternFormat } from "react-number-format";
 import { Calendar02Icon } from "hugeicons-react";
 import { usStates } from "@/lib/data/usStates";
-import { useProfileForm } from "@/features/account/hooks/useProfileForm";
 import { getInitials } from "@/lib/hooks/textUtils";
 import AvatarUpload from "@/features/settings/components/AvatarUpload";
+import { UseFormReturnType } from "@mantine/form";
+
+// Define a type for the form values, mirroring the hook's initialValues
+export interface ProfileFormValues {
+  formName: string;
+  formEmail: string;
+  formUsername: string;
+  formPhone: string;
+  formDob: Date | null;
+  formGender: string | null;
+  formAddress1: string;
+  formAddress2: string;
+  formCity: string;
+  formState: string;
+  formZip: string;
+  avatar_url: string;
+  newAvatarFile: File | null;
+  avatarPreviewUrl: string;
+}
 
 interface ProfileFormProps {
+  form: UseFormReturnType<ProfileFormValues>;
+  loading: boolean;
+  handleSubmit: (values: ProfileFormValues) => Promise<void>;
+  handleAvatarUploadAction: (file: File | null) => void;
   onCancel: () => void;
-  onSaveSuccess: () => void;
 }
 
 export default function ProfileForm({
+  form,
+  loading,
+  handleSubmit,
+  handleAvatarUploadAction,
   onCancel,
-  onSaveSuccess,
 }: ProfileFormProps) {
-  const { form, loading, handleSubmit, profile, handleAvatarUploadAction } =
-    useProfileForm({
-      onSaveSuccess,
-    });
+  const initials = getInitials(form.values.formName);
+  const isGoogleAuth = form.values.formEmail.endsWith("@gmail.com"); // Simple check, adjust if needed
 
   return (
     <Stack>
@@ -48,9 +70,8 @@ export default function ProfileForm({
           <AvatarUpload
             onFileSelect={handleAvatarUploadAction}
             avatarPreviewUrl={form.values.avatarPreviewUrl}
-            initials={getInitials(profile?.full_name)}
+            initials={initials}
           />
-
           <SimpleGrid
             cols={{ base: 1, xs: 2 }}
             spacing={{ base: "md" }}
@@ -63,9 +84,9 @@ export default function ProfileForm({
               radius="md"
               placeholder="Enter your full name"
               {...form.getInputProps("formName")}
-              disabled={profile?.auth_provider === "google"}
+              disabled={isGoogleAuth}
               description={
-                profile?.auth_provider === "google"
+                isGoogleAuth
                   ? "Your name is linked to your Google account."
                   : ""
               }
@@ -79,9 +100,9 @@ export default function ProfileForm({
               placeholder="Enter your email address"
               type="email"
               {...form.getInputProps("formEmail")}
-              disabled={profile?.auth_provider === "google"}
+              disabled={isGoogleAuth}
               description={
-                profile?.auth_provider === "google"
+                isGoogleAuth
                   ? "Your email is linked to your Google account."
                   : ""
               }
@@ -102,7 +123,6 @@ export default function ProfileForm({
               radius="md"
               {...form.getInputProps("formPhone")}
             />
-
             <TextInput
               label="Username"
               size="lg"
@@ -111,7 +131,6 @@ export default function ProfileForm({
               {...form.getInputProps("formUsername")}
               autoComplete="username"
             />
-
             <DateInput
               label="Date of birth"
               {...form.getInputProps("formDob")}

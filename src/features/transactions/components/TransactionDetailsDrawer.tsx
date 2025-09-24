@@ -284,6 +284,10 @@ export default function TransactionDetailsDrawer({
 
           <TransactionTimeline />
 
+          <Button fullWidth variant="subtle" onClick={close} size="lg">
+            Submit an issue
+          </Button>
+
           <Space h={100} />
         </Stack>
       </Drawer>

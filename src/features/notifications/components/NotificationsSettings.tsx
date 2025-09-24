@@ -1,6 +1,6 @@
 import { Space, Stack } from "@mantine/core";
-import SectionHeader from "../settings/components/SectionHeader";
 import AccountNotificationsCard from "./AccountNotificationsCard";
+import SectionHeader from "@/features/settings/components/SectionHeader";
 
 export function NotificationsSettings() {
   return (
