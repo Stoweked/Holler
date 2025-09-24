@@ -8,30 +8,21 @@ import {
   StarsIcon,
   UserCircleIcon,
 } from "hugeicons-react";
-import FeedbackModal from "../../../components/modals/feedback/components/FeedbackModal";
 import { ColorSchemeMenuItem } from "../../../components/layout/TopNav/ColorSchemeMenuItem";
 import { logout } from "@/features/auth/actions/logout";
 import { useProfile } from "@/contexts/ProfileContext";
 import { useEffect } from "react";
 import { getInitials } from "@/lib/hooks/textUtils";
 import SettingsDrawer from "@/features/settings/components/SettingsDrawer";
-import WhatsNewModal from "@/components/modals/WhatsNewModal";
+import { useModals } from "@/contexts/ModalContext";
 
 export default function AccountDropdown() {
   const { profile, loading } = useProfile();
-  const [
-    openedFeedbackModal,
-    { open: openFeedbackModal, close: closeFeedbackModal },
-  ] = useDisclosure(false);
+  const { openFeedbackModal, openWhatsNewModal } = useModals();
 
   const [
     openedProfileDrawer,
     { open: openProfileDrawer, close: closeProfileDrawer },
-  ] = useDisclosure(false);
-
-  const [
-    openedWhatsNewModal,
-    { open: openWhatsNewModal, close: closeWhatsNewModal },
   ] = useDisclosure(false);
 
   useEffect(() => {
@@ -126,10 +117,6 @@ export default function AccountDropdown() {
           </Menu.Item>
         </Menu.Dropdown>
       </Menu>
-
-      <FeedbackModal opened={openedFeedbackModal} close={closeFeedbackModal} />
-
-      <WhatsNewModal opened={openedWhatsNewModal} close={closeWhatsNewModal} />
 
       <SettingsDrawer
         opened={openedProfileDrawer}

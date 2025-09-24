@@ -16,6 +16,7 @@ import { FavoritesProvider } from "@/contexts/FavoritesContext";
 import { useWaivers, WaiversProvider } from "@/contexts/WaiversContext";
 import { ProjectsProvider, useProjects } from "@/contexts/ProjectsContext";
 import dynamic from "next/dynamic";
+import { ModalProvider } from "@/contexts/ModalContext";
 
 const LienWaiversDrawer = dynamic(
   () => import("@/features/waivers/components/LienWaiversDrawer"),
@@ -139,7 +140,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         <WaiversProvider>
           <ProjectsProvider>
             <FavoritesProvider>
-              <AuthenticatedLayout>{children}</AuthenticatedLayout>
+              <ModalProvider>
+                <AuthenticatedLayout>{children}</AuthenticatedLayout>
+              </ModalProvider>
             </FavoritesProvider>
           </ProjectsProvider>
         </WaiversProvider>
