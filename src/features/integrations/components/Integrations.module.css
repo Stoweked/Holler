@@ -1,6 +1,5 @@
 .integrationLogo {
-  filter: light-dark(none, invert(1) hue-rotate(180deg));
-  max-width: 140px;
+  max-width: 160px;
   height: auto;
   max-height: 50px;
   object-fit: contain;

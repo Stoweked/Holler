@@ -12,6 +12,7 @@ import {
   Title,
   Text,
   Button,
+  useMantineColorScheme,
 } from "@mantine/core";
 import classes from "./Integrations.module.css";
 import { Search01Icon, Cancel01Icon } from "hugeicons-react";
@@ -20,31 +21,37 @@ const allIntegrations = [
   {
     label: "Autodesk",
     image: "/images/integration-logos/autodesk-logo.svg",
+    darkImage: "/images/integration-logos/autodesk-logo-dark.svg",
     alt: "Autodesk",
   },
   {
     label: "Buildertrend",
     image: "/images/integration-logos/buildertrend-logo.svg",
+    darkImage: "/images/integration-logos/buildertrend-logo-dark.svg",
     alt: "Buildertrend",
   },
   {
     label: "Fieldwire",
     image: "/images/integration-logos/fieldwire-logo.svg",
+    darkImage: "/images/integration-logos/fieldwire-logo-dark.svg",
     alt: "Fieldwire",
   },
   {
     label: "Knowify",
     image: "/images/integration-logos/knowify-logo.svg",
+    darkImage: "/images/integration-logos/knowify-logo-dark.svg",
     alt: "Knowify",
   },
   {
     label: "Procore",
     image: "/images/integration-logos/procore-logo.svg",
+    darkImage: "/images/integration-logos/procore-logo-dark.svg",
     alt: "Procore",
   },
   {
     label: "QuickBooks",
     image: "/images/integration-logos/quickbooks-logo.svg",
+    darkImage: "/images/integration-logos/quickbooks-logo-dark.svg",
     alt: "QuickBooks",
   },
   {
@@ -61,6 +68,7 @@ const allIntegrations = [
 
 export default function AddNewIntegrations() {
   const [searchValue, setSearchValue] = useState("");
+  const { colorScheme } = useMantineColorScheme();
 
   const filteredIntegrations = allIntegrations.filter((integration) =>
     integration.label.toLowerCase().includes(searchValue.toLowerCase())
@@ -101,13 +109,17 @@ export default function AddNewIntegrations() {
           />
 
           {filteredIntegrations.length > 0 ? (
-            <SimpleGrid cols={3} spacing="lg">
+            <SimpleGrid cols={{ base: 1, xs: 2 }} spacing="lg">
               {filteredIntegrations.map((integration) => (
                 <OptionButton
                   key={integration.label}
                   icon={
                     <Image
-                      src={integration.image}
+                      src={
+                        colorScheme === "dark" && integration.darkImage
+                          ? integration.darkImage
+                          : integration.image
+                      }
                       alt={integration.alt}
                       className={classes.integrationLogo}
                     />
