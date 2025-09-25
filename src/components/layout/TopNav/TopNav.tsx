@@ -82,7 +82,13 @@ export default function TopNav({ opened, toggle }: TopNavProps) {
 
         {/* Notifications */}
         <Group wrap="nowrap" gap="xs">
-          <Indicator color="red" size={10} offset={6} position="top-end">
+          <Indicator
+            color="red"
+            size={10}
+            offset={6}
+            position="top-end"
+            processing
+          >
             <ActionIcon
               variant="default"
               size={38}
