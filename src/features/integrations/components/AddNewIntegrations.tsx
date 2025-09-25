@@ -61,7 +61,7 @@ const allIntegrations = [
   },
   {
     label: "Xero",
-    image: "/images/integration-logos/Xero-logo.svg",
+    image: "/images/integration-logos/xero-logo.svg",
     alt: "Xero",
   },
 ];
