@@ -9,7 +9,7 @@ export function IntegrationSettings() {
         heading="Your integrations"
         subHeading="Conenct and manage your third-party integrations."
       />
-      <Skeleton height={200} radius="lg" />
+      <Skeleton height={300} radius="lg" />
       <AddNewIntegrations />
       <Space h={100} />
     </Stack>
