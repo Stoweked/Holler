@@ -1,6 +1,7 @@
 .button {
   border-radius: var(--mantine-radius-lg);
   width: 100%;
+  min-height: 80px;
   transition: all 200ms ease-in-out;
   padding: var(--mantine-spacing-md);
   border: 1px solid

@@ -13,6 +13,7 @@ import classes from "./Settings.module.css";
 import {
   ArrowLeft02Icon,
   Cancel01Icon,
+  ConnectIcon,
   CreditCardIcon,
   Notification01Icon,
   OfficeIcon,
@@ -26,6 +27,7 @@ import { BillingSettings } from "../../billing/components/BillingSettings";
 import Account from "@/features/account/components/Account";
 import { BusinessSettings } from "@/features/business/components/BusinessSettings";
 import { NotificationsSettings } from "@/features/notifications/components/NotificationsSettings";
+import { IntegrationSettings } from "@/features/integrations/components/IntegrationSettings";
 
 interface SettingsDrawerProps {
   opened: boolean;
@@ -142,6 +144,13 @@ export default function SettingsDrawer({
                     Business
                   </Tabs.Tab>
                   <Tabs.Tab
+                    value="integrations"
+                    leftSection={<ConnectIcon size={24} color="gray" />}
+                    aria-label="Integrations"
+                  >
+                    Integrations
+                  </Tabs.Tab>
+                  <Tabs.Tab
                     value="notifications"
                     leftSection={<Notification01Icon size={24} color="gray" />}
                     aria-label="Notifications"
@@ -174,6 +183,11 @@ export default function SettingsDrawer({
                       onClick={() => setActiveTab("business")}
                     />
                     <OptionButton
+                      icon={<ConnectIcon size={24} />}
+                      label="Integrations"
+                      onClick={() => setActiveTab("integrations")}
+                    />
+                    <OptionButton
                       icon={<Notification01Icon size={24} />}
                       label="Notifications"
                       onClick={() => setActiveTab("notifications")}
@@ -192,6 +206,10 @@ export default function SettingsDrawer({
 
                 <Tabs.Panel value="business" pt="lg">
                   <BusinessSettings />
+                </Tabs.Panel>
+
+                <Tabs.Panel value="integrations" pt="lg">
+                  <IntegrationSettings />
                 </Tabs.Panel>
 
                 <Tabs.Panel value="billing" pt="lg">

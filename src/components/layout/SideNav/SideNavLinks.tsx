@@ -1,12 +1,11 @@
 // src/components/layout/SideNav/SideNavLinks.tsx
-import { Badge, Group, NavLink } from "@mantine/core";
+import { Group, NavLink } from "@mantine/core";
 import {
   ArrowRight01Icon,
   BankIcon,
   ClipboardIcon,
   House03Icon,
-  Message01Icon,
-  UserIcon,
+  Settings01Icon,
   UserMultiple02Icon,
 } from "hugeicons-react";
 import classes from "./SideNav.module.css";
@@ -113,6 +112,7 @@ export default function SideNavLinks({ closeMobileNav }: SideNavLinksProps) {
     <div>
       <NavLink
         label="Contacts"
+        aria-label="Contacts"
         leftSection={<UserMultiple02Icon size={24} color="gray" />}
         rightSection={
           <ArrowRight01Icon size={32} color="var(--mantine-color-lime-4)" />
@@ -124,6 +124,7 @@ export default function SideNavLinks({ closeMobileNav }: SideNavLinksProps) {
 
       <NavLink
         label="Projects"
+        aria-label="Projects"
         leftSection={<House03Icon size={24} color="gray" />}
         rightSection={
           <ArrowRight01Icon size={32} color="var(--mantine-color-lime-4)" />
@@ -135,6 +136,7 @@ export default function SideNavLinks({ closeMobileNav }: SideNavLinksProps) {
 
       <NavLink
         label="Lien waivers"
+        aria-label="Lie waivers"
         leftSection={<ClipboardIcon size={24} color="gray" />}
         rightSection={
           <ArrowRight01Icon size={32} color="var(--mantine-color-lime-4)" />
@@ -153,6 +155,7 @@ export default function SideNavLinks({ closeMobileNav }: SideNavLinksProps) {
             </Badge> */}
           </Group>
         }
+        aria-label="Bank accounts"
         leftSection={<BankIcon size={24} color="gray" />}
         rightSection={
           <ArrowRight01Icon size={32} color="var(--mantine-color-lime-4)" />
@@ -162,26 +165,17 @@ export default function SideNavLinks({ closeMobileNav }: SideNavLinksProps) {
         onClick={handleBankAccountsClick}
       />
 
-      {/* <NavLink
-        label="Your account"
-        leftSection={<UserIcon size={24} color="gray" />}
+      <NavLink
+        label="Settings"
+        aria-label="Settings"
+        leftSection={<Settings01Icon size={24} color="gray" />}
         rightSection={
           <ArrowRight01Icon size={32} color="var(--mantine-color-lime-4)" />
         }
         className={classes.navLink}
         classNames={{ label: classes.label }}
         onClick={handleSettingsClick}
-      /> */}
-
-      {/* <NavLink
-        label="Support"
-        leftSection={<Message01Icon size={24} color="gray" />}
-        rightSection={
-          <ArrowRight01Icon size={32} color="var(--mantine-color-lime-4)" />
-        }
-        className={classes.navLink}
-        classNames={{ label: classes.label }}
-      /> */}
+      />
 
       <ContactsDrawer
         opened={openedContactsDrawer}

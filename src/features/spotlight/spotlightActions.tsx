@@ -27,6 +27,7 @@ import {
   StarsIcon,
   ClipboardIcon,
   House03Icon,
+  ConnectIcon,
 } from "hugeicons-react";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { logout } from "@/features/auth/actions/logout";
@@ -209,6 +210,29 @@ export const getSpotlightActions = (
           closeNav();
         },
         leftSection: <OfficeIcon size={24} />,
+      },
+      {
+        id: "integrations",
+        label: "Integrations",
+        description: "Conenct and manage your third-party integrations",
+        keywords: [
+          "integrations",
+          "apps",
+          "connect",
+          "api",
+          "third-party",
+          "services",
+          "quickbooks",
+        ],
+        onClick: () => {
+          window.dispatchEvent(
+            new CustomEvent("open-settings", {
+              detail: { tab: "integrations" },
+            })
+          );
+          closeNav();
+        },
+        leftSection: <ConnectIcon size={24} />,
       },
       {
         id: "billing",
