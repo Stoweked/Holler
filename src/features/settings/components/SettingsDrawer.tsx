@@ -87,7 +87,7 @@ export default function SettingsDrawer({
                 onClick={() => setActiveTab("menu")}
                 hiddenFrom="sm"
               >
-                <ArrowLeft02Icon style={{ width: "70%", height: "70%" }} />
+                <ArrowLeft02Icon size={24} />
               </ActionIcon>
             ) : null}
 
