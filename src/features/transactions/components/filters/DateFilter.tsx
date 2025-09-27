@@ -109,7 +109,14 @@ export function DateFilterComponent({
               onDateChange("All");
             }}
           >
-            Show all
+            <Group gap="xs">
+              Show all
+              {activeDateFilter === "All" && (
+                <Badge variant="light" size="sm">
+                  Active
+                </Badge>
+              )}
+            </Group>
           </Menu.Item>
           <Menu.Divider />
           <Menu.Item
