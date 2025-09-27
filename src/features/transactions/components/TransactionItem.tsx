@@ -13,7 +13,7 @@ import {
 } from "@mantine/core";
 import classes from "../Transactions.module.css";
 import { getInitials } from "@/lib/hooks/textUtils";
-import { useProfile } from "@/contexts/ProfileContext";
+import { useProfile } from "@/features/account/contexts/ProfileContext";
 import { getPartyName } from "../types/transactionParty";
 import { ContactType } from "@/features/contacts/types/contact";
 import { House03Icon } from "hugeicons-react";

@@ -10,7 +10,7 @@ import {
 } from "hugeicons-react";
 import { ColorSchemeMenuItem } from "../../../components/layout/TopNav/ColorSchemeMenuItem";
 import { logout } from "@/features/auth/actions/logout";
-import { useProfile } from "@/contexts/ProfileContext";
+import { useProfile } from "@/features/account/contexts/ProfileContext";
 import { useEffect } from "react";
 import { getInitials } from "@/lib/hooks/textUtils";
 import SettingsDrawer from "@/features/settings/components/SettingsDrawer";

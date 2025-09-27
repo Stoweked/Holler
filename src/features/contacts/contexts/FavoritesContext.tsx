@@ -8,10 +8,10 @@ import {
   ReactNode,
 } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { useProfile } from "./ProfileContext";
 import { notifications } from "@mantine/notifications";
 import { CheckIcon } from "@mantine/core";
 import { Contact, ContactType } from "@/features/contacts/types/contact";
+import { useProfile } from "@/features/account/contexts/ProfileContext";
 
 interface FavoritesContextType {
   favoriteContacts: Set<string>;

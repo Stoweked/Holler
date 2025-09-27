@@ -17,7 +17,7 @@ import ContactsDrawer from "@/features/contacts/components/ContactsDrawer";
 import ContactModal from "@/features/contacts/components/ContactModal";
 import { Contact } from "@/features/contacts/types/contact";
 import SettingsDrawer from "@/features/settings/components/SettingsDrawer";
-import { useProjects } from "@/contexts/ProjectsContext";
+import { useProjects } from "@/features/projects/contexts/ProjectsContext";
 
 interface SideNavLinksProps {
   closeMobileNav: () => void;

@@ -4,7 +4,7 @@
 import LandingPageButtons from "@/features/marketing/landing/LandingPageButtons";
 import TermsAndConditions from "@/features/marketing/landing/TermsAndConditions";
 import { Stack, Text, Title, Image } from "@mantine/core";
-import { ProfileProvider } from "@/contexts/ProfileContext";
+import { ProfileProvider } from "@/features/account/contexts/ProfileContext";
 
 export default function LandingPage() {
   return (

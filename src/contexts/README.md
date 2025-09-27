@@ -4,4 +4,6 @@ This directory contains React context providers for global state management.
 
 ### **Files**
 
-- **`ProfileContext.tsx`**: Provides user profile data to the application. It fetches the authenticated user's profile from Supabase and makes it available to all components wrapped within the ProfileProvider. Additionally, it includes a real-time authentication state listener. If the user's session expires or they sign out, this listener detects the SIGNED_OUT event and automatically redirects them to the landing page to ensure the UI stays in sync with their authentication status.
+- **`ModalContext.tsx`**: Provides a React context for managing modal state and behavior across the application.
+  Enables components to open, close, and interact with modals in a centralized and consistent manner.
+  Useful for handling global modals, passing modal data, and controlling modal visibility from anywhere in the component tree.

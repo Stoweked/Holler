@@ -22,7 +22,7 @@ import { House03Icon, PlusSignIcon, Search01Icon } from "hugeicons-react";
 import classes from "./Projects.module.css";
 import React, { useState } from "react";
 import ProjectSelectItem from "./ProjectSelectItem";
-import { useProjects } from "@/contexts/ProjectsContext";
+import { useProjects } from "@/features/projects/contexts/ProjectsContext";
 
 interface ProjectDetailsCardProps {
   selectedProject: Project | null;

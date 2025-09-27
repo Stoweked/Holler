@@ -18,7 +18,7 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
-import { useProfile } from "@/contexts/ProfileContext";
+import { useProfile } from "@/features/account/contexts/ProfileContext";
 import { AlertCircleIcon } from "hugeicons-react";
 import { submitFeedback as submitFeedbackAction } from "@/components/modals/feedback/actions/submit-feedback";
 

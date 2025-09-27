@@ -9,7 +9,7 @@ import Placeholder from "@tiptap/extension-placeholder";
 import { notifications } from "@mantine/notifications";
 import { CheckIcon } from "@mantine/core";
 import { AlertCircleIcon } from "hugeicons-react";
-import { useWaivers } from "@/contexts/WaiversContext";
+import { useWaivers } from "@/features/waivers/contexts/WaiversContext";
 
 type WaiverStep = "initial" | "templates" | "editor";
 type EditorMode = "new" | "edit" | "template";

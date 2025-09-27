@@ -3,7 +3,7 @@ import { Card, Stack, Title, Text } from "@mantine/core";
 import ActionButtons from "../../../components/layout/SideNav/ActionButtons";
 import classes from "./PrimaryActions.module.css";
 import AccountToggle from "./AccountToggle/AccountToggle";
-import { useWallet } from "@/contexts/WalletContext";
+import { useWallet } from "@/features/wallet/contexts/WalletContext";
 import { TransactionActionType } from "../types/wallet";
 
 export default function PrimaryActionsCard() {

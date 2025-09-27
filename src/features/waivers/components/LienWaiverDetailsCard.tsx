@@ -35,7 +35,7 @@ import WaiverSelectItem from "./WaiverSelectItem";
 import { useDisclosure } from "@mantine/hooks";
 import { capitalize } from "@/lib/hooks/textUtils";
 import LienWaiverModal from "./LienWaiverModal";
-import { useWaivers } from "@/contexts/WaiversContext";
+import { useWaivers } from "@/features/waivers/contexts/WaiversContext";
 
 interface LienWaiverDetailsCardProps {
   selectedWaiver: Waiver | null;

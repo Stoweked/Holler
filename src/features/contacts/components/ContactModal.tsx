@@ -10,9 +10,9 @@ import {
 import { StarIcon } from "hugeicons-react";
 import { Contact, ContactType } from "../types/contact";
 import { getInitials } from "@/lib/hooks/textUtils";
-import { useFavorites } from "@/contexts/FavoritesContext";
-import { useWallet } from "@/contexts/WalletContext";
+import { useWallet } from "@/features/wallet/contexts/WalletContext";
 import { TransactionParty } from "@/features/transactions/types/transactionParty";
+import { useFavorites } from "../contexts/FavoritesContext";
 
 interface ContactModalProps {
   opened: boolean;

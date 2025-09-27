@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { useProfile } from "@/contexts/ProfileContext";
+import { useProfile } from "@/features/account/contexts/ProfileContext";
 import { Business } from "../types/business";
 import { notifications } from "@mantine/notifications";
 import { BusinessRole } from "../types/businessRole";

@@ -6,17 +6,29 @@ import { AppShell, ScrollArea, Center, Loader } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { SideNav } from "@/components/layout/SideNav";
 import TopNav from "@/components/layout/TopNav/TopNav";
-import { ProfileProvider, useProfile } from "@/contexts/ProfileContext";
+import {
+  ProfileProvider,
+  useProfile,
+} from "@/features/account/contexts/ProfileContext";
 import { getSpotlightActions } from "@/features/spotlight/spotlightActions";
 import { useRouter } from "next/navigation";
 import { Spotlight } from "@mantine/spotlight";
 import { Search01Icon } from "hugeicons-react";
-import { WalletProvider, useWallet } from "@/contexts/WalletContext";
-import { FavoritesProvider } from "@/contexts/FavoritesContext";
-import { useWaivers, WaiversProvider } from "@/contexts/WaiversContext";
-import { ProjectsProvider, useProjects } from "@/contexts/ProjectsContext";
+import {
+  WalletProvider,
+  useWallet,
+} from "@/features/wallet/contexts/WalletContext";
+import {
+  useWaivers,
+  WaiversProvider,
+} from "@/features/waivers/contexts/WaiversContext";
+import {
+  ProjectsProvider,
+  useProjects,
+} from "@/features/projects/contexts/ProjectsContext";
 import dynamic from "next/dynamic";
 import { ModalProvider } from "@/contexts/ModalContext";
+import { FavoritesProvider } from "@/features/contacts/contexts/FavoritesContext";
 
 const LienWaiversDrawer = dynamic(
   () => import("@/features/waivers/components/LienWaiversDrawer"),

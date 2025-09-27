@@ -3,7 +3,7 @@
 
 import { Button, Group } from "@mantine/core";
 import { useRouter } from "next/navigation";
-import { useProfile } from "@/contexts/ProfileContext";
+import { useProfile } from "@/features/account/contexts/ProfileContext";
 import Link from "next/link";
 
 export default function LandingPageButtons() {

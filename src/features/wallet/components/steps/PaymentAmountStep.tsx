@@ -10,11 +10,11 @@ import { Waiver } from "@/features/waivers/types/waiver";
 import LienWaiverDetailsCard from "@/features/waivers/components/LienWaiverDetailsCard";
 import ProfileModal from "@/features/contacts/components/ContactModal";
 import AmountInput from "./AmountInput";
-import { useWallet } from "@/contexts/WalletContext";
+import { useWallet } from "@/features/wallet/contexts/WalletContext";
 import { TransactionActionType } from "../../types/wallet";
 import { Bank } from "@/features/banks/types/bank";
 import { TransactionParty } from "@/features/transactions/types/transactionParty";
-import { useWaivers } from "@/contexts/WaiversContext";
+import { useWaivers } from "@/features/waivers/contexts/WaiversContext";
 
 interface PaymentAmountStepProps {
   party: TransactionParty | null;

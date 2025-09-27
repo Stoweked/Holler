@@ -12,3 +12,6 @@ export * from "./hooks/useProfileForm";
 
 // Export all types
 export * from "./types/account";
+
+// Export contexts
+export * from "./contexts/ProfileContext";

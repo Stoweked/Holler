@@ -2,4 +2,4 @@
 
 export * from "./AccountToggle/AccountToggle";
 export * from "./PrimaryActionsCard";
-export * from "./actions";
+export * from "./steps";

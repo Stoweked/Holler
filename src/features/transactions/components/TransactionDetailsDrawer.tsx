@@ -28,7 +28,7 @@ import { useDisclosure } from "@mantine/hooks";
 import ContactModal from "@/features/contacts/components/ContactModal";
 import { Contact, ContactType } from "@/features/contacts/types/contact";
 import { getInitials } from "@/lib/hooks/textUtils";
-import { useProfile } from "@/contexts/ProfileContext";
+import { useProfile } from "@/features/account/contexts/ProfileContext";
 import ContactDetailsCard from "@/features/contacts/components/ContactDetailsCard";
 import BankDetailsCard from "@/features/banks/components/BankDetailsCard";
 import TransactionTimeline from "./TransactionTimeline";

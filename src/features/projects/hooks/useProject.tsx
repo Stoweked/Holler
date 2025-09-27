@@ -5,7 +5,7 @@ import { Project } from "../types/project";
 import { notifications } from "@mantine/notifications";
 import { CheckIcon } from "@mantine/core";
 import { AlertCircleIcon } from "hugeicons-react";
-import { useProjects } from "@/contexts/ProjectsContext";
+import { useProjects } from "@/features/projects/contexts/ProjectsContext";
 import { createProject } from "../actions/create-project";
 import { updateProject } from "../actions/update-project";
 import { archiveProject } from "../actions/archive-project";

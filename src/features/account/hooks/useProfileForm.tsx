@@ -7,7 +7,7 @@ import { notifications } from "@mantine/notifications";
 import { rem } from "@mantine/core";
 import { CheckmarkCircle02Icon, AlertCircleIcon } from "hugeicons-react";
 import dayjs from "dayjs";
-import { useProfile } from "@/contexts/ProfileContext";
+import { useProfile } from "@/features/account/contexts/ProfileContext";
 import { checkUsernameExists } from "@/features/auth/actions/check-username";
 import { uploadAvatar } from "../actions/upload-avatar";
 import { updateProfile } from "../actions/update-profile";

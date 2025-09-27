@@ -21,7 +21,7 @@ import {
 } from "hugeicons-react";
 import { useEffect, useState } from "react";
 import { useViewportSize } from "@mantine/hooks";
-import { useProfile } from "@/contexts/ProfileContext";
+import { useProfile } from "@/features/account/contexts/ProfileContext";
 import OptionButton from "@/components/shared/OptionButton/OptionButton";
 import { BillingSettings } from "../../billing/components/BillingSettings";
 import Account from "@/features/account/components/Account";

@@ -18,7 +18,7 @@ import { TransactionActionType } from "../../types/wallet";
 import ProjectDetailsCard from "@/features/projects/components/ProjectDetailsCard";
 import { Project } from "@/features/projects/types/project";
 import { PaymentSuccess02Icon } from "hugeicons-react";
-import { useWallet } from "@/contexts/WalletContext";
+import { useWallet } from "@/features/wallet/contexts/WalletContext";
 
 interface SuccessStepProps {
   transactionType: TransactionActionType;

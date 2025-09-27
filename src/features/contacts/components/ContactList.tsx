@@ -19,8 +19,8 @@ import {
   UserMultiple02Icon,
 } from "hugeicons-react";
 import { Contact, ContactType } from "../types/contact";
-import { useFavorites } from "@/contexts/FavoritesContext";
 import { useContacts } from "../hooks/useContacts";
+import { useFavorites } from "../contexts/FavoritesContext";
 
 interface ContactsListProps {
   onContactClick?: (contact: Contact) => void;

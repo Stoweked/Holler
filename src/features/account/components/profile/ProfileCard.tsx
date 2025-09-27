@@ -6,7 +6,7 @@ import { Paper } from "@mantine/core";
 import ProfileView from "./ProfileView";
 import ProfileForm, { ProfileFormValues } from "./ProfileForm";
 import { useProfileForm } from "../../hooks/useProfileForm";
-import { useProfile } from "@/contexts/ProfileContext";
+import { useProfile } from "@/features/account/contexts/ProfileContext";
 
 export default function ProfileCard() {
   const { profile } = useProfile();
