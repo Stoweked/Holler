@@ -14,6 +14,7 @@ import { useEffect, useState } from "react";
 import { TransactionActionType } from "../../types/wallet";
 import ProjectDetailsCard from "@/features/projects/components/ProjectDetailsCard";
 import { Project } from "@/features/projects/types/project";
+import { PaymentSuccess02Icon } from "hugeicons-react";
 
 interface SuccessStepProps {
   transactionType: TransactionActionType;
@@ -74,24 +75,18 @@ export default function SuccessStep({
         {/* Coin image */}
         <Transition
           mounted={mounted}
-          transition="fade"
-          duration={800}
+          transition="fade-down"
+          duration={1000}
           timingFunction="ease"
         >
           {(styles) => (
-            <Box className={classes.coinContainer} mt={-100} style={styles}>
+            <Box className={classes.coinContainer} style={styles}>
               <Image
                 src="/images/success-step/coins.png"
                 h="auto"
-                w="100%"
+                w={440}
                 alt="Coins graphic"
-              />
-              <Image
-                src="/images/success-step/coins-fade.svg"
-                h="auto"
-                w="100%"
-                alt="Fade overlay"
-                className={classes.coinOverlay}
+                className={classes.coinImage}
               />
             </Box>
           )}
@@ -106,7 +101,8 @@ export default function SuccessStep({
         >
           {(styles) => (
             <Stack align="center" gap="xs" style={styles}>
-              <Title order={1} style={{ color: "white" }} ta="center" lh={1.2}>
+              <PaymentSuccess02Icon size={48} color="green" />
+              <Title order={1} ta="center" lh={1.2}>
                 {title}
               </Title>
               <Text c="dimmed" ta="center">

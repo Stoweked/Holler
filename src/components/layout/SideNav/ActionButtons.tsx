@@ -41,7 +41,7 @@ export default function ActionButtons({
         {/* Send button */}
         <Stack gap={4} align="center">
           <ActionIcon
-            variant="default"
+            // variant="default"
             size={56}
             radius="xl"
             aria-label="Send funds"
@@ -57,7 +57,7 @@ export default function ActionButtons({
         {/* Request button */}
         <Stack gap={4} align="center">
           <ActionIcon
-            variant="default"
+            // variant="default"
             size={56}
             radius="xl"
             aria-label="Request funds"
