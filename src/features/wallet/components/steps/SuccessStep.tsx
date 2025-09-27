@@ -112,16 +112,16 @@ export default function SuccessStep({
       <Button onClick={handleDoneClick} size="lg" fullWidth>
         Done
       </Button>
-      {/* {transactionId && (
+      {transactionId && (
         <Button
-          variant="light"
+          variant="subtle"
           size="lg"
           fullWidth
           onClick={() => openDetailsDrawer(transactionId)}
         >
           View details
         </Button>
-      )} */}
+      )}
     </Stack>
   );
 

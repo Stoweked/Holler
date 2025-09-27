@@ -1,4 +1,10 @@
 // src/features/settings/components/sections/account/profile/index.ts
-export * from "./ProfileCard";
-export * from "./ProfileForm";
-export * from "./ProfileView";
+import ProfileCard from "./ProfileCard";
+import ProfileForm from "./ProfileForm";
+import ProfileView from "./ProfileView";
+
+export const Profile = {
+  Card: ProfileCard,
+  Form: ProfileForm,
+  View: ProfileView,
+};

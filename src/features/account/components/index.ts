@@ -1,7 +1,16 @@
 // src/features/account/components/index.ts
-export * from "./Account";
-export * from "./AccountDropdown";
-export * from "./ColorModeCard";
-export * from "./DeleteAccountCard";
-export * from "./ResetPasswordCard";
-export * from "./profile";
+import Account from "./Account";
+import AccountDropdown from "./AccountDropdown";
+import ColorModeCard from "./ColorModeCard";
+import DeleteAccountCard from "./DeleteAccountCard";
+import ResetPasswordCard from "./ResetPasswordCard";
+import { Profile } from "./profile";
+
+export const AccountUI = {
+  Page: Account,
+  Dropdown: AccountDropdown,
+  ColorModeCard: ColorModeCard,
+  DeleteAccountCard: DeleteAccountCard,
+  ResetPasswordCard: ResetPasswordCard,
+  Profile: Profile,
+};

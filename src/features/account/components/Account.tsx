@@ -1,8 +1,5 @@
 import { Space, Stack } from "@mantine/core";
-import ProfileCard from "./profile/ProfileCard";
-import ColorModeCard from "./ColorModeCard";
-import ResetPasswordCard from "./ResetPasswordCard";
-import DeleteAccountCard from "./DeleteAccountCard";
+import { AccountUI } from ".";
 import SectionHeader from "../../settings/components/SectionHeader";
 
 export default function Account() {
@@ -12,10 +9,10 @@ export default function Account() {
         heading="Your account"
         subHeading=" Manage your account and profile."
       />
-      <ProfileCard />
-      <ColorModeCard />
-      <ResetPasswordCard />
-      <DeleteAccountCard />
+      <AccountUI.Profile.Card />
+      <AccountUI.ColorModeCard />
+      <AccountUI.ResetPasswordCard />
+      <AccountUI.DeleteAccountCard />
       <Space h={100} />
     </Stack>
   );
