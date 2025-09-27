@@ -5,6 +5,9 @@ import { ColorSchemeScript, MantineProvider } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
 import { theme } from "../styles/theme";
 import "../styles/globals.css";
+import { Inter } from "next/font/google";
+
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Holler",
@@ -49,7 +52,7 @@ export default function RootLayout({
           content="minimum-scale=1, initial-scale=1, width=device-width, user-scalable=no"
         />
       </head>
-      <body>
+      <body className={inter.className}>
         <MantineProvider theme={theme} defaultColorScheme="light">
           <Notifications position="bottom-center" />
           {children}
