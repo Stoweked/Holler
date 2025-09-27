@@ -1,6 +1,7 @@
 // /src/features/wallet/components/actions/SuccessStep.tsx
 
 import {
+  Anchor,
   Box,
   Button,
   CheckIcon,
@@ -39,14 +40,29 @@ export default function SuccessStep({
   useEffect(() => {
     setMounted(true);
   }, []);
-
   const handleDoneClick = () => {
     notifications.show({
       title: "Success",
-      message: "Transaction complete.",
+      message: (
+        <Text>
+          Transaction complete.{" "}
+          {transactionId && (
+            <Anchor
+              href="#"
+              onClick={(event) => {
+                event.preventDefault();
+                openDetailsDrawer(transactionId);
+                notifications.clean();
+              }}
+            >
+              View details
+            </Anchor>
+          )}
+        </Text>
+      ),
       color: "lime",
       icon: <CheckIcon size={18} />,
-      autoClose: 5000,
+      autoClose: 8000,
     });
     onDone();
   };
