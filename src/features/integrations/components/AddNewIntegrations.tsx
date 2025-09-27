@@ -1,8 +1,8 @@
 import { useState } from "react";
+import Image from "next/image"; // Changed to Next.js Image component for optimization
 import OptionButton from "@/components/shared/OptionButton/OptionButton";
 import SectionHeader from "@/features/settings/components/SectionHeader";
 import {
-  Image,
   SimpleGrid,
   Stack,
   Input,
@@ -17,51 +17,67 @@ import {
 import classes from "./Integrations.module.css";
 import { Search01Icon, Cancel01Icon } from "hugeicons-react";
 
+// Import logos from the new assets folder
+import autodeskLogo from "../assets/logos/autodesk-logo.svg";
+import autodeskLogoDark from "../assets/logos/autodesk-logo-dark.svg";
+import buildertrendLogo from "../assets/logos/buildertrend-logo.svg";
+import buildertrendLogoDark from "../assets/logos/buildertrend-logo-dark.svg";
+import fieldwireLogo from "../assets/logos/fieldwire-logo.svg";
+import fieldwireLogoDark from "../assets/logos/fieldwire-logo-dark.svg";
+import knowifyLogo from "../assets/logos/knowify-logo.svg";
+import knowifyLogoDark from "../assets/logos/knowify-logo-dark.svg";
+import procoreLogo from "../assets/logos/procore-logo.svg";
+import procoreLogoDark from "../assets/logos/procore-logo-dark.svg";
+import quickbooksLogo from "../assets/logos/quickbooks-logo.svg";
+import quickbooksLogoDark from "../assets/logos/quickbooks-logo-dark.svg";
+import sageLogo from "../assets/logos/sage-logo.svg";
+import xeroLogo from "../assets/logos/xero-logo.svg";
+
 const allIntegrations = [
   {
     label: "Autodesk",
-    image: "/images/integration-logos/autodesk-logo.svg",
-    darkImage: "/images/integration-logos/autodesk-logo-dark.svg",
+    image: autodeskLogo,
+    darkImage: autodeskLogoDark,
     alt: "Autodesk",
   },
   {
     label: "Buildertrend",
-    image: "/images/integration-logos/buildertrend-logo.svg",
-    darkImage: "/images/integration-logos/buildertrend-logo-dark.svg",
+    image: buildertrendLogo,
+    darkImage: buildertrendLogoDark,
     alt: "Buildertrend",
   },
   {
     label: "Fieldwire",
-    image: "/images/integration-logos/fieldwire-logo.svg",
-    darkImage: "/images/integration-logos/fieldwire-logo-dark.svg",
+    image: fieldwireLogo,
+    darkImage: fieldwireLogoDark,
     alt: "Fieldwire",
   },
   {
     label: "Knowify",
-    image: "/images/integration-logos/knowify-logo.svg",
-    darkImage: "/images/integration-logos/knowify-logo-dark.svg",
+    image: knowifyLogo,
+    darkImage: knowifyLogoDark,
     alt: "Knowify",
   },
   {
     label: "Procore",
-    image: "/images/integration-logos/procore-logo.svg",
-    darkImage: "/images/integration-logos/procore-logo-dark.svg",
+    image: procoreLogo,
+    darkImage: procoreLogoDark,
     alt: "Procore",
   },
   {
     label: "QuickBooks",
-    image: "/images/integration-logos/quickbooks-logo.svg",
-    darkImage: "/images/integration-logos/quickbooks-logo-dark.svg",
+    image: quickbooksLogo,
+    darkImage: quickbooksLogoDark,
     alt: "QuickBooks",
   },
   {
     label: "Sage",
-    image: "/images/integration-logos/sage-logo.svg",
+    image: sageLogo,
     alt: "Sage",
   },
   {
     label: "Xero",
-    image: "/images/integration-logos/xero-logo.svg",
+    image: xeroLogo,
     alt: "Xero",
   },
 ];
@@ -122,6 +138,8 @@ export default function AddNewIntegrations() {
                       }
                       alt={integration.alt}
                       className={classes.integrationLogo}
+                      width={120} // Added width for Next.js Image
+                      height={40} // Added height for Next.js Image
                     />
                   }
                   minHeight={100}

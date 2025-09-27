@@ -5,12 +5,12 @@ import {
   Box,
   Button,
   CheckIcon,
-  Image,
   Stack,
   Text,
   Title,
   Transition,
 } from "@mantine/core";
+import Image from "next/image"; // Switched to Next.js Image component
 import { notifications } from "@mantine/notifications";
 import classes from "./Actions.module.css";
 import { useEffect, useState } from "react";
@@ -19,6 +19,9 @@ import ProjectDetailsCard from "@/features/projects/components/ProjectDetailsCar
 import { Project } from "@/features/projects/types/project";
 import { PaymentSuccess02Icon } from "hugeicons-react";
 import { useWallet } from "@/features/wallet/contexts/WalletContext";
+
+// Import the image from the feature's assets folder
+import coinsImage from "../../assets/coins.png";
 
 interface SuccessStepProps {
   transactionType: TransactionActionType;
@@ -40,6 +43,7 @@ export default function SuccessStep({
   useEffect(() => {
     setMounted(true);
   }, []);
+
   const handleDoneClick = () => {
     notifications.show({
       title: "Success",
@@ -134,11 +138,12 @@ export default function SuccessStep({
           {(styles) => (
             <Box className={classes.coinContainer} style={styles}>
               <Image
-                src="/images/success-step/coins.png"
-                h="auto"
-                w={440}
+                src={coinsImage}
+                height={440}
+                width={440}
                 alt="Coins graphic"
                 className={classes.coinImage}
+                priority
               />
             </Box>
           )}
