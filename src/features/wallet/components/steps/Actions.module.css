@@ -52,7 +52,7 @@
   align-items: center;
 }
 .coinImage {
-  animation: rotate 800s linear infinite;
+  animation: rotate 500s linear infinite;
   opacity: 60%;
 }
 .coinOverlay {

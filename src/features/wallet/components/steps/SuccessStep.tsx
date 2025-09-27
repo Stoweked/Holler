@@ -109,7 +109,7 @@ export default function SuccessStep({
   // Reusable component for the action buttons
   const ActionButtons = () => (
     <Stack w="100%" gap="sm">
-      <Button onClick={handleDoneClick} size="lg" fullWidth>
+      <Button onClick={handleDoneClick} size="xl" fullWidth>
         Done
       </Button>
       {transactionId && (
