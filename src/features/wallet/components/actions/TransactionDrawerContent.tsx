@@ -1,3 +1,4 @@
+// src/features/wallet/components/actions/TransactionDrawerContent.tsx
 import SelectBankStep from "@/features/banks/components/SelectBankStep";
 import { useTransactionState } from "../../hooks/useTransactionState";
 import SelectContactStep from "@/features/contacts/components/SelectContactStep";
@@ -37,6 +38,7 @@ export default function TransactionDrawerContent({
     actionType,
     handleStartOver,
     handleClose,
+    transactionId,
   } = state;
 
   const [activeStep, setActiveStep] = useState(step);
@@ -108,6 +110,7 @@ export default function TransactionDrawerContent({
         return (
           <SuccessStep
             transactionType={actionType}
+            transactionId={transactionId}
             onDone={handleClose}
             onStartOver={handleStartOver}
           />

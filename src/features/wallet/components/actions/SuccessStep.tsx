@@ -17,20 +17,24 @@ import { TransactionActionType } from "../../types/wallet";
 import ProjectDetailsCard from "@/features/projects/components/ProjectDetailsCard";
 import { Project } from "@/features/projects/types/project";
 import { PaymentSuccess02Icon } from "hugeicons-react";
+import { useWallet } from "@/contexts/WalletContext";
 
 interface SuccessStepProps {
   transactionType: TransactionActionType;
+  transactionId?: string;
   onDone: () => void;
   onStartOver: () => void;
 }
 
 export default function SuccessStep({
   transactionType,
+  transactionId,
   onDone,
   onStartOver,
 }: SuccessStepProps) {
   const [mounted, setMounted] = useState(false);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const { openDetailsDrawer } = useWallet();
 
   useEffect(() => {
     setMounted(true);
@@ -40,7 +44,7 @@ export default function SuccessStep({
     notifications.show({
       title: "Success",
       message: "Transaction complete.",
-      color: "teal",
+      color: "lime",
       icon: <CheckIcon size={18} />,
       autoClose: 5000,
     });
@@ -81,6 +85,25 @@ export default function SuccessStep({
   };
 
   const { title, message } = getSuccessMessages();
+
+  // Reusable component for the action buttons
+  const ActionButtons = () => (
+    <Stack w="100%" gap="sm">
+      <Button onClick={handleDoneClick} size="lg" fullWidth>
+        Done
+      </Button>
+      {transactionId && (
+        <Button
+          variant="light"
+          size="lg"
+          fullWidth
+          onClick={() => openDetailsDrawer(transactionId)}
+        >
+          View details
+        </Button>
+      )}
+    </Stack>
+  );
 
   return (
     <Stack align="center" justify="center" gap="lg" px="md">
@@ -140,9 +163,7 @@ export default function SuccessStep({
                 selectedProject={selectedProject}
                 setSelectedProject={setSelectedProject}
               />
-              <Button onClick={handleDoneClick} size="lg" fullWidth>
-                Done
-              </Button>
+              <ActionButtons />
             </Stack>
           )}
         </Transition>
@@ -158,9 +179,7 @@ export default function SuccessStep({
         >
           {(styles) => (
             <Stack align="center" w="100%" gap="lg" style={styles}>
-              <Button onClick={handleDoneClick} size="lg" fullWidth>
-                Done
-              </Button>
+              <ActionButtons />
             </Stack>
           )}
         </Transition>

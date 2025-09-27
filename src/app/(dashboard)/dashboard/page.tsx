@@ -1,3 +1,4 @@
+// src/app/(dashboard)/dashboard/page.tsx
 "use client";
 
 import PrimaryActionsCard from "@/features/wallet/components/PrimaryActionsCard";
@@ -6,6 +7,7 @@ import { useViewportSize } from "@mantine/hooks";
 import { useEffect, useState } from "react";
 import { useWallet } from "@/contexts/WalletContext";
 import TransactionDrawer from "@/features/wallet/components/actions/TransactionDrawer";
+import TransactionDetailsDrawer from "@/features/transactions/components/TransactionDetailsDrawer";
 
 export const dynamic = "force-dynamic";
 
@@ -23,6 +25,9 @@ export default function Dashboard() {
     closeActionDrawer,
     actionType,
     preselectedParty,
+    isDetailsDrawerOpen,
+    closeDetailsDrawer,
+    selectedTransaction,
   } = useWallet();
 
   return (
@@ -35,6 +40,12 @@ export default function Dashboard() {
         close={closeActionDrawer}
         actionType={actionType}
         preselectedParty={preselectedParty}
+      />
+
+      <TransactionDetailsDrawer
+        opened={isDetailsDrawerOpen}
+        close={closeDetailsDrawer}
+        transaction={selectedTransaction}
       />
     </>
   );

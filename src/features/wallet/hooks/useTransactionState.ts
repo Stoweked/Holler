@@ -1,3 +1,4 @@
+// src/features/wallet/hooks/useTransactionState.ts
 import { useState, useEffect, useCallback } from "react";
 import { Waiver } from "@/features/waivers/types/waiver";
 import { mockBanks } from "@/mockData/mockBanks";
@@ -29,6 +30,9 @@ export function useTransactionState(
   const [selectedWaiver, setSelectedWaiver] = useState<Waiver | null>(null);
   const [amount, setAmount] = useState<string | number>("");
   const [note, setNote] = useState("");
+  const [transactionId, setTransactionId] = useState<string | undefined>(
+    undefined
+  );
 
   useEffect(() => {
     if (opened) {
@@ -114,5 +118,7 @@ export function useTransactionState(
     handleClose,
     handleStartOver,
     actionType,
+    transactionId,
+    setTransactionId,
   };
 }

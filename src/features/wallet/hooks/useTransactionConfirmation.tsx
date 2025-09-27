@@ -1,3 +1,4 @@
+// src/features/wallet/hooks/useTransactionConfirmation.tsx
 import { notifications } from "@mantine/notifications";
 import { Waiver } from "@/features/waivers/types/waiver";
 import { TransactionActionType, TransactionStep } from "../types/wallet";
@@ -13,6 +14,7 @@ export interface ConfirmationParams {
   selectedWaiver: Waiver | null;
   handleClose: () => void;
   setStep: (step: TransactionStep) => void;
+  setTransactionId: (id: string) => void;
 }
 
 export function useTransactionConfirmation() {
@@ -25,6 +27,7 @@ export function useTransactionConfirmation() {
     selectedWaiver,
     handleClose,
     setStep,
+    setTransactionId,
   }: ConfirmationParams) => {
     const transactionData = {
       amount,
@@ -59,20 +62,8 @@ export function useTransactionConfirmation() {
     try {
       console.log(`Simulating API call to ${endpoint} with payload:`, payload);
 
-      // const successMessage =
-      //   transactionType === "deposit"
-      //     ? "Your deposit has been started."
-      //     : transactionType === "send"
-      //     ? "Your payment has been sent."
-      //     : "Your payment has been requested.";
-
-      // notifications.show({
-      //   title: "Success",
-      //   message: successMessage,
-      //   color: "lime",
-      //   icon: <CheckIcon size={16} />,
-      //   autoClose: 6000,
-      // });
+      const mockTransactionId = "1";
+      setTransactionId(mockTransactionId);
       setStep("success");
     } catch (error) {
       console.error("Transaction failed:", error);
