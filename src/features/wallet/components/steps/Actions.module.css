@@ -53,7 +53,7 @@
 }
 .coinImage {
   animation: rotate 800s linear infinite;
-  opacity: 40%;
+  opacity: 60%;
 }
 .coinOverlay {
   position: absolute;

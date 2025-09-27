@@ -112,7 +112,7 @@ export default function SuccessStep({
       <Button onClick={handleDoneClick} size="lg" fullWidth>
         Done
       </Button>
-      {transactionId && (
+      {/* {transactionId && (
         <Button
           variant="light"
           size="lg"
@@ -121,7 +121,7 @@ export default function SuccessStep({
         >
           View details
         </Button>
-      )}
+      )} */}
     </Stack>
   );
 
@@ -158,7 +158,7 @@ export default function SuccessStep({
         >
           {(styles) => (
             <Stack align="center" gap="xs" style={styles}>
-              <PaymentSuccess02Icon size={48} color="green" />
+              <PaymentSuccess02Icon size={48} />
               <Title order={1} ta="center" lh={1.2}>
                 {title}
               </Title>
