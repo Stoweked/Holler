@@ -6,30 +6,17 @@ import TermsAndConditions from "@/features/marketing/landing/TermsAndConditions"
 import { Stack, Text, Title } from "@mantine/core";
 import { ProfileProvider } from "@/features/account/contexts/ProfileContext";
 import Image from "next/image";
-import background from "../../../public/images/background.png";
 
 export default function LandingPage() {
   return (
     <ProfileProvider>
-      <div
-        style={{
-          position: "fixed",
-          height: "100vh",
-          width: "100vw",
-          overflow: "hidden",
-          zIndex: -1,
-        }}
+      <Stack
+        align="center"
+        justify="center"
+        mih="100vh"
+        p="md"
+        className="pageBackground"
       >
-        <Image
-          src={background}
-          alt="Abstract background"
-          fill
-          style={{ objectFit: "cover" }}
-          priority
-          placeholder="blur"
-        />
-      </div>
-      <Stack align="center" justify="center" mih="100vh" p="md">
         <Stack align="center" gap="xl">
           <Image
             src="/images/holler-logo-green.svg"
