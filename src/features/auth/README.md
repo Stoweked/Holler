@@ -1,17 +1,31 @@
-# Authentication Feature
+# Authentication
 
-This directory contains all the logic, components, and types related to user authentication.
+This feature handles all aspects of user authentication, including signing up, logging in, and managing user sessions. It provides the UI and server-side logic required to secure the application.
 
-### Subdirectories
+### Key Components
 
-- **`/actions`**: Contains server-side actions for handling authentication, such as logging in, signing up, and resetting passwords.
-- **`/components`**: Includes all UI components related to authentication, including the login form, sign-up form, and multi-step sign-up flow.
-- **`/hooks`**: Houses custom React hooks for managing the state and logic of authentication forms, such as the multi-step sign-up process.
-- **`/types`**: Defines TypeScript types and interfaces for authentication-related data structures, ensuring type safety across the feature.
+- **`LoginForm.tsx`**: A form for existing users to sign in.
+- **`SignupForm.tsx`**: The initial form for new users to create an account.
+- **`MultiStepSignupForm.tsx`**: A component that guides new users through a comprehensive sign-up process, including profile information and password creation.
+- **`OAuthButtons.tsx`**: Provides options for users to sign in or sign up using third-party providers like Google or GitHub.
 
-### Key Components and Logic
+### Hooks
 
-- **`LoginForm.tsx`**: The main component for the user login form, handling user input and form submission.
-- **`MultiStepSignupForm.tsx`**: A component that orchestrates the multi-step sign-up process, guiding users through profile information and password creation.
-- **`useMultiStepSignupForm.ts`**: A custom hook that manages the state and logic for the multi-step sign-up form, including step transitions and form validation.
-- **Server Actions**: The `actions` directory contains various server-side functions that interact with Supabase for user authentication, such as `login.ts`, `signup.ts`, and `logout.ts`.
+- **`useMultiStepSignupForm.ts`**: Manages the state, validation, and step transitions for the multi-step sign-up flow.
+
+### Actions
+
+- **`login.ts`**: A Server Action to handle user login.
+- **`signup.ts`**: A Server Action to handle new user registration.
+- **`logout.ts`**: A Server Action to terminate the user's session.
+- **`forgot-password.ts`**: A Server Action to initiate the password reset process.
+- **`reset-password.ts`**: A Server Action to finalize the password reset.
+
+### How to Use
+
+The authentication components are used on the application's public routes (e.g., `/login`, `/signup`). They use Server Actions to communicate with the authentication provider (Supabase) to create and manage user sessions. The application's middleware relies on this feature to protect routes and redirect unauthenticated users.
+
+### Related Features
+
+- **Account**: Once a user is authenticated, their profile and account settings are managed by the `account` feature.
+- **Middleware**: The application's `middleware.ts` uses the authentication state to control access to protected dashboard pages.

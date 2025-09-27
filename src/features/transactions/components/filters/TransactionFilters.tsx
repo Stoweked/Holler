@@ -11,7 +11,7 @@ import {
 } from "@mantine/core";
 import { useDisclosure, useViewportSize } from "@mantine/hooks";
 import { FilterHorizontalIcon } from "hugeicons-react";
-import classes from "../../Transactions.module.css";
+import classes from "../Transactions.module.css";
 import dayjs from "dayjs";
 import {
   DateFilter,

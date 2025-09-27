@@ -11,7 +11,7 @@ import {
   Title,
   UnstyledButton,
 } from "@mantine/core";
-import classes from "../Transactions.module.css";
+import classes from "./Transactions.module.css";
 import { getInitials } from "@/lib/hooks/textUtils";
 import { useProfile } from "@/features/account/contexts/ProfileContext";
 import { getPartyName } from "../types/transactionParty";
