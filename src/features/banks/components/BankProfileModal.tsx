@@ -1,6 +1,7 @@
 import { Stack, Title, Text, Modal, Button, Avatar } from "@mantine/core";
 import { BankIcon } from "hugeicons-react";
 import { Bank } from "../types/bank";
+import Image from "next/image";
 
 interface BankProfileModalProps {
   opened: boolean;
@@ -28,14 +29,19 @@ export default function BankProfileModal({
     >
       <Stack gap="xl">
         <Stack align="center" gap="sm">
-          <Avatar
-            src={bank.avatar_url}
-            size={100}
-            radius="50%"
-            variant="default"
-          >
-            <BankIcon size={48} />
-          </Avatar>
+          {bank.avatar_url ? (
+            <Image
+              src={bank.avatar_url}
+              alt={`${bank.name} logo`}
+              width={100}
+              height={100}
+              style={{ borderRadius: "50%" }}
+            />
+          ) : (
+            <Avatar size={100} radius="50%" variant="default">
+              <BankIcon size={48} />
+            </Avatar>
+          )}
           <Stack align="center" gap={4}>
             <Title order={2} ta="center">
               {bank.name}
@@ -48,6 +54,7 @@ export default function BankProfileModal({
         <Button
           variant="outline"
           color="red"
+          size="lg"
           aria-label="Disconnect bank account"
         >
           Disconnect bank account

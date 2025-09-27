@@ -144,6 +144,7 @@ export default function SuccessStep({
                 alt="Coins graphic"
                 className={classes.coinImage}
                 priority
+                placeholder="blur"
               />
             </Box>
           )}

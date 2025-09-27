@@ -4,7 +4,6 @@ import { useEffect, useRef } from "react";
 import { Alert02Icon } from "hugeicons-react";
 import { useDisclosure } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
-import ContactDetailsCard from "@/features/contacts/components/ContactDetailsCard";
 import BankDetailsCard from "@/features/banks/components/BankDetailsCard";
 import { Waiver } from "@/features/waivers/types/waiver";
 import LienWaiverDetailsCard from "@/features/waivers/components/LienWaiverDetailsCard";
@@ -15,6 +14,7 @@ import { TransactionActionType } from "../../types/wallet";
 import { Bank } from "@/features/banks/types/bank";
 import { TransactionParty } from "@/features/transactions/types/transactionParty";
 import { useWaivers } from "@/features/waivers/contexts/WaiversContext";
+import { Contacts } from "@/features/contacts";
 
 interface PaymentAmountStepProps {
   party: TransactionParty | null;
@@ -87,7 +87,7 @@ export default function PaymentAmountStep({
     if (party.type === "contact") {
       return (
         <>
-          <ContactDetailsCard
+          <Contacts.DetailsCard
             contact={party.data}
             label={actionType === "send" ? "Send to" : "Request from"}
             onEdit={onEditContact}

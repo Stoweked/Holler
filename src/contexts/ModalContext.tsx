@@ -2,10 +2,20 @@
 
 import { createContext, useContext, ReactNode } from "react";
 import { useDisclosure } from "@mantine/hooks";
-import FeedbackModal from "@/components/modals/feedback/components/FeedbackModal";
-import TermsConditionsModal from "@/components/modals/TermsConditionsModal";
-import PrivacyPolicyModal from "@/components/modals/PrivacyPolicyModal";
-import WhatsNewModal from "@/components/modals/WhatsNewModal";
+import dynamic from "next/dynamic";
+
+const FeedbackModal = dynamic(
+  () => import("@/components/modals/feedback/components/FeedbackModal")
+);
+const TermsConditionsModal = dynamic(
+  () => import("@/components/modals/TermsConditionsModal")
+);
+const PrivacyPolicyModal = dynamic(
+  () => import("@/components/modals/PrivacyPolicyModal")
+);
+const WhatsNewModal = dynamic(
+  () => import("@/components/modals/WhatsNewModal")
+);
 
 interface ModalContextType {
   openFeedbackModal: () => void;

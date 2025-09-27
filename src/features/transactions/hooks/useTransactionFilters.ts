@@ -71,6 +71,7 @@ export const useTransactionFilters = () => {
     [searchParams, router]
   );
 
+  // This effect fetches transactions whenever the filters change.
   useEffect(() => {
     const fetchTransactions = async () => {
       setLoading(true);

@@ -1,6 +1,15 @@
-export * from "./ContactDetailsCard";
-export * from "./ContactItem";
-export * from "./ContactList";
-export * from "./ContactsDrawer";
-export * from "./ContactModal";
-export * from "./SelectContactStep";
+import ContactDetailsCard from "./ContactDetailsCard";
+import ContactItem from "./ContactItem";
+import ContactList from "./ContactList";
+import ContactsDrawer from "./ContactsDrawer";
+import ContactModal from "./ContactModal";
+import SelectContactStep from "./SelectContactStep";
+
+export const Contacts = {
+  DetailsCard: ContactDetailsCard,
+  Item: ContactItem,
+  List: ContactList,
+  Drawer: ContactsDrawer,
+  Modal: ContactModal,
+  SelectStep: SelectContactStep,
+};
