@@ -3,12 +3,14 @@
 import {
   Box,
   Button,
+  CheckIcon,
   Image,
   Stack,
   Text,
   Title,
   Transition,
 } from "@mantine/core";
+import { notifications } from "@mantine/notifications";
 import classes from "./Actions.module.css";
 import { useEffect, useState } from "react";
 import { TransactionActionType } from "../../types/wallet";
@@ -33,6 +35,17 @@ export default function SuccessStep({
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  const handleDoneClick = () => {
+    notifications.show({
+      title: "Success",
+      message: "Transaction complete.",
+      color: "teal",
+      icon: <CheckIcon size={18} />,
+      autoClose: 5000,
+    });
+    onDone();
+  };
 
   const showProjectDetails =
     transactionType === "send" || transactionType === "request";
@@ -127,7 +140,7 @@ export default function SuccessStep({
                 selectedProject={selectedProject}
                 setSelectedProject={setSelectedProject}
               />
-              <Button onClick={onDone} size="lg" fullWidth>
+              <Button onClick={handleDoneClick} size="lg" fullWidth>
                 Done
               </Button>
             </Stack>
@@ -145,7 +158,7 @@ export default function SuccessStep({
         >
           {(styles) => (
             <Stack align="center" w="100%" gap="lg" style={styles}>
-              <Button onClick={onDone} size="lg" fullWidth>
+              <Button onClick={handleDoneClick} size="lg" fullWidth>
                 Done
               </Button>
             </Stack>
