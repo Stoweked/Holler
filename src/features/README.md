@@ -1,13 +1,16 @@
 # Features
 
-This directory contains feature-based modules, each encapsulating all the necessary components, types, and actions for a specific feature.
+This directory implements a feature-sliced architecture. Each subdirectory represents a distinct feature of the application and encapsulates all the necessary logic, UI components, hooks, and data types required for that feature to function. This approach makes the codebase more modular, scalable, and easier to maintain.
 
-### Subdirectories
+### Feature Modules
 
-- **/account**: Components and logic for managing user accounts and profiles.
-- **/auth**: Authentication-related components, actions, and types.
-- **/banks**: Components for managing connected bank accounts.
-- **/contacts**: Components for contact management.
-- **/transactions**: Components for displaying transaction history and details.
-- **/waivers**: Components for creating, managing, and attaching lien waivers.
-- **/wallet**: Components and hooks for wallet actions like sending, requesting, and depositing funds.
+- **/account**: Manages user profiles and application settings.
+- **/auth**: Handles all aspects of user authentication, including sign-up, login, and session management.
+- **/banks**: Manages the connection and display of user bank accounts.
+- **/billing**: Displays billing settings, payment methods, and history.
+- **/business**: Enables users to create and manage their business profiles.
+- **/contacts**: Allows users to view and manage their personal and business contacts.
+- **/projects**: Allows users to create, manage, and organize their projects.
+- **/transactions**: Displays the user's transaction history with robust filtering and sorting.
+- **/waivers**: Handles the creation, management, and editing of lien waivers.
+- **/wallet**: Provides core functionality for managing a user's wallet and handling payment actions.
