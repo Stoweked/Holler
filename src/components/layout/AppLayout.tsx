@@ -2,6 +2,8 @@
 
 import "@mantine/core/styles.css";
 import React, { useEffect, useState } from "react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Analytics } from "@vercel/analytics/next";
 import { AppShell, ScrollArea, Center, Loader } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { SideNav } from "@/components/layout/SideNav";
@@ -153,7 +155,11 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           <ProjectsProvider>
             <FavoritesProvider>
               <ModalProvider>
-                <AuthenticatedLayout>{children}</AuthenticatedLayout>
+                <AuthenticatedLayout>
+                  {children}
+                  <SpeedInsights />
+                  <Analytics />
+                </AuthenticatedLayout>
               </ModalProvider>
             </FavoritesProvider>
           </ProjectsProvider>
