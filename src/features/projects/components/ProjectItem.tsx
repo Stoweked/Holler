@@ -3,11 +3,11 @@ import {
   Group,
   Stack,
   Text,
-  ThemeIcon,
   Title,
+  Tooltip,
   UnstyledButton,
 } from "@mantine/core";
-import { ArrowRight01Icon, House03Icon } from "hugeicons-react";
+import { PencilEdit01Icon } from "hugeicons-react";
 import classes from "./Projects.module.css";
 import { Project } from "../types/project";
 import dayjs from "dayjs";
@@ -29,20 +29,18 @@ function ProjectItem({ project, onEdit }: ProjectItemProps) {
       onClick={() => onEdit(project)}
     >
       <Group justify="space-between" wrap="nowrap">
-        <Group>
-          <ThemeIcon variant="default" radius="xl" size="xl">
-            <House03Icon size={20} />
-          </ThemeIcon>
-          <Stack gap={4} style={{ overflow: "hidden" }}>
-            <Title order={5} lineClamp={2} lh={1.2}>
-              {project.name}
-            </Title>
-            <Text size="sm" c="dimmed" w="100%">
-              {project.address}
-            </Text>
-          </Stack>
-        </Group>
-        <ArrowRight01Icon size={32} color="gray" />
+        <Stack gap={4} style={{ overflow: "hidden" }}>
+          <Title order={5} lineClamp={2} lh={1.2}>
+            {project.name}
+          </Title>
+          <Text size="sm" c="dimmed" w="100%">
+            {project.address}
+          </Text>
+        </Stack>
+
+        <Tooltip label="Edit project" position="left">
+          <PencilEdit01Icon size={32} color="gray" />
+        </Tooltip>
       </Group>
     </UnstyledButton>
   );
