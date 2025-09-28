@@ -105,7 +105,7 @@ function ProjectDetailsCard({
                   component="button"
                   type="button"
                   pointer
-                  classNames={{ input: classes.waiverInputWrapper }}
+                  classNames={{ input: classes.projectInputWrapper }}
                   rightSection={
                     <Tooltip position="left" label="Remove project">
                       <CloseButton
@@ -156,6 +156,7 @@ function ProjectDetailsCard({
           style={{
             boxShadow: "var(--mantine-shadow-xl)",
             borderRadius: "var(--mantine-radius-md)",
+            overflow: "hidden",
           }}
         >
           {userProjects.length > 0 && (

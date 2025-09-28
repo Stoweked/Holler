@@ -19,15 +19,10 @@ import {
   TransactionStatusFilter,
   TransactionTypeFilter,
 } from "../../types/transaction";
-import { TypeFilter } from "./TypeFilter";
-import { StatusFilter } from "./StatusFilter";
-import { DateFilterComponent } from "./DateFilter";
-import { AmountFilter } from "./AmountFilter";
-import { ContactFilter } from "./ContactFilter";
 import { Sort } from "./Sort";
 import { Options } from "./Options";
 import TransactionFiltersDrawer from "./TransactionFiltersDrawer";
-import { SearchFilter } from "./SearchFilter";
+import { Filters } from ".";
 
 const statusFilters: TransactionStatusFilter[] = [
   "All",
@@ -155,29 +150,29 @@ export default function TransactionFilters({
               </Indicator>
             ) : (
               <Group wrap="nowrap" gap="sm" style={{ flex: 1 }}>
-                <SearchFilter
+                <Filters.Search
                   searchQuery={searchQuery}
                   onSearchQueryChange={onSearchQueryChange}
                 />
-                <TypeFilter
+                <Filters.Type
                   activeTypeFilter={activeTypeFilter}
                   onTypeFilterChange={onTypeFilterChange}
                   typeFilters={typeFilters}
                 />
-                <StatusFilter
+                <Filters.Status
                   activeStatusFilter={activeStatusFilter}
                   onStatusFilterChange={onStatusFilterChange}
                   statusFilters={statusFilters}
                 />
-                <DateFilterComponent
+                <Filters.Date
                   activeDateFilter={activeDateFilter}
                   onDateChange={onDateChange}
                 />
-                <AmountFilter
+                <Filters.Amount
                   activeAmountFilter={activeAmountFilter}
                   onAmountFilterChange={onAmountFilterChange}
                 />
-                <ContactFilter
+                <Filters.Contact
                   activeContactFilter={activeContactFilter}
                   onContactFilterChange={onContactFilterChange}
                 />

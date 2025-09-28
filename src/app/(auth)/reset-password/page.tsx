@@ -107,7 +107,7 @@ export default function ResetPasswordPage() {
                 size="lg"
                 loading={isLoading}
               >
-                Reset Password
+                Reset password
               </Button>
             </Stack>
           </form>

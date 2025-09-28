@@ -54,10 +54,10 @@ function WaiverItem({ waiver, onEdit }: WaiverItemProps) {
               </Badge>
             </Group>
             <Stack gap={4} style={{ overflow: "hidden" }}>
-              <Title order={5} lineClamp={2} lh={1.2}>
+              <Title order={4} lineClamp={2} lh={1.2}>
                 {waiver.title}
               </Title>
-              <Text size="sm" c="dimmed" w="100%">
+              <Text size="xs" c="dimmed" w="100%">
                 Last modified: {dayjs(waiver.updated_at).fromNow()}
               </Text>
             </Stack>

@@ -112,7 +112,7 @@ export default function SuccessStep({
       <Button onClick={handleDoneClick} size="xl" fullWidth>
         Done
       </Button>
-      {transactionId && (
+      {/* {transactionId && (
         <Button
           variant="subtle"
           size="lg"
@@ -121,7 +121,7 @@ export default function SuccessStep({
         >
           View details
         </Button>
-      )}
+      )} */}
     </Stack>
   );
 

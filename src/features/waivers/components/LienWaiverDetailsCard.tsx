@@ -256,7 +256,7 @@ export default function LienWaiverDetailsCard({
                   <Button
                     variant="outline"
                     onClick={() => {
-                      openDrawer();
+                      openDrawer("payment");
                       combobox.closeDropdown();
                     }}
                   >

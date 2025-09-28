@@ -19,10 +19,11 @@ interface WaiversContextType {
   loading: boolean;
   refetchWaivers: () => Promise<Waiver[] | null>;
   drawerOpened: boolean;
-  openDrawer: () => void;
+  openDrawer: (source?: string) => void;
   closeDrawer: () => void;
   newlyCreatedWaiver: Waiver | null;
   setNewlyCreatedWaiver: (waiver: Waiver | null) => void;
+  source?: string;
 }
 
 const WaiversContext = createContext<WaiversContextType | undefined>(undefined);
@@ -30,11 +31,11 @@ const WaiversContext = createContext<WaiversContextType | undefined>(undefined);
 export function WaiversProvider({ children }: { children: ReactNode }) {
   const [waivers, setWaivers] = useState<Waiver[]>([]);
   const [loading, setLoading] = useState(true);
-  const [drawerOpened, { open: openDrawer, close: closeDrawer }] =
-    useDisclosure(false);
+  const [drawerOpened, { open, close: closeDrawer }] = useDisclosure(false);
   const [newlyCreatedWaiver, setNewlyCreatedWaiver] = useState<Waiver | null>(
     null
   );
+  const [source, setSource] = useState<string | undefined>();
   const supabase = createClient();
 
   const fetchWaivers = useCallback(async () => {
@@ -61,6 +62,14 @@ export function WaiversProvider({ children }: { children: ReactNode }) {
     fetchWaivers();
   }, [fetchWaivers]);
 
+  const openDrawer = useCallback(
+    (sourceValue?: string) => {
+      setSource(sourceValue);
+      open();
+    },
+    [open]
+  );
+
   const value = useMemo(
     () => ({
       waivers,
@@ -71,6 +80,7 @@ export function WaiversProvider({ children }: { children: ReactNode }) {
       closeDrawer,
       newlyCreatedWaiver,
       setNewlyCreatedWaiver,
+      source,
     }),
     [
       waivers,
@@ -80,6 +90,7 @@ export function WaiversProvider({ children }: { children: ReactNode }) {
       openDrawer,
       closeDrawer,
       newlyCreatedWaiver,
+      source,
     ]
   );
 

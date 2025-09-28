@@ -1,5 +1,5 @@
 // src/features/waivers/hooks/useWaiver.tsx
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { Link } from "@mantine/tiptap";
@@ -29,7 +29,13 @@ export function useWaiver(closeDrawer: () => void) {
   const [isSaving, setIsSaving] = useState(false);
   const [isArchiving, setIsArchiving] = useState(false);
 
-  const { waivers, refetchWaivers, setNewlyCreatedWaiver } = useWaivers();
+  const {
+    waivers,
+    refetchWaivers,
+    setNewlyCreatedWaiver,
+    source,
+    drawerOpened,
+  } = useWaivers();
   const supabase = createClient();
 
   const editor = useEditor({
@@ -44,7 +50,7 @@ export function useWaiver(closeDrawer: () => void) {
     immediatelyRender: false,
   });
 
-  const handleCreateNew = () => {
+  const handleCreateNew = useCallback(() => {
     setWaiverTitle("");
     setWaiverType("conditional");
     setWaiverPayment_type("progress");
@@ -53,7 +59,13 @@ export function useWaiver(closeDrawer: () => void) {
     setPreviousStep("initial");
     setEditorMode("new");
     setStep("editor");
-  };
+  }, [editor]);
+
+  useEffect(() => {
+    if (drawerOpened && source === "payment") {
+      handleCreateNew();
+    }
+  }, [drawerOpened, source, handleCreateNew]);
 
   const handleSelectTemplate = (content: string, name: string) => {
     setWaiverTitle(name);
@@ -149,13 +161,20 @@ export function useWaiver(closeDrawer: () => void) {
       });
 
       const allWaivers = await refetchWaivers();
-      if (allWaivers && allWaivers.length === 1 && newWaiverId) {
+      if (
+        source === "payment" &&
+        allWaivers &&
+        allWaivers.length === 1 &&
+        newWaiverId
+      ) {
         const newWaiver = allWaivers.find((w) => w.id === newWaiverId);
         if (newWaiver) {
           setNewlyCreatedWaiver(newWaiver);
         }
+        handleClose();
+      } else {
+        setStep("initial");
       }
-      handleClose();
     } catch (error) {
       console.error("Error saving waiver:", error);
       const errorMessage =
