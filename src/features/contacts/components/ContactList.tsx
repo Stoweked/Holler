@@ -97,12 +97,7 @@ export default function ContactsList({ onContactClick }: ContactsListProps) {
     <Stack gap="lg">
       <Group wrap="nowrap" w="100%">
         <Tooltip label="Invite contact" position="right">
-          <ActionIcon
-            variant="light"
-            size={60}
-            radius="xl"
-            aria-label="Invite contact"
-          >
+          <ActionIcon size={60} radius="xl" aria-label="Invite contact">
             <PlusSignIcon size={32} />
           </ActionIcon>
         </Tooltip>

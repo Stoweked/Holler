@@ -107,7 +107,7 @@ export default function BankList({
         </Center>
       )}
 
-      <Button size="lg" variant="default" onClick={onConnectNew}>
+      <Button size="xl" variant="default" onClick={onConnectNew}>
         Connect new account
       </Button>
     </Stack>

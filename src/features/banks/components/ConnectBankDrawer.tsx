@@ -47,7 +47,7 @@ export default function ConnectBankDrawer({
             radius="md"
             required
           />
-          <Button size="lg" radius="xl" mt="md">
+          <Button size="xl" radius="xl" mt="md">
             Connect account
           </Button>
         </Stack>
