@@ -11,10 +11,12 @@ import {
   Text,
   Center,
   Skeleton,
+  Group,
 } from "@mantine/core";
 import ContactItem from "./ContactItem";
 import {
   Cancel01Icon,
+  PlusSignIcon,
   Search01Icon,
   UserMultiple02Icon,
 } from "hugeicons-react";
@@ -93,31 +95,45 @@ export default function ContactsList({ onContactClick }: ContactsListProps) {
 
   return (
     <Stack gap="lg">
-      <Input
-        placeholder="Search contacts"
-        leftSection={<Search01Icon size={20} />}
-        radius="xl"
-        size="xl"
-        value={searchValue}
-        onChange={(event) => setSearchValue(event.currentTarget.value)}
-        rightSectionPointerEvents="all"
-        rightSection={
-          searchValue && (
-            <Tooltip label="Clear search" position="left">
-              <ActionIcon
-                onClick={() => setSearchValue("")}
-                variant="subtle"
-                aria-label="Clear search"
-                radius="xl"
-                size="lg"
-                color="gray"
-              >
-                <Cancel01Icon size={24} />
-              </ActionIcon>
-            </Tooltip>
-          )
-        }
-      />
+      <Group wrap="nowrap" w="100%">
+        <Tooltip label="Invite contact" position="right">
+          <ActionIcon
+            variant="light"
+            size={60}
+            radius="xl"
+            aria-label="Invite contact"
+          >
+            <PlusSignIcon size={32} />
+          </ActionIcon>
+        </Tooltip>
+
+        <Input
+          w="100%"
+          placeholder="Search contacts"
+          leftSection={<Search01Icon size={20} />}
+          radius="xl"
+          size="xl"
+          value={searchValue}
+          onChange={(event) => setSearchValue(event.currentTarget.value)}
+          rightSectionPointerEvents="all"
+          rightSection={
+            searchValue && (
+              <Tooltip label="Clear search" position="left">
+                <ActionIcon
+                  onClick={() => setSearchValue("")}
+                  variant="subtle"
+                  aria-label="Clear search"
+                  radius="xl"
+                  size="lg"
+                  color="gray"
+                >
+                  <Cancel01Icon size={24} />
+                </ActionIcon>
+              </Tooltip>
+            )
+          }
+        />
+      </Group>
 
       {filteredContacts.length > 0 ? (
         <>
