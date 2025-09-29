@@ -8,6 +8,8 @@ import { useEffect, useState } from "react";
 import { useWallet } from "@/features/wallet/contexts/WalletContext";
 import TransactionDrawer from "@/features/wallet/components/steps/TransactionDrawer";
 import TransactionDetailsDrawer from "@/features/transactions/components/TransactionDetailsDrawer";
+import FeaturedHeader from "@/components/layout/FeaturedHeader/FeaturedHeader";
+import { Space, Stack } from "@mantine/core";
 
 export const dynamic = "force-dynamic";
 
@@ -33,7 +35,12 @@ export default function Dashboard() {
   return (
     <>
       {mounted && isMobile && <PrimaryActionsCard />}
-      <TransactionsTable />
+
+      <Stack gap={0}>
+        <TransactionsTable />
+        <FeaturedHeader />
+        <Space h={100} />
+      </Stack>
 
       <TransactionDrawer
         opened={isActionDrawerOpen}
