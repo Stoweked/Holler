@@ -7,3 +7,20 @@
     light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
   overflow-x: auto;
 }
+
+.button {
+  width: 100%;
+  min-width: 300px;
+  border: 1px solid
+    light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+  border-radius: var(--mantine-radius-lg);
+  padding: var(--mantine-spacing-sm);
+  background-color: light-dark(
+    var(--mantine-color-white),
+    var(--mantine-color-dark-6)
+  );
+  transition: all 200ms ease-in-out;
+}
+.button:hover {
+  border-color: var(--mantine-color-lime-6);
+}
