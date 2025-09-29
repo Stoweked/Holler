@@ -10,7 +10,8 @@
 
 .button {
   width: 100%;
-  min-width: 300px;
+  min-width: 280px;
+  min-height: 84px;
   border: 1px solid
     light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
   border-radius: var(--mantine-radius-lg);
