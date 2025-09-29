@@ -7,6 +7,7 @@ import { Transaction } from "@/features/transactions/types/transaction";
 import { Search01Icon } from "hugeicons-react";
 import dynamic from "next/dynamic";
 import { useTransactionFilters } from "../hooks/useTransactionFilters";
+import FeaturedHeader from "@/components/layout/FeaturedHeader/FeaturedHeader";
 
 const TransactionDetailsDrawer = dynamic(
   () => import("./TransactionDetailsDrawer"),
@@ -56,6 +57,8 @@ export default function TransactionsTable() {
     <>
       <Stack>
         <Stack gap={0}>
+          <FeaturedHeader />
+
           <TransactionFilters
             activeStatusFilter={activeStatusFilter}
             onStatusFilterChange={setActiveStatusFilter}

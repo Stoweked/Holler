@@ -11,6 +11,11 @@ export const theme = createTheme({
         size: "md",
         radius: "xl",
       },
+      styles: {
+        root: {
+          flexShrink: 0,
+        },
+      },
     },
     Badge: {
       classNames: {
