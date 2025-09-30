@@ -8,6 +8,7 @@ import SuccessStep from "./SuccessStep";
 import { Transition } from "@mantine/core";
 import { useState, useEffect } from "react";
 import { Contact } from "@/features/contacts/types/contact";
+import InviteContactStep from "@/features/contacts/components/InviteContactStep";
 
 interface TransactionDrawerContentProps {
   state: ReturnType<typeof useTransactionState>;
@@ -39,6 +40,8 @@ export default function TransactionDrawerContent({
     handleStartOver,
     handleClose,
     transactionId,
+    handleInviteNew,
+    handleInvite,
   } = state;
 
   const [activeStep, setActiveStep] = useState(step);
@@ -66,7 +69,14 @@ export default function TransactionDrawerContent({
 
     switch (currentStep) {
       case "selectContact":
-        return <SelectContactStep onSelectContact={handleSelectContact} />;
+        return (
+          <SelectContactStep
+            onSelectContact={handleSelectContact}
+            onInviteNew={handleInviteNew}
+          />
+        );
+      case "inviteContact":
+        return <InviteContactStep onInvite={handleInvite} />;
       case "selectBank":
         return (
           <SelectBankStep onSelectBank={setBank} onConnectNew={onConnectNew} />

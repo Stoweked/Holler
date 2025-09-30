@@ -2,6 +2,7 @@
 
 export type TransactionStep =
   | "selectContact"
+  | "inviteContact"
   | "enterAmount"
   | "confirm"
   | "selectBank"

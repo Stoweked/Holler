@@ -26,9 +26,13 @@ import { useFavorites } from "../contexts/FavoritesContext";
 
 interface ContactsListProps {
   onContactClick?: (contact: Contact) => void;
+  onInviteNew: () => void;
 }
 
-export default function ContactsList({ onContactClick }: ContactsListProps) {
+export default function ContactsList({
+  onContactClick,
+  onInviteNew,
+}: ContactsListProps) {
   const [searchValue, setSearchValue] = useState("");
   const { contacts, loading: contactsLoading } = useContacts();
   const { favoriteContacts, loading: favoritesLoading } = useFavorites();
@@ -105,7 +109,12 @@ export default function ContactsList({ onContactClick }: ContactsListProps) {
     <Stack gap="lg">
       <Group wrap="nowrap" w="100%">
         <Tooltip label="Invite contact" position="right">
-          <ActionIcon size={60} radius="xl" aria-label="Invite contact">
+          <ActionIcon
+            onClick={onInviteNew}
+            size={60}
+            radius="xl"
+            aria-label="Invite contact"
+          >
             <PlusSignIcon size={32} />
           </ActionIcon>
         </Tooltip>
