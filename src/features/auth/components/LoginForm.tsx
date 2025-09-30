@@ -84,7 +84,7 @@ export default function LoginForm() {
             <Stack>
               <TextInput
                 size="lg"
-                radius="md"
+                radius="lg"
                 required
                 name="email"
                 label="Email"
@@ -93,7 +93,7 @@ export default function LoginForm() {
               />
               <PasswordInput
                 size="lg"
-                radius="md"
+                radius="lg"
                 required
                 name="password"
                 label="Password"

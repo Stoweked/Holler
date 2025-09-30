@@ -71,7 +71,7 @@ export function ProfileInfoStep({
         name="full_name"
         {...form.getInputProps("full_name")}
         size="lg"
-        radius="md"
+        radius="lg"
         disabled={isOAuth}
         description={
           isOAuth ? "Your name is linked to your Google account." : ""
@@ -83,7 +83,7 @@ export function ProfileInfoStep({
         name="username"
         {...form.getInputProps("username")}
         size="lg"
-        radius="md"
+        radius="lg"
         onBlur={handleUsernameBlur}
         rightSection={isCheckingUsername ? <Loader size="xs" /> : null}
       />
@@ -95,7 +95,7 @@ export function ProfileInfoStep({
         format="(###) ###-####"
         {...form.getInputProps("phone_number")}
         size="lg"
-        radius="md"
+        radius="lg"
       />
       <Button
         type="submit"

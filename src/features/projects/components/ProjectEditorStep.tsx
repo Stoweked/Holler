@@ -25,14 +25,14 @@ export default function ProjectEditorStep({
         required
         label="Project name"
         size="lg"
-        radius="md"
+        radius="lg"
         placeholder="Enter project name"
         {...form.getInputProps("name")}
       />
       <TextInput
         label="Address"
         size="lg"
-        radius="md"
+        radius="lg"
         placeholder="Enter project address"
         {...form.getInputProps("address")}
       />

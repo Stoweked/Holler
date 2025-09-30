@@ -13,15 +13,15 @@ export function WaiverEditor({ editor }: WaiverEditorProps) {
       styles={{
         root: {
           fontSize: "var(--mantine-font-size-lg)",
-          borderRadius: "var(--mantine-radius-md)",
+          borderRadius: "var(--mantine-radius-lg)",
         },
         content: {
           minHeight: 200,
-          borderRadius: "var(--mantine-radius-md)",
+          borderRadius: "var(--mantine-radius-lg)",
         },
         toolbar: {
-          borderTopLeftRadius: "var(--mantine-radius-md)",
-          borderTopRightRadius: "var(--mantine-radius-md)",
+          borderTopLeftRadius: "var(--mantine-radius-lg)",
+          borderTopRightRadius: "var(--mantine-radius-lg)",
         },
       }}
     >

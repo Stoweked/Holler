@@ -81,7 +81,7 @@ export default function ProfileForm({
               required
               label="Full name"
               size="lg"
-              radius="md"
+              radius="lg"
               placeholder="Enter your full name"
               {...form.getInputProps("formName")}
               disabled={isGoogleAuth}
@@ -96,7 +96,7 @@ export default function ProfileForm({
               required
               label="Email"
               size="lg"
-              radius="md"
+              radius="lg"
               placeholder="Enter your email address"
               type="email"
               {...form.getInputProps("formEmail")}
@@ -120,13 +120,13 @@ export default function ProfileForm({
               format="+1 (###) ###-####"
               mask="_"
               size="lg"
-              radius="md"
+              radius="lg"
               {...form.getInputProps("formPhone")}
             />
             <TextInput
               label="Username"
               size="lg"
-              radius="md"
+              radius="lg"
               placeholder="Enter a username"
               {...form.getInputProps("formUsername")}
               autoComplete="username"
@@ -136,7 +136,7 @@ export default function ProfileForm({
               {...form.getInputProps("formDob")}
               placeholder="MM/DD/YYYY"
               size="lg"
-              radius="md"
+              radius="lg"
               valueFormat="MM/DD/YYYY"
               maxDate={new Date()}
               leftSection={
@@ -147,7 +147,7 @@ export default function ProfileForm({
             <Select
               label="Gender"
               size="lg"
-              radius="md"
+              radius="lg"
               placeholder="Gender"
               data={["Male", "Female", "Nonbinary", "Prefer not to say"]}
               {...form.getInputProps("formGender")}
@@ -157,14 +157,14 @@ export default function ProfileForm({
           <TextInput
             label="Address"
             size="lg"
-            radius="md"
+            radius="lg"
             placeholder="Address"
             {...form.getInputProps("formAddress1")}
             autoComplete="street-address"
           />
           <TextInput
             size="lg"
-            radius="md"
+            radius="lg"
             placeholder="Apartment, suite, etc. (optional)"
             {...form.getInputProps("formAddress2")}
           />
@@ -172,7 +172,7 @@ export default function ProfileForm({
             <Grid.Col span={{ base: 12, md: 4 }}>
               <TextInput
                 size="lg"
-                radius="md"
+                radius="lg"
                 placeholder="City"
                 {...form.getInputProps("formCity")}
                 autoComplete="address-level2"
@@ -181,7 +181,7 @@ export default function ProfileForm({
             <Grid.Col span={{ base: 6, md: 4 }}>
               <NativeSelect
                 size="lg"
-                radius="md"
+                radius="lg"
                 {...form.getInputProps("formState")}
                 autoComplete="address-level1"
                 data={["", ...usStates]}
@@ -190,7 +190,7 @@ export default function ProfileForm({
             <Grid.Col span={{ base: 6, md: 4 }}>
               <TextInput
                 size="lg"
-                radius="md"
+                radius="lg"
                 placeholder="Zip code"
                 {...form.getInputProps("formZip")}
                 autoComplete="postal-code"

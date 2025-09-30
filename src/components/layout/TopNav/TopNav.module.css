@@ -1,7 +1,7 @@
 .search {
   border: 1px solid
     light-dark(var(--mantine-color-gray-4), var(--mantine-color-dark-4));
-  border-radius: 8px;
+  border-radius: 99px;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -14,7 +14,7 @@
     var(--mantine-color-dark-6)
   );
   transition: border-color 300ms;
-  height: 40px;
+  height: 44px;
 }
 
 .search:hover {

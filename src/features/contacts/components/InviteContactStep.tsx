@@ -59,8 +59,8 @@ export default function InviteContactStep({
           type="name"
           label="Full name"
           placeholder="Enter their full name"
-          size="xl"
-          radius="md"
+          size="lg"
+          radius="lg"
           {...form.getInputProps("fullName")}
         />
 
@@ -95,15 +95,15 @@ export default function InviteContactStep({
           <TextInput
             type="email"
             placeholder="Enter email address"
-            size="xl"
-            radius="md"
+            size="lg"
+            radius="lg"
             {...form.getInputProps("value")}
           />
         ) : (
           <TextInput
             type="tel"
             placeholder="Enter phone number"
-            size="xl"
+            size="lg"
             radius="md"
             {...form.getInputProps("value")}
           />

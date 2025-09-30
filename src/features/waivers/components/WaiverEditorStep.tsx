@@ -37,7 +37,7 @@ export default function WaiverEditorStep({
       <TextInput
         label="Title"
         size="lg"
-        radius="md"
+        radius="lg"
         placeholder="Enter waiver title"
         aria-label="Lien waiver title"
         value={waiverTitle}
@@ -48,7 +48,7 @@ export default function WaiverEditorStep({
         <Select
           label="Waiver Type"
           size="lg"
-          radius="md"
+          radius="lg"
           placeholder="Select waiver type"
           data={[
             { value: "conditional", label: "Conditional" },
@@ -69,7 +69,7 @@ export default function WaiverEditorStep({
         <Select
           label="Payment Type"
           size="lg"
-          radius="md"
+          radius="lg"
           placeholder="Select payment type"
           data={[
             { value: "progress", label: "In progress" },

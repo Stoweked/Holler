@@ -8,7 +8,7 @@ import SuccessStep from "./SuccessStep";
 import { Transition } from "@mantine/core";
 import { useState, useEffect } from "react";
 import { Contact } from "@/features/contacts/types/contact";
-import InviteContactStep from "@/features/contacts/components/InviteContactStep";
+import { Contacts } from "@/features/contacts";
 
 interface TransactionDrawerContentProps {
   state: ReturnType<typeof useTransactionState>;
@@ -78,7 +78,7 @@ export default function TransactionDrawerContent({
         );
       case "inviteContact":
         return (
-          <InviteContactStep
+          <Contacts.InviteStep
             onInvite={handleInvite}
             flowContext="transaction"
           />

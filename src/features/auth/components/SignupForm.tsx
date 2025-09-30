@@ -89,7 +89,7 @@ export default function SignUpForm() {
               <TextInput
                 required
                 size="lg"
-                radius="md"
+                radius="lg"
                 label="Email"
                 name="email"
                 placeholder="Your email address"

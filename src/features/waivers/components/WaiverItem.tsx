@@ -32,6 +32,13 @@ function WaiverItem({ waiver, onEdit }: WaiverItemProps) {
       <Group justify="space-between" wrap="nowrap">
         {/* Title */}
         <Stack gap={8}>
+          <Text size="xs" c="dimmed" w="100%">
+            Last modified: {dayjs(waiver.updated_at).fromNow()}
+          </Text>
+          <Title order={4} lineClamp={2} lh={1.2}>
+            {waiver.title}
+          </Title>
+
           <Group gap="xs">
             <Badge
               variant="light"
@@ -48,14 +55,6 @@ function WaiverItem({ waiver, onEdit }: WaiverItemProps) {
               {capitalize(waiver.payment_type)}
             </Badge>
           </Group>
-          <Stack gap={4} style={{ overflow: "hidden" }}>
-            <Title order={4} lineClamp={2} lh={1.2}>
-              {waiver.title}
-            </Title>
-            <Text size="xs" c="dimmed" w="100%">
-              Last modified: {dayjs(waiver.updated_at).fromNow()}
-            </Text>
-          </Stack>
         </Stack>
 
         <Tooltip label="Edit waiver" position="left">
