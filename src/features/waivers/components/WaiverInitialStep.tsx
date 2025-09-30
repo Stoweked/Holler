@@ -48,31 +48,44 @@ export default function WaiverInitialStep({
       {/* Search and existing waivers */}
       {hasWaivers && (
         <Stack>
-          <Input
-            placeholder="Search lien waivers"
-            leftSection={<Search01Icon size={20} />}
-            radius="xl"
-            size="xl"
-            value={searchValue}
-            onChange={(event) => setSearchValue(event.currentTarget.value)}
-            rightSectionPointerEvents="all"
-            rightSection={
-              searchValue && (
-                <Tooltip label="Clear search" position="left">
-                  <ActionIcon
-                    onClick={() => setSearchValue("")}
-                    variant="subtle"
-                    aria-label="Clear search"
-                    radius="xl"
-                    size="lg"
-                    color="gray"
-                  >
-                    <Cancel01Icon size={24} />
-                  </ActionIcon>
-                </Tooltip>
-              )
-            }
-          />
+          <Group wrap="nowrap" w="100%">
+            <Tooltip label="New waiver" position="right">
+              <ActionIcon
+                onClick={onNew}
+                size={60}
+                radius="xl"
+                aria-label="Create new waiver"
+              >
+                <PlusSignIcon size={32} />
+              </ActionIcon>
+            </Tooltip>
+            <Input
+              w="100%"
+              placeholder="Search lien waivers"
+              leftSection={<Search01Icon size={20} />}
+              radius="xl"
+              size="xl"
+              value={searchValue}
+              onChange={(event) => setSearchValue(event.currentTarget.value)}
+              rightSectionPointerEvents="all"
+              rightSection={
+                searchValue && (
+                  <Tooltip label="Clear search" position="left">
+                    <ActionIcon
+                      onClick={() => setSearchValue("")}
+                      variant="subtle"
+                      aria-label="Clear search"
+                      radius="xl"
+                      size="lg"
+                      color="gray"
+                    >
+                      <Cancel01Icon size={24} />
+                    </ActionIcon>
+                  </Tooltip>
+                )
+              }
+            />
+          </Group>
           {filteredWaivers.length > 0 &&
             filteredWaivers.map((waiver) => (
               <WaiverItem
@@ -98,6 +111,15 @@ export default function WaiverInitialStep({
                 ensure you get paid on time.
               </Text>
             </Stack>
+
+            {/* Create buttons */}
+            <Group grow className={classes.buttonGroup}>
+              <OptionButton
+                icon={<PlusSignIcon size={24} />}
+                label="Add new waiver"
+                onClick={onNew}
+              />
+            </Group>
           </Stack>
         </Center>
       )}
@@ -118,15 +140,6 @@ export default function WaiverInitialStep({
           </Stack>
         </Center>
       )}
-
-      {/* Create buttons */}
-      <Group grow className={classes.buttonGroup}>
-        <OptionButton
-          icon={<PlusSignIcon size={24} />}
-          label="Add new waiver"
-          onClick={onNew}
-        />
-      </Group>
     </Stack>
   );
 }

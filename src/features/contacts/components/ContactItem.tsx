@@ -35,7 +35,7 @@ function ContactItem({ contact, onClick }: ContactItemProps) {
         >
           <Avatar
             src={contact.avatar_url}
-            variant="light"
+            variant="default"
             radius="xl"
             size={44}
             color="lime"

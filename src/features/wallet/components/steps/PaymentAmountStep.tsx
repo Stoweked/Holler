@@ -140,10 +140,10 @@ export default function PaymentAmountStep({
             placeholder="Add a note or description"
             value={note}
             onChange={(event) => setNote(event.currentTarget.value)}
-            radius="md"
-            size="md"
+            radius="lg"
+            size="lg"
             autosize
-            minRows={3}
+            minRows={1}
           />
           <Button
             size="xl"

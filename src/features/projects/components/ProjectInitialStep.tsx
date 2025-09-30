@@ -45,31 +45,44 @@ export default function ProjectInitialStep({
     <Stack gap="md">
       {hasProjects && (
         <Stack>
-          <Input
-            placeholder="Search projects"
-            leftSection={<Search01Icon size={20} />}
-            radius="xl"
-            size="xl"
-            value={searchValue}
-            onChange={(event) => setSearchValue(event.currentTarget.value)}
-            rightSectionPointerEvents="all"
-            rightSection={
-              searchValue && (
-                <Tooltip label="Clear search" position="left">
-                  <ActionIcon
-                    onClick={() => setSearchValue("")}
-                    variant="subtle"
-                    aria-label="Clear search"
-                    radius="xl"
-                    size="lg"
-                    color="gray"
-                  >
-                    <Cancel01Icon size={24} />
-                  </ActionIcon>
-                </Tooltip>
-              )
-            }
-          />
+          <Group wrap="nowrap" w="100%">
+            <Tooltip label="New project" position="right">
+              <ActionIcon
+                onClick={onNew}
+                size={60}
+                radius="xl"
+                aria-label="Create new project"
+              >
+                <PlusSignIcon size={32} />
+              </ActionIcon>
+            </Tooltip>
+            <Input
+              w="100%"
+              placeholder="Search projects"
+              leftSection={<Search01Icon size={20} />}
+              radius="xl"
+              size="xl"
+              value={searchValue}
+              onChange={(event) => setSearchValue(event.currentTarget.value)}
+              rightSectionPointerEvents="all"
+              rightSection={
+                searchValue && (
+                  <Tooltip label="Clear search" position="left">
+                    <ActionIcon
+                      onClick={() => setSearchValue("")}
+                      variant="subtle"
+                      aria-label="Clear search"
+                      radius="xl"
+                      size="lg"
+                      color="gray"
+                    >
+                      <Cancel01Icon size={24} />
+                    </ActionIcon>
+                  </Tooltip>
+                )
+              }
+            />
+          </Group>
           {filteredProjects.length > 0 &&
             filteredProjects.map((project) => (
               <ProjectItem
@@ -93,6 +106,14 @@ export default function ProjectInitialStep({
                 Organize transactions for specific jobs.
               </Text>
             </Stack>
+
+            <Group grow className={classes.buttonGroup}>
+              <OptionButton
+                icon={<PlusSignIcon size={24} />}
+                label="Add new project"
+                onClick={onNew}
+              />
+            </Group>
           </Stack>
         </Center>
       )}
@@ -112,14 +133,6 @@ export default function ProjectInitialStep({
           </Stack>
         </Center>
       )}
-
-      <Group grow className={classes.buttonGroup}>
-        <OptionButton
-          icon={<PlusSignIcon size={24} />}
-          label="Add new project"
-          onClick={onNew}
-        />
-      </Group>
     </Stack>
   );
 }

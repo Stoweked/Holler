@@ -83,8 +83,16 @@ export default function ContactsList({ onContactClick }: ContactsListProps) {
   if (contactsLoading || favoritesLoading) {
     return (
       <Stack gap="lg">
-        <Skeleton height={60} radius="xl" w="100%" />
         <Stack gap="md">
+          <Group wrap="nowrap" w="100%">
+            <Skeleton
+              height={60}
+              w={60}
+              radius="xl"
+              style={{ flexShrink: 0 }}
+            />
+            <Skeleton height={60} radius="xl" w="100%" />
+          </Group>
           {Array.from({ length: 10 }).map((_, i) => (
             <Skeleton key={i} height={60} radius="xl" w="100%" />
           ))}
@@ -134,7 +142,7 @@ export default function ContactsList({ onContactClick }: ContactsListProps) {
         <>
           {favorites.length > 0 && (
             <Stack gap={8}>
-              <Title order={4} px="xs">
+              <Title order={3} px="xs">
                 Favorites
               </Title>
               <Stack gap={0}>
@@ -156,7 +164,7 @@ export default function ContactsList({ onContactClick }: ContactsListProps) {
               .sort()
               .map((letter) => (
                 <Stack gap={8} key={letter}>
-                  <Title order={4} px="xs">
+                  <Title order={3} px="xs">
                     {letter}
                   </Title>
                   <Stack gap={0}>

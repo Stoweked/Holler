@@ -8,8 +8,14 @@ import {
   Button,
   Text,
   Center,
+  Group,
 } from "@mantine/core";
-import { Cancel01Icon, Search01Icon, BankIcon } from "hugeicons-react";
+import {
+  Cancel01Icon,
+  Search01Icon,
+  BankIcon,
+  PlusSignIcon,
+} from "hugeicons-react";
 import BankItem from "./BankItem";
 import { Bank } from "../types/bank";
 
@@ -40,36 +46,50 @@ export default function BankList({
 
   return (
     <Stack gap="lg">
-      <Input
-        placeholder="Search for a bank"
-        leftSection={<Search01Icon size={20} />}
-        radius="xl"
-        size="xl"
-        value={searchValue}
-        onChange={(event) => setSearchValue(event.currentTarget.value)}
-        rightSectionPointerEvents="all"
-        rightSection={
-          searchValue && (
-            <Tooltip label="Clear search" position="left">
-              <ActionIcon
-                onClick={() => setSearchValue("")}
-                variant="subtle"
-                aria-label="Clear search"
-                radius="xl"
-                size="lg"
-              >
-                <Cancel01Icon size={24} />
-              </ActionIcon>
-            </Tooltip>
-          )
-        }
-      />
+      <Group wrap="nowrap" w="100%">
+        <Tooltip label="Connect new bank" position="right">
+          <ActionIcon
+            onClick={onConnectNew}
+            size={60}
+            radius="xl"
+            aria-label="Connect new bank"
+          >
+            <PlusSignIcon size={32} />
+          </ActionIcon>
+        </Tooltip>
+
+        <Input
+          w="100%"
+          placeholder="Search for a bank"
+          leftSection={<Search01Icon size={20} />}
+          radius="xl"
+          size="xl"
+          value={searchValue}
+          onChange={(event) => setSearchValue(event.currentTarget.value)}
+          rightSectionPointerEvents="all"
+          rightSection={
+            searchValue && (
+              <Tooltip label="Clear search" position="left">
+                <ActionIcon
+                  onClick={() => setSearchValue("")}
+                  variant="subtle"
+                  aria-label="Clear search"
+                  radius="xl"
+                  size="lg"
+                >
+                  <Cancel01Icon size={24} />
+                </ActionIcon>
+              </Tooltip>
+            )
+          }
+        />
+      </Group>
 
       {/* Show content only if there are results */}
 
       {filteredBanks.length > 0 ? (
         <Stack>
-          <Title order={4}>Your accounts</Title>
+          <Title order={3}>Your accounts</Title>
           <Stack gap={0}>
             {filteredBanks.map((bank) => (
               <BankItem
@@ -106,10 +126,6 @@ export default function BankList({
           </Stack>
         </Center>
       )}
-
-      <Button size="xl" variant="default" onClick={onConnectNew}>
-        Connect new account
-      </Button>
     </Stack>
   );
 }

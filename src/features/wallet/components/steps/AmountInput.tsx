@@ -125,7 +125,7 @@ const AmountInput = forwardRef<HTMLInputElement, AmountInputProps>(
             icon={<Alert02Icon />}
           />
         ) : (
-          <Text c="dimmed" size="md" ta="center">
+          <Text size="md" ta="center">
             {balanceText}
           </Text>
         )}
