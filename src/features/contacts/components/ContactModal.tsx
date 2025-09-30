@@ -66,27 +66,33 @@ function ContactModalContent({
         >
           <Title order={1}>{getInitials(name)}</Title>
         </Avatar>
-        <Button
-          variant="default"
-          size="compact-md"
-          leftSection={
-            <StarIcon
-              size={16}
-              color={isFavorite ? "gold" : "gray"}
-              style={{ fill: isFavorite ? "currentColor" : "none" }}
-            />
-          }
-          onClick={handleToggleFavorite}
-        >
-          {isFavorite ? "Favorite" : "Add to favorites"}
-        </Button>
+
+        {/* Only show favorite button if the contact has a username */}
+        {contact.username && (
+          <Button
+            variant="default"
+            size="compact-md"
+            leftSection={
+              <StarIcon
+                size={16}
+                color={isFavorite ? "gold" : "gray"}
+                style={{ fill: isFavorite ? "currentColor" : "none" }}
+              />
+            }
+            onClick={handleToggleFavorite}
+          >
+            {isFavorite ? "Favorite" : "Add to favorites"}
+          </Button>
+        )}
         <Stack align="center" gap={4}>
           <Title order={2} ta="center">
             {name}
           </Title>
-          <Text c="dimmed" ta="center">
-            @{contact.username}
-          </Text>
+          {contact.username && (
+            <Text c="dimmed" ta="center">
+              @{contact.username}
+            </Text>
+          )}
         </Stack>
       </Stack>
       {showButtons && (

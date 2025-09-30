@@ -13,21 +13,36 @@ import { Mail01Icon, SmartPhone01Icon } from "hugeicons-react";
 type InviteMethod = "email" | "phone";
 
 interface InviteContactStepProps {
-  onInvite: (method: InviteMethod, value: string) => void;
+  onInvite: (method: InviteMethod, value: string, fullName: string) => void;
+  flowContext: "contacts" | "transaction";
 }
 
 export default function InviteContactStep({
   onInvite,
+  flowContext,
 }: InviteContactStepProps) {
   const [inviteMethod, setInviteMethod] = useState<InviteMethod>("email");
   const [value, setValue] = useState("");
+  const [fullName, setFullName] = useState("");
 
   const handleInvite = () => {
-    onInvite(inviteMethod, value);
+    onInvite(inviteMethod, value, fullName);
   };
+
+  const buttonText = flowContext === "contacts" ? "Invite contact" : "Continue";
 
   return (
     <Stack gap="lg">
+      <TextInput
+        type="name"
+        label="Full name"
+        placeholder="Enter their full name"
+        size="xl"
+        radius="md"
+        value={fullName}
+        onChange={(event) => setFullName(event.currentTarget.value)}
+      />
+
       <SegmentedControl
         fullWidth
         size="xl"
@@ -59,7 +74,6 @@ export default function InviteContactStep({
       {inviteMethod === "email" ? (
         <TextInput
           type="email"
-          label="Email address"
           placeholder="Enter email address"
           size="xl"
           radius="md"
@@ -69,7 +83,6 @@ export default function InviteContactStep({
       ) : (
         <TextInput
           type="tel"
-          label="Phone number"
           placeholder="Enter phone number"
           size="xl"
           radius="md"
@@ -78,8 +91,13 @@ export default function InviteContactStep({
         />
       )}
 
-      <Button size="xl" radius="xl" onClick={handleInvite} disabled={!value}>
-        Continue
+      <Button
+        size="xl"
+        radius="xl"
+        onClick={handleInvite}
+        disabled={!value || !fullName}
+      >
+        {buttonText}
       </Button>
     </Stack>
   );

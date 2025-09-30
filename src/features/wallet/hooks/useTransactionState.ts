@@ -34,6 +34,7 @@ export function useTransactionState(
   const [transactionId, setTransactionId] = useState<string | undefined>(
     undefined
   );
+  const [cameFromInvite, setCameFromInvite] = useState(false);
 
   useEffect(() => {
     if (opened) {
@@ -47,12 +48,14 @@ export function useTransactionState(
         setAmount("");
         setNote("");
         setSelectedWaiver(null);
+        setCameFromInvite(false);
       }, 300);
     }
   }, [opened, preselectedParty, getInitialStep]);
 
   const handleSelectParty = (selected: TransactionParty) => {
     setParty(selected);
+    setCameFromInvite(false);
     setStep("enterAmount");
   };
 
@@ -60,17 +63,23 @@ export function useTransactionState(
     setStep("inviteContact");
   };
 
-  const handleInvite = (method: "email" | "phone", value: string) => {
+  const handleInvite = (
+    method: "email" | "phone",
+    value: string,
+    fullName: string
+  ) => {
     // Here you would typically have logic to check if a user with this email/phone already exists.
     // For now, we'll just create a temporary contact object.
     const newContact: Contact = {
       id: `new-${Date.now()}`,
       contactType: ContactType.Person,
-      full_name: value, // Use the value as a temporary name
+      full_name: fullName, // Use the value as a temporary name
       email: method === "email" ? value : "",
       phone_number: method === "phone" ? value : "",
+      username: undefined,
     };
     setParty({ type: "contact", data: newContact });
+    setCameFromInvite(true);
     setStep("enterAmount");
   };
 
@@ -84,7 +93,13 @@ export function useTransactionState(
 
   const handleAmountContinue = () => setStep("confirm");
   const handleEditBank = () => setStep("selectBank");
-  const handleEditContact = () => setStep("selectContact");
+  const handleEditContact = () => {
+    if (cameFromInvite) {
+      setStep("inviteContact");
+    } else {
+      setStep("selectContact");
+    }
+  };
 
   const handleBack = () => {
     if (step === "confirm") {
@@ -94,7 +109,9 @@ export function useTransactionState(
         close();
         return;
       }
-      if (actionType === "send" || actionType === "request") {
+      if (cameFromInvite) {
+        setStep("inviteContact");
+      } else if (actionType === "send" || actionType === "request") {
         setStep("selectContact");
       } else {
         setStep("selectBank");
@@ -117,6 +134,7 @@ export function useTransactionState(
     setAmount("");
     setNote("");
     setSelectedWaiver(null);
+    setCameFromInvite(false);
   };
 
   return {

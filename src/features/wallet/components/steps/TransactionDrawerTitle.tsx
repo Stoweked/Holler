@@ -24,6 +24,7 @@ export default function TransactionDrawerTitle({
           review: "Review deposit",
           amount: "Deposit amount",
           bank: "Select deposit account",
+          invite: "Invite a new contact",
         };
       case "send":
         return {
@@ -31,6 +32,7 @@ export default function TransactionDrawerTitle({
           review: "Review send",
           amount: "Amount to send",
           bank: "Select payment account",
+          invite: "Send payment to",
         };
       case "request":
         return {
@@ -38,6 +40,7 @@ export default function TransactionDrawerTitle({
           review: "Review request",
           amount: "Request amount",
           bank: "Select deposit account",
+          invite: "Request payment from",
         };
       case "transfer":
         return {
@@ -47,7 +50,13 @@ export default function TransactionDrawerTitle({
           bank: "Transfer to your bank",
         };
       default:
-        return { main: "Transaction", review: "", amount: "", bank: "" };
+        return {
+          main: "Transaction",
+          review: "",
+          amount: "",
+          bank: "",
+          invite: "",
+        };
     }
   };
 
@@ -56,10 +65,29 @@ export default function TransactionDrawerTitle({
     review: reviewTitle,
     amount: amountTitle,
     bank: bankTitle,
+    invite: inviteTitle,
   } = getTitle();
 
   if (step === "selectContact") return <>{mainTitle}</>;
   if (step === "selectBank") return <>{bankTitle}</>;
+
+  if (step === "inviteContact") {
+    return (
+      <Group gap="xs">
+        <Tooltip label="Back to contacts" position="right">
+          <ActionIcon
+            onClick={handleBack}
+            variant="subtle"
+            c="gray"
+            aria-label="Go back"
+          >
+            <ArrowLeft02Icon size={24} />
+          </ActionIcon>
+        </Tooltip>
+        <Text>{inviteTitle}</Text>
+      </Group>
+    );
+  }
 
   const backLabel =
     step === "confirm"

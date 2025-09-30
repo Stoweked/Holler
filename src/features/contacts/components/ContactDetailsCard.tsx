@@ -34,6 +34,11 @@ export default function ContactDetailsCard({
     contact.contactType === ContactType.Person
       ? contact.full_name
       : contact.business_name;
+
+  const details = contact.username
+    ? `@${contact.username}`
+    : contact.email || contact.phone_number;
+
   return (
     <Card withBorder radius="lg" p="xs" w="100%">
       <Group gap="xs" className={classes.recipientContainer} wrap="nowrap">
@@ -55,14 +60,14 @@ export default function ContactDetailsCard({
               {name}
             </Text>
 
-            {contact.username && (
+            {details && (
               <Text
                 size="sm"
                 c="dimmed"
                 lineClamp={1}
                 className={classes.detailsText}
               >
-                @{contact.username}
+                {details}
               </Text>
             )}
           </Stack>

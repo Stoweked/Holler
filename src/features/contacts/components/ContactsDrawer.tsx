@@ -28,8 +28,8 @@ export default function ContactsDrawer({
     setStep("invite");
   };
 
-  const handleInvite = (method: string, value: string) => {
-    console.log("Inviting new contact:", { method, value });
+  const handleInvite = (method: string, value: string, fullName: string) => {
+    console.log("Inviting new contact:", { method, value, fullName });
     // Here you would add the logic to actually create/invite the contact
     // For now, just close the drawer.
     setStep("list");
@@ -57,7 +57,9 @@ export default function ContactsDrawer({
           onInviteNew={handleInviteNew}
         />
       )}
-      {step === "invite" && <InviteContactStep onInvite={handleInvite} />}
+      {step === "invite" && (
+        <InviteContactStep onInvite={handleInvite} flowContext="contacts" />
+      )}
       <Space h={100} />
     </Drawer>
   );

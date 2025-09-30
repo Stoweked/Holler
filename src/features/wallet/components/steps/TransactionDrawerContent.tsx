@@ -42,6 +42,7 @@ export default function TransactionDrawerContent({
     transactionId,
     handleInviteNew,
     handleInvite,
+    handleBack,
   } = state;
 
   const [activeStep, setActiveStep] = useState(step);
@@ -76,7 +77,12 @@ export default function TransactionDrawerContent({
           />
         );
       case "inviteContact":
-        return <InviteContactStep onInvite={handleInvite} />;
+        return (
+          <InviteContactStep
+            onInvite={handleInvite}
+            flowContext="transaction"
+          />
+        );
       case "selectBank":
         return (
           <SelectBankStep onSelectBank={setBank} onConnectNew={onConnectNew} />
