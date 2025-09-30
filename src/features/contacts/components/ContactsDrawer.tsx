@@ -1,8 +1,9 @@
-import { Drawer, Space } from "@mantine/core";
+import { CheckIcon, Drawer, Space } from "@mantine/core";
 import ContactsList from "./ContactList";
 import { Contact } from "../types/contact";
 import InviteContactStep from "./InviteContactStep";
 import { useState } from "react";
+import { notifications } from "@mantine/notifications";
 
 interface ContactsDrawerProps {
   opened: boolean;
@@ -29,9 +30,13 @@ export default function ContactsDrawer({
   };
 
   const handleInvite = (method: string, value: string, fullName: string) => {
-    console.log("Inviting new contact:", { method, value, fullName });
-    // Here you would add the logic to actually create/invite the contact
-    // For now, just close the drawer.
+    // Show success notification
+    notifications.show({
+      title: "Invitation sent",
+      message: `${fullName} has been invited to Holler.`,
+      color: "lime",
+      icon: <CheckIcon size={18} />,
+    });
     setStep("list");
     close();
   };

@@ -53,6 +53,8 @@ const PartyInfoCard = ({
       name = getPartyName(party);
       if (party.data.username) {
         details = `@${party.data.username}`;
+      } else {
+        details = party.data.email || party.data.phone_number;
       }
       avatarSrc = party.data.avatar_url;
       avatarChildren = getInitials(name);
