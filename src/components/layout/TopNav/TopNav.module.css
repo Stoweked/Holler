@@ -14,7 +14,7 @@
     var(--mantine-color-dark-6)
   );
   transition: border-color 300ms;
-  height: 44px;
+  height: 38px;
 }
 
 .search:hover {
