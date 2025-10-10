@@ -1,3 +1,4 @@
+// src/features/transactions/components/filters/ProjectFilter.tsx
 import {
   Menu,
   Indicator,
@@ -5,45 +6,38 @@ import {
   TextInput,
   ScrollArea,
   Group,
-  Avatar,
   Text,
   Stack,
   CloseButton,
 } from "@mantine/core";
-import { UserMultiple02Icon, Search01Icon } from "hugeicons-react";
-import { mockContacts } from "@/mockData/mockContacts";
+import { House03Icon, Search01Icon } from "hugeicons-react";
+import { mockProjects } from "@/mockData/mockProjects";
 import { useState } from "react";
-import { Contact, ContactType } from "@/features/contacts/types/contact";
-import { getInitials } from "@/lib/hooks/textUtils";
+import { Project } from "@/features/projects/types/project";
 
-interface ContactFilterProps {
-  activeContactFilter: string;
-  onContactFilterChange: (contact: string) => void;
+interface ProjectFilterProps {
+  activeProjectFilter: string;
+  onProjectFilterChange: (project: string) => void;
 }
 
-export function ContactFilter({
-  activeContactFilter,
-  onContactFilterChange,
-}: ContactFilterProps) {
+export function ProjectFilter({
+  activeProjectFilter,
+  onProjectFilterChange,
+}: ProjectFilterProps) {
   const [searchValue, setSearchValue] = useState("");
 
-  const filteredContacts = mockContacts
-    .filter((contact: Contact) => {
-      const name =
-        contact.contactType === ContactType.Person
-          ? contact.full_name
-          : contact.business_name;
+  const filteredProjects = mockProjects
+    .filter((project: Project) => {
+      const name = project.name;
       return name?.toLowerCase().includes(searchValue.toLowerCase());
     })
     .sort((a, b) => {
-      const nameA =
-        a.contactType === ContactType.Person ? a.full_name : a.business_name;
-      const nameB =
-        b.contactType === ContactType.Person ? b.full_name : b.business_name;
+      const nameA = a.name;
+      const nameB = b.name;
       return (nameA || "").localeCompare(nameB || "");
     });
 
-  const isContactFilterActive = activeContactFilter !== "All";
+  const isProjectFilterActive = activeProjectFilter !== "All";
 
   return (
     <Menu
@@ -55,7 +49,7 @@ export function ContactFilter({
     >
       <Menu.Target>
         <Indicator
-          disabled={!isContactFilterActive}
+          disabled={!isProjectFilterActive}
           color="lime"
           position="top-end"
           size={10}
@@ -64,16 +58,16 @@ export function ContactFilter({
           <Button
             size="sm"
             variant="default"
-            leftSection={<UserMultiple02Icon size={16} />}
-            aria-label="Filter by contacts"
+            leftSection={<House03Icon size={16} />}
+            aria-label="Filter by projects"
           >
-            Contacts
+            Projects
           </Button>
         </Indicator>
       </Menu.Target>
       <Menu.Dropdown p="sm">
         <TextInput
-          placeholder="Search contacts"
+          placeholder="Search projects"
           leftSection={<Search01Icon size={16} />}
           value={searchValue}
           onChange={(event) => setSearchValue(event.currentTarget.value)}
@@ -92,27 +86,21 @@ export function ContactFilter({
           }
         />
         <ScrollArea h={300}>
-          {filteredContacts.map((contact) => {
-            const name =
-              contact.contactType === ContactType.Person
-                ? contact.full_name
-                : contact.business_name;
+          {filteredProjects.map((project) => {
+            const name = project.name;
             return (
               <Menu.Item
-                key={contact.id}
-                onClick={() => onContactFilterChange(name || "")}
+                key={project.id}
+                onClick={() => onProjectFilterChange(name || "")}
                 styles={{ item: { paddingLeft: "6px", paddingRight: "6px" } }}
               >
                 <Group wrap="nowrap" gap="xs">
-                  <Avatar color="lime" radius="xl" size="md">
-                    {contact.avatar_url || getInitials(name)}
-                  </Avatar>
                   <Stack gap={0}>
                     <Text size="sm" fw="bold">
                       {name}
                     </Text>
                     <Text size="xs" c="dimmed">
-                      {contact.email || contact.phone_number}
+                      {project.address}
                     </Text>
                   </Stack>
                 </Group>

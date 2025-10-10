@@ -32,6 +32,7 @@ export function StatusFilter({
             size="sm"
             leftSection={<CheckmarkCircle02Icon size={16} />}
             style={{ flexShrink: 0 }}
+            aria-label="Filter by status"
           >
             Status
           </Button>

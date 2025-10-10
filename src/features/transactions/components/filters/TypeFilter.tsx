@@ -32,6 +32,7 @@ export function TypeFilter({
             size="sm"
             leftSection={<ArrowLeftRightIcon size={16} />}
             style={{ flexShrink: 0 }}
+            aria-label="Filter by type"
           >
             Type
           </Button>

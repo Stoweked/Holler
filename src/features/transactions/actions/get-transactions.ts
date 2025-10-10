@@ -19,6 +19,7 @@ interface GetTransactionsParams {
   status: TransactionStatusFilter;
   type: TransactionTypeFilter;
   contact: string;
+  project: string;
   minAmount: number;
   maxAmount: number;
   search: string;
@@ -30,6 +31,7 @@ export async function getTransactions({
   status = "All",
   type = "All",
   contact = "All",
+  project = "All",
   minAmount = 0,
   maxAmount = 999999,
   search = "",
@@ -56,13 +58,17 @@ export async function getTransactions({
       );
     })
     .filter((transaction) => {
+      if (project === "All") return true;
+      return transaction.project === project;
+    })
+    .filter((transaction) => {
       return transaction.amount >= minAmount && transaction.amount <= maxAmount;
     })
     .filter((transaction) => {
       if (!search) return true;
       const searchableText = `${getPartyName(transaction.from)} ${getPartyName(
         transaction.to
-      )} ${transaction.bankAccount}`.toLowerCase();
+      )} ${transaction.bankAccount} ${transaction.project}`.toLowerCase();
       return search
         .toLowerCase()
         .split(" ")

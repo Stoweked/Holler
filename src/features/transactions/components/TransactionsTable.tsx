@@ -32,6 +32,8 @@ export default function TransactionsTable() {
     setAmountRange,
     activeContactFilter,
     setActiveContactFilter,
+    activeProjectFilter,
+    setActiveProjectFilter,
     searchQuery,
     setSearchQuery,
     processedTransactions,
@@ -48,6 +50,7 @@ export default function TransactionsTable() {
     activeTypeFilter !== "All" ||
     dateFilter !== "All" ||
     activeContactFilter !== "All" ||
+    activeProjectFilter !== "All" ||
     amountRange[0] !== 0 ||
     amountRange[1] !== 999999 ||
     searchQuery.length > 0;
@@ -68,6 +71,8 @@ export default function TransactionsTable() {
           onAmountFilterChange={setAmountRange}
           activeContactFilter={activeContactFilter}
           onContactFilterChange={setActiveContactFilter}
+          activeProjectFilter={activeProjectFilter}
+          onProjectFilterChange={setActiveProjectFilter}
           searchQuery={searchQuery}
           onSearchQueryChange={setSearchQuery}
           resetFilters={resetFilters}
@@ -109,6 +114,7 @@ export default function TransactionsTable() {
             {isAnyFilterActive ? (
               <Button
                 mt="lg"
+                mb={4}
                 size="md"
                 radius="xl"
                 variant="default"

@@ -47,8 +47,9 @@ export function SearchFilter({
             size="sm"
             variant="default"
             leftSection={<Search01Icon size={16} />}
+            aria-label="Search transactions"
           >
-            Keywords
+            Search
           </Button>
         </Indicator>
       </Menu.Target>

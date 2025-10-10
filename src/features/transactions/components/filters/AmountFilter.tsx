@@ -48,6 +48,7 @@ export function AmountFilter({
             size="sm"
             variant="default"
             leftSection={<CoinsDollarIcon size={16} />}
+            aria-label="Filter by amount"
           >
             Amount
           </Button>

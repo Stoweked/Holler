@@ -3,6 +3,7 @@ import { AmountFilter } from "./AmountFilter";
 import { ContactFilter } from "./ContactFilter";
 import { DateFilterComponent } from "./DateFilter";
 import { Options } from "./Options";
+import { ProjectFilter } from "./ProjectFilter";
 import { SearchFilter } from "./SearchFilter";
 import { Sort } from "./Sort";
 import { StatusFilter } from "./StatusFilter";
@@ -15,6 +16,7 @@ export const Filters = {
   Contact: ContactFilter,
   Date: DateFilterComponent,
   Options: Options,
+  Project: ProjectFilter,
   Search: SearchFilter,
   Sort: Sort,
   Status: StatusFilter,

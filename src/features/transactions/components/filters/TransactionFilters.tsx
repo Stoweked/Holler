@@ -1,4 +1,4 @@
-// src/features/transactions/filters/TransactionFilters.tsx
+// src/features/transactions/components/filters/TransactionFilters.tsx
 
 import {
   Group,
@@ -51,6 +51,8 @@ interface TransactionFiltersProps {
   onAmountFilterChange: (range: [number, number]) => void;
   activeContactFilter: string;
   onContactFilterChange: (contact: string) => void;
+  activeProjectFilter: string;
+  onProjectFilterChange: (project: string) => void;
   searchQuery: string[];
   onSearchQueryChange: (query: string[]) => void;
   resetFilters: () => void;
@@ -70,13 +72,15 @@ export default function TransactionFilters({
   onAmountFilterChange,
   activeContactFilter,
   onContactFilterChange,
+  activeProjectFilter,
+  onProjectFilterChange,
   searchQuery,
   onSearchQueryChange,
   resetFilters,
   total,
 }: TransactionFiltersProps) {
   const { width } = useViewportSize();
-  const condenseFilters = width < 1235;
+  const condenseFilters = width < 1360;
 
   const [drawerOpened, { open: openDrawer, close: closeDrawer }] =
     useDisclosure(false);
@@ -90,6 +94,7 @@ export default function TransactionFilters({
   const isAmountFilterActive =
     activeAmountFilter[0] !== 0 || activeAmountFilter[1] !== 999999;
   const isContactFilterActive = activeContactFilter !== "All";
+  const isProjectFilterActive = activeProjectFilter !== "All";
   const isSearchActive = searchQuery.length > 0;
 
   const isAnyFilterActive =
@@ -98,6 +103,7 @@ export default function TransactionFilters({
     isDateFilterActive ||
     isAmountFilterActive ||
     isContactFilterActive ||
+    isProjectFilterActive ||
     isSearchActive;
 
   const getDateFilterLabel = () => {
@@ -176,6 +182,10 @@ export default function TransactionFilters({
                   activeContactFilter={activeContactFilter}
                   onContactFilterChange={onContactFilterChange}
                 />
+                <Filters.Project
+                  activeProjectFilter={activeProjectFilter}
+                  onProjectFilterChange={onProjectFilterChange}
+                />
               </Group>
             )}
             {/* Right side */}
@@ -246,6 +256,15 @@ export default function TransactionFilters({
                   {activeContactFilter}
                 </Pill>
               )}
+              {isProjectFilterActive && (
+                <Pill
+                  className={classes.filterPill}
+                  withRemoveButton
+                  onRemove={() => onProjectFilterChange("All")}
+                >
+                  {activeProjectFilter}
+                </Pill>
+              )}
               {isDateFilterActive && (
                 <Pill
                   className={classes.filterPill}
@@ -279,6 +298,8 @@ export default function TransactionFilters({
         activeDateFilter={activeDateFilter}
         activeAmountFilter={activeAmountFilter}
         activeContactFilter={activeContactFilter}
+        activeProjectFilter={activeProjectFilter}
+        onProjectFilterChange={onProjectFilterChange}
         searchQuery={searchQuery}
         onSearchQueryChange={onSearchQueryChange}
         onAmountFilterChange={onAmountFilterChange}

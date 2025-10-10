@@ -26,6 +26,7 @@ export const useTransactionFilters = () => {
     dateFilter,
     amountRange,
     activeContactFilter,
+    activeProjectFilter,
     searchQuery,
   } = useMemo(() => {
     const status = (searchParams.get("status") ||
@@ -43,6 +44,7 @@ export const useTransactionFilters = () => {
       Number(searchParams.get("maxAmount")) || 999999,
     ];
     const contact = searchParams.get("contact") || "All";
+    const project = searchParams.get("project") || "All";
     const search = searchParams.get("search") || "";
     return {
       activeStatusFilter: status,
@@ -51,6 +53,7 @@ export const useTransactionFilters = () => {
       dateFilter: date,
       amountRange: range,
       activeContactFilter: contact,
+      activeProjectFilter: project,
       searchQuery: search,
     };
   }, [searchParams]);
@@ -84,6 +87,7 @@ export const useTransactionFilters = () => {
           minAmount: amountRange[0],
           maxAmount: amountRange[1],
           contact: activeContactFilter,
+          project: activeProjectFilter,
           search: searchQuery,
         });
         setTransactions(data);
@@ -103,6 +107,7 @@ export const useTransactionFilters = () => {
     dateFilter,
     amountRange,
     activeContactFilter,
+    activeProjectFilter,
     searchQuery,
   ]);
 
@@ -139,6 +144,8 @@ export const useTransactionFilters = () => {
       }),
     activeContactFilter,
     setActiveContactFilter: (contact: string) => updateParams({ contact }),
+    activeProjectFilter,
+    setActiveProjectFilter: (project: string) => updateParams({ project }),
     searchQuery: searchQuery.split(" ").filter(Boolean),
     setSearchQuery: (query: string[]) =>
       updateParams({ search: query.join(" ") }),

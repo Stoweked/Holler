@@ -97,6 +97,7 @@ export function DateFilterComponent({
               size="sm"
               variant="default"
               leftSection={<Calendar02Icon size={16} />}
+              aria-label="Filter by date"
             >
               Dates
             </Button>

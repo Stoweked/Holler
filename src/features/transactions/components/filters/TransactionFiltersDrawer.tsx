@@ -28,8 +28,10 @@ import { useDisclosure } from "@mantine/hooks";
 import dayjs from "dayjs";
 import { useState } from "react";
 import { mockContacts } from "@/mockData/mockContacts";
+import { mockProjects } from "@/mockData/mockProjects";
 import { Search01Icon } from "hugeicons-react";
 import { Contact, ContactType } from "@/features/contacts/types/contact";
+import { Project } from "@/features/projects/types/project";
 import { getInitials } from "@/lib/hooks/textUtils";
 
 const statusFilters: TransactionStatusFilter[] = [
@@ -54,6 +56,7 @@ interface TransactionFiltersDrawerProps {
   activeDateFilter: DateFilter | [Date, Date];
   activeAmountFilter: [number, number];
   activeContactFilter: string;
+  activeProjectFilter: string;
   searchQuery: string[];
   onSearchQueryChange: (query: string[]) => void;
   onStatusFilterChange: (filter: TransactionStatusFilter) => void;
@@ -61,6 +64,7 @@ interface TransactionFiltersDrawerProps {
   onDateChange: (date: DateFilter | [Date, Date]) => void;
   onAmountFilterChange: (range: [number, number]) => void;
   onContactFilterChange: (contact: string) => void;
+  onProjectFilterChange: (project: string) => void;
   total: number;
   resetFilters: () => void;
 }
@@ -73,6 +77,7 @@ export default function TransactionFiltersDrawer({
   activeDateFilter,
   activeAmountFilter,
   activeContactFilter,
+  activeProjectFilter,
   searchQuery,
   onSearchQueryChange,
   onStatusFilterChange,
@@ -80,6 +85,7 @@ export default function TransactionFiltersDrawer({
   onDateChange,
   onAmountFilterChange,
   onContactFilterChange,
+  onProjectFilterChange,
   total,
   resetFilters,
 }: TransactionFiltersDrawerProps) {
@@ -90,8 +96,10 @@ export default function TransactionFiltersDrawer({
     null,
   ]);
   const [contactSearch, setContactSearch] = useState("");
+  const [projectSearch, setProjectSearch] = useState("");
   const dateCombobox = useCombobox();
   const contactCombobox = useCombobox();
+  const projectCombobox = useCombobox();
 
   const handleDateChange = (value: [string | null, string | null]) => {
     const newRange: [Date | null, Date | null] = [
@@ -154,6 +162,29 @@ export default function TransactionFiltersDrawer({
             </Text>
             <Text size="sm" c="dimmed">
               {item.email || item.phone_number}
+            </Text>
+          </Stack>
+        </Group>
+      </Combobox.Option>
+    );
+  });
+
+  const filteredProjects = mockProjects.filter((project: Project) => {
+    const name = project.name;
+    return name?.toLowerCase().includes(projectSearch.toLowerCase());
+  });
+
+  const projectOptions = filteredProjects.map((item) => {
+    const name = item.name;
+    return (
+      <Combobox.Option value={name || ""} key={item.id}>
+        <Group>
+          <Stack gap={0}>
+            <Text size="md" fw="bold">
+              {name}
+            </Text>
+            <Text size="sm" c="dimmed">
+              {item.address}
             </Text>
           </Stack>
         </Group>
@@ -283,6 +314,63 @@ export default function TransactionFiltersDrawer({
                 <ScrollArea.Autosize type="scroll" mah={250}>
                   {contactOptions.length > 0 ? (
                     contactOptions
+                  ) : (
+                    <Combobox.Empty>No results found...</Combobox.Empty>
+                  )}
+                </ScrollArea.Autosize>
+              </Combobox.Options>
+            </Combobox.Dropdown>
+          </Combobox>
+
+          <Combobox
+            store={projectCombobox}
+            withinPortal={false}
+            onOptionSubmit={(val) => {
+              onProjectFilterChange(val);
+              projectCombobox.closeDropdown();
+            }}
+          >
+            <Combobox.Target>
+              <InputBase
+                label="Project"
+                size="lg"
+                radius="md"
+                component="button"
+                type="button"
+                pointer
+                rightSection={
+                  activeProjectFilter !== "All" ? (
+                    <CloseButton
+                      size="md"
+                      onMouseDown={(event) => event.preventDefault()}
+                      onClick={() => onProjectFilterChange("All")}
+                      aria-label="Clear value"
+                    />
+                  ) : (
+                    <Combobox.Chevron />
+                  )
+                }
+                onClick={() => projectCombobox.toggleDropdown()}
+              >
+                {activeProjectFilter !== "All"
+                  ? activeProjectFilter
+                  : "All projects"}
+              </InputBase>
+            </Combobox.Target>
+            <Combobox.Dropdown>
+              <Combobox.Search
+                size="lg"
+                value={projectSearch}
+                onChange={(event) =>
+                  setProjectSearch(event.currentTarget.value)
+                }
+                placeholder="Search projects"
+                leftSection={<Search01Icon size={16} />}
+              />
+              <Combobox.Options>
+                <ScrollArea.Autosize type="scroll" mah={250}>
+                  {projectOptions.length > 0 ? (
+                    projectOptions
                   ) : (
                     <Combobox.Empty>No results found...</Combobox.Empty>
                   )}
