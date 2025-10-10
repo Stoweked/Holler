@@ -3,23 +3,18 @@
 
 import {
   ActionIcon,
-  Box,
   Burger,
   Group,
   Image,
   Indicator,
-  Kbd,
-  Text,
   Title,
-  UnstyledButton,
 } from "@mantine/core";
-import { InboxIcon, Search01Icon } from "hugeicons-react";
+import { InboxIcon } from "hugeicons-react";
 import React, { useEffect } from "react";
 import { useDisclosure } from "@mantine/hooks";
-import classes from "./TopNav.module.css";
-import { spotlight } from "@mantine/spotlight";
 import AccountDropdown from "../../../features/account/components/AccountDropdown";
 import NotificationDrawer from "@/features/notifications/components/NotificationDrawer";
+import SearchBar from "./SearchBar";
 
 interface TopNavProps {
   opened: boolean;
@@ -64,21 +59,7 @@ export default function TopNav({ opened, toggle }: TopNavProps) {
         </Group>
 
         {/* Search */}
-        <UnstyledButton
-          aria-label="Search"
-          className={classes.search}
-          onClick={spotlight.open}
-        >
-          <Group align="center" justify="space-between" w="100%">
-            <Group align="center" gap="xs" wrap="nowrap">
-              <Search01Icon size={16} />
-              <Text style={{ whiteSpace: "nowrap" }}>Search</Text>
-            </Group>
-            <Box visibleFrom="md" style={{ marginTop: "-4px" }}>
-              <Kbd c="dimmed">⌘</Kbd> <Kbd c="dimmed">K</Kbd>
-            </Box>
-          </Group>
-        </UnstyledButton>
+        <SearchBar />
 
         {/* Notifications */}
         <Group wrap="nowrap" gap="xs">
