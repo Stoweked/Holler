@@ -10,6 +10,8 @@ import TransactionDrawer from "@/features/wallet/components/steps/TransactionDra
 import TransactionDetailsDrawer from "@/features/transactions/components/TransactionDetailsDrawer";
 import FeaturedHeader from "@/components/layout/FeaturedHeader/FeaturedHeader";
 import { Space, Stack } from "@mantine/core";
+import ProjectsGrid from "@/features/projects/components/ProjectsGrid";
+import { useProjects } from "@/features/projects/contexts/ProjectsContext";
 
 export const dynamic = "force-dynamic";
 
@@ -32,13 +34,21 @@ export default function Dashboard() {
     selectedTransaction,
   } = useWallet();
 
+  const { projects, loading: projectsLoading } = useProjects();
+
   return (
     <>
       {mounted && isMobile && <PrimaryActionsCard />}
 
       <Stack gap={0}>
+        {projectsLoading ? (
+          <Space h={100} /> // Or a skeleton loader
+        ) : projects.length > 0 ? (
+          <ProjectsGrid />
+        ) : (
+          <FeaturedHeader />
+        )}
         <TransactionsTable />
-        <FeaturedHeader />
         <Space h={100} />
       </Stack>
 

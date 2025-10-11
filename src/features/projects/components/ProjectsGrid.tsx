@@ -1,10 +1,11 @@
 // src/features/projects/components/ProjectsGrid.tsx
 "use client";
 
-import { SimpleGrid, Stack, Title, Text, Center } from "@mantine/core";
+import { Stack, Title, Text, Center, Group, ScrollArea } from "@mantine/core";
 import { useProjects } from "@/features/projects/contexts/ProjectsContext";
-import ProjectCard from "./ProjectCard";
 import { House03Icon } from "hugeicons-react";
+import ProjectCard from "./ProjectCard";
+import classes from "./Projects.module.css";
 
 export default function ProjectsGrid() {
   const { projects, loading } = useProjects();
@@ -32,10 +33,14 @@ export default function ProjectsGrid() {
   }
 
   return (
-    <SimpleGrid cols={{ base: 1, xs: 2, lg: 3, xl: 4 }} p="md" spacing="md">
-      {projects.map((project) => (
-        <ProjectCard key={project.id} project={project} />
-      ))}
-    </SimpleGrid>
+    <Group wrap="nowrap" className={classes.featuredHeader} grow>
+      <ScrollArea.Autosize type="never">
+        <Group p="md" gap="md" wrap="nowrap">
+          {projects.map((project) => (
+            <ProjectCard key={project.id} project={project} />
+          ))}
+        </Group>
+      </ScrollArea.Autosize>
+    </Group>
   );
 }

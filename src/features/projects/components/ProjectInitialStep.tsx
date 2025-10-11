@@ -9,7 +9,6 @@ import {
   Tooltip,
   Center,
 } from "@mantine/core";
-import ProjectItem from "./ProjectItem";
 import {
   Cancel01Icon,
   PlusSignIcon,
@@ -20,6 +19,7 @@ import { useState } from "react";
 import classes from "./Projects.module.css";
 import { Project } from "../types/project";
 import OptionButton from "@/components/shared/OptionButton/OptionButton";
+import ProjectCard from "./ProjectCard";
 
 interface ProjectInitialStepProps {
   onNew: () => void;
@@ -85,7 +85,7 @@ export default function ProjectInitialStep({
           </Group>
           {filteredProjects.length > 0 &&
             filteredProjects.map((project) => (
-              <ProjectItem
+              <ProjectCard
                 key={project.id}
                 project={project}
                 onEdit={onEditProject}
