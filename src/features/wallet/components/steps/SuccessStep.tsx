@@ -56,7 +56,6 @@ const TransactionPartyAvatar = ({ party }: { party: TransactionParty }) => {
           variant="default"
           size={80}
           radius="50%"
-          style={{ border: "1px solid var(--app-shell-border-color)" }}
         >
           {getInitials(name)}
         </Avatar>
@@ -164,16 +163,6 @@ export default function SuccessStep({
       <Button onClick={handleDoneClick} size="xl" fullWidth>
         Done
       </Button>
-      {/* {transactionId && (
-        <Button
-          variant="subtle"
-          size="lg"
-          fullWidth
-          onClick={() => openDetailsDrawer(transactionId)}
-        >
-          View details
-        </Button>
-      )} */}
     </Stack>
   );
 
@@ -214,67 +203,45 @@ export default function SuccessStep({
           {(styles) => (
             <Group align="center" justify="center" wrap="nowrap" style={styles}>
               <TransactionPartyAvatar party={fromAvatar} />
-              <ArrowRight02Icon size={32} color="var(--mantine-color-gray-6)" />
+              <ArrowRight02Icon size={32} />
               <TransactionPartyAvatar party={toAvatar} />
             </Group>
           )}
         </Transition>
 
-        {/* Title and subheading */}
+        {/* Title, subheading, and conditional content */}
         <Transition
           mounted={mounted}
           transition="slide-up"
-          duration={1000}
+          duration={1200}
           timingFunction="ease"
         >
           {(styles) => (
-            <Stack align="center" gap="xs" style={styles}>
-              <Title order={1} ta="center" lh={1.2}>
-                {title}
-              </Title>
-              <Text c="dimmed" ta="center">
-                {message}
-              </Text>
+            <Stack align="center" w="100%" gap="lg" style={styles}>
+              <Stack align="center" gap="xs">
+                <Title order={1} ta="center" lh={1.2}>
+                  {title}
+                </Title>
+                <Text c="dimmed" ta="center">
+                  {message}
+                </Text>
+              </Stack>
+
+              {showProjectDetails ? (
+                <>
+                  <ProjectDetailsCard
+                    selectedProject={selectedProject}
+                    setSelectedProject={setSelectedProject}
+                  />
+                  <ActionButtons />
+                </>
+              ) : (
+                <ActionButtons />
+              )}
             </Stack>
           )}
         </Transition>
       </Stack>
-
-      {/* Project details card */}
-      {showProjectDetails && (
-        <Transition
-          mounted={mounted}
-          transition="slide-up"
-          duration={1200}
-          timingFunction="ease"
-        >
-          {(styles) => (
-            <Stack align="center" w="100%" gap="lg" style={styles}>
-              <ProjectDetailsCard
-                selectedProject={selectedProject}
-                setSelectedProject={setSelectedProject}
-              />
-              <ActionButtons />
-            </Stack>
-          )}
-        </Transition>
-      )}
-
-      {/* Button */}
-      {!showProjectDetails && (
-        <Transition
-          mounted={mounted}
-          transition="slide-up"
-          duration={1200}
-          timingFunction="ease"
-        >
-          {(styles) => (
-            <Stack align="center" w="100%" gap="lg" style={styles}>
-              <ActionButtons />
-            </Stack>
-          )}
-        </Transition>
-      )}
     </Stack>
   );
 }
