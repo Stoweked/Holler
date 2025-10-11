@@ -1,4 +1,4 @@
-// src/features/wallet/components/actions/TransactionDrawerContent.tsx
+// src/features/wallet/components/steps/TransactionDrawerContent.tsx
 import SelectBankStep from "@/features/banks/components/SelectBankStep";
 import { useTransactionState } from "../../hooks/useTransactionState";
 import SelectContactStep from "@/features/contacts/components/SelectContactStep";
@@ -123,14 +123,32 @@ export default function TransactionDrawerContent({
         }
         return null;
       case "success":
-        return (
-          <SuccessStep
-            transactionType={actionType}
-            transactionId={transactionId}
-            onDone={handleClose}
-            onStartOver={handleStartOver}
-          />
-        );
+        if (party && bank) {
+          return (
+            <SuccessStep
+              transactionType={actionType}
+              transactionId={transactionId}
+              onDone={handleClose}
+              onStartOver={handleStartOver}
+              fromParty={
+                actionType === "transfer"
+                  ? {
+                      type: "wallet",
+                      name: "Holler Wallet",
+                    }
+                  : { type: "bank", data: bank }
+              }
+              toParty={
+                actionType === "deposit"
+                  ? { type: "wallet", name: "Holler Wallet" }
+                  : actionType === "transfer"
+                  ? { type: "bank", data: bank }
+                  : party
+              }
+            />
+          );
+        }
+        return null;
       default:
         return null;
     }

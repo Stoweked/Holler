@@ -1,21 +1,5 @@
 .successDrawer {
-  background-image: url("/images/texture-lines.png"),
-    light-dark(
-      /* Light mode gradient */
-        radial-gradient(
-          circle at 50% 40%,
-          var(--mantine-color-gray-0) 0%,
-          var(--mantine-color-green-light) 60%,
-          var(--mantine-color-gray-1) 100%
-        ),
-      /* Dark mode gradient */
-        radial-gradient(
-          circle at 10% 80%,
-          var(--mantine-color-green-light) 0%,
-          var(--mantine-color-dark-8) 60%,
-          var(--mantine-color-dark-9) 100%
-        )
-    );
+  background-image: url("/images/texture-lines.png");
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;

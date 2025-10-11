@@ -24,7 +24,7 @@
 
 .item:hover {
   background-color: light-dark(
-    var(--mantine-color-gray-0),
+    var(--mantine-color-body),
     var(--mantine-color-dark-8)
   );
   border-color: var(--mantine-color-lime-5);
@@ -55,7 +55,7 @@
 .projectInputWrapper {
   height: auto !important;
   background-color: light-dark(
-    var(--mantine-color-gray-0),
+    var(--mantine-color-body),
     var(--mantine-color-dark-5)
   );
 }

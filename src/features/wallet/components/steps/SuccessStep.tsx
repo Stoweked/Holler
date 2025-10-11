@@ -1,10 +1,12 @@
-// /src/features/wallet/components/actions/SuccessStep.tsx
+// src/features/wallet/components/steps/SuccessStep.tsx
 
 import {
   Anchor,
+  Avatar,
   Box,
   Button,
   CheckIcon,
+  Group,
   Stack,
   Text,
   Title,
@@ -17,17 +19,65 @@ import { useEffect, useState } from "react";
 import { TransactionActionType } from "../../types/wallet";
 import ProjectDetailsCard from "@/features/projects/components/ProjectDetailsCard";
 import { Project } from "@/features/projects/types/project";
-import { PaymentSuccess02Icon } from "hugeicons-react";
+import { ArrowRight02Icon, BankIcon } from "hugeicons-react";
 import { useWallet } from "@/features/wallet/contexts/WalletContext";
 
 // Import the image from the feature's assets folder
 import coinsImage from "../../assets/coins.png";
+import { TransactionParty } from "@/features/transactions/types/transactionParty";
+import { useProfile } from "@/features/account/contexts/ProfileContext";
+import { getInitials } from "@/lib/hooks/textUtils";
+import { ContactType } from "@/features/contacts/types/contact";
 
+// Helper component to render the correct avatar for each party
+const TransactionPartyAvatar = ({ party }: { party: TransactionParty }) => {
+  const { profile } = useProfile();
+
+  switch (party.type) {
+    case "self":
+      return (
+        <Avatar
+          src={profile?.avatar_url}
+          variant="default"
+          size={80}
+          radius="50%"
+        >
+          {getInitials(profile?.full_name)}
+        </Avatar>
+      );
+    case "contact":
+      const name =
+        party.data.contactType === ContactType.Person
+          ? party.data.full_name
+          : party.data.business_name;
+      return (
+        <Avatar
+          src={party.data.avatar_url}
+          variant="default"
+          size={80}
+          radius="50%"
+          style={{ border: "1px solid var(--app-shell-border-color)" }}
+        >
+          {getInitials(name)}
+        </Avatar>
+      );
+    case "bank":
+      return (
+        <Avatar src={party.data.avatar_url} size={80} radius="50%">
+          <BankIcon size={40} />
+        </Avatar>
+      );
+    default:
+      return <Avatar color="gray" size={80} radius="50%" variant="default" />;
+  }
+};
 interface SuccessStepProps {
   transactionType: TransactionActionType;
   transactionId?: string;
   onDone: () => void;
   onStartOver: () => void;
+  fromParty: TransactionParty;
+  toParty: TransactionParty;
 }
 
 export default function SuccessStep({
@@ -35,6 +85,8 @@ export default function SuccessStep({
   transactionId,
   onDone,
   onStartOver,
+  fromParty,
+  toParty,
 }: SuccessStepProps) {
   const [mounted, setMounted] = useState(false);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
@@ -125,6 +177,9 @@ export default function SuccessStep({
     </Stack>
   );
 
+  const fromAvatar = transactionType === "request" ? toParty : fromParty;
+  const toAvatar = transactionType === "request" ? fromParty : toParty;
+
   return (
     <Stack align="center" justify="center" gap="lg" px="md">
       <Stack gap="xl" w="100%" style={{ zIndex: 9 }}>
@@ -150,6 +205,21 @@ export default function SuccessStep({
           )}
         </Transition>
 
+        <Transition
+          mounted={mounted}
+          transition="fade"
+          duration={1000}
+          timingFunction="ease"
+        >
+          {(styles) => (
+            <Group align="center" justify="center" wrap="nowrap" style={styles}>
+              <TransactionPartyAvatar party={fromAvatar} />
+              <ArrowRight02Icon size={32} color="var(--mantine-color-gray-6)" />
+              <TransactionPartyAvatar party={toAvatar} />
+            </Group>
+          )}
+        </Transition>
+
         {/* Title and subheading */}
         <Transition
           mounted={mounted}
@@ -159,7 +229,6 @@ export default function SuccessStep({
         >
           {(styles) => (
             <Stack align="center" gap="xs" style={styles}>
-              <PaymentSuccess02Icon size={48} />
               <Title order={1} ta="center" lh={1.2}>
                 {title}
               </Title>

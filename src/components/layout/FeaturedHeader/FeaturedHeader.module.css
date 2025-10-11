@@ -4,6 +4,7 @@
     var(--mantine-color-dark-8)
   );
   overflow-x: auto;
+  border-bottom: 1px solid var(--app-shell-border-color);
 }
 
 .button {

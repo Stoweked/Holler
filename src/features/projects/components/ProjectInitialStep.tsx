@@ -107,7 +107,7 @@ export default function ProjectInitialStep({
               </Text>
             </Stack>
 
-            <Group grow className={classes.buttonGroup}>
+            <Group grow className={classes.buttonGroup} w="100%">
               <OptionButton
                 icon={<PlusSignIcon size={24} />}
                 label="Add new project"

@@ -30,14 +30,21 @@ export default function FeaturedHeader() {
           <Group p="md" gap="md" wrap="nowrap">
             <FeaturedHeaderCard
               icon={<Coins02Icon size={20} />}
-              title="Getting started"
+              title="Get started"
               description="Get set up to send & receive payments."
               ariaLabel="Getting started"
               onClick={openConnectBankDrawer}
             />
             <FeaturedHeaderCard
+              icon={<House03Icon size={20} />}
+              title="Organize by project"
+              description="Organize transactions by project for easier tracking."
+              ariaLabel="Create project"
+              onClick={openProjectsDrawer}
+            />
+            <FeaturedHeaderCard
               icon={<ClipboardIcon size={20} />}
-              title="Lien waivers"
+              title="Add lien waivers"
               description="Require lien waivers before releasing funds."
               ariaLabel="Add lien waivers"
               onClick={() => openWaiversDrawer("payment")}
@@ -48,13 +55,6 @@ export default function FeaturedHeader() {
               description="Fund your Holler account to pay builders and subs"
               ariaLabel="Connect bank account"
               onClick={() => openActionDrawer("deposit")}
-            />
-            <FeaturedHeaderCard
-              icon={<House03Icon size={20} />}
-              title="Projects"
-              description="Organize transactions by project for easier tracking."
-              ariaLabel="Create project"
-              onClick={openProjectsDrawer}
             />
           </Group>
         </ScrollArea.Autosize>
