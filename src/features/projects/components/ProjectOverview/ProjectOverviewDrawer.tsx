@@ -1,11 +1,16 @@
-// src/features/projects/components/ProjectOverviewDrawer.tsx
+// src/features/projects/components/ProjectOverview/ProjectOverviewDrawer.tsx
 "use client";
 
-import { Drawer, Space, Stack } from "@mantine/core";
+import { Button, CheckIcon, Drawer, Space, Stack } from "@mantine/core";
+import { notifications } from "@mantine/notifications";
+import { AlertCircleIcon } from "hugeicons-react";
+import { useState } from "react";
 import { Project } from "../../types/project";
-import ProjectDetailsCard from "./ProjectOverviewDetailsCard";
+import ProjectOverviewDetailsCard from "./ProjectOverviewDetailsCard";
 import ProjectOverviewContacts from "./ProjectOverviewContacts";
 import ProjectOverviewStats from "./ProjectOverviewStats";
+import { useProjects } from "../../contexts/ProjectsContext";
+import { archiveProject } from "../../actions";
 
 interface ProjectOverviewDrawerProps {
   project: Project | null;
@@ -18,9 +23,36 @@ export default function ProjectOverviewDrawer({
   opened,
   onClose,
 }: ProjectOverviewDrawerProps) {
+  const [isArchiving, setIsArchiving] = useState(false);
+  const { refetchProjects } = useProjects();
+
   if (!project) {
     return null;
   }
+
+  const handleArchive = async () => {
+    setIsArchiving(true);
+    const result = await archiveProject(project.id);
+
+    if (result?.error) {
+      notifications.show({
+        title: "Error",
+        message: result.error,
+        color: "red",
+        icon: <AlertCircleIcon size={18} />,
+      });
+    } else {
+      notifications.show({
+        title: "Project archived",
+        message: "Your project has been archived.",
+        color: "lime",
+        icon: <CheckIcon size={16} />,
+      });
+      await refetchProjects();
+      onClose(); // Close the drawer on success
+    }
+    setIsArchiving(false);
+  };
 
   return (
     <Drawer
@@ -31,12 +63,28 @@ export default function ProjectOverviewDrawer({
       size="md"
       position="left"
     >
-      <Stack gap="lg">
-        <ProjectDetailsCard project={project} />
-        <ProjectOverviewStats project={project} />
-        <ProjectOverviewContacts project={project} />
-        <Space h={100} />
+      <Stack
+        justify="space-between"
+        style={{ minHeight: "calc(100vh - 60px)" }}
+      >
+        <Stack gap="lg">
+          <ProjectOverviewDetailsCard project={project} />
+          <ProjectOverviewStats project={project} />
+          <ProjectOverviewContacts project={project} />
+        </Stack>
+
+        <Button
+          color="red"
+          size="lg"
+          onClick={handleArchive}
+          loading={isArchiving}
+          fullWidth
+          mt="lg"
+        >
+          Archive Project
+        </Button>
       </Stack>
+      <Space h={100} />
     </Drawer>
   );
 }

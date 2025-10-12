@@ -11,12 +11,14 @@ import {
 } from "@/features/transactions/types/transaction";
 import { useRouter, useSearchParams } from "next/navigation";
 import { getTransactions } from "../actions/get-transactions";
+import { useProjects } from "@/features/projects/contexts/ProjectsContext";
 
 export const useTransactionFilters = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
+  const { projects } = useProjects(); // <-- Fetch projects from context
 
   // Memoize all derived state from searchParams to prevent re-renders
   const {
@@ -26,7 +28,7 @@ export const useTransactionFilters = () => {
     dateFilter,
     amountRange,
     activeContactFilter,
-    activeProjectFilter,
+    activeProjectFilter, // This will now be the project ID
     searchQuery,
   } = useMemo(() => {
     const status = (searchParams.get("status") ||
@@ -44,7 +46,7 @@ export const useTransactionFilters = () => {
       Number(searchParams.get("maxAmount")) || 999999,
     ];
     const contact = searchParams.get("contact") || "All";
-    const project = searchParams.get("project") || "All";
+    const project = searchParams.get("project") || "All"; // This is now the ID
     const search = searchParams.get("search") || "";
     return {
       activeStatusFilter: status,
@@ -115,6 +117,13 @@ export const useTransactionFilters = () => {
     router.push("?");
   };
 
+  // Find the project name from the ID for display purposes
+  const activeProjectName = useMemo(() => {
+    if (activeProjectFilter === "All") return "All";
+    const project = projects.find((p) => p.id === activeProjectFilter);
+    return project ? project.name : "All";
+  }, [activeProjectFilter, projects]);
+
   return {
     activeStatusFilter,
     setActiveStatusFilter: (status: TransactionStatusFilter) =>
@@ -145,7 +154,8 @@ export const useTransactionFilters = () => {
     activeContactFilter,
     setActiveContactFilter: (contact: string) => updateParams({ contact }),
     activeProjectFilter,
-    setActiveProjectFilter: (project: string) => updateParams({ project }),
+    activeProjectName, // <-- Pass the name to the UI
+    setActiveProjectFilter: (project: string) => updateParams({ project }), // This will now set the ID
     searchQuery: searchQuery.split(" ").filter(Boolean),
     setSearchQuery: (query: string[]) =>
       updateParams({ search: query.join(" ") }),

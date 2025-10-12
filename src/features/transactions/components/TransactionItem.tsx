@@ -136,7 +136,7 @@ function TransactionItem({ transaction, onClick }: TransactionItemProps) {
               <Group gap={4} wrap="nowrap">
                 <House03Icon size={16} color="gray" />
                 <Text size="md" c="dimmed" fw={500} lh={1.2}>
-                  {project}
+                  {project.name}
                 </Text>
               </Group>
             )}

@@ -38,6 +38,7 @@ export default function TransactionsTable() {
     setSearchQuery,
     processedTransactions,
     resetFilters,
+    activeProjectName,
   } = useTransactionFilters();
 
   const handleTransactionClick = (transaction: Transaction) => {
@@ -72,6 +73,7 @@ export default function TransactionsTable() {
           activeContactFilter={activeContactFilter}
           onContactFilterChange={setActiveContactFilter}
           activeProjectFilter={activeProjectFilter}
+          activeProjectName={activeProjectName}
           onProjectFilterChange={setActiveProjectFilter}
           searchQuery={searchQuery}
           onSearchQueryChange={setSearchQuery}

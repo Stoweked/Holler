@@ -13,7 +13,7 @@ export const mockTransactions: Transaction[] = [
     from: { type: "self", name: "You" },
     to: { type: "contact", data: mockContacts[0] }, // Layton
     bankAccount: "Chase Checking",
-    project: mockProjects[0].name,
+    projectId: mockProjects[0].id, // Correct: Use projectId
   },
   {
     id: "2",
@@ -24,7 +24,7 @@ export const mockTransactions: Transaction[] = [
     from: { type: "contact", data: mockContacts[7] }, // Ezra Lee
     to: { type: "self", name: "You" },
     bankAccount: "Business Savings",
-    project: mockProjects[1].name,
+    projectId: mockProjects[1].id, // Correct: Use projectId
   },
   {
     id: "3",
@@ -35,7 +35,7 @@ export const mockTransactions: Transaction[] = [
     from: { type: "self", name: "You" },
     to: { type: "contact", data: mockContacts[2] }, // Autumn
     bankAccount: "Chase Checking",
-    project: mockProjects[2].name,
+    projectId: mockProjects[2].id, // Correct: Use projectId
   },
   {
     id: "4",
@@ -66,7 +66,7 @@ export const mockTransactions: Transaction[] = [
     from: { type: "contact", data: mockContacts[5] }, // Juniper
     to: { type: "self", name: "You" },
     bankAccount: "Business Savings",
-    project: mockProjects[0].name,
+    projectId: mockProjects[0].id, // Correct: Use projectId
   },
   {
     id: "7",
@@ -87,7 +87,7 @@ export const mockTransactions: Transaction[] = [
     from: { type: "contact", data: mockContacts[1] }, // River
     to: { type: "self", name: "You" },
     bankAccount: "Business Savings",
-    project: mockProjects[1].name,
+    projectId: mockProjects[1].id, // Correct: Use projectId
   },
   {
     id: "9",
@@ -98,7 +98,7 @@ export const mockTransactions: Transaction[] = [
     from: { type: "self", name: "You" },
     to: { type: "bank", data: mockBanks[1] }, // Bank of America
     bankAccount: "Chase Checking",
-    project: mockProjects[2].name,
+    projectId: mockProjects[2].id, // Correct: Use projectId
   },
   {
     id: "10",
@@ -119,7 +119,7 @@ export const mockTransactions: Transaction[] = [
     from: { type: "self", name: "You" },
     to: { type: "contact", data: mockContacts[8] }, // Sage
     bankAccount: "Chase Checking",
-    project: mockProjects[0].name,
+    projectId: mockProjects[0].id, // Correct: Use projectId
   },
   {
     id: "12",
@@ -130,6 +130,6 @@ export const mockTransactions: Transaction[] = [
     from: { type: "contact", data: mockContacts[9] }, // Wren
     to: { type: "self", name: "You" },
     bankAccount: "Business Savings",
-    project: mockProjects[1].name,
+    projectId: mockProjects[1].id, // Correct: Use projectId
   },
 ];

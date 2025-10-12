@@ -6,6 +6,8 @@ import { ArrowLeft02Icon } from "hugeicons-react";
 import ProjectInitialStep from "./ProjectInitialStep";
 import ProjectEditorStep from "./ProjectEditorStep";
 import { useProjectsDrawer } from "../hooks/useProjectsDrawer";
+import { useProjects } from "../contexts/ProjectsContext";
+import { Project } from "../types/project";
 
 interface ProjectsDrawerProps {
   opened: boolean;
@@ -13,20 +15,22 @@ interface ProjectsDrawerProps {
 }
 
 export default function ProjectsDrawer({ opened, close }: ProjectsDrawerProps) {
+  const { openOverviewDrawer } = useProjects();
   const {
     step,
-    editorMode,
     form,
     handleCreateNew,
-    handleEditProject,
     handleBack,
     handleClose,
     handleSave,
-    handleArchive,
     projects,
     isSaving,
-    isArchiving,
   } = useProjectsDrawer(close);
+
+  const handleProjectClick = (project: Project) => {
+    openOverviewDrawer(project);
+    close();
+  };
 
   const drawerTitle =
     step === "initial" ? (
@@ -43,7 +47,7 @@ export default function ProjectsDrawer({ opened, close }: ProjectsDrawerProps) {
             <ArrowLeft02Icon size={24} />
           </ActionIcon>
         </Tooltip>
-        <Text>{editorMode === "new" ? "New project" : "Edit project"}</Text>
+        <Text>New project</Text>
       </Group>
     );
 
@@ -59,7 +63,7 @@ export default function ProjectsDrawer({ opened, close }: ProjectsDrawerProps) {
       {step === "initial" && (
         <ProjectInitialStep
           onNew={handleCreateNew}
-          onEditProject={handleEditProject}
+          onProjectClick={handleProjectClick}
           projects={projects}
         />
       )}
@@ -68,9 +72,9 @@ export default function ProjectsDrawer({ opened, close }: ProjectsDrawerProps) {
           form={form}
           onSave={handleSave}
           isSaving={isSaving}
-          onArchive={handleArchive}
-          isArchiving={isArchiving}
-          editorMode={editorMode}
+          onArchive={() => {}} // This is no longer used
+          isArchiving={false} // This is no longer used
+          editorMode="new"
         />
       )}
       <Space h={100} />

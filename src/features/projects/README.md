@@ -8,7 +8,7 @@ This feature allows users to create, manage, and organize their projects. Projec
 
 ### Hooks & Contexts
 
-- **`useProject.tsx`**: A hook that manages the state and logic for the project creation and editing flow within the `ProjectsDrawer`.
+- **`useProjectsDrawer.ts`**: A hook that manages the state and logic for the project creation and editing flow within the `ProjectsDrawer`.
 - **`ProjectsContext.tsx`**: Provides a list of all projects to its children and includes functions to open the project management drawer.
 
 ### Actions

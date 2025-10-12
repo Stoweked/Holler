@@ -1,4 +1,6 @@
+// src/features/transactions/types/transaction.ts
 import { TransactionParty } from "./transactionParty";
+import { Project } from "@/features/projects/types/project"; // <-- Import Project type
 
 export type TransactionStatus = "Completed" | "Pending" | "Failed";
 export type TransactionType = "Sent" | "Received" | "Deposited" | "Transferred";
@@ -19,5 +21,6 @@ export interface Transaction {
   from: TransactionParty;
   to: TransactionParty;
   bankAccount: string;
-  project?: string; //temporary?
+  projectId?: string;
+  project?: Project;
 }

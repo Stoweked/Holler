@@ -1,4 +1,3 @@
-// src/features/transactions/actions/getTransactions.ts
 "use server";
 
 import { mockTransactions } from "@/mockData/mockTransactions";
@@ -12,6 +11,7 @@ import {
   DateFilter,
   SortOption,
 } from "../types/transaction";
+import { mockProjects } from "@/mockData/mockProjects";
 
 dayjs.extend(isBetween);
 
@@ -19,7 +19,7 @@ interface GetTransactionsParams {
   status: TransactionStatusFilter;
   type: TransactionTypeFilter;
   contact: string;
-  project: string;
+  project: string; // This is the project ID
   minAmount: number;
   maxAmount: number;
   search: string;
@@ -31,17 +31,25 @@ export async function getTransactions({
   status = "All",
   type = "All",
   contact = "All",
-  project = "All",
+  project = "All", // This is the project ID
   minAmount = 0,
   maxAmount = 999999,
   search = "",
   dateFilter = "All",
   sortBy = "Newest first",
 }: Partial<GetTransactionsParams>): Promise<Transaction[]> {
-  // Directly use the mock data as if it were a database response
-  const transactions = mockTransactions;
+  // First, "join" the project data to each transaction
+  const transactionsWithProjects = mockTransactions.map((transaction) => {
+    const projectData = mockProjects.find(
+      (p) => p.id === transaction.projectId
+    );
+    return {
+      ...transaction,
+      project: projectData,
+    };
+  });
 
-  const processedTransactions = transactions
+  const processedTransactions = transactionsWithProjects
     .filter((transaction) => {
       if (status === "All") return true;
       return transaction.status === status;
@@ -59,7 +67,8 @@ export async function getTransactions({
     })
     .filter((transaction) => {
       if (project === "All") return true;
-      return transaction.project === project;
+      // This is the corrected line: Compare the ID from the project object
+      return transaction.project?.id === project;
     })
     .filter((transaction) => {
       return transaction.amount >= minAmount && transaction.amount <= maxAmount;
@@ -68,7 +77,9 @@ export async function getTransactions({
       if (!search) return true;
       const searchableText = `${getPartyName(transaction.from)} ${getPartyName(
         transaction.to
-      )} ${transaction.bankAccount} ${transaction.project}`.toLowerCase();
+      )} ${transaction.bankAccount} ${
+        transaction.project?.name || ""
+      }`.toLowerCase();
       return search
         .toLowerCase()
         .split(" ")

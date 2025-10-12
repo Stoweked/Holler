@@ -25,7 +25,7 @@ interface RawProjectData extends Omit<Project, "profiles" | "businesses"> {
 interface ProjectsContextType {
   projects: Project[];
   loading: boolean;
-  refetchProjects: () => void;
+  refetchProjects: () => Promise<void>;
   // For the drawer that lists all projects
   listDrawerOpened: boolean;
   openListDrawer: () => void;
@@ -55,7 +55,7 @@ export function ProjectsProvider({ children }: { children: ReactNode }) {
   const closeOverviewDrawer = useCallback(() => {
     setSelectedProject(null);
     closeOverview();
-  }, [closeOverview]);
+  }, [closeOverview]); // `setSelectedProject` is stable and can be omitted, but adding it satisfies the linter
 
   const fetchProjects = useCallback(async () => {
     setLoading(true);
@@ -85,19 +85,28 @@ export function ProjectsProvider({ children }: { children: ReactNode }) {
       }));
       setProjects(formattedData);
 
-      if (selectedProject) {
-        const updatedSelectedProject = formattedData.find(
-          (p) => p.id === selectedProject.id
-        );
-        if (updatedSelectedProject) {
-          setSelectedProject(updatedSelectedProject);
-        } else {
-          closeOverviewDrawer();
+      // Use a functional update to get the latest `selectedProject` state
+      // without needing it in the dependency array.
+      setSelectedProject((currentSelectedProject) => {
+        if (!currentSelectedProject) {
+          return null; // Nothing was selected, so do nothing.
         }
-      }
+
+        const updatedSelectedProject = formattedData.find(
+          (p) => p.id === currentSelectedProject.id
+        );
+
+        if (updatedSelectedProject) {
+          return updatedSelectedProject; // Return the updated project data
+        }
+
+        // The project no longer exists in the list (e.g., archived), so close the drawer.
+        closeOverviewDrawer();
+        return null;
+      });
     }
     setLoading(false);
-  }, [supabase, selectedProject, closeOverviewDrawer]);
+  }, [supabase, closeOverviewDrawer]);
 
   useEffect(() => {
     fetchProjects();

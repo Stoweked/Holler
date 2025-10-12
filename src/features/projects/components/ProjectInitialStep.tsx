@@ -23,13 +23,13 @@ import ProjectCard from "./ProjectCard";
 
 interface ProjectInitialStepProps {
   onNew: () => void;
-  onEditProject: (project: Project) => void;
+  onProjectClick: (project: Project) => void;
   projects: Project[];
 }
 
 export default function ProjectInitialStep({
   onNew,
-  onEditProject,
+  onProjectClick,
   projects,
 }: ProjectInitialStepProps) {
   const [searchValue, setSearchValue] = useState("");
@@ -88,7 +88,7 @@ export default function ProjectInitialStep({
               <ProjectCard
                 key={project.id}
                 project={project}
-                onClick={onEditProject}
+                onClick={() => onProjectClick(project)}
               />
             ))}
         </Stack>

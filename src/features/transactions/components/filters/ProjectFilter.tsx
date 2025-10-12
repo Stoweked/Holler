@@ -11,9 +11,9 @@ import {
   CloseButton,
 } from "@mantine/core";
 import { House03Icon, Search01Icon } from "hugeicons-react";
-import { mockProjects } from "@/mockData/mockProjects";
 import { useState } from "react";
 import { Project } from "@/features/projects/types/project";
+import { useProjects } from "@/features/projects/contexts/ProjectsContext"; // <-- Import useProjects
 
 interface ProjectFilterProps {
   activeProjectFilter: string;
@@ -25,8 +25,9 @@ export function ProjectFilter({
   onProjectFilterChange,
 }: ProjectFilterProps) {
   const [searchValue, setSearchValue] = useState("");
+  const { projects } = useProjects(); // <-- Get projects from context
 
-  const filteredProjects = mockProjects
+  const filteredProjects = projects
     .filter((project: Project) => {
       const name = project.name;
       return name?.toLowerCase().includes(searchValue.toLowerCase());
@@ -91,7 +92,7 @@ export function ProjectFilter({
             return (
               <Menu.Item
                 key={project.id}
-                onClick={() => onProjectFilterChange(name || "")}
+                onClick={() => onProjectFilterChange(project.id || "")} // <-- Use project ID
                 styles={{ item: { paddingLeft: "6px", paddingRight: "6px" } }}
               >
                 <Group wrap="nowrap" gap="xs">

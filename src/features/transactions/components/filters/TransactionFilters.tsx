@@ -52,6 +52,7 @@ interface TransactionFiltersProps {
   activeContactFilter: string;
   onContactFilterChange: (contact: string) => void;
   activeProjectFilter: string;
+  activeProjectName: string;
   onProjectFilterChange: (project: string) => void;
   searchQuery: string[];
   onSearchQueryChange: (query: string[]) => void;
@@ -73,6 +74,7 @@ export default function TransactionFilters({
   activeContactFilter,
   onContactFilterChange,
   activeProjectFilter,
+  activeProjectName,
   onProjectFilterChange,
   searchQuery,
   onSearchQueryChange,
@@ -262,7 +264,7 @@ export default function TransactionFilters({
                   withRemoveButton
                   onRemove={() => onProjectFilterChange("All")}
                 >
-                  {activeProjectFilter}
+                  {activeProjectName}
                 </Pill>
               )}
               {isDateFilterActive && (

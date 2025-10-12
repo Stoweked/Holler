@@ -1,6 +1,8 @@
 import { Group, Stack, Text, Title, Button, Paper } from "@mantine/core";
 import { BarChart } from "@mantine/charts";
+import { useRouter } from "next/navigation";
 import { Project } from "../../types/project";
+import { useProjects } from "../../contexts/ProjectsContext";
 
 interface ProjectOverviewStatsProps {
   project: Project;
@@ -29,6 +31,9 @@ function StatItem({ label, value }: { label: string; value: string }) {
 export default function ProjectOverviewStats({
   project,
 }: ProjectOverviewStatsProps) {
+  const router = useRouter();
+  const { closeOverviewDrawer } = useProjects();
+
   // Mock data - replace with actual transaction data fetching logic
   const stats = {
     sent: "$12,500.00",
@@ -38,14 +43,26 @@ export default function ProjectOverviewStats({
   };
 
   const handleViewTransactions = () => {
-    // This will eventually link to the transactions page with a filter
-    console.log("Navigating to transactions for project:", project.id);
+    // 1. Close the current project overview drawer
+    closeOverviewDrawer();
+
+    // 2. Navigate to the dashboard with the project ID as a URL parameter
+    router.push(`/dashboard?project=${project.id}`);
   };
 
   return (
     <Paper withBorder radius="lg" p="md">
       <Stack>
-        <Title order={5}>Transactions</Title>
+        <Group justify="space-between" wrap="nowrap">
+          <Title order={5}>Transactions</Title>
+          <Button
+            variant="subtle"
+            size="compact-sm"
+            onClick={handleViewTransactions}
+          >
+            View all
+          </Button>
+        </Group>
 
         <Group justify="space-around" py="md">
           <StatItem label="Sent" value={stats.sent} />
@@ -60,7 +77,6 @@ export default function ProjectOverviewStats({
           dataKey="month"
           withYAxis={false}
           type="stacked"
-          //   orientation="vertical"
           withLegend
           legendProps={{ verticalAlign: "top", height: 50 }}
           valueFormatter={(value) =>
@@ -76,10 +92,6 @@ export default function ProjectOverviewStats({
             { name: "Requested", color: "cyan.5" },
           ]}
         />
-
-        <Button size="lg" onClick={handleViewTransactions}>
-          View transactions
-        </Button>
       </Stack>
     </Paper>
   );
