@@ -27,7 +27,7 @@
     "@mantine/dropzone": "^8.3.2",
     "@mantine/form": "^8.3.2",
     "@mantine/hooks": "^8.3.2",
-    "@mantine/modals": "^8.3.2",
+    "@mantine/modals": "^8.3.4",
     "@mantine/notifications": "^8.3.2",
     "@mantine/nprogress": "^8.3.2",
     "@mantine/spotlight": "^8.3.2",

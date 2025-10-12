@@ -6,20 +6,20 @@ import SideNavLinks from "./SideNavLinks";
 import PrimaryActionsCard from "../../../features/wallet/components/PrimaryActionsCard";
 import { useViewportSize } from "@mantine/hooks";
 import { useEffect } from "react";
-import { useModals } from "@/contexts/ModalContext";
+import { useAppModals } from "@/contexts/AppModalsContext";
 
 interface SideNavProps {
   closeMobileNav: () => void;
 }
 
 export function SideNav({ closeMobileNav }: SideNavProps) {
-  const { openTermsModal, openPrivacyModal } = useModals();
+  const { openTerms, openPrivacy } = useAppModals();
   const { width } = useViewportSize();
   const isMobile = width < 768;
 
   useEffect(() => {
-    const handleOpenTerms = () => openTermsModal();
-    const handleOpenPrivacy = () => openPrivacyModal();
+    const handleOpenTerms = () => openTerms();
+    const handleOpenPrivacy = () => openPrivacy();
 
     window.addEventListener("open-terms", handleOpenTerms);
     window.addEventListener("open-privacy", handleOpenPrivacy);
@@ -28,7 +28,7 @@ export function SideNav({ closeMobileNav }: SideNavProps) {
       window.removeEventListener("open-terms", handleOpenTerms);
       window.removeEventListener("open-privacy", handleOpenPrivacy);
     };
-  }, [openTermsModal, openPrivacyModal]);
+  }, [openTerms, openPrivacy]);
 
   return (
     <>
@@ -43,10 +43,7 @@ export function SideNav({ closeMobileNav }: SideNavProps) {
         </Stack>
         <Text c="dimmed" size="xs" p="md" ta="center">
           All rights reserved Holler, LLC®{" "}
-          <Anchor
-            aria-label="Open terms and conditions"
-            onClick={openTermsModal}
-          >
+          <Anchor aria-label="Open terms and conditions" onClick={openTerms}>
             Terms & Conditions
           </Anchor>
         </Text>

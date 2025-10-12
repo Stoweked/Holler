@@ -1,7 +1,7 @@
 // src/features/projects/components/ProjectOverview/ProjectOverviewDrawer.tsx
 "use client";
 
-import { Button, CheckIcon, Drawer, Space, Stack } from "@mantine/core";
+import { Button, CheckIcon, Drawer, Space, Stack, Text } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { AlertCircleIcon } from "hugeicons-react";
 import { useState } from "react";
@@ -11,6 +11,7 @@ import ProjectOverviewContacts from "./ProjectOverviewContacts";
 import ProjectOverviewStats from "./ProjectOverviewStats";
 import { useProjects } from "../../contexts/ProjectsContext";
 import { archiveProject } from "../../actions";
+import { modals } from "@mantine/modals";
 
 interface ProjectOverviewDrawerProps {
   project: Project | null;
@@ -54,6 +55,23 @@ export default function ProjectOverviewDrawer({
     setIsArchiving(false);
   };
 
+  //Archive confirmation modal
+  const confirmArchive = () =>
+    modals.openConfirmModal({
+      title: "Archive project",
+      centered: true,
+      withCloseButton: true,
+      children: (
+        <Text size="sm">
+          Are you sure you want to archive this project? All contacts and
+          transactions will still be available in your account.
+        </Text>
+      ),
+      labels: { confirm: "Confirm archive", cancel: "Cancel" },
+      confirmProps: { color: "red" },
+      onConfirm: () => handleArchive(),
+    });
+
   return (
     <Drawer
       opened={opened}
@@ -76,12 +94,12 @@ export default function ProjectOverviewDrawer({
         <Button
           color="red"
           size="lg"
-          onClick={handleArchive}
+          onClick={confirmArchive}
           loading={isArchiving}
           fullWidth
           mt="lg"
         >
-          Archive Project
+          Archive project
         </Button>
       </Stack>
       <Space h={100} />

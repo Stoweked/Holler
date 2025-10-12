@@ -9,7 +9,7 @@ import {
   Center,
   Indicator,
 } from "@mantine/core";
-import { DonutChart, PieChart } from "@mantine/charts";
+import { PieChart } from "@mantine/charts";
 import { useRouter } from "next/navigation";
 import { Project } from "../../types/project";
 import { useProjects } from "../../contexts/ProjectsContext";

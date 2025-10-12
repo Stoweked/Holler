@@ -14,11 +14,11 @@ import { useProfile } from "@/features/account/contexts/ProfileContext";
 import { useEffect } from "react";
 import { getInitials } from "@/lib/hooks/textUtils";
 import SettingsDrawer from "@/features/settings/components/SettingsDrawer";
-import { useModals } from "@/contexts/ModalContext";
+import { useAppModals } from "@/contexts/AppModalsContext";
 
 export default function AccountDropdown() {
   const { profile, loading } = useProfile();
-  const { openFeedbackModal, openWhatsNewModal } = useModals();
+  const { openFeedback, openWhatsNew } = useAppModals();
 
   const [
     openedProfileDrawer,
@@ -27,8 +27,8 @@ export default function AccountDropdown() {
 
   useEffect(() => {
     const handleOpenAccount = () => openProfileDrawer();
-    const handleOpenFeedback = () => openFeedbackModal();
-    const handleOpenWhatsNew = () => openWhatsNewModal();
+    const handleOpenFeedback = () => openFeedback();
+    const handleOpenWhatsNew = () => openWhatsNew();
 
     window.addEventListener("open-account", handleOpenAccount);
     window.addEventListener("open-feedback", handleOpenFeedback);
@@ -85,7 +85,7 @@ export default function AccountDropdown() {
 
           <Menu.Item
             leftSection={<PencilEdit01Icon size={16} />}
-            onClick={openFeedbackModal}
+            onClick={openFeedback}
             aria-label="Share feedback"
           >
             Share feedback
@@ -93,7 +93,7 @@ export default function AccountDropdown() {
 
           <Menu.Item
             leftSection={<StarsIcon size={16} />}
-            onClick={openWhatsNewModal}
+            onClick={openWhatsNew}
             aria-label="What's new"
           >
             What&apos;s new
