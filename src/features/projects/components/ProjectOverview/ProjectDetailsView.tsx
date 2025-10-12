@@ -1,6 +1,8 @@
 // src/features/projects/components/ProjectDetailsView.tsx
 import { Stack, Title, Text, Button, Group } from "@mantine/core";
 import { Project } from "../../types/project";
+import { useFormattedDate } from "@/lib/hooks/useFormattedDate";
+import { Calendar02Icon } from "hugeicons-react";
 
 interface ProjectDetailsViewProps {
   project: Project;
@@ -11,6 +13,9 @@ export default function ProjectDetailsView({
   project,
   onEdit,
 }: ProjectDetailsViewProps) {
+  const formattedStartDate = useFormattedDate(project.start_date);
+  const formattedEndDate = useFormattedDate(project.end_date);
+
   return (
     <Stack>
       <Group justify="space-between">
@@ -38,6 +43,32 @@ export default function ProjectDetailsView({
           </Stack>
         ) : null}
       </Stack>
+
+      <Group grow>
+        {project.start_date && (
+          <Group gap="sm" wrap="nowrap">
+            <Calendar02Icon size={20} color="gray" />
+            <Stack gap={0}>
+              <Text size="sm" c="dimmed">
+                Start Date
+              </Text>
+              <Text fw={500}>{formattedStartDate}</Text>
+            </Stack>
+          </Group>
+        )}
+
+        {project.end_date && (
+          <Group gap="sm" wrap="nowrap">
+            <Calendar02Icon size={20} color="gray" />
+            <Stack gap={0}>
+              <Text size="sm" c="dimmed">
+                End Date
+              </Text>
+              <Text fw={500}>{formattedEndDate}</Text>
+            </Stack>
+          </Group>
+        )}
+      </Group>
     </Stack>
   );
 }

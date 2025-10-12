@@ -21,7 +21,14 @@ export default function ActionButtons({
 }: ActionButtonsProps) {
   return (
     <>
-      <Group wrap="nowrap" gap="xl" grow w="100%" maw={300}>
+      <Group
+        wrap="nowrap"
+        gap="xl"
+        grow
+        w="100%"
+        maw={320}
+        justify="space-between"
+      >
         {/* Deposit button */}
         <Stack gap={8} align="center">
           <ActionIcon

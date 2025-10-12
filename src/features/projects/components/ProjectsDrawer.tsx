@@ -1,13 +1,22 @@
 // src/features/projects/components/ProjectsDrawer.tsx
 "use client";
 
-import { ActionIcon, Drawer, Group, Space, Text, Tooltip } from "@mantine/core";
+import {
+  ActionIcon,
+  Drawer,
+  Group,
+  Space,
+  Text,
+  Tooltip,
+  Button,
+  Stack,
+} from "@mantine/core";
 import { ArrowLeft02Icon } from "hugeicons-react";
-import ProjectInitialStep from "./ProjectInitialStep";
-import ProjectEditorStep from "./ProjectEditorStep";
 import { useProjectsDrawer } from "../hooks/useProjectsDrawer";
 import { useProjects } from "../contexts/ProjectsContext";
 import { Project } from "../types/project";
+import ProjectsList from "./ProjectsList";
+import ProjectFormInputs from "./ProjectFormInputs";
 
 interface ProjectsDrawerProps {
   opened: boolean;
@@ -67,18 +76,27 @@ export default function ProjectsDrawer({ opened, close }: ProjectsDrawerProps) {
       size="md"
     >
       {step === "initial" && (
-        <ProjectInitialStep
+        <ProjectsList
           onNew={handleCreateNew}
           onProjectClick={handleProjectClick}
           projects={projects}
         />
       )}
       {step === "editor" && (
-        <ProjectEditorStep
-          form={form}
-          onSave={handleSave}
-          isSaving={isSaving}
-        />
+        <Stack gap="lg">
+          <ProjectFormInputs form={form} />
+          <Group justify="flex-end">
+            <Button
+              aria-label="Save project"
+              size="lg"
+              fullWidth
+              onClick={handleSave}
+              loading={isSaving}
+            >
+              Save project
+            </Button>
+          </Group>
+        </Stack>
       )}
       <Space h={100} />
     </Drawer>

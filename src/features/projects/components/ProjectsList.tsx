@@ -22,17 +22,17 @@ import OptionButton from "@/components/shared/OptionButton/OptionButton";
 import ProjectCard from "./ProjectCard";
 import { useProjects } from "../contexts/ProjectsContext";
 
-interface ProjectInitialStepProps {
+interface ProjectsListProps {
   onNew: () => void;
   onProjectClick: (project: Project) => void;
   projects: Project[];
 }
 
-export default function ProjectInitialStep({
+export default function ProjectsList({
   onNew,
   onProjectClick,
   projects,
-}: ProjectInitialStepProps) {
+}: ProjectsListProps) {
   const [searchValue, setSearchValue] = useState("");
   const { isSelectionMode } = useProjects();
 

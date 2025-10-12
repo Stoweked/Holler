@@ -6,6 +6,8 @@ import { createServer } from "@/lib/supabase/server";
 export async function updateProject(formData: FormData, projectId: string) {
   const name = formData.get("name") as string;
   const address = formData.get("address") as string;
+  const start_date = formData.get("start_date") as string | null;
+  const end_date = formData.get("end_date") as string | null;
   const supabase = await createServer();
 
   const {
@@ -18,7 +20,13 @@ export async function updateProject(formData: FormData, projectId: string) {
 
   const { data, error } = await supabase
     .from("projects")
-    .update({ name, address, updated_at: new Date().toISOString() })
+    .update({
+      name,
+      address,
+      start_date,
+      end_date,
+      updated_at: new Date().toISOString(),
+    })
     .eq("id", projectId)
     .select()
     .single();

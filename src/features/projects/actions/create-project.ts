@@ -6,6 +6,8 @@ import { createServer } from "@/lib/supabase/server";
 export async function createProject(formData: FormData) {
   const name = formData.get("name") as string;
   const address = formData.get("address") as string;
+  const start_date = formData.get("start_date") as string | null;
+  const end_date = formData.get("end_date") as string | null;
   const supabase = await createServer();
 
   const {
@@ -18,7 +20,15 @@ export async function createProject(formData: FormData) {
 
   const { data, error } = await supabase
     .from("projects")
-    .insert([{ name, address, user_id: user.id }])
+    .insert([
+      {
+        name,
+        address,
+        start_date: start_date,
+        end_date: end_date,
+        user_id: user.id,
+      },
+    ])
     .select()
     .single();
 

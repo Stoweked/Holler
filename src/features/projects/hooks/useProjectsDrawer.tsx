@@ -18,6 +18,8 @@ export function useProjectsDrawer(closeDrawer: () => void) {
     initialValues: {
       name: "",
       address: "",
+      start_date: null as Date | null,
+      end_date: null as Date | null,
     },
     validate: {
       name: (value) => (value.trim().length > 0 ? null : "Name is required"),
@@ -45,11 +47,17 @@ export function useProjectsDrawer(closeDrawer: () => void) {
     if (form.validate().hasErrors) return;
 
     setIsSaving(true);
-    const { name, address } = form.values;
+    const { name, address, start_date, end_date } = form.values;
 
     const formData = new FormData();
     formData.append("name", name);
     formData.append("address", address);
+    if (start_date instanceof Date) {
+      formData.append("start_date", start_date.toISOString());
+    }
+    if (end_date instanceof Date) {
+      formData.append("end_date", end_date.toISOString());
+    }
 
     const result = await createProject(formData);
 

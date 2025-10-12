@@ -11,6 +11,8 @@ export interface Project {
   client_phone?: string;
   status?: "active" | "completed" | "on hold";
   created_at?: string;
+  start_date?: string;
+  end_date?: string;
   profiles?: Profile[]; // Users associated with the project
   businesses?: Business[]; // Businesses associated with the project
 }
