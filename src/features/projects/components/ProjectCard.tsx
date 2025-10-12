@@ -18,9 +18,16 @@ import React from "react";
 interface ProjectCardProps {
   project: Project;
   onClick?: (project: Project) => void;
+  isSelectionMode?: boolean;
 }
 
-function ProjectCard({ project, onClick }: ProjectCardProps) {
+function ProjectCard({
+  project,
+  onClick,
+  isSelectionMode = false,
+}: ProjectCardProps) {
+  const tooltipLabel = isSelectionMode ? "Select project" : "View project";
+
   const content = (
     <Stack gap="lg">
       <Group justify="space-between" wrap="nowrap">
@@ -38,13 +45,13 @@ function ProjectCard({ project, onClick }: ProjectCardProps) {
           </Stack>
         </Group>
 
-        <Tooltip label={"View project"} position="left">
+        <Tooltip label={tooltipLabel} position="left">
           <ActionIcon
             component="div"
             variant="subtle"
             size="xl"
             radius="xl"
-            aria-label={"View project"}
+            aria-label={tooltipLabel}
           >
             <ArrowRight01Icon size={32} />
           </ActionIcon>

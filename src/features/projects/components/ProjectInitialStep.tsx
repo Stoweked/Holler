@@ -20,6 +20,7 @@ import classes from "./Projects.module.css";
 import { Project } from "../types/project";
 import OptionButton from "@/components/shared/OptionButton/OptionButton";
 import ProjectCard from "./ProjectCard";
+import { useProjects } from "../contexts/ProjectsContext";
 
 interface ProjectInitialStepProps {
   onNew: () => void;
@@ -33,6 +34,7 @@ export default function ProjectInitialStep({
   projects,
 }: ProjectInitialStepProps) {
   const [searchValue, setSearchValue] = useState("");
+  const { isSelectionMode } = useProjects();
 
   const filteredProjects = projects.filter((project) =>
     project.name.toLowerCase().includes(searchValue.toLowerCase())
@@ -89,6 +91,7 @@ export default function ProjectInitialStep({
                 key={project.id}
                 project={project}
                 onClick={() => onProjectClick(project)}
+                isSelectionMode={isSelectionMode}
               />
             ))}
         </Stack>
