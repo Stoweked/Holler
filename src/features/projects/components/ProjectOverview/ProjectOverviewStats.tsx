@@ -99,7 +99,7 @@ export default function ProjectOverviewStats({
   ));
 
   return (
-    <Paper withBorder radius="lg" p="md">
+    <Paper withBorder radius="lg" p="md" shadow="xs">
       <Stack>
         <Group justify="space-between" wrap="nowrap">
           <Title order={5}>Transactions</Title>
