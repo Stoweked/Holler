@@ -6,6 +6,7 @@ import {
   ClipboardIcon,
   Coins02Icon,
   House03Icon,
+  OfficeIcon,
 } from "hugeicons-react";
 import { useWallet } from "@/features/wallet/contexts/WalletContext";
 import { useWaivers } from "@/features/waivers/contexts/WaiversContext";
@@ -23,6 +24,12 @@ export default function FeaturedHeader() {
     { open: openConnectBankDrawer, close: closeConnectBankDrawer },
   ] = useDisclosure(false);
 
+  const handleConnectBusiness = () => {
+    window.dispatchEvent(
+      new CustomEvent("open-settings", { detail: { tab: "business" } })
+    );
+  };
+
   return (
     <>
       <Group wrap="nowrap" className={classes.featuredHeader} grow>
@@ -34,6 +41,13 @@ export default function FeaturedHeader() {
               description="Get set up to send & receive payments."
               ariaLabel="Getting started"
               onClick={openConnectBankDrawer}
+            />
+            <FeaturedHeaderCard
+              icon={<OfficeIcon size={20} />}
+              title="Business profile"
+              description="Set up your Holler business profile."
+              ariaLabel="Business profile"
+              onClick={handleConnectBusiness}
             />
             <FeaturedHeaderCard
               icon={<House03Icon size={20} />}
