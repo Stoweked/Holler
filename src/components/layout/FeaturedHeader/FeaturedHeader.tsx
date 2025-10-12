@@ -17,7 +17,7 @@ import FeaturedHeaderCard from "./FeaturedHeaderCard";
 export default function FeaturedHeader() {
   const { openActionDrawer } = useWallet();
   const { openDrawer: openWaiversDrawer } = useWaivers();
-  const { openDrawer: openProjectsDrawer } = useProjects();
+  const { openListDrawer: openProjectsDrawer } = useProjects();
   const [
     openedConnectBankDrawer,
     { open: openConnectBankDrawer, close: closeConnectBankDrawer },

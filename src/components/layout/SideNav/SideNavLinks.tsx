@@ -26,7 +26,7 @@ interface SideNavLinksProps {
 export default function SideNavLinks({ closeMobileNav }: SideNavLinksProps) {
   const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
   const [initialSettingsTab, setInitialSettingsTab] = useState("account");
-  const { openDrawer: openProjectsDrawer } = useProjects();
+  const { openListDrawer: openProjectsDrawer } = useProjects();
 
   const [
     openedContactsDrawer,

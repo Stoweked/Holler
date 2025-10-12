@@ -88,7 +88,7 @@ export default function ProjectInitialStep({
               <ProjectCard
                 key={project.id}
                 project={project}
-                onEdit={onEditProject}
+                onClick={onEditProject}
               />
             ))}
         </Stack>

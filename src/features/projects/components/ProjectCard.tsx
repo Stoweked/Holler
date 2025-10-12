@@ -1,4 +1,4 @@
-// src/features/projects/components/ProjectItem.tsx
+// src/features/projects/components/ProjectCard.tsx
 import {
   ActionIcon,
   Badge,
@@ -14,15 +14,13 @@ import { ArrowRight01Icon, House03Icon } from "hugeicons-react";
 import classes from "./Projects.module.css";
 import { Project } from "../types/project";
 import React from "react";
-import Link from "next/link";
 
 interface ProjectCardProps {
   project: Project;
-  onEdit?: (project: Project) => void;
-  href?: string;
+  onClick?: (project: Project) => void;
 }
 
-function ProjectCard({ project, onEdit, href }: ProjectCardProps) {
+function ProjectCard({ project, onClick }: ProjectCardProps) {
   const content = (
     <Stack gap="lg">
       <Group justify="space-between" wrap="nowrap">
@@ -40,13 +38,13 @@ function ProjectCard({ project, onEdit, href }: ProjectCardProps) {
           </Stack>
         </Group>
 
-        <Tooltip label={href ? "View project" : "Edit project"} position="left">
+        <Tooltip label={"View project"} position="left">
           <ActionIcon
             component="div"
             variant="subtle"
             size="xl"
             radius="xl"
-            aria-label={href ? "View project" : "Edit project"}
+            aria-label={"View project"}
           >
             <ArrowRight01Icon size={32} />
           </ActionIcon>
@@ -75,24 +73,11 @@ function ProjectCard({ project, onEdit, href }: ProjectCardProps) {
     </Stack>
   );
 
-  if (href) {
-    return (
-      <UnstyledButton
-        key={project.id}
-        className={classes.item}
-        component={Link}
-        href={href}
-      >
-        {content}
-      </UnstyledButton>
-    );
-  }
-
   return (
     <UnstyledButton
       key={project.id}
       className={classes.item}
-      onClick={() => onEdit?.(project)}
+      onClick={() => onClick?.(project)}
     >
       {content}
     </UnstyledButton>

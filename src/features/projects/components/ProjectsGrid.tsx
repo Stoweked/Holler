@@ -8,7 +8,7 @@ import ProjectCard from "./ProjectCard";
 import classes from "./Projects.module.css";
 
 export default function ProjectsGrid() {
-  const { projects, loading } = useProjects();
+  const { projects, loading, openOverviewDrawer } = useProjects();
 
   if (loading) {
     return null; // Or a skeleton loader
@@ -37,7 +37,11 @@ export default function ProjectsGrid() {
       <ScrollArea.Autosize type="never">
         <Group p="md" gap="md" wrap="nowrap">
           {projects.map((project) => (
-            <ProjectCard key={project.id} project={project} />
+            <ProjectCard
+              key={project.id}
+              project={project}
+              onClick={openOverviewDrawer}
+            />
           ))}
         </Group>
       </ScrollArea.Autosize>

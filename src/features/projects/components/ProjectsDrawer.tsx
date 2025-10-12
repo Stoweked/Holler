@@ -5,7 +5,7 @@ import { ActionIcon, Drawer, Group, Space, Text, Tooltip } from "@mantine/core";
 import { ArrowLeft02Icon } from "hugeicons-react";
 import ProjectInitialStep from "./ProjectInitialStep";
 import ProjectEditorStep from "./ProjectEditorStep";
-import { useProject } from "../hooks/useProject";
+import { useProjectsDrawer } from "../hooks/useProjectsDrawer";
 
 interface ProjectsDrawerProps {
   opened: boolean;
@@ -26,7 +26,7 @@ export default function ProjectsDrawer({ opened, close }: ProjectsDrawerProps) {
     projects,
     isSaving,
     isArchiving,
-  } = useProject(close);
+  } = useProjectsDrawer(close);
 
   const drawerTitle =
     step === "initial" ? (

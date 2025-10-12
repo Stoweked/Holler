@@ -40,6 +40,13 @@ const ProjectsDrawer = dynamic(
   () => import("@/features/projects/components/ProjectsDrawer"),
   { ssr: false }
 );
+const ProjectOverviewDrawer = dynamic(
+  () =>
+    import(
+      "@/features/projects/components/ProjectOverview/ProjectOverviewDrawer"
+    ),
+  { ssr: false }
+);
 
 const AuthenticatedLayout = ({ children }: { children: React.ReactNode }) => {
   const { user, profile, loading } = useProfile();
@@ -51,15 +58,18 @@ const AuthenticatedLayout = ({ children }: { children: React.ReactNode }) => {
 
   // Waivers
   const {
-    drawerOpened,
-    closeDrawer,
+    drawerOpened: waiversDrawerOpened,
+    closeDrawer: closeWaiversDrawer,
     openDrawer: openWaiversDrawer,
   } = useWaivers();
 
   const {
-    drawerOpened: projectsDrawerOpened,
-    closeDrawer: closeProjectsDrawer,
-    openDrawer: openProjectsDrawer,
+    listDrawerOpened,
+    closeListDrawer,
+    openListDrawer,
+    overviewDrawerOpened,
+    closeOverviewDrawer,
+    selectedProject,
   } = useProjects();
 
   useEffect(() => {
@@ -74,7 +84,7 @@ const AuthenticatedLayout = ({ children }: { children: React.ReactNode }) => {
     router,
     openActionDrawer,
     openWaiversDrawer,
-    openProjectsDrawer,
+    openListDrawer,
     close
   );
 
@@ -87,8 +97,6 @@ const AuthenticatedLayout = ({ children }: { children: React.ReactNode }) => {
   }
 
   if (!user) {
-    // This can be a redirect or null, depending on your auth flow
-    // For now, returning null assumes middleware handles the redirect
     return null;
   }
 
@@ -128,10 +136,15 @@ const AuthenticatedLayout = ({ children }: { children: React.ReactNode }) => {
         </AppShell.Main>
       </AppShell>
 
-      <LienWaiversDrawer opened={drawerOpened} close={closeDrawer} />
-      <ProjectsDrawer
-        opened={projectsDrawerOpened}
-        close={closeProjectsDrawer}
+      <LienWaiversDrawer
+        opened={waiversDrawerOpened}
+        close={closeWaiversDrawer}
+      />
+      <ProjectsDrawer opened={listDrawerOpened} close={closeListDrawer} />
+      <ProjectOverviewDrawer
+        opened={overviewDrawerOpened}
+        onClose={closeOverviewDrawer}
+        project={selectedProject}
       />
     </>
   );
