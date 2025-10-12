@@ -5,6 +5,6 @@ import dayjs from "dayjs";
 export const useFormattedDate = (date: string | null | undefined) => {
   return useMemo(() => {
     if (!date) return "";
-    return dayjs(date).format("MMMM D, YYYY");
+    return dayjs(date).format("MMM D, YYYY");
   }, [date]);
 };

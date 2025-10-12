@@ -8,10 +8,10 @@ import { useState } from "react";
 import { Project } from "../../types/project";
 import ProjectOverviewDetailsCard from "./ProjectOverviewDetailsCard";
 import ProjectOverviewContacts from "./ProjectOverviewContacts";
-import ProjectOverviewStats from "./ProjectOverviewStats";
 import { useProjects } from "../../contexts/ProjectsContext";
 import { archiveProject } from "../../actions";
 import { modals } from "@mantine/modals";
+import ProjectOverviewTransactions from "./ProjectOverviewTransactions";
 
 interface ProjectOverviewDrawerProps {
   project: Project | null;
@@ -87,7 +87,7 @@ export default function ProjectOverviewDrawer({
       >
         <Stack gap="lg">
           <ProjectOverviewDetailsCard project={project} />
-          <ProjectOverviewStats project={project} />
+          <ProjectOverviewTransactions project={project} />
           <ProjectOverviewContacts project={project} />
         </Stack>
 

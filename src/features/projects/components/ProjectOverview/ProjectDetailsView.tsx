@@ -28,9 +28,9 @@ export default function ProjectDetailsView({
         {project.name ? (
           <Stack gap={0}>
             <Text size="sm" c="dimmed">
-              Project name
+              Project
             </Text>
-            <Title order={2}>{project.name}</Title>
+            <Title order={3}>{project.name}</Title>
           </Stack>
         ) : null}
 
@@ -44,31 +44,33 @@ export default function ProjectDetailsView({
         ) : null}
       </Stack>
 
-      <Group grow>
-        {project.start_date && (
-          <Group gap="sm" wrap="nowrap">
-            <Calendar02Icon size={20} color="gray" />
-            <Stack gap={0}>
-              <Text size="sm" c="dimmed">
-                Start Date
-              </Text>
-              <Text fw={500}>{formattedStartDate}</Text>
-            </Stack>
-          </Group>
-        )}
+      {(project.start_date || project.end_date) && (
+        <Group grow>
+          {project.start_date && (
+            <Group gap="sm" wrap="nowrap">
+              <Calendar02Icon size={20} color="gray" />
+              <Stack gap={0}>
+                <Text size="sm" c="dimmed">
+                  Start date
+                </Text>
+                <Text fw={500}>{formattedStartDate}</Text>
+              </Stack>
+            </Group>
+          )}
 
-        {project.end_date && (
-          <Group gap="sm" wrap="nowrap">
-            <Calendar02Icon size={20} color="gray" />
-            <Stack gap={0}>
-              <Text size="sm" c="dimmed">
-                End Date
-              </Text>
-              <Text fw={500}>{formattedEndDate}</Text>
-            </Stack>
-          </Group>
-        )}
-      </Group>
+          {project.end_date && (
+            <Group gap="sm" wrap="nowrap">
+              <Calendar02Icon size={20} color="gray" />
+              <Stack gap={0}>
+                <Text size="sm" c="dimmed">
+                  End date
+                </Text>
+                <Text fw={500}>{formattedEndDate}</Text>
+              </Stack>
+            </Group>
+          )}
+        </Group>
+      )}
     </Stack>
   );
 }

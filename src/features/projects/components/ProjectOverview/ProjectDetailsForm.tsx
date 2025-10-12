@@ -1,4 +1,4 @@
-// src/features/projects/components/ProjectDetailsForm.tsx
+// src/features/projects/components/ProjectOverview/ProjectDetailsForm.tsx
 "use client";
 
 import { Button, Group, Stack, Title } from "@mantine/core";
@@ -40,17 +40,17 @@ export default function ProjectDetailsForm({
 
   const handleSubmit = async (values: typeof form.values) => {
     setLoading(true);
-    const formData = new FormData();
-    formData.append("name", values.name);
-    formData.append("address", values.address);
-    if (values.start_date) {
-      formData.append("start_date", values.start_date.toISOString());
-    }
-    if (values.end_date) {
-      formData.append("end_date", values.end_date.toISOString());
-    }
 
-    const result = await updateProject(formData, project.id);
+    const projectData = {
+      name: values.name,
+      address: values.address,
+      start_date: values.start_date
+        ? dayjs(values.start_date).toISOString()
+        : null,
+      end_date: values.end_date ? dayjs(values.end_date).toISOString() : null,
+    };
+
+    const result = await updateProject(projectData, project.id);
 
     if (result?.error) {
       notifications.show({

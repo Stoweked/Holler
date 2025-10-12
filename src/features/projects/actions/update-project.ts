@@ -3,11 +3,18 @@
 
 import { createServer } from "@/lib/supabase/server";
 
-export async function updateProject(formData: FormData, projectId: string) {
-  const name = formData.get("name") as string;
-  const address = formData.get("address") as string;
-  const start_date = formData.get("start_date") as string | null;
-  const end_date = formData.get("end_date") as string | null;
+interface UpdateProjectData {
+  name: string;
+  address: string;
+  start_date: string | null;
+  end_date: string | null;
+}
+
+export async function updateProject(
+  projectData: UpdateProjectData,
+  projectId: string
+) {
+  const { name, address, start_date, end_date } = projectData;
   const supabase = await createServer();
 
   const {
