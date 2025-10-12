@@ -41,7 +41,7 @@ function ProjectDetailsCard({
   const {
     projects: userProjects,
     loading: projectsLoading,
-    openDrawer,
+    openListDrawer: openDrawer,
   } = useProjects();
 
   const filteredProjects = userProjects.filter((project) =>
