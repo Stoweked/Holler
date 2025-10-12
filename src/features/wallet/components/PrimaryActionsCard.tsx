@@ -65,7 +65,7 @@ export default function PrimaryActionsCard() {
     <Card w="100%" py={48} className={classes.card}>
       <Stack align="center" gap="xl">
         <Stack align="center" gap="lg">
-          {loading ? null : businessProfile ? <AccountToggle /> : null}
+          {businessProfile || loading ? <AccountToggle /> : null}
           <Stack align="center" gap={4}>
             <Title order={1} style={{ fontSize, whiteSpace: "nowrap" }}>
               {`$${balance.toLocaleString("en-US", {

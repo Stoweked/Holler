@@ -6,7 +6,7 @@ import PaymentAmountStep from "./PaymentAmountStep";
 import ConfirmationStep from "./ConfirmationStep";
 import SuccessStep from "./SuccessStep";
 import { Transition } from "@mantine/core";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Contact } from "@/features/contacts/types/contact";
 import { Contacts } from "@/features/contacts";
 
@@ -48,10 +48,19 @@ export default function TransactionDrawerContent({
   const [activeStep, setActiveStep] = useState(step);
   const [isMounted, setIsMounted] = useState(true);
   const transitionDuration = 200;
+  const contentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (step !== activeStep) {
       setIsMounted(false);
+      // Scroll to top when step changes
+      if (contentRef.current) {
+        // The scrollable element is likely the parent of this component's root div
+        const scrollableContainer = contentRef.current.parentElement;
+        if (scrollableContainer) {
+          scrollableContainer.scrollTo(0, 0);
+        }
+      }
       const timer = setTimeout(() => {
         setActiveStep(step);
         setIsMounted(true);
@@ -161,7 +170,11 @@ export default function TransactionDrawerContent({
       duration={transitionDuration}
       timingFunction="ease"
     >
-      {(styles) => <div style={styles}>{renderStep(activeStep)}</div>}
+      {(styles) => (
+        <div style={styles} ref={contentRef}>
+          {renderStep(activeStep)}
+        </div>
+      )}
     </Transition>
   );
 }

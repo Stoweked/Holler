@@ -35,7 +35,7 @@ export default function AccountToggle() {
                 <Loader size={32} />
               </Center>
               <Stack gap={8}>
-                <Skeleton height={12} width={104} radius="xl" />
+                <Skeleton height={16} width={128} radius="xl" />
                 <Skeleton height={8} width={64} radius="xl" />
               </Stack>
             </Group>
