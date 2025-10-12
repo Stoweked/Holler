@@ -5,19 +5,17 @@ import {
   Stack,
   Text,
   UnstyledButton,
+  Skeleton,
+  Loader,
+  Center,
 } from "@mantine/core";
-import {
-  ArrowDown01Icon,
-  ArrowLeftRightIcon,
-  MoreVerticalCircle01Icon,
-  Settings01Icon,
-} from "hugeicons-react";
+import { ArrowLeftRightIcon, Settings01Icon } from "hugeicons-react";
 import classes from "./AccountToggle.module.css";
 import { useBusinessProfile } from "@/features/business";
 import { getInitials } from "@/lib/hooks/textUtils";
 
 export default function AccountToggle() {
-  const { businessProfile } = useBusinessProfile();
+  const { businessProfile, loading } = useBusinessProfile();
 
   const handleManageAccounts = () => {
     window.dispatchEvent(
@@ -31,35 +29,43 @@ export default function AccountToggle() {
     <div>
       <Menu shadow="md" width={240} radius="md" position="bottom">
         <Menu.Target>
-          <UnstyledButton
-            aria-label="Switch account"
-            className={classes.accountToggle}
-          >
-            <Group wrap="nowrap" gap="xs">
-              <Avatar
-                src={businessProfile?.avatar_url}
-                color="lime"
-                size="lg"
-                radius="xl"
-              >
-                {initials}
-              </Avatar>
-              <Stack gap={0}>
-                <Text fw="bold" lineClamp={1} size="sm">
-                  {businessProfile?.business_name || "Your Account"}
-                </Text>
-                <Text c="dimmed" lineClamp={1} size="xs">
-                  @{businessProfile?.username || "@username"}
-                </Text>
+          {loading ? (
+            <Group className={classes.accountToggle} wrap="nowrap" gap="xs">
+              <Center w={40} h={40}>
+                <Loader size={32} />
+              </Center>
+              <Stack gap={8}>
+                <Skeleton height={12} width={104} radius="xl" />
+                <Skeleton height={8} width={64} radius="xl" />
               </Stack>
-              {/* <MoreVerticalCircle01Icon size={20} /> */}
             </Group>
-          </UnstyledButton>
+          ) : (
+            <UnstyledButton
+              aria-label="Switch account"
+              className={classes.accountToggle}
+            >
+              <Group wrap="nowrap" gap="xs">
+                <Avatar
+                  src={businessProfile?.avatar_url}
+                  color="lime"
+                  size={40}
+                  radius="xl"
+                >
+                  {initials}
+                </Avatar>
+                <Stack gap={0}>
+                  <Text fw="bold" lineClamp={1} size="sm">
+                    {businessProfile?.business_name || ""}
+                  </Text>
+                  <Text c="dimmed" lineClamp={1} size="xs">
+                    @{businessProfile?.username || ""}
+                  </Text>
+                </Stack>
+              </Group>
+            </UnstyledButton>
+          )}
         </Menu.Target>
         <Menu.Dropdown>
-          <Menu.Item leftSection={<ArrowLeftRightIcon size={16} />}>
-            Wasatch Framing
-          </Menu.Item>
           <Menu.Item leftSection={<ArrowLeftRightIcon size={16} />}>
             Mountain View Carpentry
           </Menu.Item>

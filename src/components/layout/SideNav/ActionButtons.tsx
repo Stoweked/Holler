@@ -23,7 +23,7 @@ export default function ActionButtons({
     <>
       <Group wrap="nowrap" gap="xl" grow w="100%" maw={300}>
         {/* Deposit button */}
-        <Stack gap={4} align="center">
+        <Stack gap={8} align="center">
           <ActionIcon
             variant="default"
             size={56}
@@ -33,13 +33,13 @@ export default function ActionButtons({
           >
             <PlusSignIcon size={32} />
           </ActionIcon>
-          <Text size="xs" fw={500}>
+          <Text size="sm" fw={500}>
             Deposit
           </Text>
         </Stack>
 
         {/* Send button */}
-        <Stack gap={4} align="center">
+        <Stack gap={8} align="center">
           <ActionIcon
             // variant="default"
             size={56}
@@ -49,13 +49,13 @@ export default function ActionButtons({
           >
             <ArrowUp02Icon size={32} />
           </ActionIcon>
-          <Text size="xs" fw={500}>
+          <Text size="sm" fw={500}>
             Send
           </Text>
         </Stack>
 
         {/* Request button */}
-        <Stack gap={4} align="center">
+        <Stack gap={8} align="center">
           <ActionIcon
             // variant="default"
             size={56}
@@ -65,13 +65,13 @@ export default function ActionButtons({
           >
             <ArrowDown02Icon size={32} />
           </ActionIcon>
-          <Text size="xs" fw={500}>
+          <Text size="sm" fw={500}>
             Request
           </Text>
         </Stack>
 
         {/* Transfer button */}
-        <Stack gap={4} align="center">
+        <Stack gap={8} align="center">
           <ActionIcon
             variant="default"
             size={56}
@@ -81,7 +81,7 @@ export default function ActionButtons({
           >
             <BankIcon size={32} />
           </ActionIcon>
-          <Text size="xs" fw={500}>
+          <Text size="sm" fw={500}>
             Transfer
           </Text>
         </Stack>

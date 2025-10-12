@@ -17,4 +17,5 @@ export interface Profile {
   state?: string;
   zip?: string;
   auth_provider?: string;
+  dismissed_business_prompt?: boolean;
 }

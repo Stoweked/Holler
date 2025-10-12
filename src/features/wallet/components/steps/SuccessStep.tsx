@@ -211,7 +211,7 @@ export default function SuccessStep({
         {/* Title, subheading, and conditional content */}
         <Transition
           mounted={mounted}
-          transition="slide-up"
+          transition="fade-up"
           duration={1200}
           timingFunction="ease"
         >
