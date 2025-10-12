@@ -182,11 +182,7 @@ export default function ProjectOverviewStats({
             </Box>
           </Center>
 
-          <SimpleGrid
-            cols={{ base: 1, xs: 2 }}
-            spacing={0}
-            verticalSpacing="lg"
-          >
+          <SimpleGrid cols={{ base: 1, xs: 2 }} spacing={0} verticalSpacing={0}>
             {statItems}
           </SimpleGrid>
         </Stack>

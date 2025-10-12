@@ -2,7 +2,7 @@
 import { Stack, Title, Text, Button, Group } from "@mantine/core";
 import { Project } from "../../types/project";
 import { useFormattedDate } from "@/lib/hooks/useFormattedDate";
-import { Calendar02Icon } from "hugeicons-react";
+import { Calendar02Icon, House03Icon, Location01Icon } from "hugeicons-react";
 
 interface ProjectDetailsViewProps {
   project: Project;
@@ -26,21 +26,22 @@ export default function ProjectDetailsView({
       </Group>
       <Stack gap="xs">
         {project.name ? (
-          <Stack gap={0}>
-            <Text size="sm" c="dimmed">
-              Project
-            </Text>
+          <Group gap="sm" wrap="nowrap">
+            <House03Icon size={20} color="gray" />
             <Title order={3}>{project.name}</Title>
-          </Stack>
+          </Group>
         ) : null}
 
         {project.address ? (
-          <Stack gap={0}>
-            <Text size="sm" c="dimmed">
-              Address
-            </Text>
-            <Text>{project.address}</Text>
-          </Stack>
+          <Group gap="sm" wrap="nowrap">
+            <Location01Icon size={20} color="gray" />
+            <Stack gap={0}>
+              <Text size="sm" c="dimmed">
+                Address
+              </Text>
+              <Text>{project.address}</Text>
+            </Stack>
+          </Group>
         ) : null}
       </Stack>
 
