@@ -1,4 +1,12 @@
-import { Group, Stack, Text, Title, Button, Paper } from "@mantine/core";
+import {
+  Group,
+  Stack,
+  Text,
+  Title,
+  Button,
+  Paper,
+  Divider,
+} from "@mantine/core";
 import { BarChart } from "@mantine/charts";
 import { useRouter } from "next/navigation";
 import { Project } from "../../types/project";
@@ -8,14 +16,10 @@ interface ProjectOverviewStatsProps {
   project: Project;
 }
 
-const data = [
-  { month: "Jan", Sent: 1200, Received: 900, Requested: 420, Pending: 200 },
-  { month: "Feb", Sent: 1900, Received: 1200, Requested: 120, Pending: 400 },
-  { month: "Mar", Sent: 400, Received: 1000, Requested: 590, Pending: 200 },
-  { month: "Apr", Sent: 1000, Received: 200, Requested: 230, Pending: 800 },
-  { month: "May", Sent: 800, Received: 1400, Requested: 540, Pending: 1200 },
-  { month: "Jun", Sent: 750, Received: 600, Requested: 300, Pending: 1000 },
-];
+// Helper to convert currency string to a number for the chart
+const currencyToNumber = (currency: string) => {
+  return Number(currency.replace(/[^0-9.-]+/g, ""));
+};
 
 function StatItem({ label, value }: { label: string; value: string }) {
   return (
@@ -34,19 +38,50 @@ export default function ProjectOverviewStats({
   const router = useRouter();
   const { closeOverviewDrawer } = useProjects();
 
-  // Mock data - replace with actual transaction data fetching logic
+  // Mock data for aggregate stats
   const stats = {
     sent: "$12,500.00",
-    requested: "$3,400.00",
-    pending: "$1,200.00",
     received: "$2,134.10",
+    pending: "$1,200.00",
+    requested: "$3,400.00",
   };
 
-  const handleViewTransactions = () => {
-    // 1. Close the current project overview drawer
-    closeOverviewDrawer();
+  // Data for the chart, remains the same
+  const chartData = [
+    {
+      category: "Transactions",
+      Sent: currencyToNumber(stats.sent),
+      Received: currencyToNumber(stats.received),
+      Pending: currencyToNumber(stats.pending),
+      Requested: currencyToNumber(stats.requested),
+    },
+  ];
 
-    // 2. Navigate to the dashboard with the project ID as a URL parameter
+  // Define the series with their values for sorting
+  const series = [
+    { name: "Sent", color: "blue.5", value: currencyToNumber(stats.sent) },
+    {
+      name: "Received",
+      color: "green.5",
+      value: currencyToNumber(stats.received),
+    },
+    {
+      name: "Pending",
+      color: "pink.5",
+      value: currencyToNumber(stats.pending),
+    },
+    {
+      name: "Requested",
+      color: "cyan.5",
+      value: currencyToNumber(stats.requested),
+    },
+  ];
+
+  // Sort the series array from most to least
+  series.sort((a, b) => b.value - a.value);
+
+  const handleViewTransactions = () => {
+    closeOverviewDrawer();
     router.push(`/dashboard?project=${project.id}`);
   };
 
@@ -71,26 +106,25 @@ export default function ProjectOverviewStats({
           <StatItem label="Requested" value={stats.requested} />
         </Group>
 
+        <Divider />
+
         <BarChart
-          h={400}
-          data={data}
-          dataKey="month"
-          withYAxis={false}
-          type="stacked"
+          h={200}
+          data={chartData}
+          dataKey="category"
+          yAxisProps={{ width: 80 }}
+          withXAxis={false}
+          gridAxis="none"
+          withTooltip={false}
           withLegend
-          legendProps={{ verticalAlign: "top", height: 50 }}
+          legendProps={{ verticalAlign: "bottom", height: 50 }}
           valueFormatter={(value) =>
             new Intl.NumberFormat("en-US", {
               style: "currency",
               currency: "USD",
             }).format(value)
           }
-          series={[
-            { name: "Sent", color: "blue.5" },
-            { name: "Received", color: "green.5" },
-            { name: "Pending", color: "pink.5" },
-            { name: "Requested", color: "cyan.5" },
-          ]}
+          series={series}
         />
       </Stack>
     </Paper>
