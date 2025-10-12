@@ -1,7 +1,7 @@
 // src/features/projects/components/ProjectOverviewDrawer.tsx
 "use client";
 
-import { Drawer, Stack } from "@mantine/core";
+import { Drawer, Space, Stack } from "@mantine/core";
 import { Project } from "../../types/project";
 import ProjectDetailsCard from "./ProjectOverviewDetailsCard";
 import ProjectOverviewContacts from "./ProjectOverviewContacts";
@@ -35,6 +35,7 @@ export default function ProjectOverviewDrawer({
         <ProjectDetailsCard project={project} />
         <ProjectOverviewStats project={project} />
         <ProjectOverviewContacts project={project} />
+        <Space h={100} />
       </Stack>
     </Drawer>
   );

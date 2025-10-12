@@ -53,7 +53,7 @@ const AuthenticatedLayout = ({ children }: { children: React.ReactNode }) => {
   const [opened, { toggle, close }] = useDisclosure();
   const router = useRouter();
 
-  //Wallet
+  // Wallet
   const { openActionDrawer } = useWallet();
 
   // Waivers
@@ -63,6 +63,7 @@ const AuthenticatedLayout = ({ children }: { children: React.ReactNode }) => {
     openDrawer: openWaiversDrawer,
   } = useWaivers();
 
+  // Projects
   const {
     listDrawerOpened,
     closeListDrawer,
