@@ -46,6 +46,7 @@ export default function PaymentAmountStep({
   setSelectedWaiver,
 }: PaymentAmountStepProps) {
   const inputRef = useRef<HTMLInputElement>(null);
+  const topRef = useRef<HTMLDivElement>(null);
   const isSend = actionType === "send";
   const showWaiverInput = actionType === "send" || "request";
 
@@ -65,6 +66,7 @@ export default function PaymentAmountStep({
 
   useEffect(() => {
     inputRef.current?.focus();
+    topRef.current?.scrollIntoView({ behavior: "smooth" });
   }, []);
 
   const handleContinue = () => {
@@ -117,7 +119,7 @@ export default function PaymentAmountStep({
 
   return (
     <>
-      <Stack justify="space-between" gap={30} pt="lg">
+      <Stack ref={topRef} justify="space-between" gap={30} pt="lg">
         <AmountInput
           ref={inputRef}
           amount={amount}

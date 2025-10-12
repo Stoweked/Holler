@@ -97,10 +97,9 @@ export default function SuccessStep({
 
   const handleDoneClick = () => {
     notifications.show({
-      title: "Success",
+      title: "Transaction complete",
       message: (
-        <Text>
-          Transaction complete.{" "}
+        <Text size="sm">
           {transactionId && (
             <Anchor
               href="#"

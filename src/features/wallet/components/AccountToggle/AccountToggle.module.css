@@ -5,8 +5,7 @@
     var(--mantine-color-dark-7)
   );
   border: 1px solid var(--app-shell-border-color);
-  padding: 4px var(--mantine-spacing-md);
-  padding-right: 12px;
+  padding: 4px 16px 4px 4px;
   transition: all 200ms ease-in-out;
 }
 
