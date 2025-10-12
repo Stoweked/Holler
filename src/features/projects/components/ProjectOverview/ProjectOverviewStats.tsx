@@ -6,8 +6,10 @@ import {
   Button,
   Paper,
   Divider,
+  Center,
+  Indicator,
 } from "@mantine/core";
-import { BarChart } from "@mantine/charts";
+import { DonutChart, PieChart } from "@mantine/charts";
 import { useRouter } from "next/navigation";
 import { Project } from "../../types/project";
 import { useProjects } from "../../contexts/ProjectsContext";
@@ -21,12 +23,24 @@ const currencyToNumber = (currency: string) => {
   return Number(currency.replace(/[^0-9.-]+/g, ""));
 };
 
-function StatItem({ label, value }: { label: string; value: string }) {
+// Updated StatItem to accept a color prop
+function StatItem({
+  label,
+  value,
+  color,
+}: {
+  label: string;
+  value: string;
+  color: string;
+}) {
   return (
     <Stack gap={0} align="center">
-      <Text size="sm" c="dimmed">
-        {label}
-      </Text>
+      <Group gap="xs" wrap="nowrap">
+        <Indicator color={color} size={10} />
+        <Text size="sm" c="dimmed">
+          {label}
+        </Text>
+      </Group>
       <Title order={2}>{value}</Title>
     </Stack>
   );
@@ -46,44 +60,43 @@ export default function ProjectOverviewStats({
     requested: "$3,400.00",
   };
 
-  // Data for the chart, remains the same
+  // Prepare the data in the format PieChart expects
   const chartData = [
-    {
-      category: "Transactions",
-      Sent: currencyToNumber(stats.sent),
-      Received: currencyToNumber(stats.received),
-      Pending: currencyToNumber(stats.pending),
-      Requested: currencyToNumber(stats.requested),
-    },
-  ];
-
-  // Define the series with their values for sorting
-  const series = [
-    { name: "Sent", color: "blue.5", value: currencyToNumber(stats.sent) },
+    { name: "Sent", value: currencyToNumber(stats.sent), color: "blue.5" },
     {
       name: "Received",
-      color: "green.5",
       value: currencyToNumber(stats.received),
+      color: "green.5",
     },
     {
       name: "Pending",
-      color: "pink.5",
       value: currencyToNumber(stats.pending),
+      color: "pink.5",
     },
     {
       name: "Requested",
-      color: "cyan.5",
       value: currencyToNumber(stats.requested),
+      color: "yellow.5",
     },
   ];
 
-  // Sort the series array from most to least
-  series.sort((a, b) => b.value - a.value);
+  // Sort the data for a cleaner look
+  chartData.sort((a, b) => b.value - a.value);
 
   const handleViewTransactions = () => {
     closeOverviewDrawer();
     router.push(`/dashboard?project=${project.id}`);
   };
+
+  // Dynamically create StatItem components
+  const statItems = chartData.map((item) => (
+    <StatItem
+      key={item.name}
+      label={item.name}
+      value={stats[item.name.toLowerCase() as keyof typeof stats]}
+      color={item.color}
+    />
+  ));
 
   return (
     <Paper withBorder radius="lg" p="md">
@@ -100,32 +113,28 @@ export default function ProjectOverviewStats({
         </Group>
 
         <Group justify="space-around" py="md">
-          <StatItem label="Sent" value={stats.sent} />
-          <StatItem label="Received" value={stats.received} />
-          <StatItem label="Pending" value={stats.pending} />
-          <StatItem label="Requested" value={stats.requested} />
+          {statItems}
         </Group>
 
         <Divider />
 
-        <BarChart
-          h={200}
-          data={chartData}
-          dataKey="category"
-          yAxisProps={{ width: 80 }}
-          withXAxis={false}
-          gridAxis="none"
-          withTooltip={false}
-          withLegend
-          legendProps={{ verticalAlign: "bottom", height: 50 }}
-          valueFormatter={(value) =>
-            new Intl.NumberFormat("en-US", {
-              style: "currency",
-              currency: "USD",
-            }).format(value)
-          }
-          series={series}
-        />
+        <Center>
+          <PieChart
+            size={300}
+            withLabelsLine
+            labelsType="percent"
+            withLabels
+            withTooltip
+            data={chartData}
+            tooltipDataSource="segment"
+            valueFormatter={(value) =>
+              new Intl.NumberFormat("en-US", {
+                style: "currency",
+                currency: "USD",
+              }).format(value)
+            }
+          />
+        </Center>
       </Stack>
     </Paper>
   );
