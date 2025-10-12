@@ -62,7 +62,7 @@ export default function PrimaryActionsCard() {
   };
 
   return (
-    <Card w="100%" py={48} className={classes.card}>
+    <Card w="100%" py={56} className={classes.card}>
       <Stack align="center" gap="xl">
         <Stack align="center" gap="lg">
           {businessProfile || loading ? <AccountToggle /> : null}
