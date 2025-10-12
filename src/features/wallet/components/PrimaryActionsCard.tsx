@@ -62,11 +62,11 @@ export default function PrimaryActionsCard() {
   };
 
   return (
-    <Card w="100%" py={56} className={classes.card}>
+    <Card w="100%" py={48} className={classes.card}>
       <Stack align="center" gap="xl">
         <Stack align="center" gap="lg">
           {businessProfile || loading ? <AccountToggle /> : null}
-          <Stack align="center" gap={4}>
+          <Stack align="center" gap={4} py="xs">
             <Title order={1} style={{ fontSize, whiteSpace: "nowrap" }}>
               {`$${balance.toLocaleString("en-US", {
                 minimumFractionDigits: 2,
