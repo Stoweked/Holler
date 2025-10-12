@@ -4,7 +4,7 @@ import AccountDropdown from "./AccountDropdown";
 import ColorModeCard from "./ColorModeCard";
 import DeleteAccountCard from "./DeleteAccountCard";
 import ResetPasswordCard from "./ResetPasswordCard";
-import { Profile } from "./profile";
+import { ProfileUI } from "./profile";
 
 export const AccountUI = {
   Page: Account,
@@ -12,5 +12,5 @@ export const AccountUI = {
   ColorModeCard: ColorModeCard,
   DeleteAccountCard: DeleteAccountCard,
   ResetPasswordCard: ResetPasswordCard,
-  Profile: Profile,
+  Profile: ProfileUI,
 };

@@ -1,9 +1,9 @@
-// src/features/settings/components/sections/account/profile/index.ts
+// src/features/account/components/profile/index.ts
 import ProfileCard from "./ProfileCard";
 import ProfileForm from "./ProfileForm";
 import ProfileView from "./ProfileView";
 
-export const Profile = {
+export const ProfileUI = {
   Card: ProfileCard,
   Form: ProfileForm,
   View: ProfileView,

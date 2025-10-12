@@ -15,7 +15,8 @@ interface ProjectsDrawerProps {
 }
 
 export default function ProjectsDrawer({ opened, close }: ProjectsDrawerProps) {
-  const { openOverviewDrawer } = useProjects();
+  const { openOverviewDrawer, isSelectionMode, onProjectSelect } =
+    useProjects();
   const {
     step,
     form,
@@ -28,8 +29,13 @@ export default function ProjectsDrawer({ opened, close }: ProjectsDrawerProps) {
   } = useProjectsDrawer(close);
 
   const handleProjectClick = (project: Project) => {
-    openOverviewDrawer(project);
-    close();
+    if (isSelectionMode && onProjectSelect) {
+      onProjectSelect(project);
+      close();
+    } else {
+      openOverviewDrawer(project);
+      close();
+    }
   };
 
   const drawerTitle =
@@ -72,9 +78,6 @@ export default function ProjectsDrawer({ opened, close }: ProjectsDrawerProps) {
           form={form}
           onSave={handleSave}
           isSaving={isSaving}
-          onArchive={() => {}} // This is no longer used
-          isArchiving={false} // This is no longer used
-          editorMode="new"
         />
       )}
       <Space h={100} />

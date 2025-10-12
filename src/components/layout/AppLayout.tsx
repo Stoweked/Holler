@@ -12,7 +12,7 @@ import {
   ProfileProvider,
   useProfile,
 } from "@/features/account/contexts/ProfileContext";
-import { getSpotlightActions } from "@/features/spotlight/spotlightActions";
+import { getSpotlightActions } from "@/components/spotlight/spotlightActions";
 import { useRouter } from "next/navigation";
 import { Spotlight } from "@mantine/spotlight";
 import { Search01Icon } from "hugeicons-react";

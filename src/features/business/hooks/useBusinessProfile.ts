@@ -1,3 +1,4 @@
+// src/features/business/hooks/useBusinessProfile.ts
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
@@ -14,6 +15,7 @@ export function useBusinessProfile() {
   const [businessProfile, setBusinessProfile] = useState<Business | null>(null);
   const [userRole, setUserRole] = useState<BusinessRole | null>(null);
   const [loading, setLoading] = useState(true);
+  const [initialLoad, setInitialLoad] = useState(true);
 
   const fetchBusinessProfile = useCallback(async () => {
     if (!user) {
@@ -23,7 +25,9 @@ export function useBusinessProfile() {
       return;
     }
 
-    setLoading(true);
+    if (initialLoad) {
+      setLoading(true);
+    }
 
     try {
       // Find the business_id and role associated with the current user
@@ -38,6 +42,7 @@ export function useBusinessProfile() {
         setBusinessProfile(null);
         setUserRole(null);
         setLoading(false);
+        if (initialLoad) setInitialLoad(false);
         return;
       }
 
@@ -65,8 +70,11 @@ export function useBusinessProfile() {
       setUserRole(null);
     } finally {
       setLoading(false);
+      if (initialLoad) {
+        setInitialLoad(false);
+      }
     }
-  }, [user]);
+  }, [user, initialLoad]);
 
   useEffect(() => {
     fetchBusinessProfile();

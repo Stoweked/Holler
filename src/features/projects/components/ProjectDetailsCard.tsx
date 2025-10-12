@@ -41,7 +41,7 @@ function ProjectDetailsCard({
   const {
     projects: userProjects,
     loading: projectsLoading,
-    openListDrawer: openDrawer,
+    openListDrawer,
   } = useProjects();
 
   const filteredProjects = userProjects.filter((project) =>
@@ -178,7 +178,7 @@ function ProjectDetailsCard({
                   <Button
                     variant="outline"
                     onClick={() => {
-                      openDrawer();
+                      openListDrawer(setSelectedProject);
                       combobox.closeDropdown();
                     }}
                   >

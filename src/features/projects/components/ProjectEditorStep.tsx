@@ -5,19 +5,13 @@ import { UseFormReturnType } from "@mantine/form";
 interface ProjectEditorStepProps {
   form: UseFormReturnType<{ name: string; address: string }>;
   onSave: () => void;
-  onArchive: () => void;
   isSaving: boolean;
-  isArchiving: boolean;
-  editorMode: "new" | "edit";
 }
 
 export default function ProjectEditorStep({
   form,
   onSave,
-  onArchive,
   isSaving,
-  isArchiving,
-  editorMode,
 }: ProjectEditorStepProps) {
   return (
     <Stack gap="lg">
@@ -37,19 +31,6 @@ export default function ProjectEditorStep({
         {...form.getInputProps("address")}
       />
       <Group justify="space-between" wrap="nowrap">
-        {editorMode === "edit" && (
-          <Button
-            aria-label="Archive project"
-            size="lg"
-            color="red"
-            variant="outline"
-            style={{ flexShrink: 0 }}
-            onClick={onArchive}
-            loading={isArchiving}
-          >
-            Archive
-          </Button>
-        )}
         <Group w="100%" justify="flex-end">
           <Button
             aria-label="Save project"

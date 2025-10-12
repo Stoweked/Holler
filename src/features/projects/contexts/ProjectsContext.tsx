@@ -28,13 +28,15 @@ interface ProjectsContextType {
   refetchProjects: () => Promise<void>;
   // For the drawer that lists all projects
   listDrawerOpened: boolean;
-  openListDrawer: () => void;
+  openListDrawer: (onSelect?: (project: Project) => void) => void;
   closeListDrawer: () => void;
   // For the new project overview drawer
   overviewDrawerOpened: boolean;
   openOverviewDrawer: (project: Project) => void;
   closeOverviewDrawer: () => void;
   selectedProject: Project | null;
+  isSelectionMode: boolean;
+  onProjectSelect?: (project: Project) => void;
 }
 
 const ProjectsContext = createContext<ProjectsContextType | undefined>(
@@ -44,18 +46,22 @@ const ProjectsContext = createContext<ProjectsContextType | undefined>(
 export function ProjectsProvider({ children }: { children: ReactNode }) {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
-  const [listDrawerOpened, { open: openListDrawer, close: closeListDrawer }] =
+  const [listDrawerOpened, { open: openList, close: closeList }] =
     useDisclosure(false);
   const [overviewDrawerOpened, { open: openOverview, close: closeOverview }] =
     useDisclosure(false);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [isSelectionMode, setIsSelectionMode] = useState(false);
+  const [onProjectSelect, setOnProjectSelect] = useState<
+    ((project: Project) => void) | undefined
+  >(undefined);
 
   const supabase = createClient();
 
   const closeOverviewDrawer = useCallback(() => {
     setSelectedProject(null);
     closeOverview();
-  }, [closeOverview]); // `setSelectedProject` is stable and can be omitted, but adding it satisfies the linter
+  }, [closeOverview]);
 
   const fetchProjects = useCallback(async () => {
     setLoading(true);
@@ -85,11 +91,9 @@ export function ProjectsProvider({ children }: { children: ReactNode }) {
       }));
       setProjects(formattedData);
 
-      // Use a functional update to get the latest `selectedProject` state
-      // without needing it in the dependency array.
       setSelectedProject((currentSelectedProject) => {
         if (!currentSelectedProject) {
-          return null; // Nothing was selected, so do nothing.
+          return null;
         }
 
         const updatedSelectedProject = formattedData.find(
@@ -97,10 +101,9 @@ export function ProjectsProvider({ children }: { children: ReactNode }) {
         );
 
         if (updatedSelectedProject) {
-          return updatedSelectedProject; // Return the updated project data
+          return updatedSelectedProject;
         }
 
-        // The project no longer exists in the list (e.g., archived), so close the drawer.
         closeOverviewDrawer();
         return null;
       });
@@ -111,6 +114,23 @@ export function ProjectsProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     fetchProjects();
   }, [fetchProjects]);
+
+  const openListDrawer = useCallback(
+    (onSelect?: (project: Project) => void) => {
+      if (onSelect) {
+        setIsSelectionMode(true);
+        setOnProjectSelect(() => onSelect);
+      }
+      openList();
+    },
+    [openList]
+  );
+
+  const closeListDrawer = useCallback(() => {
+    closeList();
+    setIsSelectionMode(false);
+    setOnProjectSelect(undefined);
+  }, [closeList]);
 
   const openOverviewDrawer = useCallback(
     (project: Project) => {
@@ -132,6 +152,8 @@ export function ProjectsProvider({ children }: { children: ReactNode }) {
       openOverviewDrawer,
       closeOverviewDrawer,
       selectedProject,
+      isSelectionMode,
+      onProjectSelect,
     }),
     [
       projects,
@@ -144,6 +166,8 @@ export function ProjectsProvider({ children }: { children: ReactNode }) {
       openOverviewDrawer,
       closeOverviewDrawer,
       selectedProject,
+      isSelectionMode,
+      onProjectSelect,
     ]
   );
 

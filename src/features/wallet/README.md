@@ -8,6 +8,7 @@ This feature provides the core functionality for managing a user's wallet, inclu
 - **`TransactionDrawer.tsx`**: A unified, multi-step drawer that handles the entire transaction flow for all action types, from selecting a contact to confirming the transaction.
 - **`ConfirmationStep.tsx`**: A reusable component for displaying a final confirmation of a transaction before submission.
 - **`PaymentAmountStep.tsx`**: A step within the `TransactionDrawer` for entering the transaction amount and other details like notes or lien waivers.
+- **`AccountToggle.tsx`**: A component that allows users to switch between different accounts.
 
 ### Hooks & Contexts
 
