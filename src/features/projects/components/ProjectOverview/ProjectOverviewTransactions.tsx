@@ -152,6 +152,7 @@ export default function ProjectOverviewStats({
                 thickness={40}
                 withLabelsLine
                 withTooltip={false}
+                strokeWidth={4}
                 data={displayData}
                 tooltipDataSource="segment"
                 valueFormatter={(value) =>

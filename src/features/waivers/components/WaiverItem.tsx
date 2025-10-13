@@ -1,4 +1,5 @@
 import {
+  ActionIcon,
   Badge,
   Group,
   Stack,
@@ -7,7 +8,7 @@ import {
   Tooltip,
   UnstyledButton,
 } from "@mantine/core";
-import { PencilEdit01Icon } from "hugeicons-react";
+import { ArrowRight01Icon } from "hugeicons-react";
 import classes from "./Waivers.module.css";
 import { Waiver } from "../types/waiver";
 import dayjs from "dayjs";
@@ -58,7 +59,15 @@ function WaiverItem({ waiver, onEdit }: WaiverItemProps) {
         </Stack>
 
         <Tooltip label="Edit waiver" position="left">
-          <PencilEdit01Icon size={32} color="gray" />
+          <ActionIcon
+            component="div"
+            variant="subtle"
+            size="xl"
+            radius="xl"
+            aria-label="Edit waiver"
+          >
+            <ArrowRight01Icon size={32} />
+          </ActionIcon>
         </Tooltip>
       </Group>
     </UnstyledButton>

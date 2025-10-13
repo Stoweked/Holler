@@ -23,6 +23,7 @@ import {
 import { Contact, ContactType } from "../types/contact";
 import { useContacts } from "../hooks/useContacts";
 import { useFavorites } from "../contexts/FavoritesContext";
+import { addContact } from "../actions/add-contact";
 
 interface ContactsListProps {
   onContactClick?: (contact: Contact) => void;
@@ -37,7 +38,10 @@ export default function ContactsList({
   const { contacts, loading: contactsLoading } = useContacts();
   const { favoriteContacts, loading: favoritesLoading } = useFavorites();
 
-  const handleContactClick = (contact: Contact) => {
+  const handleContactClick = async (contact: Contact) => {
+    // Add the contact to the user's list in the background.
+    // The upsert in the action will handle cases where it's already added.
+    await addContact(contact.id, contact.contactType);
     if (onContactClick) {
       onContactClick({
         ...contact,
@@ -90,12 +94,12 @@ export default function ContactsList({
         <Stack gap="md">
           <Group wrap="nowrap" w="100%">
             <Skeleton
-              height={60}
-              w={60}
+              height={50}
+              w={50}
               radius="xl"
               style={{ flexShrink: 0 }}
             />
-            <Skeleton height={60} radius="xl" w="100%" />
+            <Skeleton height={50} radius="xl" w="100%" />
           </Group>
           {Array.from({ length: 10 }).map((_, i) => (
             <Skeleton key={i} height={60} radius="xl" w="100%" />
@@ -111,7 +115,7 @@ export default function ContactsList({
         <Tooltip label="Invite contact" position="right">
           <ActionIcon
             onClick={onInviteNew}
-            size={60}
+            size={50}
             radius="xl"
             aria-label="Invite contact"
           >
@@ -124,7 +128,7 @@ export default function ContactsList({
           placeholder="Search contacts"
           leftSection={<Search01Icon size={20} />}
           radius="xl"
-          size="xl"
+          size="lg"
           value={searchValue}
           onChange={(event) => setSearchValue(event.currentTarget.value)}
           rightSectionPointerEvents="all"

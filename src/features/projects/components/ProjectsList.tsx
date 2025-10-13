@@ -35,11 +35,9 @@ export default function ProjectsList({
 }: ProjectsListProps) {
   const [searchValue, setSearchValue] = useState("");
   const { isSelectionMode } = useProjects();
-
   const filteredProjects = projects.filter((project) =>
     project.name.toLowerCase().includes(searchValue.toLowerCase())
   );
-
   const hasProjects = projects.length > 0;
   const noSearchResults = filteredProjects.length === 0 && searchValue !== "";
 
@@ -51,7 +49,7 @@ export default function ProjectsList({
             <Tooltip label="New project" position="right">
               <ActionIcon
                 onClick={onNew}
-                size={60}
+                size={50}
                 radius="xl"
                 aria-label="Create new project"
               >
@@ -63,7 +61,7 @@ export default function ProjectsList({
               placeholder="Search projects"
               leftSection={<Search01Icon size={20} />}
               radius="xl"
-              size="xl"
+              size="lg"
               value={searchValue}
               onChange={(event) => setSearchValue(event.currentTarget.value)}
               rightSectionPointerEvents="all"

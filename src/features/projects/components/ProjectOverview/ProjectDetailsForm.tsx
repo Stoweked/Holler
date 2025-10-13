@@ -75,14 +75,14 @@ export default function ProjectDetailsForm({
       <Stack>
         <Title order={5}>Edit project</Title>
         <ProjectFormInputs form={form} />
-        <Group justify="flex-end" grow>
-          <Button variant="default" size="lg" onClick={onCancel}>
-            Cancel
-          </Button>
+        <Stack w="100%">
           <Button type="submit" size="lg" loading={loading}>
             Save
           </Button>
-        </Group>
+          <Button variant="default" size="lg" onClick={onCancel}>
+            Cancel
+          </Button>
+        </Stack>
       </Stack>
     </form>
   );

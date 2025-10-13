@@ -35,11 +35,9 @@ export default function WaiverInitialStep({
   waivers,
 }: WaiverInitialStepProps) {
   const [searchValue, setSearchValue] = useState("");
-
   const filteredWaivers = waivers.filter((waiver) =>
     waiver.title.toLowerCase().includes(searchValue.toLowerCase())
   );
-
   const hasWaivers = waivers.length > 0;
   const noSearchResults = filteredWaivers.length === 0 && searchValue !== "";
 
@@ -52,7 +50,7 @@ export default function WaiverInitialStep({
             <Tooltip label="New waiver" position="right">
               <ActionIcon
                 onClick={onNew}
-                size={60}
+                size={50}
                 radius="xl"
                 aria-label="Create new waiver"
               >
@@ -64,7 +62,7 @@ export default function WaiverInitialStep({
               placeholder="Search lien waivers"
               leftSection={<Search01Icon size={20} />}
               radius="xl"
-              size="xl"
+              size="lg"
               value={searchValue}
               onChange={(event) => setSearchValue(event.currentTarget.value)}
               rightSectionPointerEvents="all"

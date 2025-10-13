@@ -50,7 +50,7 @@ export default function BankList({
         <Tooltip label="Connect new bank" position="right">
           <ActionIcon
             onClick={onConnectNew}
-            size={60}
+            size={50}
             radius="xl"
             aria-label="Connect new bank"
           >
@@ -63,7 +63,7 @@ export default function BankList({
           placeholder="Search for a bank"
           leftSection={<Search01Icon size={20} />}
           radius="xl"
-          size="xl"
+          size="lg"
           value={searchValue}
           onChange={(event) => setSearchValue(event.currentTarget.value)}
           rightSectionPointerEvents="all"
