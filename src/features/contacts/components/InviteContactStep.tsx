@@ -104,7 +104,7 @@ export default function InviteContactStep({
             type="tel"
             placeholder="Enter phone number"
             size="lg"
-            radius="md"
+            radius="lg"
             {...form.getInputProps("value")}
           />
         )}

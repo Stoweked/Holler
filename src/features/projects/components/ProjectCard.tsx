@@ -58,7 +58,7 @@ function ProjectCard({
         </Tooltip>
       </Group>
 
-      <Progress.Root size={20}>
+      <Progress.Root size={20} radius={99}>
         <Tooltip label="Received $3,534">
           <Progress.Section value={42} color="green">
             <Progress.Label>Received</Progress.Label>
