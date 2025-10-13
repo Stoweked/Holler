@@ -376,6 +376,55 @@ CREATE TABLE IF NOT EXISTS "public"."businesses" (
 ALTER TABLE "public"."businesses" OWNER TO "postgres";
 
 
+CREATE TABLE IF NOT EXISTS "public"."profiles" (
+    "id" "uuid" NOT NULL,
+    "phone_number" "text",
+    "first_name" "text",
+    "last_name" "text",
+    "username" "text",
+    "full_name" "text",
+    "avatar_url" "text",
+    "email" "text",
+    "dob" "date",
+    "gender" "text",
+    "address1" "text",
+    "address2" "text",
+    "city" "text",
+    "state" "text",
+    "zip" "text",
+    "auth_provider" "text",
+    "dismissed_business_prompt" boolean DEFAULT false
+);
+
+
+ALTER TABLE "public"."profiles" OWNER TO "postgres";
+
+
+CREATE OR REPLACE VIEW "public"."contacts_view" AS
+ SELECT "profiles"."id",
+    "profiles"."email",
+    "profiles"."phone_number",
+    "profiles"."avatar_url",
+    "profiles"."username",
+    "profiles"."full_name",
+    NULL::"text" AS "business_name",
+    'person'::"text" AS "contactType"
+   FROM "public"."profiles"
+UNION ALL
+ SELECT "businesses"."id",
+    "businesses"."email",
+    "businesses"."phone_number",
+    "businesses"."avatar_url",
+    "businesses"."username",
+    NULL::"text" AS "full_name",
+    "businesses"."business_name",
+    'business'::"text" AS "contactType"
+   FROM "public"."businesses";
+
+
+ALTER VIEW "public"."contacts_view" OWNER TO "postgres";
+
+
 CREATE TABLE IF NOT EXISTS "public"."contract_agreements" (
     "id" "text" NOT NULL,
     "contract_id" "text" NOT NULL,
@@ -518,27 +567,48 @@ CREATE TABLE IF NOT EXISTS "public"."pending_payments" (
 ALTER TABLE "public"."pending_payments" OWNER TO "postgres";
 
 
-CREATE TABLE IF NOT EXISTS "public"."profiles" (
-    "id" "uuid" NOT NULL,
-    "phone_number" "text",
-    "first_name" "text",
-    "last_name" "text",
-    "username" "text",
-    "full_name" "text",
-    "avatar_url" "text",
-    "email" "text",
-    "dob" "date",
-    "gender" "text",
-    "address1" "text",
-    "address2" "text",
-    "city" "text",
-    "state" "text",
-    "zip" "text",
-    "auth_provider" "text"
+CREATE TABLE IF NOT EXISTS "public"."project_businesses" (
+    "project_id" "uuid" NOT NULL,
+    "business_id" "uuid" NOT NULL,
+    "created_at" timestamp with time zone DEFAULT "now"() NOT NULL
 );
 
 
-ALTER TABLE "public"."profiles" OWNER TO "postgres";
+ALTER TABLE "public"."project_businesses" OWNER TO "postgres";
+
+
+COMMENT ON TABLE "public"."project_businesses" IS 'Maps which businesses are associated with a project.';
+
+
+
+CREATE TABLE IF NOT EXISTS "public"."project_profiles" (
+    "project_id" "uuid" NOT NULL,
+    "profile_id" "uuid" NOT NULL,
+    "created_at" timestamp with time zone DEFAULT "now"() NOT NULL
+);
+
+
+ALTER TABLE "public"."project_profiles" OWNER TO "postgres";
+
+
+COMMENT ON TABLE "public"."project_profiles" IS 'Maps which user profiles are associated with a project.';
+
+
+
+CREATE TABLE IF NOT EXISTS "public"."projects" (
+    "id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
+    "user_id" "uuid" NOT NULL,
+    "name" "text" NOT NULL,
+    "address" "text",
+    "created_at" timestamp with time zone DEFAULT "now"(),
+    "updated_at" timestamp with time zone DEFAULT "now"(),
+    "archived" boolean DEFAULT false,
+    "start_date" "date",
+    "end_date" "date"
+);
+
+
+ALTER TABLE "public"."projects" OWNER TO "postgres";
 
 
 ALTER TABLE ONLY "public"."accounts"
@@ -631,6 +701,21 @@ ALTER TABLE ONLY "public"."profiles"
 
 
 
+ALTER TABLE ONLY "public"."project_businesses"
+    ADD CONSTRAINT "project_businesses_pkey" PRIMARY KEY ("project_id", "business_id");
+
+
+
+ALTER TABLE ONLY "public"."project_profiles"
+    ADD CONSTRAINT "project_profiles_pkey" PRIMARY KEY ("project_id", "profile_id");
+
+
+
+ALTER TABLE ONLY "public"."projects"
+    ADD CONSTRAINT "projects_pkey" PRIMARY KEY ("id");
+
+
+
 CREATE INDEX "idx_accounts_moov_account_id" ON "public"."accounts" USING "btree" ("moov_account_id");
 
 
@@ -687,6 +772,10 @@ CREATE OR REPLACE TRIGGER "on_businesses_update" BEFORE UPDATE ON "public"."busi
 
 
 
+CREATE OR REPLACE TRIGGER "on_projects_update" BEFORE UPDATE ON "public"."projects" FOR EACH ROW EXECUTE FUNCTION "public"."handle_updated_at"();
+
+
+
 CREATE OR REPLACE TRIGGER "set_row_hash_contract_agreements" BEFORE INSERT ON "public"."contract_agreements" FOR EACH ROW EXECUTE FUNCTION "public"."compute_contract_agreements_table_row_hash"();
 
 
@@ -733,18 +822,33 @@ ALTER TABLE ONLY "public"."favorite_contacts"
 
 
 
-ALTER TABLE ONLY "public"."profiles"
-    ADD CONSTRAINT "fk_user" FOREIGN KEY ("id") REFERENCES "auth"."users"("id") ON DELETE CASCADE;
-
-
-
 ALTER TABLE ONLY "public"."lien_waivers"
     ADD CONSTRAINT "lien_waivers_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "auth"."users"("id") ON DELETE CASCADE;
 
 
 
-ALTER TABLE ONLY "public"."profiles"
-    ADD CONSTRAINT "profiles_id_fkey" FOREIGN KEY ("id") REFERENCES "auth"."users"("id") ON DELETE CASCADE;
+ALTER TABLE ONLY "public"."project_businesses"
+    ADD CONSTRAINT "project_businesses_business_id_fkey" FOREIGN KEY ("business_id") REFERENCES "public"."businesses"("id") ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY "public"."project_businesses"
+    ADD CONSTRAINT "project_businesses_project_id_fkey" FOREIGN KEY ("project_id") REFERENCES "public"."projects"("id") ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY "public"."project_profiles"
+    ADD CONSTRAINT "project_profiles_profile_id_fkey" FOREIGN KEY ("profile_id") REFERENCES "public"."profiles"("id") ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY "public"."project_profiles"
+    ADD CONSTRAINT "project_profiles_project_id_fkey" FOREIGN KEY ("project_id") REFERENCES "public"."projects"("id") ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY "public"."projects"
+    ADD CONSTRAINT "projects_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "auth"."users"("id");
 
 
 
@@ -760,15 +864,15 @@ CREATE POLICY "Authenticated users can create businesses." ON "public"."business
 
 
 
+CREATE POLICY "Enable read access for all users" ON "public"."profiles" FOR SELECT USING (true);
+
+
+
 CREATE POLICY "Owners/admins can manage their business's members." ON "public"."business_admins" USING ("public"."is_business_admin_or_owner"("business_id"));
 
 
 
 CREATE POLICY "Public can view businesses." ON "public"."businesses" FOR SELECT USING (true);
-
-
-
-CREATE POLICY "Public profiles are viewable by everyone." ON "public"."profiles" FOR SELECT USING (("auth"."uid"() = "id"));
 
 
 
@@ -782,7 +886,15 @@ CREATE POLICY "Users can delete their own lien waivers" ON "public"."lien_waiver
 
 
 
+CREATE POLICY "Users can delete their own projects" ON "public"."projects" FOR DELETE USING (("auth"."uid"() = "user_id"));
+
+
+
 CREATE POLICY "Users can insert their own lien waivers" ON "public"."lien_waivers" FOR INSERT WITH CHECK (("auth"."uid"() = "user_id"));
+
+
+
+CREATE POLICY "Users can insert their own projects" ON "public"."projects" FOR INSERT WITH CHECK (("auth"."uid"() = "user_id"));
 
 
 
@@ -805,6 +917,10 @@ CREATE POLICY "Users can update their own lien waivers" ON "public"."lien_waiver
 
 
 CREATE POLICY "Users can update their own profile." ON "public"."profiles" FOR UPDATE USING (("auth"."uid"() = "id"));
+
+
+
+CREATE POLICY "Users can update their own projects" ON "public"."projects" FOR UPDATE USING (("auth"."uid"() = "user_id"));
 
 
 
@@ -862,6 +978,10 @@ CREATE POLICY "Users can view their own pending payments" ON "public"."pending_p
 
 
 
+CREATE POLICY "Users can view their own projects" ON "public"."projects" FOR SELECT USING (("auth"."uid"() = "user_id"));
+
+
+
 ALTER TABLE "public"."accounts" ENABLE ROW LEVEL SECURITY;
 
 
@@ -899,6 +1019,9 @@ ALTER TABLE "public"."pending_payments" ENABLE ROW LEVEL SECURITY;
 
 
 ALTER TABLE "public"."profiles" ENABLE ROW LEVEL SECURITY;
+
+
+ALTER TABLE "public"."projects" ENABLE ROW LEVEL SECURITY;
 
 
 
@@ -1190,6 +1313,18 @@ GRANT ALL ON TABLE "public"."businesses" TO "service_role";
 
 
 
+GRANT ALL ON TABLE "public"."profiles" TO "anon";
+GRANT ALL ON TABLE "public"."profiles" TO "authenticated";
+GRANT ALL ON TABLE "public"."profiles" TO "service_role";
+
+
+
+GRANT ALL ON TABLE "public"."contacts_view" TO "anon";
+GRANT ALL ON TABLE "public"."contacts_view" TO "authenticated";
+GRANT ALL ON TABLE "public"."contacts_view" TO "service_role";
+
+
+
 GRANT ALL ON TABLE "public"."contract_agreements" TO "anon";
 GRANT ALL ON TABLE "public"."contract_agreements" TO "authenticated";
 GRANT ALL ON TABLE "public"."contract_agreements" TO "service_role";
@@ -1250,9 +1385,21 @@ GRANT ALL ON TABLE "public"."pending_payments" TO "service_role";
 
 
 
-GRANT ALL ON TABLE "public"."profiles" TO "anon";
-GRANT ALL ON TABLE "public"."profiles" TO "authenticated";
-GRANT ALL ON TABLE "public"."profiles" TO "service_role";
+GRANT ALL ON TABLE "public"."project_businesses" TO "anon";
+GRANT ALL ON TABLE "public"."project_businesses" TO "authenticated";
+GRANT ALL ON TABLE "public"."project_businesses" TO "service_role";
+
+
+
+GRANT ALL ON TABLE "public"."project_profiles" TO "anon";
+GRANT ALL ON TABLE "public"."project_profiles" TO "authenticated";
+GRANT ALL ON TABLE "public"."project_profiles" TO "service_role";
+
+
+
+GRANT ALL ON TABLE "public"."projects" TO "anon";
+GRANT ALL ON TABLE "public"."projects" TO "authenticated";
+GRANT ALL ON TABLE "public"."projects" TO "service_role";
 
 
 
