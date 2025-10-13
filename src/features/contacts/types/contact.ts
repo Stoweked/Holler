@@ -1,3 +1,5 @@
+import { Project } from "@/features/projects/types/project";
+
 export enum ContactType {
   Person = "person",
   Business = "business",
@@ -11,6 +13,7 @@ export interface BaseContact {
   avatar_url?: string;
   favorite?: boolean;
   username?: string;
+  projects?: Project[];
 }
 
 export interface PersonContact extends BaseContact {
