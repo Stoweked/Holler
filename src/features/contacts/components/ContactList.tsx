@@ -1,5 +1,5 @@
 // src/features/contacts/components/ContactList.tsx
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Input,
   Stack,
@@ -7,7 +7,6 @@ import {
   ActionIcon,
   Tooltip,
   Divider,
-  Button,
   Text,
   Center,
   Skeleton,
@@ -24,6 +23,7 @@ import { Contact, ContactType } from "../types/contact";
 import { useContacts } from "../hooks/useContacts";
 import { useFavorites } from "../contexts/FavoritesContext";
 import { addContact } from "../actions/add-contact";
+import { searchGlobalContacts } from "../actions/search-global-contacts"; // Import the new action
 
 interface ContactsListProps {
   onContactClick?: (contact: Contact) => void;
@@ -35,12 +35,35 @@ export default function ContactsList({
   onInviteNew,
 }: ContactsListProps) {
   const [searchValue, setSearchValue] = useState("");
+  const [searchResults, setSearchResults] = useState<Contact[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
+
+  // This hook fetches the user's PERSONAL contacts list
   const { contacts, loading: contactsLoading } = useContacts();
   const { favoriteContacts, loading: favoritesLoading } = useFavorites();
 
+  // Effect to handle global search when the user types
+  useEffect(() => {
+    // Debounce the search to avoid excessive API calls
+    const handler = setTimeout(async () => {
+      if (searchValue.trim().length >= 2) {
+        setIsSearching(true);
+        const results = await searchGlobalContacts(searchValue);
+        setSearchResults(results);
+        setIsSearching(false);
+      } else {
+        setSearchResults([]);
+      }
+    }, 300); // 300ms delay
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [searchValue]);
+
   const handleContactClick = async (contact: Contact) => {
-    // Add the contact to the user's list in the background.
-    // The upsert in the action will handle cases where it's already added.
+    // This action works for both personal and searched contacts.
+    // When a searched contact is clicked, they are added to the user's list.
     await addContact(contact.id, contact.contactType);
     if (onContactClick) {
       onContactClick({
@@ -50,29 +73,9 @@ export default function ContactsList({
     }
   };
 
-  const filteredContacts = contacts.filter((contact) => {
-    const searchTerm = searchValue.toLowerCase();
-    const name =
-      contact.contactType === ContactType.Person
-        ? contact.full_name
-        : contact.business_name;
-    const email = contact.email?.toLowerCase() || "";
-    const phone = contact.phone_number || "";
-    const username = contact.username || "";
-
-    return (
-      name?.toLowerCase().includes(searchTerm) ||
-      email.includes(searchTerm) ||
-      phone.includes(searchTerm) ||
-      username.toLowerCase().includes(searchTerm)
-    );
-  });
-
-  const favorites = filteredContacts.filter((c) => favoriteContacts.has(c.id));
-  const otherContacts = filteredContacts.filter(
-    (c) => !favoriteContacts.has(c.id)
-  );
-
+  // Logic for displaying the user's personal contacts
+  const favorites = contacts.filter((c) => favoriteContacts.has(c.id));
+  const otherContacts = contacts.filter((c) => !favoriteContacts.has(c.id));
   const groupedContacts = otherContacts.reduce((acc, contact) => {
     const name =
       contact.contactType === ContactType.Person
@@ -85,29 +88,120 @@ export default function ContactsList({
     acc[firstLetter].push(contact);
     return acc;
   }, {} as Record<string, typeof otherContacts>);
-
   const showDivider = favorites.length > 0 && otherContacts.length > 0;
+  const isLoading = contactsLoading || favoritesLoading;
 
-  if (contactsLoading || favoritesLoading) {
-    return (
-      <Stack gap="lg">
+  // RENDER LOGIC
+  const showSearchResults = searchValue.trim().length >= 2;
+
+  const renderContent = () => {
+    if (isLoading && !showSearchResults) {
+      // Show skeleton only on initial load
+      return (
         <Stack gap="md">
-          <Group wrap="nowrap" w="100%">
-            <Skeleton
-              height={50}
-              w={50}
-              radius="xl"
-              style={{ flexShrink: 0 }}
-            />
-            <Skeleton height={50} radius="xl" w="100%" />
-          </Group>
           {Array.from({ length: 10 }).map((_, i) => (
             <Skeleton key={i} height={60} radius="xl" w="100%" />
           ))}
         </Stack>
-      </Stack>
+      );
+    }
+
+    if (showSearchResults) {
+      // --- SEARCH RESULTS VIEW ---
+      return (
+        <Stack gap={8}>
+          <Title order={3} px="xs">
+            Search results
+          </Title>
+          {isSearching && (
+            <Stack gap="md">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <Skeleton key={i} height={60} radius="xl" w="100%" />
+              ))}
+            </Stack>
+          )}
+          {!isSearching && searchResults.length > 0 && (
+            <Stack gap={0}>
+              {searchResults.map((contact) => (
+                <ContactItem
+                  key={contact.id}
+                  contact={contact}
+                  onClick={() => handleContactClick(contact)}
+                />
+              ))}
+            </Stack>
+          )}
+          {!isSearching && searchResults.length === 0 && (
+            <Text c="dimmed" ta="center" mt="md">
+              No users found. You can invite them.
+            </Text>
+          )}
+        </Stack>
+      );
+    }
+
+    // --- PERSONAL CONTACTS VIEW ---
+    if (contacts.length > 0) {
+      return (
+        <>
+          {favorites.length > 0 && (
+            <Stack gap={8}>
+              <Title order={3} px="xs">
+                Favorites
+              </Title>
+              <Stack gap={0}>
+                {favorites.map((contact) => (
+                  <ContactItem
+                    key={contact.id}
+                    contact={contact}
+                    onClick={() => handleContactClick(contact)}
+                  />
+                ))}
+              </Stack>
+            </Stack>
+          )}
+          {showDivider && <Divider />}
+          <Stack gap="lg">
+            {Object.keys(groupedContacts)
+              .sort()
+              .map((letter) => (
+                <Stack gap={8} key={letter}>
+                  <Title order={3} px="xs">
+                    {letter}
+                  </Title>
+                  <Stack gap={0}>
+                    {groupedContacts[letter].map((contact) => (
+                      <ContactItem
+                        key={contact.id}
+                        contact={contact}
+                        onClick={() => handleContactClick(contact)}
+                      />
+                    ))}
+                  </Stack>
+                </Stack>
+              ))}
+          </Stack>
+        </>
+      );
+    }
+
+    // --- EMPTY STATE VIEW ---
+    return (
+      <Center>
+        <Stack align="center" mt="xl" gap="lg">
+          <UserMultiple02Icon size={40} color="grey" />
+          <Stack gap={0} align="center">
+            <Title order={4} ta="center">
+              Your contact list is empty
+            </Title>
+            <Text c="dimmed" ta="center">
+              Search for people to add or invite a new contact.
+            </Text>
+          </Stack>
+        </Stack>
+      </Center>
     );
-  }
+  };
 
   return (
     <Stack gap="lg">
@@ -122,10 +216,9 @@ export default function ContactsList({
             <PlusSignIcon size={32} />
           </ActionIcon>
         </Tooltip>
-
         <Input
           w="100%"
-          placeholder="Search contacts"
+          placeholder="Search all users or invite"
           leftSection={<Search01Icon size={20} />}
           radius="xl"
           size="lg"
@@ -150,75 +243,7 @@ export default function ContactsList({
           }
         />
       </Group>
-
-      {filteredContacts.length > 0 ? (
-        <>
-          {favorites.length > 0 && (
-            <Stack gap={8}>
-              <Title order={3} px="xs">
-                Favorites
-              </Title>
-              <Stack gap={0}>
-                {favorites.map((contact) => (
-                  <ContactItem
-                    key={contact.id}
-                    contact={contact}
-                    onClick={() => handleContactClick(contact)}
-                  />
-                ))}
-              </Stack>
-            </Stack>
-          )}
-
-          {showDivider && <Divider />}
-
-          <Stack gap="lg">
-            {Object.keys(groupedContacts)
-              .sort()
-              .map((letter) => (
-                <Stack gap={8} key={letter}>
-                  <Title order={3} px="xs">
-                    {letter}
-                  </Title>
-                  <Stack gap={0}>
-                    {groupedContacts[letter].map((contact) => (
-                      <ContactItem
-                        key={contact.id}
-                        contact={contact}
-                        onClick={() => handleContactClick(contact)}
-                      />
-                    ))}
-                  </Stack>
-                </Stack>
-              ))}
-          </Stack>
-        </>
-      ) : (
-        <Center>
-          <Stack align="center" mt="xl" gap="lg">
-            <UserMultiple02Icon size={40} color="grey" />
-            <Stack gap={0} align="center">
-              <Title order={4} ta="center">
-                No contacts found
-              </Title>
-              <Text c="dimmed" ta="center">
-                Try adjusting your search or invite a new contact.
-              </Text>
-            </Stack>
-            {searchValue && (
-              <Button
-                size="lg"
-                radius="xl"
-                variant="default"
-                fullWidth
-                onClick={() => setSearchValue("")}
-              >
-                Clear search
-              </Button>
-            )}
-          </Stack>
-        </Center>
-      )}
+      {renderContent()}
     </Stack>
   );
 }

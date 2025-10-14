@@ -1,4 +1,4 @@
-// src/features/contacts/actions/getContacts.ts
+// src/features/contacts/actions/get-contacts.ts
 "use server";
 
 import { createServer } from "@/lib/supabase/server";
@@ -19,65 +19,73 @@ export async function getContacts(): Promise<Contact[]> {
     throw new Error("Unauthorized");
   }
 
-  const { data: profiles, error: profileError } = await supabase
-    .from("profiles")
-    .select("id, full_name, email, phone_number, avatar_url, username")
-    .neq("id", user.id);
-
-  const { data: businesses, error: businessError } = await supabase
-    .from("businesses")
-    .select("id, business_name, email, phone_number, avatar_url, username");
-
-  const { data: userBusinesses, error: userBusinessError } = await supabase
-    .from("business_admins")
-    .select("business_id")
+  // Fetch from user_contacts and join the related profile or business data
+  const { data: userContacts, error } = await supabase
+    .from("user_contacts")
+    .select(
+      `
+      profiles (*),
+      businesses (*)
+    `
+    )
     .eq("user_id", user.id);
 
-  if (profileError || businessError || userBusinessError) {
-    console.error(
-      "Error fetching contacts:",
-      profileError || businessError || userBusinessError
-    );
+  if (error) {
+    console.error("Error fetching user contacts:", error);
     throw new Error("Failed to fetch contacts");
   }
 
-  const userBusinessIds = new Set(
-    (userBusinesses || []).map((ub) => ub.business_id)
+  const allContacts: Contact[] = (userContacts || [])
+    .map((uc) => {
+      const profile: Partial<PersonContact> | null = Array.isArray(uc.profiles)
+        ? uc.profiles[0]
+        : uc.profiles;
+      const business: Partial<BusinessContact> | null = Array.isArray(
+        uc.businesses
+      )
+        ? uc.businesses[0]
+        : uc.businesses;
+
+      if (profile) {
+        return {
+          id: profile.id,
+          contactType: ContactType.Person,
+          full_name: profile.full_name,
+          email: profile.email,
+          phone_number: profile.phone_number,
+          avatar_url: profile.avatar_url,
+          username: profile.username,
+        } as PersonContact;
+      }
+
+      if (business) {
+        return {
+          id: business.id,
+          contactType: ContactType.Business,
+          business_name: business.business_name,
+          email: business.email,
+          phone_number: business.phone_number,
+          avatar_url: business.avatar_url,
+          username: business.username,
+        } as BusinessContact;
+      }
+
+      return null;
+    })
+    .filter((c): c is Contact => c !== null);
+
+  // FIX: Filter out duplicate contacts to prevent the React key error
+  const uniqueContacts = allContacts.filter(
+    (contact, index, self) =>
+      index === self.findIndex((c) => c.id === contact.id)
   );
 
-  const profileContacts: PersonContact[] =
-    profiles?.map((p) => ({
-      id: p.id,
-      contactType: ContactType.Person,
-      full_name: p.full_name,
-      email: p.email,
-      phone_number: p.phone_number,
-      avatar_url: p.avatar_url,
-      username: p.username,
-    })) || [];
-
-  const businessContacts: BusinessContact[] =
-    businesses
-      ?.filter((b) => !userBusinessIds.has(b.id))
-      .map((b) => ({
-        id: b.id,
-        contactType: ContactType.Business,
-        business_name: b.business_name,
-        email: b.email,
-        phone_number: b.phone_number,
-        avatar_url: b.avatar_url,
-        username: b.username,
-      })) || [];
-
-  const allContacts: Contact[] = [...profileContacts, ...businessContacts].sort(
-    (a, b) => {
-      const nameA =
-        a.contactType === ContactType.Person ? a.full_name : a.business_name;
-      const nameB =
-        b.contactType === ContactType.Person ? b.full_name : b.business_name;
-      return (nameA || "").localeCompare(nameB || "");
-    }
-  );
-
-  return allContacts;
+  // Sort the final, unique list alphabetically
+  return uniqueContacts.sort((a, b) => {
+    const nameA =
+      a.contactType === ContactType.Person ? a.full_name : a.business_name;
+    const nameB =
+      b.contactType === ContactType.Person ? b.full_name : b.business_name;
+    return (nameA || "").localeCompare(nameB || "");
+  });
 }

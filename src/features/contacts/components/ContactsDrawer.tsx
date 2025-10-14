@@ -1,9 +1,18 @@
-import { CheckIcon, Drawer, Space } from "@mantine/core";
+import {
+  ActionIcon,
+  CheckIcon,
+  Drawer,
+  Group,
+  Space,
+  Text,
+  Tooltip,
+} from "@mantine/core";
 import ContactsList from "./ContactList";
 import { Contact } from "../types/contact";
 import InviteContactStep from "./InviteContactStep";
 import { useState } from "react";
 import { notifications } from "@mantine/notifications";
+import { ArrowLeft02Icon } from "hugeicons-react";
 
 interface ContactsDrawerProps {
   opened: boolean;
@@ -52,7 +61,20 @@ export default function ContactsDrawer({
         close();
         setStep("list");
       }}
-      title={step === "list" ? "Holler contacts" : "Invite a new contact"}
+      title={
+        step === "list" ? (
+          "Holler contacts"
+        ) : (
+          <Group gap="xs">
+            <Tooltip label="Back to contacts">
+              <ActionIcon onClick={handleBack} variant="subtle" color="gray">
+                <ArrowLeft02Icon size={24} />
+              </ActionIcon>
+            </Tooltip>
+            <Text>Invite a new contact</Text>
+          </Group>
+        )
+      }
       padding="lg"
       size="md"
     >

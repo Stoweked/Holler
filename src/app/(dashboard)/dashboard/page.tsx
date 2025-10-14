@@ -43,9 +43,7 @@ export default function Dashboard() {
       <Stack gap={0}>
         {projectsLoading ? (
           <Space h={100} /> // Or a skeleton loader
-        ) : projects.length > 0 ? (
-          <ProjectsGrid />
-        ) : (
+        ) : projects.length > 0 ? null : (
           <FeaturedHeader />
         )}
         <TransactionsTable />
