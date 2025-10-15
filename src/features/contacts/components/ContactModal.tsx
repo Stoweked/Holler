@@ -1,4 +1,3 @@
-// src/features/contacts/components/ContactModal.tsx
 import {
   Stack,
   Avatar,
@@ -14,11 +13,13 @@ import { Contact, ContactType } from "../types/contact";
 import { getInitials } from "@/lib/hooks/textUtils";
 import { useWallet } from "@/features/wallet/contexts/WalletContext";
 import { TransactionParty } from "@/features/transactions/types/transactionParty";
-import { useFavorites } from "../contexts/FavoritesContext";
 import { useProjects } from "@/features/projects/contexts/ProjectsContext";
 import { useState, useEffect } from "react";
 import { notifications } from "@mantine/notifications";
 import { updateContactProjects } from "../actions/update-contact-projects";
+import { useContacts } from "../contexts/ContactsContext";
+// Import the addContact action
+import { addContact } from "../actions/add-contact";
 
 interface ContactModalProps {
   opened: boolean;
@@ -36,10 +37,13 @@ function ContactModalContent({
   showButtons,
   close,
 }: ContactModalContentProps) {
-  const { toggleFavorite } = useFavorites();
   const { openActionDrawer } = useWallet();
   const { projects, refetchProjects } = useProjects();
-  const isFavorite = contact.favorite; // CORRECT: Read directly from the contact prop
+  const { contacts, toggleFavorite } = useContacts();
+
+  // This logic remains correct for displaying the current state
+  const currentContact = contacts.find((c) => c.id === contact.id) || contact;
+  const isFavorite = currentContact.favorite;
 
   const [selectedProjects, setSelectedProjects] = useState<string[]>(
     contact.projects?.map((p) => p.name) || []
@@ -50,7 +54,6 @@ function ContactModalContent({
       ? contact.full_name
       : contact.business_name;
 
-  // This effect will run when the modal is closed to save project changes.
   useEffect(() => {
     const initialProjects = new Set(contact.projects?.map((p) => p.name) || []);
     return () => {
@@ -89,7 +92,9 @@ function ContactModalContent({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedProjects]);
 
-  const handleToggleFavorite = () => {
+  const handleToggleFavorite = async () => {
+    // Ensure the contact exists in the user_contacts table. addContact will create it if it's missing, or do nothing if it's already there.
+    await addContact(contact.id, contact.contactType);
     toggleFavorite(contact);
   };
 

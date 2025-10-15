@@ -1,4 +1,3 @@
-// src/features/contacts/actions/add-contact.ts
 "use server";
 
 import { createServer } from "@/lib/supabase/server";
@@ -15,7 +14,32 @@ export async function addContact(contactId: string, contactType: ContactType) {
     return { error: "You must be logged in to add contacts." };
   }
 
-  // Prepare the record to insert. Only one of the contact foreign keys will be set.
+  // Step 1: Check if the contact relationship already exists.
+  let query = supabase
+    .from("user_contacts")
+    .select("id", { count: "exact", head: true })
+    .eq("user_id", user.id);
+
+  if (contactType === ContactType.Person) {
+    query = query.eq("contact_profile_id", contactId);
+  } else {
+    query = query.eq("contact_business_id", contactId);
+  }
+
+  const { count, error: checkError } = await query;
+
+  if (checkError) {
+    console.error("Error checking for existing contact:", checkError);
+    return { error: "Could not add contact." };
+  }
+
+  // If the count is greater than 0, the contact already exists. We can just exit.
+  if (count !== null && count > 0) {
+    console.log("Contact relationship already exists. No action needed.");
+    return { success: true };
+  }
+
+  // Step 2: If the contact does not exist, insert it.
   const recordToInsert = {
     user_id: user.id,
     contact_profile_id: contactType === ContactType.Person ? contactId : null,
@@ -23,17 +47,15 @@ export async function addContact(contactId: string, contactType: ContactType) {
       contactType === ContactType.Business ? contactId : null,
   };
 
-  // Use upsert with ignoreDuplicates to prevent errors if the contact already exists.
-  // This makes the operation idempotent.
-  const { error } = await supabase
+  const { error: insertError } = await supabase
     .from("user_contacts")
-    .upsert(recordToInsert, { ignoreDuplicates: true });
+    .insert(recordToInsert);
 
-  if (error) {
-    console.error("Error adding contact:", error);
+  if (insertError) {
+    console.error("Error inserting new contact:", insertError);
     return { error: "Could not add contact to your list." };
   }
 
-  revalidatePath("/dashboard"); // This tells Next.js to refetch data on the client
+  revalidatePath("/dashboard");
   return { success: true };
 }

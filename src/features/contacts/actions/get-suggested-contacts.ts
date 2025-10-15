@@ -47,7 +47,7 @@ export async function getSuggestedContacts(): Promise<Contact[]> {
 
   // --- Primary Strategy: Contacts of Contacts ---
   if (directContactIds.length > 0) {
-    const { data: suggested, error: suggestedError } = await supabase
+    const { data: suggested } = await supabase
       .from("user_contacts")
       .select("profiles(*), businesses(*)")
       .in("user_id", directContactIds)
@@ -105,7 +105,7 @@ export async function getSuggestedContacts(): Promise<Contact[]> {
       idsToExclude.push(user.id);
     }
 
-    const { data: randomContacts, error: randomError } = await supabase
+    const { data: randomContacts } = await supabase
       .from("contacts_view")
       .select("*")
       .not("id", "in", `(${idsToExclude.join(",")})`)

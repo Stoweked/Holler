@@ -1,4 +1,3 @@
-// src/features/contacts/actions/toggle-favorite.ts
 "use server";
 
 import { createServer } from "@/lib/supabase/server";
@@ -19,22 +18,23 @@ export async function toggleFavorite(
     return { error: "You must be logged in." };
   }
 
-  // Prepare the record for upsert. Since we are only favoriting existing
-  // profiles or businesses, external_contact_id will be null.
-  const record = {
-    user_id: user.id,
-    contact_profile_id: contactType === ContactType.Person ? contactId : null,
-    contact_business_id:
-      contactType === ContactType.Business ? contactId : null,
-    external_contact_id: null,
-    is_favorite: !currentStatus,
-  };
+  // **THE FIX:**
+  // Instead of a complex upsert, we use a simple update.
+  // We build the query to target the specific row based on the contact type.
 
-  const { error } = await supabase.from("user_contacts").upsert(record, {
-    // FIX: Match the 4-column unique constraint in the database
-    onConflict:
-      "user_id, contact_profile_id, contact_business_id, external_contact_id",
-  });
+  let query = supabase
+    .from("user_contacts")
+    .update({ is_favorite: !currentStatus })
+    .eq("user_id", user.id);
+
+  // Dynamically add the correct WHERE clause to find the exact contact record.
+  if (contactType === ContactType.Person) {
+    query = query.eq("contact_profile_id", contactId);
+  } else {
+    query = query.eq("contact_business_id", contactId);
+  }
+
+  const { error } = await query;
 
   if (error) {
     console.error("Error toggling favorite:", error);

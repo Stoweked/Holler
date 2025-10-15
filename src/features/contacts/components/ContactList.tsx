@@ -20,8 +20,8 @@ import {
   UserMultiple02Icon,
 } from "hugeicons-react";
 import { Contact, ContactType } from "../types/contact";
-import { useContacts } from "../hooks/useContacts";
-// No longer need useFavorites here as the contact object itself holds the favorite state
+// Corrected import path
+import { useContacts } from "../contexts/ContactsContext";
 import { addContact } from "../actions/add-contact";
 import { searchGlobalContacts } from "../actions/search-global-contacts";
 import { getSuggestedContacts } from "../actions/get-suggested-contacts";
@@ -41,7 +41,7 @@ export default function ContactsList({
   const [suggestedContacts, setSuggestedContacts] = useState<Contact[]>([]);
   const [suggestionsLoading, setSuggestionsLoading] = useState(true);
 
-  // useContacts now provides the single source of truth for contacts and their favorite status
+  // This now correctly uses the shared context!
   const { contacts, loading: contactsLoading } = useContacts();
 
   // Effect to handle global search when the user types
@@ -108,6 +108,8 @@ export default function ContactsList({
   const showSearchResults = searchValue.trim().length >= 2;
   const showSuggestions =
     suggestedContacts.length > 0 && !showSearchResults && !isLoading;
+  const showSuggestionsDivider =
+    suggestedContacts.length > 0 && otherContacts.length > 0;
 
   const renderContent = () => {
     if (isLoading && !showSearchResults) {
@@ -196,7 +198,7 @@ export default function ContactsList({
               ))}
           </Stack>
 
-          {(showSuggestions || suggestionsLoading) && <Divider my="md" />}
+          {showSuggestionsDivider && <Divider my="md" />}
 
           {suggestionsLoading && (
             <Stack gap={8} mt="lg">

@@ -1,4 +1,3 @@
-// src/features/contacts/actions/get-contacts.ts
 "use server";
 
 import { createServer } from "@/lib/supabase/server";
@@ -16,7 +15,8 @@ export async function getContacts(): Promise<Contact[]> {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    throw new Error("Unauthorized");
+    console.log("getContacts: No user found.");
+    return [];
   }
 
   const { data: userContacts, error } = await supabase
@@ -32,7 +32,7 @@ export async function getContacts(): Promise<Contact[]> {
 
   if (error) {
     console.error("Error fetching user contacts:", error);
-    throw new Error("Failed to fetch contacts");
+    return [];
   }
 
   const allContacts: Contact[] = (userContacts || [])
@@ -42,7 +42,7 @@ export async function getContacts(): Promise<Contact[]> {
         ? uc.businesses[0]
         : uc.businesses;
 
-      if (profile) {
+      if (profile && profile.id) {
         return {
           id: profile.id,
           contactType: ContactType.Person,
@@ -51,11 +51,11 @@ export async function getContacts(): Promise<Contact[]> {
           phone_number: profile.phone_number,
           avatar_url: profile.avatar_url,
           username: profile.username,
-          favorite: uc.is_favorite,
+          favorite: uc.is_favorite || false,
         } as PersonContact;
       }
 
-      if (business) {
+      if (business && business.id) {
         return {
           id: business.id,
           contactType: ContactType.Business,
@@ -64,7 +64,7 @@ export async function getContacts(): Promise<Contact[]> {
           phone_number: business.phone_number,
           avatar_url: business.avatar_url,
           username: business.username,
-          favorite: uc.is_favorite,
+          favorite: uc.is_favorite || false,
         } as BusinessContact;
       }
 
@@ -72,10 +72,18 @@ export async function getContacts(): Promise<Contact[]> {
     })
     .filter((c): c is Contact => c !== null);
 
-  const uniqueContacts = allContacts.filter(
-    (contact, index, self) =>
-      index === self.findIndex((c) => c.id === contact.id)
-  );
+  // Map to de-duplicate intelligently, prioritizing favorites.
+  const uniqueContactsMap = new Map<string, Contact>();
+  for (const contact of allContacts) {
+    const existingContact = uniqueContactsMap.get(contact.id);
+    // If we haven't seen this contact OR if the new one is a favorite
+    // and the old one wasn't, we add/update it in the map.
+    if (!existingContact || (!existingContact.favorite && contact.favorite)) {
+      uniqueContactsMap.set(contact.id, contact);
+    }
+  }
+
+  const uniqueContacts = Array.from(uniqueContactsMap.values());
 
   return uniqueContacts.sort((a, b) => {
     const nameA =
