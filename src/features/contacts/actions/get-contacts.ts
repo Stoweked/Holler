@@ -19,11 +19,11 @@ export async function getContacts(): Promise<Contact[]> {
     throw new Error("Unauthorized");
   }
 
-  // Fetch from user_contacts and join the related profile or business data
   const { data: userContacts, error } = await supabase
     .from("user_contacts")
     .select(
       `
+      is_favorite, 
       profiles (*),
       businesses (*)
     `
@@ -37,12 +37,8 @@ export async function getContacts(): Promise<Contact[]> {
 
   const allContacts: Contact[] = (userContacts || [])
     .map((uc) => {
-      const profile: Partial<PersonContact> | null = Array.isArray(uc.profiles)
-        ? uc.profiles[0]
-        : uc.profiles;
-      const business: Partial<BusinessContact> | null = Array.isArray(
-        uc.businesses
-      )
+      const profile = Array.isArray(uc.profiles) ? uc.profiles[0] : uc.profiles;
+      const business = Array.isArray(uc.businesses)
         ? uc.businesses[0]
         : uc.businesses;
 
@@ -55,6 +51,7 @@ export async function getContacts(): Promise<Contact[]> {
           phone_number: profile.phone_number,
           avatar_url: profile.avatar_url,
           username: profile.username,
+          favorite: uc.is_favorite,
         } as PersonContact;
       }
 
@@ -67,6 +64,7 @@ export async function getContacts(): Promise<Contact[]> {
           phone_number: business.phone_number,
           avatar_url: business.avatar_url,
           username: business.username,
+          favorite: uc.is_favorite,
         } as BusinessContact;
       }
 
@@ -74,13 +72,11 @@ export async function getContacts(): Promise<Contact[]> {
     })
     .filter((c): c is Contact => c !== null);
 
-  // FIX: Filter out duplicate contacts to prevent the React key error
   const uniqueContacts = allContacts.filter(
     (contact, index, self) =>
       index === self.findIndex((c) => c.id === contact.id)
   );
 
-  // Sort the final, unique list alphabetically
   return uniqueContacts.sort((a, b) => {
     const nameA =
       a.contactType === ContactType.Person ? a.full_name : a.business_name;

@@ -11,7 +11,7 @@ export interface BaseContact {
   email: string;
   phone_number?: string;
   avatar_url?: string;
-  favorite?: boolean;
+  favorite: boolean;
   username?: string;
   projects?: Project[];
 }

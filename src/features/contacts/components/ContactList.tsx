@@ -21,7 +21,7 @@ import {
 } from "hugeicons-react";
 import { Contact, ContactType } from "../types/contact";
 import { useContacts } from "../hooks/useContacts";
-import { useFavorites } from "../contexts/FavoritesContext";
+// No longer need useFavorites here as the contact object itself holds the favorite state
 import { addContact } from "../actions/add-contact";
 import { searchGlobalContacts } from "../actions/search-global-contacts";
 import { getSuggestedContacts } from "../actions/get-suggested-contacts";
@@ -39,10 +39,10 @@ export default function ContactsList({
   const [searchResults, setSearchResults] = useState<Contact[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [suggestedContacts, setSuggestedContacts] = useState<Contact[]>([]);
+  const [suggestionsLoading, setSuggestionsLoading] = useState(true);
 
-  // This hook fetches the user's PERSONAL contacts list
+  // useContacts now provides the single source of truth for contacts and their favorite status
   const { contacts, loading: contactsLoading } = useContacts();
-  const { favoriteContacts, loading: favoritesLoading } = useFavorites();
 
   // Effect to handle global search when the user types
   useEffect(() => {
@@ -65,27 +65,30 @@ export default function ContactsList({
   // Fetch suggested contacts on component mount or when contacts change
   useEffect(() => {
     const fetchSuggestions = async () => {
+      setSuggestionsLoading(true);
       if (contacts.length < 50) {
         const suggestions = await getSuggestedContacts();
         setSuggestedContacts(suggestions);
       }
+      setSuggestionsLoading(false);
     };
     fetchSuggestions();
   }, [contacts]);
 
   const handleContactClick = async (contact: Contact) => {
+    // When a user clicks a contact from search/suggestions, add them to the user_contacts table.
+    // The `addContact` action uses `upsert` so it's safe to call even if they already exist.
     await addContact(contact.id, contact.contactType);
+
     if (onContactClick) {
-      onContactClick({
-        ...contact,
-        favorite: favoriteContacts.has(contact.id),
-      });
+      // Pass the contact object directly. The `favorite` property is already on it.
+      onContactClick(contact);
     }
   };
 
   // Logic for displaying the user's personal contacts
-  const favorites = contacts.filter((c) => favoriteContacts.has(c.id));
-  const otherContacts = contacts.filter((c) => !favoriteContacts.has(c.id));
+  const favorites = contacts.filter((c) => c.favorite);
+  const otherContacts = contacts.filter((c) => !c.favorite);
   const groupedContacts = otherContacts.reduce((acc, contact) => {
     const name =
       contact.contactType === ContactType.Person
@@ -99,14 +102,12 @@ export default function ContactsList({
     return acc;
   }, {} as Record<string, typeof otherContacts>);
   const showFavoritesDivider = favorites.length > 0 && otherContacts.length > 0;
-  const isLoading = contactsLoading || favoritesLoading;
+  const isLoading = contactsLoading; // Simplified loading state
 
   // RENDER LOGIC
   const showSearchResults = searchValue.trim().length >= 2;
   const showSuggestions =
     suggestedContacts.length > 0 && !showSearchResults && !isLoading;
-  const showSuggestionsDivider =
-    suggestedContacts.length > 0 && otherContacts.length > 0;
 
   const renderContent = () => {
     if (isLoading && !showSearchResults) {
@@ -152,7 +153,7 @@ export default function ContactsList({
       );
     }
 
-    if (contacts.length > 0 || showSuggestions) {
+    if (contacts.length > 0 || showSuggestions || suggestionsLoading) {
       return (
         <>
           {favorites.length > 0 && (
@@ -195,12 +196,30 @@ export default function ContactsList({
               ))}
           </Stack>
 
-          {showSuggestionsDivider && <Divider my="md" />}
+          {(showSuggestions || suggestionsLoading) && <Divider my="md" />}
+
+          {suggestionsLoading && (
+            <Stack gap={8} mt="lg">
+              <Title order={3} px="xs">
+                Suggestions
+              </Title>
+              <Stack gap="md">
+                {Array.from({ length: 3 }).map((_, i) => (
+                  <Skeleton
+                    key={`suggestion-loader-${i}`}
+                    height={60}
+                    radius="xl"
+                    w="100%"
+                  />
+                ))}
+              </Stack>
+            </Stack>
+          )}
 
           {showSuggestions && (
-            <Stack gap="md">
+            <Stack gap={8} mt="lg">
               <Title order={3} px="xs">
-                You might know...
+                Suggestions
               </Title>
               <Stack gap={0}>
                 {suggestedContacts.map((contact) => (
@@ -229,6 +248,9 @@ export default function ContactsList({
               Search for people to add or invite a new contact.
             </Text>
           </Stack>
+          <Button onClick={onInviteNew} size="lg" radius="xl" fullWidth>
+            Invite a new contact
+          </Button>
         </Stack>
       </Center>
     );

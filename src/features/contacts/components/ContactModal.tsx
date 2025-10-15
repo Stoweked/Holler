@@ -1,3 +1,4 @@
+// src/features/contacts/components/ContactModal.tsx
 import {
   Stack,
   Avatar,
@@ -35,10 +36,10 @@ function ContactModalContent({
   showButtons,
   close,
 }: ContactModalContentProps) {
-  const { favoriteContacts, toggleFavorite } = useFavorites();
+  const { toggleFavorite } = useFavorites();
   const { openActionDrawer } = useWallet();
   const { projects, refetchProjects } = useProjects();
-  const isFavorite = favoriteContacts.has(contact.id);
+  const isFavorite = contact.favorite; // CORRECT: Read directly from the contact prop
 
   const [selectedProjects, setSelectedProjects] = useState<string[]>(
     contact.projects?.map((p) => p.name) || []
@@ -49,10 +50,9 @@ function ContactModalContent({
       ? contact.full_name
       : contact.business_name;
 
-  // This effect will run when the modal is closed (component unmounts) to save changes.
+  // This effect will run when the modal is closed to save project changes.
   useEffect(() => {
     const initialProjects = new Set(contact.projects?.map((p) => p.name) || []);
-
     return () => {
       const currentProjects = new Set(selectedProjects);
       const hasChanged =
@@ -121,22 +121,20 @@ function ContactModalContent({
           <Title order={1}>{getInitials(name)}</Title>
         </Avatar>
 
-        {contact.username && (
-          <Button
-            variant="default"
-            size="compact-md"
-            leftSection={
-              <StarIcon
-                size={16}
-                color={isFavorite ? "gold" : "gray"}
-                style={{ fill: isFavorite ? "currentColor" : "none" }}
-              />
-            }
-            onClick={handleToggleFavorite}
-          >
-            {isFavorite ? "Favorite" : "Add to favorites"}
-          </Button>
-        )}
+        <Button
+          variant="default"
+          size="compact-md"
+          leftSection={
+            <StarIcon
+              size={16}
+              color={isFavorite ? "gold" : "gray"}
+              style={{ fill: isFavorite ? "currentColor" : "none" }}
+            />
+          }
+          onClick={handleToggleFavorite}
+        >
+          {isFavorite ? "Favorite" : "Add to favorites"}
+        </Button>
         <Stack align="center" gap={4}>
           <Title order={2} ta="center">
             {name}

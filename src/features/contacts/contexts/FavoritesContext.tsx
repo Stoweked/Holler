@@ -1,146 +1,61 @@
-// src/contexts/FavoritesContext.tsx
-import {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  useCallback,
-  ReactNode,
-} from "react";
-import { createClient } from "@/lib/supabase/client";
+import { createContext, useContext, useCallback, ReactNode } from "react";
 import { notifications } from "@mantine/notifications";
 import { CheckIcon } from "@mantine/core";
 import { Contact, ContactType } from "@/features/contacts/types/contact";
-import { useProfile } from "@/features/account/contexts/ProfileContext";
+import { toggleFavorite as toggleFavoriteAction } from "@/features/contacts/actions/toggle-favorite";
+import { useContacts } from "@/features/contacts/hooks/useContacts"; // 1. Import useContacts
 
 interface FavoritesContextType {
-  favoriteContacts: Set<string>;
   toggleFavorite: (contact: Contact) => void;
-  loading: boolean;
 }
 
 const FavoritesContext = createContext<FavoritesContextType | undefined>(
   undefined
 );
 
-const supabase = createClient();
-
 export function FavoritesProvider({ children }: { children: ReactNode }) {
-  const [favoriteContacts, setFavoriteContacts] = useState<Set<string>>(
-    new Set()
-  );
-  const [loading, setLoading] = useState(true);
-  const { user } = useProfile();
-
-  const fetchFavorites = useCallback(async () => {
-    if (!user) {
-      setLoading(false);
-      return;
-    }
-    setLoading(true);
-    const { data, error } = await supabase
-      .from("favorite_contacts")
-      .select("favorited_id")
-      .eq("user_id", user.id);
-
-    if (error) {
-      console.error("Error fetching favorites:", error);
-      setLoading(false);
-      return;
-    }
-
-    const favoriteSet = new Set(data.map((fav) => fav.favorited_id));
-    setFavoriteContacts(favoriteSet);
-    setLoading(false);
-  }, [user]);
-
-  useEffect(() => {
-    fetchFavorites();
-  }, [fetchFavorites]);
+  // 2. Get the refetch function from your contacts hook
+  const { refetchContacts } = useContacts();
 
   const toggleFavorite = useCallback(
     async (contact: Contact) => {
-      if (!user) return;
-
-      const isCurrentlyFavorite = favoriteContacts.has(contact.id);
-      const newFavorites = new Set(favoriteContacts);
-      const favorited_type =
-        contact.contactType === ContactType.Person ? "profile" : "business";
       const name =
         contact.contactType === ContactType.Person
           ? contact.full_name
           : contact.business_name;
 
-      if (isCurrentlyFavorite) {
-        newFavorites.delete(contact.id);
-        setFavoriteContacts(newFavorites);
+      const result = await toggleFavoriteAction(
+        contact.id,
+        contact.contactType,
+        contact.favorite
+      );
 
-        const { error } = await supabase
-          .from("favorite_contacts")
-          .delete()
-          .match({
-            user_id: user.id,
-            favorited_id: contact.id,
-            favorited_type: favorited_type,
-          });
-
-        if (error) {
-          newFavorites.add(contact.id);
-          setFavoriteContacts(newFavorites);
-          notifications.show({
-            title: "Error",
-            message: "Could not remove from favorites.",
-            color: "red",
-          });
-        } else {
-          notifications.show({
-            title: "Success",
-            message: `${name} removed from favorites.`,
-            color: "lime",
-            icon: <CheckIcon size={16} />,
-          });
-          // This call ensures all components are synced
-          fetchFavorites();
-        }
+      if (result.error) {
+        notifications.show({
+          title: "Error",
+          message: `Could not update ${name}.`,
+          color: "red",
+        });
       } else {
-        newFavorites.add(contact.id);
-        setFavoriteContacts(newFavorites);
+        notifications.show({
+          title: "Success",
+          message: contact.favorite
+            ? `${name} removed from favorites.`
+            : `${name} added to favorites.`,
+          color: "lime",
+          icon: <CheckIcon size={16} />,
+        });
 
-        const { error } = await supabase.from("favorite_contacts").insert([
-          {
-            user_id: user.id,
-            favorited_id: contact.id,
-            favorited_type: favorited_type,
-          },
-        ]);
-
-        if (error) {
-          newFavorites.delete(contact.id);
-          setFavoriteContacts(newFavorites);
-          notifications.show({
-            title: "Error",
-            message: "Could not add to favorites.",
-            color: "red",
-          });
-        } else {
-          notifications.show({
-            title: "Success",
-            message: `${name} added to favorites.`,
-            color: "lime",
-            icon: <CheckIcon size={16} />,
-          });
-          // This call ensures all components are synced
-          fetchFavorites();
-        }
+        // 3. THIS IS THE FIX:
+        // After a successful update, tell the contacts hook to refetch its data.
+        refetchContacts();
       }
     },
-    [user, favoriteContacts, fetchFavorites]
+    [refetchContacts] // 4. Add refetchContacts to the dependency array
   );
 
   return (
-    <FavoritesContext.Provider
-      value={{ favoriteContacts, toggleFavorite, loading }}
-    >
+    <FavoritesContext.Provider value={{ toggleFavorite }}>
       {children}
     </FavoritesContext.Provider>
   );
