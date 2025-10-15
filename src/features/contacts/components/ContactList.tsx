@@ -105,6 +105,8 @@ export default function ContactsList({
   const showSearchResults = searchValue.trim().length >= 2;
   const showSuggestions =
     suggestedContacts.length > 0 && !showSearchResults && !isLoading;
+  const showSuggestionsDivider =
+    suggestedContacts.length > 0 && otherContacts.length > 0;
 
   const renderContent = () => {
     if (isLoading && !showSearchResults) {
@@ -193,9 +195,10 @@ export default function ContactsList({
               ))}
           </Stack>
 
+          {showSuggestionsDivider && <Divider my="md" />}
+
           {showSuggestions && (
             <Stack gap="md">
-              <Divider my="md" />
               <Title order={3} px="xs">
                 You might know...
               </Title>
