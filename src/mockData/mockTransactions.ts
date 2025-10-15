@@ -1,7 +1,88 @@
 import { Transaction } from "@/features/transactions/types/transaction";
-import { mockContacts } from "./mockContacts";
 import { mockBanks } from "./mockBanks";
 import { mockProjects } from "./mockProjects";
+import { Contact, ContactType } from "@/features/contacts"; // Import the Contact type
+
+// Create a local, self-contained array of contacts just for these mock transactions.
+const localMockContacts: Contact[] = [
+  {
+    id: "contact-1",
+    contactType: ContactType.Person,
+    full_name: "Layton Funches",
+    email: "layton@example.com",
+    favorite: true,
+    projects: [mockProjects[0]],
+  },
+  {
+    id: "contact-2",
+    contactType: ContactType.Person,
+    full_name: "River Sterling",
+    email: "river@example.com",
+    favorite: false,
+    projects: [mockProjects[1]],
+  },
+  {
+    id: "contact-3",
+    contactType: ContactType.Person,
+    full_name: "Autumn Falls",
+    email: "autumn@example.com",
+    favorite: false,
+    projects: [mockProjects[2]],
+  },
+  {
+    id: "contact-4",
+    contactType: ContactType.Person,
+    full_name: "Parker Rhoades",
+    email: "parker@example.com",
+    favorite: false,
+  },
+  {
+    id: "contact-5",
+    contactType: ContactType.Business,
+    business_name: "Bodhi Construction",
+    email: "bodhi@construction.com",
+    favorite: false,
+  },
+  {
+    id: "contact-6",
+    contactType: ContactType.Person,
+    full_name: "Juniper Sage",
+    email: "juniper@example.com",
+    favorite: false,
+    projects: [mockProjects[0]],
+  },
+  {
+    id: "contact-7",
+    contactType: ContactType.Person,
+    full_name: "Kinsley Arbor",
+    email: "kinsley@example.com",
+    favorite: false,
+  },
+  {
+    id: "contact-8",
+    contactType: ContactType.Person,
+    full_name: "Ezra Lee",
+    email: "ezra@example.com",
+    favorite: false,
+    projects: [mockProjects[1]],
+  },
+  {
+    id: "contact-9",
+    contactType: ContactType.Business,
+    business_name: "Sage Builders",
+    email: "sage@builders.com",
+    favorite: false,
+    projects: [mockProjects[0]],
+  },
+  {
+    id: "contact-10",
+    contactType: ContactType.Person,
+    full_name: "Wren Meadow",
+    email: "wren@example.com",
+    favorite: false,
+    projects: [mockProjects[1]],
+  },
+];
 
 export const mockTransactions: Transaction[] = [
   {
@@ -11,9 +92,9 @@ export const mockTransactions: Transaction[] = [
     status: "Completed",
     type: "Sent",
     from: { type: "self", name: "You" },
-    to: { type: "contact", data: mockContacts[0] }, // Layton
+    to: { type: "contact", data: localMockContacts[0] }, // Use local mock
     bankAccount: "Chase Checking",
-    projectId: mockProjects[0].id, // Correct: Use projectId
+    projectId: mockProjects[0].id,
   },
   {
     id: "2",
@@ -21,10 +102,10 @@ export const mockTransactions: Transaction[] = [
     date: "2025-10-09T15:30:00Z",
     status: "Completed",
     type: "Received",
-    from: { type: "contact", data: mockContacts[7] }, // Ezra Lee
+    from: { type: "contact", data: localMockContacts[7] }, // Use local mock
     to: { type: "self", name: "You" },
     bankAccount: "Business Savings",
-    projectId: mockProjects[1].id, // Correct: Use projectId
+    projectId: mockProjects[1].id,
   },
   {
     id: "3",
@@ -33,9 +114,9 @@ export const mockTransactions: Transaction[] = [
     status: "Pending",
     type: "Sent",
     from: { type: "self", name: "You" },
-    to: { type: "contact", data: mockContacts[2] }, // Autumn
+    to: { type: "contact", data: localMockContacts[2] }, // Use local mock
     bankAccount: "Chase Checking",
-    projectId: mockProjects[2].id, // Correct: Use projectId
+    projectId: mockProjects[2].id,
   },
   {
     id: "4",
@@ -43,7 +124,7 @@ export const mockTransactions: Transaction[] = [
     date: "2025-10-07T18:00:00Z",
     status: "Completed",
     type: "Deposited",
-    from: { type: "bank", data: mockBanks[0] }, // Chase Bank
+    from: { type: "bank", data: mockBanks[0] },
     to: { type: "self", name: "You" },
     bankAccount: "Business Savings",
   },
@@ -54,7 +135,7 @@ export const mockTransactions: Transaction[] = [
     status: "Failed",
     type: "Sent",
     from: { type: "self", name: "You" },
-    to: { type: "contact", data: mockContacts[4] }, // Bodhi
+    to: { type: "contact", data: localMockContacts[4] }, // Use local mock
     bankAccount: "Chase Checking",
   },
   {
@@ -63,10 +144,10 @@ export const mockTransactions: Transaction[] = [
     date: "2025-10-05T14:20:00Z",
     status: "Completed",
     type: "Received",
-    from: { type: "contact", data: mockContacts[5] }, // Juniper
+    from: { type: "contact", data: localMockContacts[5] }, // Use local mock
     to: { type: "self", name: "You" },
     bankAccount: "Business Savings",
-    projectId: mockProjects[0].id, // Correct: Use projectId
+    projectId: mockProjects[0].id,
   },
   {
     id: "7",
@@ -75,7 +156,7 @@ export const mockTransactions: Transaction[] = [
     status: "Completed",
     type: "Sent",
     from: { type: "self", name: "You" },
-    to: { type: "contact", data: mockContacts[6] }, // Kinsley
+    to: { type: "contact", data: localMockContacts[6] }, // Use local mock
     bankAccount: "Chase Checking",
   },
   {
@@ -84,10 +165,10 @@ export const mockTransactions: Transaction[] = [
     date: "2025-10-02T16:00:00Z",
     status: "Pending",
     type: "Sent",
-    from: { type: "contact", data: mockContacts[1] }, // River
+    from: { type: "contact", data: localMockContacts[1] }, // Use local mock
     to: { type: "self", name: "You" },
     bankAccount: "Business Savings",
-    projectId: mockProjects[1].id, // Correct: Use projectId
+    projectId: mockProjects[1].id,
   },
   {
     id: "9",
@@ -96,9 +177,9 @@ export const mockTransactions: Transaction[] = [
     status: "Completed",
     type: "Transferred",
     from: { type: "self", name: "You" },
-    to: { type: "bank", data: mockBanks[1] }, // Bank of America
+    to: { type: "bank", data: mockBanks[1] },
     bankAccount: "Chase Checking",
-    projectId: mockProjects[2].id, // Correct: Use projectId
+    projectId: mockProjects[2].id,
   },
   {
     id: "10",
@@ -106,7 +187,7 @@ export const mockTransactions: Transaction[] = [
     date: "2025-09-28T13:10:00Z",
     status: "Completed",
     type: "Received",
-    from: { type: "contact", data: mockContacts[3] }, // Parker
+    from: { type: "contact", data: localMockContacts[3] }, // Use local mock
     to: { type: "self", name: "You" },
     bankAccount: "Chase Checking",
   },
@@ -117,9 +198,9 @@ export const mockTransactions: Transaction[] = [
     status: "Completed",
     type: "Sent",
     from: { type: "self", name: "You" },
-    to: { type: "contact", data: mockContacts[8] }, // Sage
+    to: { type: "contact", data: localMockContacts[8] }, // Use local mock
     bankAccount: "Chase Checking",
-    projectId: mockProjects[0].id, // Correct: Use projectId
+    projectId: mockProjects[0].id,
   },
   {
     id: "12",
@@ -127,9 +208,9 @@ export const mockTransactions: Transaction[] = [
     date: "2025-09-22T09:00:00Z",
     status: "Pending",
     type: "Sent",
-    from: { type: "contact", data: mockContacts[9] }, // Wren
+    from: { type: "contact", data: localMockContacts[9] }, // Use local mock
     to: { type: "self", name: "You" },
     bankAccount: "Business Savings",
-    projectId: mockProjects[1].id, // Correct: Use projectId
+    projectId: mockProjects[1].id,
   },
 ];

@@ -1,3 +1,5 @@
+"use client";
+
 import { createContext, useContext, useState, ReactNode } from "react";
 import { TransactionParty } from "@/features/transactions/types/transactionParty";
 import { TransactionActionType } from "@/features/wallet/types/wallet";

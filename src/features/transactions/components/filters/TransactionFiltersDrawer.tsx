@@ -27,12 +27,13 @@ import { DatePicker } from "@mantine/dates";
 import { useDisclosure } from "@mantine/hooks";
 import dayjs from "dayjs";
 import { useState } from "react";
-import { mockContacts } from "@/mockData/mockContacts";
-import { mockProjects } from "@/mockData/mockProjects";
 import { Search01Icon } from "hugeicons-react";
 import { Contact, ContactType } from "@/features/contacts/types/contact";
 import { Project } from "@/features/projects/types/project";
 import { getInitials } from "@/lib/hooks/textUtils";
+// 1. Import the hooks for live data
+import { useContacts } from "@/features/contacts/contexts/ContactsContext";
+import { useProjects } from "@/features/projects/contexts/ProjectsContext";
 
 const statusFilters: TransactionStatusFilter[] = [
   "All",
@@ -101,6 +102,10 @@ export default function TransactionFiltersDrawer({
   const contactCombobox = useCombobox();
   const projectCombobox = useCombobox();
 
+  // 2. Get live data from the contexts
+  const { contacts } = useContacts();
+  const { projects } = useProjects();
+
   const handleDateChange = (value: [string | null, string | null]) => {
     const newRange: [Date | null, Date | null] = [
       value[0] ? dayjs(value[0]).toDate() : null,
@@ -137,7 +142,8 @@ export default function TransactionFiltersDrawer({
     )
   );
 
-  const filteredContacts = mockContacts.filter((contact: Contact) => {
+  // 3. Use the live 'contacts' data instead of 'mockContacts'
+  const filteredContacts = contacts.filter((contact: Contact) => {
     const name =
       contact.contactType === ContactType.Person
         ? contact.full_name
@@ -169,7 +175,8 @@ export default function TransactionFiltersDrawer({
     );
   });
 
-  const filteredProjects = mockProjects.filter((project: Project) => {
+  // 4. Use the live 'projects' data instead of 'mockProjects'
+  const filteredProjects = projects.filter((project: Project) => {
     const name = project.name;
     return name?.toLowerCase().includes(projectSearch.toLowerCase());
   });

@@ -11,9 +11,8 @@ import {
 } from "@mantine/core";
 import { Project } from "../../types/project";
 import ContactDetailsCard from "@/features/contacts/components/ContactDetailsCard";
-import { Contact, ContactType } from "@/features/contacts";
-import { useState } from "react";
-import { mockContacts } from "@/mockData/mockContacts";
+import { Contact, ContactType, useContacts } from "@/features/contacts"; // 1. Import useContacts
+import { useState, useMemo } from "react"; // 2. Import useMemo
 import { useDisclosure } from "@mantine/hooks";
 import ContactModal from "@/features/contacts/components/ContactModal";
 import { Search01Icon } from "hugeicons-react";
@@ -36,18 +35,30 @@ const getContactName = (contact: Contact): string => {
 export default function ProjectOverviewContacts({
   project,
 }: ProjectContactsProps) {
-  const [contacts, setContacts] = useState<Contact[]>(mockContacts.slice(0, 3)); // Mock data for now
   const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
   const [opened, { open, close }] = useDisclosure(false);
   const [searchValue, setSearchValue] = useState("");
+
+  // 3. Get all contacts from the global context
+  const { contacts: allContacts } = useContacts();
+
+  // 4. Filter the global contacts to get only those associated with this project
+  const projectContacts = useMemo(() => {
+    if (!project || !project.id || !allContacts) {
+      return [];
+    }
+    return allContacts.filter((contact) =>
+      contact.projects?.some((p) => p.id === project.id)
+    );
+  }, [project, allContacts]);
 
   const handleViewProfile = (contact: Contact) => {
     setSelectedContact(contact);
     open();
   };
 
-  // Filter contacts using the helper function
-  const filteredContacts = contacts.filter((contact) =>
+  // 5. Filter the project-specific contacts for the search input
+  const filteredContacts = projectContacts.filter((contact) =>
     getContactName(contact).toLowerCase().includes(searchValue.toLowerCase())
   );
 

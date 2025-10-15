@@ -11,10 +11,11 @@ import {
   CloseButton,
 } from "@mantine/core";
 import { UserMultiple02Icon, Search01Icon } from "hugeicons-react";
-import { mockContacts } from "@/mockData/mockContacts";
 import { useState } from "react";
 import { Contact, ContactType } from "@/features/contacts/types/contact";
 import { getInitials } from "@/lib/hooks/textUtils";
+// 1. Import the useContacts hook
+import { useContacts } from "@/features/contacts";
 
 interface ContactFilterProps {
   activeContactFilter: string;
@@ -26,8 +27,11 @@ export function ContactFilter({
   onContactFilterChange,
 }: ContactFilterProps) {
   const [searchValue, setSearchValue] = useState("");
+  // 2. Get live contacts data from the context
+  const { contacts } = useContacts();
 
-  const filteredContacts = mockContacts
+  // 3. Use the live 'contacts' data instead of 'mockContacts'
+  const filteredContacts = contacts
     .filter((contact: Contact) => {
       const name =
         contact.contactType === ContactType.Person

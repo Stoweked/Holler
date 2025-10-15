@@ -474,16 +474,20 @@ CREATE TABLE IF NOT EXISTS "public"."contracts" (
 ALTER TABLE "public"."contracts" OWNER TO "postgres";
 
 
-CREATE TABLE IF NOT EXISTS "public"."favorite_contacts" (
-    "user_id" "uuid" NOT NULL,
-    "favorited_id" "uuid" NOT NULL,
-    "favorited_type" "text" NOT NULL,
+CREATE TABLE IF NOT EXISTS "public"."external_contacts" (
+    "id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
+    "inviter_id" "uuid" NOT NULL,
+    "email" "text",
+    "phone" "text",
+    "name" "text",
+    "invite_token" "text" DEFAULT "extensions"."uuid_generate_v4"() NOT NULL,
+    "status" "text" DEFAULT 'pending'::"text" NOT NULL,
     "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
-    CONSTRAINT "favorite_contacts_favorited_type_check" CHECK (("favorited_type" = ANY (ARRAY['profile'::"text", 'business'::"text"])))
+    CONSTRAINT "external_contacts_email_phone_check" CHECK ((("email" IS NOT NULL) OR ("phone" IS NOT NULL)))
 );
 
 
-ALTER TABLE "public"."favorite_contacts" OWNER TO "postgres";
+ALTER TABLE "public"."external_contacts" OWNER TO "postgres";
 
 
 CREATE TABLE IF NOT EXISTS "public"."feedback" (
@@ -611,6 +615,20 @@ CREATE TABLE IF NOT EXISTS "public"."projects" (
 ALTER TABLE "public"."projects" OWNER TO "postgres";
 
 
+CREATE TABLE IF NOT EXISTS "public"."user_contacts" (
+    "id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
+    "user_id" "uuid" NOT NULL,
+    "contact_profile_id" "uuid",
+    "contact_business_id" "uuid",
+    "external_contact_id" "uuid",
+    "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
+    "is_favorite" boolean DEFAULT false NOT NULL
+);
+
+
+ALTER TABLE "public"."user_contacts" OWNER TO "postgres";
+
+
 ALTER TABLE ONLY "public"."accounts"
     ADD CONSTRAINT "accounts_pkey" PRIMARY KEY ("id");
 
@@ -661,8 +679,13 @@ ALTER TABLE ONLY "public"."contracts"
 
 
 
-ALTER TABLE ONLY "public"."favorite_contacts"
-    ADD CONSTRAINT "favorite_contacts_pkey" PRIMARY KEY ("user_id", "favorited_id", "favorited_type");
+ALTER TABLE ONLY "public"."external_contacts"
+    ADD CONSTRAINT "external_contacts_invite_token_key" UNIQUE ("invite_token");
+
+
+
+ALTER TABLE ONLY "public"."external_contacts"
+    ADD CONSTRAINT "external_contacts_pkey" PRIMARY KEY ("id");
 
 
 
@@ -716,6 +739,16 @@ ALTER TABLE ONLY "public"."projects"
 
 
 
+ALTER TABLE ONLY "public"."user_contacts"
+    ADD CONSTRAINT "user_contacts_pkey" PRIMARY KEY ("id");
+
+
+
+ALTER TABLE ONLY "public"."user_contacts"
+    ADD CONSTRAINT "user_contacts_unique_contact" UNIQUE ("user_id", "contact_profile_id", "contact_business_id", "external_contact_id");
+
+
+
 CREATE INDEX "idx_accounts_moov_account_id" ON "public"."accounts" USING "btree" ("moov_account_id");
 
 
@@ -749,6 +782,14 @@ CREATE INDEX "idx_pending_payments_destination_account_id" ON "public"."pending_
 
 
 CREATE INDEX "idx_pending_payments_source_account_id" ON "public"."pending_payments" USING "btree" ("source_account_id");
+
+
+
+CREATE UNIQUE INDEX "user_contacts_unique_business_constraint" ON "public"."user_contacts" USING "btree" ("user_id", "contact_business_id") WHERE ("contact_business_id" IS NOT NULL);
+
+
+
+CREATE UNIQUE INDEX "user_contacts_unique_profile_constraint" ON "public"."user_contacts" USING "btree" ("user_id", "contact_profile_id") WHERE ("contact_profile_id" IS NOT NULL);
 
 
 
@@ -817,8 +858,8 @@ ALTER TABLE ONLY "public"."contracts"
 
 
 
-ALTER TABLE ONLY "public"."favorite_contacts"
-    ADD CONSTRAINT "favorite_contacts_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "auth"."users"("id") ON DELETE CASCADE;
+ALTER TABLE ONLY "public"."external_contacts"
+    ADD CONSTRAINT "external_contacts_inviter_id_fkey" FOREIGN KEY ("inviter_id") REFERENCES "auth"."users"("id") ON DELETE CASCADE;
 
 
 
@@ -852,7 +893,35 @@ ALTER TABLE ONLY "public"."projects"
 
 
 
+ALTER TABLE ONLY "public"."user_contacts"
+    ADD CONSTRAINT "user_contacts_contact_business_id_fkey" FOREIGN KEY ("contact_business_id") REFERENCES "public"."businesses"("id") ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY "public"."user_contacts"
+    ADD CONSTRAINT "user_contacts_contact_profile_id_fkey" FOREIGN KEY ("contact_profile_id") REFERENCES "public"."profiles"("id") ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY "public"."user_contacts"
+    ADD CONSTRAINT "user_contacts_external_contact_id_fkey" FOREIGN KEY ("external_contact_id") REFERENCES "public"."external_contacts"("id") ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY "public"."user_contacts"
+    ADD CONSTRAINT "user_contacts_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "auth"."users"("id") ON DELETE CASCADE;
+
+
+
 CREATE POLICY "Admins or owners can update their business." ON "public"."businesses" FOR UPDATE USING ("public"."is_business_admin_or_owner"("id"));
+
+
+
+CREATE POLICY "Allow users to manage their own contact list" ON "public"."user_contacts" USING (("auth"."uid"() = "user_id"));
+
+
+
+CREATE POLICY "Allow users to manage their own external contacts" ON "public"."external_contacts" USING (("auth"."uid"() = "inviter_id"));
 
 
 
@@ -895,10 +964,6 @@ CREATE POLICY "Users can insert their own lien waivers" ON "public"."lien_waiver
 
 
 CREATE POLICY "Users can insert their own projects" ON "public"."projects" FOR INSERT WITH CHECK (("auth"."uid"() = "user_id"));
-
-
-
-CREATE POLICY "Users can manage their own favorites." ON "public"."favorite_contacts" USING (("auth"."uid"() = "user_id"));
 
 
 
@@ -1003,7 +1068,7 @@ ALTER TABLE "public"."contract_versions" ENABLE ROW LEVEL SECURITY;
 ALTER TABLE "public"."contracts" ENABLE ROW LEVEL SECURITY;
 
 
-ALTER TABLE "public"."favorite_contacts" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "public"."external_contacts" ENABLE ROW LEVEL SECURITY;
 
 
 ALTER TABLE "public"."feedback" ENABLE ROW LEVEL SECURITY;
@@ -1022,6 +1087,9 @@ ALTER TABLE "public"."profiles" ENABLE ROW LEVEL SECURITY;
 
 
 ALTER TABLE "public"."projects" ENABLE ROW LEVEL SECURITY;
+
+
+ALTER TABLE "public"."user_contacts" ENABLE ROW LEVEL SECURITY;
 
 
 
@@ -1349,9 +1417,9 @@ GRANT ALL ON TABLE "public"."contracts" TO "service_role";
 
 
 
-GRANT ALL ON TABLE "public"."favorite_contacts" TO "anon";
-GRANT ALL ON TABLE "public"."favorite_contacts" TO "authenticated";
-GRANT ALL ON TABLE "public"."favorite_contacts" TO "service_role";
+GRANT ALL ON TABLE "public"."external_contacts" TO "anon";
+GRANT ALL ON TABLE "public"."external_contacts" TO "authenticated";
+GRANT ALL ON TABLE "public"."external_contacts" TO "service_role";
 
 
 
@@ -1400,6 +1468,12 @@ GRANT ALL ON TABLE "public"."project_profiles" TO "service_role";
 GRANT ALL ON TABLE "public"."projects" TO "anon";
 GRANT ALL ON TABLE "public"."projects" TO "authenticated";
 GRANT ALL ON TABLE "public"."projects" TO "service_role";
+
+
+
+GRANT ALL ON TABLE "public"."user_contacts" TO "anon";
+GRANT ALL ON TABLE "public"."user_contacts" TO "authenticated";
+GRANT ALL ON TABLE "public"."user_contacts" TO "service_role";
 
 
 

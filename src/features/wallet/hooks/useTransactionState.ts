@@ -5,7 +5,7 @@ import { mockBanks } from "@/mockData/mockBanks";
 import { TransactionActionType, TransactionStep } from "../types/wallet";
 import { Bank } from "@/features/banks/types/bank";
 import { TransactionParty } from "@/features/transactions/types/transactionParty";
-import { Contact, ContactType } from "@/features/contacts";
+import { createTemporaryContact } from "@/features/contacts/utils/createContact";
 
 export function useTransactionState(
   opened: boolean,
@@ -70,14 +70,7 @@ export function useTransactionState(
   ) => {
     // Here you would typically have logic to check if a user with this email/phone already exists.
     // For now, we'll just create a temporary contact object.
-    const newContact: Contact = {
-      id: `new-${Date.now()}`,
-      contactType: ContactType.Person,
-      full_name: fullName, // Use the value as a temporary name
-      email: method === "email" ? value : "",
-      phone_number: method === "phone" ? value : "",
-      username: undefined,
-    };
+    const newContact = createTemporaryContact(method, value, fullName);
     setParty({ type: "contact", data: newContact });
     setCameFromInvite(true);
     setStep("enterAmount");

@@ -33,6 +33,7 @@ import ContactDetailsCard from "@/features/contacts/components/ContactDetailsCar
 import BankDetailsCard from "@/features/banks/components/BankDetailsCard";
 import TransactionTimeline from "./TransactionTimeline";
 import { TransactionParty } from "../types/transactionParty";
+import { createContactFromProfile } from "@/features/contacts/utils/createContact";
 
 // Helper component to render the correct avatar for each party
 const TransactionPartyAvatar = ({ party }: { party: TransactionParty }) => {
@@ -142,14 +143,7 @@ export default function TransactionDetailsDrawer({
         return <BankDetailsCard bank={party.data} label={label} />;
       case "self":
         if (profile) {
-          const selfAsContact: Contact = {
-            id: profile.id,
-            contactType: ContactType.Person,
-            full_name: profile.full_name || "You",
-            email: profile.email,
-            avatar_url: profile.avatar_url,
-            username: profile.username,
-          };
+          const selfAsContact = createContactFromProfile(profile);
           return <ContactDetailsCard contact={selfAsContact} label={label} />;
         }
         // Fallback while profile is loading
