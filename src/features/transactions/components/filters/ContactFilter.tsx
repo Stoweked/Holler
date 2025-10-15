@@ -14,7 +14,6 @@ import { UserMultiple02Icon, Search01Icon } from "hugeicons-react";
 import { useState } from "react";
 import { Contact, ContactType } from "@/features/contacts/types/contact";
 import { getInitials } from "@/lib/hooks/textUtils";
-// 1. Import the useContacts hook
 import { useContacts } from "@/features/contacts";
 
 interface ContactFilterProps {
@@ -27,10 +26,7 @@ export function ContactFilter({
   onContactFilterChange,
 }: ContactFilterProps) {
   const [searchValue, setSearchValue] = useState("");
-  // 2. Get live contacts data from the context
   const { contacts } = useContacts();
-
-  // 3. Use the live 'contacts' data instead of 'mockContacts'
   const filteredContacts = contacts
     .filter((contact: Contact) => {
       const name =
@@ -108,8 +104,13 @@ export function ContactFilter({
                 styles={{ item: { paddingLeft: "6px", paddingRight: "6px" } }}
               >
                 <Group wrap="nowrap" gap="xs">
-                  <Avatar color="lime" radius="xl" size="md">
-                    {contact.avatar_url || getInitials(name)}
+                  <Avatar
+                    variant="default"
+                    src={contact.avatar_url}
+                    radius="xl"
+                    size="md"
+                  >
+                    {getInitials(name)}
                   </Avatar>
                   <Stack gap={0}>
                     <Text size="sm" fw="bold">

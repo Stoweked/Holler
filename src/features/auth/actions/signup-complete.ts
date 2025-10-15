@@ -54,6 +54,7 @@ export async function signupComplete(formData: FormData) {
     const { error: profileError } = await supabase
       .from("profiles")
       .update({
+        full_name: fullName,
         phone_number: phoneNumber,
         username: username,
       })

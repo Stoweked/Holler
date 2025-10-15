@@ -165,8 +165,8 @@ export const mockTransactions: Transaction[] = [
     date: "2025-10-02T16:00:00Z",
     status: "Pending",
     type: "Sent",
-    from: { type: "contact", data: localMockContacts[1] }, // Use local mock
-    to: { type: "self", name: "You" },
+    to: { type: "contact", data: localMockContacts[1] }, // Use local mock
+    from: { type: "self", name: "You" },
     bankAccount: "Business Savings",
     projectId: mockProjects[1].id,
   },
@@ -208,8 +208,8 @@ export const mockTransactions: Transaction[] = [
     date: "2025-09-22T09:00:00Z",
     status: "Pending",
     type: "Sent",
-    from: { type: "contact", data: localMockContacts[9] }, // Use local mock
-    to: { type: "self", name: "You" },
+    to: { type: "contact", data: localMockContacts[9] }, // Use local mock
+    from: { type: "self", name: "You" },
     bankAccount: "Business Savings",
     projectId: mockProjects[1].id,
   },

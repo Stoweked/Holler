@@ -156,11 +156,17 @@ export default function TransactionFiltersDrawer({
       item.contactType === ContactType.Person
         ? item.full_name
         : item.business_name;
+
+    // Check for the invalid URL. If it's found, treat it as if there's no avatar.
+    const validAvatarUrl = item.avatar_url?.includes("googleusercontent.com")
+      ? null
+      : item.avatar_url;
+
     return (
       <Combobox.Option value={name || ""} key={item.id}>
         <Group>
-          <Avatar color="lime" radius="xl" size="md">
-            {item.avatar_url || getInitials(name)}
+          <Avatar src={validAvatarUrl} variant="default" radius="xl" size="md">
+            {getInitials(name)}
           </Avatar>
           <Stack gap={0}>
             <Text size="md" fw="bold">
