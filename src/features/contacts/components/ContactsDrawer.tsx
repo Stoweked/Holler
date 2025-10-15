@@ -71,7 +71,7 @@ export default function ContactsDrawer({
                 <ArrowLeft02Icon size={24} />
               </ActionIcon>
             </Tooltip>
-            <Text>Invite a new contact</Text>
+            <Text>Invite new contact</Text>
           </Group>
         )
       }

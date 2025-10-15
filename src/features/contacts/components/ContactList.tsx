@@ -1,4 +1,3 @@
-// src/features/contacts/components/ContactList.tsx
 import { useState, useEffect } from "react";
 import {
   Input,
@@ -11,6 +10,7 @@ import {
   Center,
   Skeleton,
   Group,
+  Button,
 } from "@mantine/core";
 import ContactItem from "./ContactItem";
 import {
@@ -23,7 +23,8 @@ import { Contact, ContactType } from "../types/contact";
 import { useContacts } from "../hooks/useContacts";
 import { useFavorites } from "../contexts/FavoritesContext";
 import { addContact } from "../actions/add-contact";
-import { searchGlobalContacts } from "../actions/search-global-contacts"; // Import the new action
+import { searchGlobalContacts } from "../actions/search-global-contacts";
+import { getSuggestedContacts } from "../actions/get-suggested-contacts";
 
 interface ContactsListProps {
   onContactClick?: (contact: Contact) => void;
@@ -37,6 +38,7 @@ export default function ContactsList({
   const [searchValue, setSearchValue] = useState("");
   const [searchResults, setSearchResults] = useState<Contact[]>([]);
   const [isSearching, setIsSearching] = useState(false);
+  const [suggestedContacts, setSuggestedContacts] = useState<Contact[]>([]);
 
   // This hook fetches the user's PERSONAL contacts list
   const { contacts, loading: contactsLoading } = useContacts();
@@ -44,7 +46,6 @@ export default function ContactsList({
 
   // Effect to handle global search when the user types
   useEffect(() => {
-    // Debounce the search to avoid excessive API calls
     const handler = setTimeout(async () => {
       if (searchValue.trim().length >= 2) {
         setIsSearching(true);
@@ -61,9 +62,18 @@ export default function ContactsList({
     };
   }, [searchValue]);
 
+  // Fetch suggested contacts on component mount or when contacts change
+  useEffect(() => {
+    const fetchSuggestions = async () => {
+      if (contacts.length < 50) {
+        const suggestions = await getSuggestedContacts();
+        setSuggestedContacts(suggestions);
+      }
+    };
+    fetchSuggestions();
+  }, [contacts]);
+
   const handleContactClick = async (contact: Contact) => {
-    // This action works for both personal and searched contacts.
-    // When a searched contact is clicked, they are added to the user's list.
     await addContact(contact.id, contact.contactType);
     if (onContactClick) {
       onContactClick({
@@ -88,15 +98,16 @@ export default function ContactsList({
     acc[firstLetter].push(contact);
     return acc;
   }, {} as Record<string, typeof otherContacts>);
-  const showDivider = favorites.length > 0 && otherContacts.length > 0;
+  const showFavoritesDivider = favorites.length > 0 && otherContacts.length > 0;
   const isLoading = contactsLoading || favoritesLoading;
 
   // RENDER LOGIC
   const showSearchResults = searchValue.trim().length >= 2;
+  const showSuggestions =
+    suggestedContacts.length > 0 && !showSearchResults && !isLoading;
 
   const renderContent = () => {
     if (isLoading && !showSearchResults) {
-      // Show skeleton only on initial load
       return (
         <Stack gap="md">
           {Array.from({ length: 10 }).map((_, i) => (
@@ -107,7 +118,6 @@ export default function ContactsList({
     }
 
     if (showSearchResults) {
-      // --- SEARCH RESULTS VIEW ---
       return (
         <Stack gap={8}>
           <Title order={3} px="xs">
@@ -140,8 +150,7 @@ export default function ContactsList({
       );
     }
 
-    // --- PERSONAL CONTACTS VIEW ---
-    if (contacts.length > 0) {
+    if (contacts.length > 0 || showSuggestions) {
       return (
         <>
           {favorites.length > 0 && (
@@ -160,7 +169,9 @@ export default function ContactsList({
               </Stack>
             </Stack>
           )}
-          {showDivider && <Divider />}
+
+          {showFavoritesDivider && <Divider my="md" />}
+
           <Stack gap="lg">
             {Object.keys(groupedContacts)
               .sort()
@@ -181,11 +192,28 @@ export default function ContactsList({
                 </Stack>
               ))}
           </Stack>
+
+          {showSuggestions && (
+            <Stack gap="md">
+              <Divider my="md" />
+              <Title order={3} px="xs">
+                You might know...
+              </Title>
+              <Stack gap={0}>
+                {suggestedContacts.map((contact) => (
+                  <ContactItem
+                    key={`suggestion-${contact.id}`}
+                    contact={contact}
+                    onClick={() => handleContactClick(contact)}
+                  />
+                ))}
+              </Stack>
+            </Stack>
+          )}
         </>
       );
     }
 
-    // --- EMPTY STATE VIEW ---
     return (
       <Center>
         <Stack align="center" mt="xl" gap="lg">
@@ -244,6 +272,10 @@ export default function ContactsList({
         />
       </Group>
       {renderContent()}
+
+      <Button onClick={onInviteNew} variant="light" size="lg">
+        Invite new contact
+      </Button>
     </Stack>
   );
 }
