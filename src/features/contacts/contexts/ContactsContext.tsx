@@ -8,6 +8,7 @@ import {
   useCallback,
   ReactNode,
   useMemo,
+  useRef,
 } from "react";
 import { Contact, ContactType } from "../types/contact";
 import { getContacts } from "../actions/get-contacts";
@@ -29,18 +30,12 @@ const ContactsContext = createContext<ContactsContextType | undefined>(
 export function ContactsProvider({ children }: { children: ReactNode }) {
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [loading, setLoading] = useState(true);
-
-  // Log contacts whenever the state updates
-  useEffect(() => {
-    console.log("✅ ContactsContext: contacts state updated", contacts);
-  }, [contacts]);
+  const hasFetched = useRef(false);
 
   const fetchContacts = useCallback(async () => {
-    console.log("▶️ ContactsContext: fetchContacts called");
     setLoading(true);
     try {
       const data = await getContacts();
-      console.log("✅ ContactsContext: Fetched data successfully", data);
       setContacts(data);
     } catch (error) {
       console.error("❌ ContactsContext: Failed to fetch contacts:", error);
@@ -51,7 +46,10 @@ export function ContactsProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
-    fetchContacts();
+    if (!hasFetched.current) {
+      fetchContacts();
+      hasFetched.current = true;
+    }
   }, [fetchContacts]);
 
   const toggleFavorite = useCallback(
@@ -60,8 +58,6 @@ export function ContactsProvider({ children }: { children: ReactNode }) {
         contact.contactType === ContactType.Person
           ? contact.full_name
           : contact.business_name;
-
-      console.log(`▶️ ContactsContext: toggleFavorite called for "${name}"`);
 
       const result = await toggleFavoriteAction(
         contact.id,
@@ -72,20 +68,18 @@ export function ContactsProvider({ children }: { children: ReactNode }) {
       if (result.error) {
         notifications.show({
           title: "Error",
-          message: `Could not update favorite status.`,
+          message: `Could not update ${name}'s favorite status.`,
           color: "red",
         });
       } else {
         notifications.show({
           title: "Success",
           message: contact.favorite
-            ? "Removed from favorites."
-            : "Added to favorites.",
+            ? `${name} removed from favorites.`
+            : `${name} added to favorites.`,
           color: "lime",
           icon: <CheckIcon size={16} />,
         });
-        // Refetch contacts to update the UI everywhere
-        console.log("▶️ ContactsContext: Refetching contacts after toggle...");
         fetchContacts();
       }
     },
