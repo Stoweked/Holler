@@ -68,7 +68,7 @@ export default function ContactsDrawer({
           "Holler contacts"
         ) : (
           <Group gap="xs">
-            <Tooltip label="Back to contacts">
+            <Tooltip label="Back to contacts" position="right">
               <ActionIcon onClick={handleBack} variant="subtle" color="gray">
                 <ArrowLeft02Icon size={24} />
               </ActionIcon>

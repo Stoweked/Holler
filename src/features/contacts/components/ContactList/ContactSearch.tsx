@@ -28,7 +28,7 @@ export default function ContactSearch({
       </Tooltip>
       <Input
         w="100%"
-        placeholder="Search all users or invite"
+        placeholder="Search phone, email, or name"
         leftSection={<Search01Icon size={20} />}
         radius="xl"
         size="lg"
