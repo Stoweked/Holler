@@ -9,7 +9,7 @@ import {
   Text,
   Tooltip,
 } from "@mantine/core";
-import ContactsList from "./ContactList";
+import ContactsList from "./ContactList/ContactList";
 import { Contact } from "../types/contact";
 import InviteContactStep from "./InviteContactStep";
 import { useState } from "react";

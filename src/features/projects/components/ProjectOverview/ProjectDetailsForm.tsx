@@ -1,7 +1,7 @@
 // src/features/projects/components/ProjectOverview/ProjectDetailsForm.tsx
 "use client";
 
-import { Button, Group, Stack, Title } from "@mantine/core";
+import { Button, Stack, Title } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
 import { useState } from "react";

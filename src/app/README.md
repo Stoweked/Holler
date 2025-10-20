@@ -2,9 +2,10 @@
 
 This directory contains the core application logic, including pages and API routes, following the Next.js App Router structure.
 
-### **Subdirectories**
+### Subdirectories
 
-- **`/(app)`**: Authenticated application routes.
-- **`/(auth)`**: Authentication-related routes (login, signup, etc.).
-- **`/(landing)`**: The public-facing landing page.
-- **`/api`**: API routes for server-side functionality.
+- **/api**: API routes for server-side functionality.
+- **/(app)**: Authenticated application routes.
+- **/(auth)**: Authentication-related routes (login, signup, etc.).
+- **/(dashboard)**: The main dashboard for authenticated users.
+- **/(landing)**: The public-facing landing page.

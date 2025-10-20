@@ -1,10 +1,12 @@
 import ContactDetailsCard from "./ContactDetailsCard";
-import ContactItem from "./ContactItem";
-import ContactList from "./ContactList";
+import ContactItem from "./ContactList/ContactItem";
+import ContactList from "./ContactList/ContactList";
 import ContactsDrawer from "./ContactsDrawer";
 import ContactModal from "./ContactModal";
 import SelectContactStep from "./SelectContactStep";
 import InviteContactStep from "./InviteContactStep";
+import ContactSearch from "./ContactList/ContactSearch";
+import ContactListContent from "./ContactList/ContactListContent";
 
 export const Contacts = {
   DetailsCard: ContactDetailsCard,
@@ -14,4 +16,6 @@ export const Contacts = {
   Modal: ContactModal,
   SelectStep: SelectContactStep,
   InviteStep: InviteContactStep,
+  Search: ContactSearch,
+  Content: ContactListContent,
 };

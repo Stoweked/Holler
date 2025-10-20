@@ -1,4 +1,4 @@
-import ContactsList from "@/features/contacts/components/ContactList";
+import ContactsList from "@/features/contacts/components/ContactList/ContactList";
 import { Contact } from "../types/contact";
 
 interface SelectContactStepProps {
