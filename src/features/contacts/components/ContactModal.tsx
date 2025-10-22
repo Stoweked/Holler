@@ -8,20 +8,19 @@ import {
   Button,
   Group,
   Modal,
-  TagsInput,
+  Divider,
 } from "@mantine/core";
-import { StarIcon } from "hugeicons-react";
+import { AlertCircleIcon, StarIcon } from "hugeicons-react";
 import { Contact, ContactType } from "../types/contact";
 import { getInitials } from "@/lib/hooks/textUtils";
 import { useWallet } from "@/features/wallet/contexts/WalletContext";
 import { TransactionParty } from "@/features/transactions/types/transactionParty";
-import { useProjects } from "@/features/projects/contexts/ProjectsContext";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { notifications } from "@mantine/notifications";
-import { updateContactProjects } from "../actions/update-contact-projects";
 import { useContacts } from "../contexts/ContactsContext";
-// Import the addContact action
 import { addContact } from "../actions/add-contact";
+import { removeContact } from "../actions/remove-contact";
+import { modals } from "@mantine/modals";
 
 interface ContactModalProps {
   opened: boolean;
@@ -40,62 +39,17 @@ function ContactModalContent({
   close,
 }: ContactModalContentProps) {
   const { openActionDrawer } = useWallet();
-  const { projects, refetchProjects } = useProjects();
-  const { contacts, toggleFavorite } = useContacts();
-
-  // This logic remains correct for displaying the current state
+  const { contacts, toggleFavorite, refetchContacts } = useContacts();
+  const [isRemoving, setIsRemoving] = useState(false); // State for loading indicator
   const currentContact = contacts.find((c) => c.id === contact.id) || contact;
   const isFavorite = currentContact.favorite;
-
-  const [selectedProjects, setSelectedProjects] = useState<string[]>(
-    contact.projects?.map((p) => p.name) || []
-  );
 
   const name =
     contact.contactType === ContactType.Person
       ? contact.full_name
       : contact.business_name;
 
-  useEffect(() => {
-    const initialProjects = new Set(contact.projects?.map((p) => p.name) || []);
-    return () => {
-      const currentProjects = new Set(selectedProjects);
-      const hasChanged =
-        initialProjects.size !== currentProjects.size ||
-        [...initialProjects].some((name) => !currentProjects.has(name));
-
-      if (hasChanged) {
-        const projectIdsToSave = projects
-          .filter((p) => currentProjects.has(p.name))
-          .map((p) => p.id);
-
-        updateContactProjects(
-          contact.id,
-          contact.contactType,
-          projectIdsToSave
-        ).then((result) => {
-          if (result.success) {
-            notifications.show({
-              title: "Project tags saved",
-              message: `Projects updated for ${name}.`,
-              color: "lime",
-            });
-            refetchProjects();
-          } else {
-            notifications.show({
-              title: "Error saving project tags",
-              message: result.error || "An unknown error occurred.",
-              color: "red",
-            });
-          }
-        });
-      }
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedProjects]);
-
   const handleToggleFavorite = async () => {
-    // Ensure the contact exists in the user_contacts table. addContact will create it if it's missing, or do nothing if it's already there.
     await addContact(contact.id, contact.contactType);
     toggleFavorite(contact);
   };
@@ -112,9 +66,44 @@ function ContactModalContent({
     close();
   };
 
-  const projectOptions = projects
-    .filter((project) => !selectedProjects.includes(project.name))
-    .map((item) => item.name);
+  const handleRemoveContact = async () => {
+    setIsRemoving(true);
+    const result = await removeContact(contact.id, contact.contactType);
+    setIsRemoving(false);
+
+    if (result.success) {
+      notifications.show({
+        title: "Contact removed",
+        message: `${name} has been removed from your contacts.`,
+        color: "lime",
+      });
+      refetchContacts(); // Refresh the list
+      close(); // Close the modal
+    } else {
+      notifications.show({
+        title: "Error",
+        message: result.error || "Failed to remove contact.",
+        color: "red",
+        icon: <AlertCircleIcon size={18} />,
+      });
+    }
+  };
+
+  const confirmRemove = () =>
+    modals.openConfirmModal({
+      title: `Remove ${name}?`,
+      centered: true,
+      children: (
+        <Text size="sm">
+          Are you sure you want to remove this contact? You can add them back
+          later by searching for them.
+        </Text>
+      ),
+      labels: { confirm: "Remove contact", cancel: "Cancel" },
+      confirmProps: { color: "red", loading: isRemoving },
+      onConfirm: handleRemoveContact,
+    });
+  // --- End Remove Contact Logic ---
 
   return (
     <Stack gap="xl" pb="sm">
@@ -169,17 +158,19 @@ function ContactModalContent({
           </Button>
         </Group>
       )}
-      {projects.length > 0 && (
-        <TagsInput
-          label="Projects"
-          size="lg"
-          radius="lg"
-          placeholder="Add projects"
-          data={projectOptions}
-          value={selectedProjects}
-          onChange={setSelectedProjects}
-        />
-      )}
+
+      <Divider />
+
+      {/* Remove contact */}
+      <Button
+        variant="light"
+        color="red"
+        size="lg"
+        onClick={confirmRemove}
+        loading={isRemoving}
+      >
+        Remove from contacts
+      </Button>
     </Stack>
   );
 }
