@@ -46,7 +46,7 @@ export default function WaiverEditorStep({
 
       <Stack gap={4}>
         <Select
-          label="Waiver Type"
+          label="Waiver type"
           size="lg"
           radius="lg"
           placeholder="Select waiver type"
@@ -67,7 +67,7 @@ export default function WaiverEditorStep({
 
       <Stack gap={4}>
         <Select
-          label="Payment Type"
+          label="Payment type"
           size="lg"
           radius="lg"
           placeholder="Select payment type"
