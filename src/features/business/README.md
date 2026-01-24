@@ -1,28 +1,47 @@
-# Business
+# Business Feature
 
-This feature enables users to create and manage their business profiles. This is crucial for users who operate as a company, allowing them to tailor their public-facing information and settings.
+## 📌 Overview
 
-### Key Components
+The **Business** feature represents the corporate entity behind a user. In Holler, users can transact as individuals or on behalf of a business. This feature handles the business profile metadata (Logo, Tax ID, Address).
 
-- **`BusinessSettings.tsx`**: The main component for viewing and managing all business-related settings.
-- **`BusinessProfileCard.tsx`**: A card that displays the business's profile information and provides an entry point for editing it.
-- **`BusinessProfileForm.tsx`**: A form used to edit the details of the business profile.
-- **`BusinessProfileView.tsx`**: A component for displaying the business profile in a read-only state.
+## 📂 Internal Structure
 
-### Hooks
+All code for this feature is self-contained in `src/features/business`.
 
-- **`useBusinessProfile.ts`**: A hook for fetching and managing the business's profile data.
-- **`useBusinessProfileForm.ts`**: A hook that handles the form state, validation, and submission logic for the business profile form.
+```
+src/features/business/
+├── actions/             # Server Actions (username checks)
+├── components/          # Profile Cards, Forms
+├── hooks/               # Logic for profile management
+└── index.ts             # Public API
+```
 
-### Actions
+## 🧩 Key Components
 
-- **`check-business-username.ts`**: A Server Action to verify if a business username is available.
+### `BusinessSettings.tsx`
 
-### How to Use
+The container page.
 
-The business feature is integrated into the user's account settings. Users with a business account type can navigate to their settings to view and edit their business profile and related information.
+- **Responsibility**: Displays the read-only view or the edit form depending on state.
 
-### Related Features
+### `BusinessProfileForm.tsx`
 
-- **Account**: This feature is closely tied to the user's main account, appearing as a section within the account settings.
-- **Transactions**: When a business sends or receives money, its profile information is displayed in the transaction details.
+The editor.
+
+- **Responsibility**: Validating business specific fields like EIN or Company Name.
+
+## 🎣 Hooks & State Management
+
+### `useBusinessProfile.ts`
+
+**Purpose**: Fetches the business details associated with the current user.
+**State**: Uses SWR or React Query (implied) to keep business data fresh.
+
+## 🛠️ Server Actions
+
+- **`check-business-username.ts`**: Verifies uniqueness of the business handle (e.g. `@acme-construction`) before claiming it.
+
+## 🔗 Dependencies
+
+- **Account**: Business profiles are children of a User Account.
+- **Transactions**: Invoices are generated using Business profile data.

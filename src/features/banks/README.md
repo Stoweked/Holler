@@ -1,20 +1,58 @@
-# Banks
+# Banks Feature
 
-This feature manages the connection and display of user bank accounts. It allows users to link their external bank accounts to the application, which serve as the primary funding and withdrawal sources for their wallet.
+## 📌 Overview
 
-### Key Components
+The **Banks** feature manages the connection between the user's Holler account and their real-world bank accounts. It serves as the bridge for funding the wallet (Deposits) and cashing out (Withdrawals).
 
-- **`ConnectBankDrawer.tsx`**: A drawer that guides the user through the process of securely connecting a new bank account.
-- **`ConnectedBanksDrawer.tsx`**: A drawer component that displays a list of all bank accounts the user has already connected.
-- **`BankList.tsx`**: A component that renders a list of individual `BankItem` components.
-- **`BankItem.tsx`**: A list item component for displaying a single bank account with its key details.
-- **`BankDetailsCard.tsx`**: A card component used to display the details of a specific bank account, often shown during a transaction or selection process.
+## 📂 Internal Structure
 
-### How to Use
+All code for this feature is self-contained in `src/features/banks`.
 
-Users can connect a bank account from their account settings or directly from the wallet feature when they need to add funds or make a transfer. Once connected, their bank accounts will appear as options for funding sources or destinations in the transaction flow.
+```
+src/features/banks/
+├── components/          # Drawers, Lists, Cards
+├── types/               # Bank account interfaces
+└── index.ts             # Public API (Barrel file)
+```
 
-### Related Features
+## 🧩 Key Components
 
-- **Wallet**: Bank accounts are the primary method for depositing funds into and transferring funds out of the user's wallet.
-- **Account**: The management of connected bank accounts is part of the user's main account settings.
+### `ConnectBankDrawer.tsx`
+
+The primary integration flow.
+
+- **Responsibility**: detailed form or Plaid integration (future?) to securely link a new bank account.
+
+### `ConnectedBanksDrawer.tsx`
+
+Management view.
+
+- **Responsibility**: Shows list of linked accounts and allows removing/unlinking.
+
+### `BankList.tsx`
+
+Reusable list component.
+
+- **Responsibility**: Displays `BankItem` components for selection screens (e.g., "Select funding source").
+
+## 🎣 Hooks & State Management
+
+State for banks is currently derived primarily from server state (fetched data) or passed down from the Wallet context when selecting a source.
+
+## 💾 Data Models (`types/bank.ts`)
+
+```typescript
+export interface BankAccount {
+  id: string;
+  user_id: string;
+  bank_name: string;
+  account_last4: string;
+  account_type: "checking" | "savings";
+  is_primary: boolean;
+}
+```
+
+## 🔗 Dependencies
+
+- **Wallet**: Cannot perform deposits/withdrawals without a linked bank.
+- **Account**: Users manage these links from their high-level account settings.

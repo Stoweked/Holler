@@ -1,27 +1,80 @@
-# Wallet
+# Wallet Feature
 
-This feature provides the core functionality for managing a user's wallet, including displaying their balance and handling primary payment actions like depositing, sending, requesting, and transferring funds.
+## 📌 Overview
 
-### Key Components
+The **Wallet** feature is the financial core of the application. It handles user balances and facilitates money movement (deposits, transfers, sending, requesting). It uses a wizard-like flow (`TransactionDrawer`) to guide users through complex multi-step payments.
 
-- **`PrimaryActionsCard.tsx`**: Displays the user's current balance and provides the main entry points for all wallet actions (Deposit, Send, Request, Transfer).
-- **`TransactionDrawer.tsx`**: A unified, multi-step drawer that handles the entire transaction flow for all action types, from selecting a contact to confirming the transaction.
-- **`ConfirmationStep.tsx`**: A reusable component for displaying a final confirmation of a transaction before submission.
-- **`PaymentAmountStep.tsx`**: A step within the `TransactionDrawer` for entering the transaction amount and other details like notes or lien waivers.
-- **`AccountToggle.tsx`**: A component that allows users to switch between different accounts.
+## 📂 Internal Structure
 
-### Hooks & Contexts
+All code for this feature is self-contained in `src/features/wallet`.
 
-- **`useTransactionState.ts`**: Manages the state of a transaction as a user moves through the steps in the `TransactionDrawer`.
-- **`useTransactionConfirmation.ts`**: Handles the final submission of a transaction.
-- **`WalletContext.tsx`**: Provides the user's balance and functions for opening and closing the transaction drawer to all components wrapped within it.
+```
+src/features/wallet/
+├── components/          # GUI components (Drawers, Steps, Cards)
+│   └── icons/           # Feature-specific SVG icons
+├── contexts/            # WalletContext (Global state for this feature)
+├── hooks/               # Logic hooks (Step management, Submission)
+├── types/               # TypeScript definitions
+└── index.ts             # Public API (Barrel file)
+```
 
-### How to Use
+## 🧩 Key Components
 
-The wallet feature is integrated into the main application layout and is accessible from the main dashboard. To initiate a transaction, you can call the `openActionDrawer` function from the `useWallet` hook, which will open the `TransactionDrawer` and guide the user through the appropriate steps.
+### `PrimaryActionsCard.tsx`
 
-### Related Features
+The main "Dashboard" widget.
 
-- **Transactions**: The wallet feature creates transactions, which are then displayed in the transaction history.
-- **Banks**: The wallet feature uses the user's connected bank accounts to make and receive payments.
-- **Contacts**: The wallet feature allows users to send and request money from their contacts.
+- **Responsibility**: Shows current balance and buttons for [Deposit, Send, Request, Transfer].
+- **Props**: None (consumes `WalletContext`)
+
+### `TransactionDrawer.tsx`
+
+The modal/drawer that orchestrates the payment flow.
+
+- **Responsibility**: Renders the correct step component based on the current state.
+- **Key Logic**: Switches usage of `PaymentAmountStep`, `ConfirmationStep`, etc.
+
+### `PaymentAmountStep.tsx`
+
+Input screen for money values.
+
+- **Features**: Currency masking, balance validation (cannot send more than you have).
+
+## 🎣 Hooks & State Management
+
+### `WalletContext` (`contexts/WalletContext.tsx`)
+
+**Scope**: Wraps the Feature/Dashboard.
+**State**:
+
+- `balance`: Current user balance.
+- `isDrawerOpen`: Visibility of the transaction drawer.
+- `actionType`: Current mode (`deposit` | `send` | `request` | `transfer`).
+
+### `useTransactionState` (`hooks/useTransactionState.ts`)
+
+**Purpose**: Manages the wizard state machine.
+**State**:
+
+- `currentStep`: `selectContact` -> `enterAmount` -> `confirm` -> `success`
+- `transactionData`: Partial data built up over the steps.
+
+## 💾 Data Models (`types/wallet.ts`)
+
+```typescript
+export type TransactionActionType = "deposit" | "send" | "request" | "transfer";
+
+export type TransactionStep =
+  | "selectContact"
+  | "inviteContact"
+  | "enterAmount"
+  | "confirm"
+  | "selectBank"
+  | "success";
+```
+
+## 🔗 Dependencies
+
+- **Auth**: Needs an authenticated user ID to fetch balances.
+- **Contacts**: "Send" and "Request" flows require selecting a contact from `features/contacts`.
+- **Banks**: "Deposit" and "Transfer" flows require bank accounts from `features/banks`.

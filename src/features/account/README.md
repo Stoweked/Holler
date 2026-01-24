@@ -1,33 +1,68 @@
-# Account
+# Account Feature
 
-This feature provides users with the tools to manage their personal profile and application settings. It serves as the central hub for user-specific configurations.
+## 📌 Overview
 
-### Key Components
+The **Account** feature is the user's personal command center. It handles profile management (avatar, name), global app settings (dark mode), and security settings (password reset).
 
-- **`Account.tsx`**: The main page component that assembles all the different account and profile settings sections.
-- **`AccountDropdown.tsx`**: A dropdown menu located in the top navigation bar, providing quick links to the user's account page and the logout action.
-- **`profile/ProfileCard.tsx`**: A component that displays the user's profile information and provides an entry point to edit it.
-- **`profile/ProfileForm.tsx`**: The form used to update a user's personal information, such as name and username.
-- **`profile/ProfileView.tsx`**: Displays the user's profile information in a read-only state.
-- **`ColorModeCard.tsx`**: A settings card that allows the user to toggle between light and dark themes.
-- **`ResetPasswordCard.tsx`**: Provides a secure way for users to change their password.
-- **`DeleteAccountCard.tsx`**: A component that allows a user to permanently delete their account.
+## 📂 Internal Structure
 
-### Hooks
+All code for this feature is self-contained in `src/features/account`.
 
-- **`useProfileForm.tsx`**: Manages the state, validation, and submission logic for the user's profile form.
+```
+src/features/account/
+├── actions/             # Server Actions (Mutations)
+├── components/          # Profile forms, Setting cards
+│   └── profile/         # Profile-specific UI sub-components
+├── contexts/            # (Optional) Profile state
+├── hooks/               # Form logic
+├── types/               # Profile interfaces
+└── index.ts             # Public API (Barrel file)
+```
 
-### Actions
+## 🧩 Key Components
 
-- **`update-profile.ts`**: A Server Action for updating the user's profile information in the database.
-- **`upload-avatar.ts`**: A Server Action for handling the upload and updating of a user's profile picture.
+### `Account.tsx`
 
-### How to Use
+The main page layout.
 
-The account feature is accessed via the `AccountDropdown` in the main application header or by navigating directly to the `/account` route. It provides the interface for all user-specific settings.
+- **Responsibility**: Aggregates all settings cards into a single responsive view.
 
-### Related Features
+### `profile/ProfileForm.tsx` & `ProfileCard.tsx`
 
-- **Authentication**: This feature manages the profile data for the currently authenticated user.
-- **Business**: For users with a business account, the business profile settings are linked from and displayed within the main account page.
-- **Billing**: The user's billing information and history are presented as a section within the account settings.
+The identity management UI.
+
+- **Responsibility**: Allows users to view and edit their public persona.
+
+### `ColorModeCard.tsx`
+
+Theme switcher.
+
+- **Responsibility**: Toggles between Light/Dark mode (persisted in local storage or cookie).
+
+## 🎣 Hooks & State Management
+
+### `useProfileForm.tsx`
+
+**Purpose**: Encapsulates form validation (likely Zod) and initial data loading for the profile editor.
+
+## 🛠️ Server Actions
+
+- **`update-profile.ts`**: Updates the `profiles` table in Supabase.
+- **`upload-avatar.ts`**: Handles image upload to Supabase Storage and updates the profile record URL.
+
+## 💾 Data Models (`types/profile.ts`)
+
+```typescript
+export interface UserProfile {
+  id: string; // References auth.users.id
+  username: string;
+  full_name?: string;
+  avatar_url?: string;
+  updated_at?: string;
+}
+```
+
+## 🔗 Dependencies
+
+- **Auth**: This feature is entirely dependent on a valid session.
+- **Business**: Business settings are often linked adjacent to personal account settings.

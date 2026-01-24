@@ -1,31 +1,59 @@
-# Authentication
+# Authentication Feature
 
-This feature handles all aspects of user authentication, including signing up, logging in, and managing user sessions. It provides the UI and server-side logic required to secure the application.
+## 📌 Overview
 
-### Key Components
+The **Authentication** feature handles all aspects of user identity, including sign-up, login, session management, and password recovery. It integrates directly with Supabase Auth and provides the UI flows for onboarding new users.
 
-- **`LoginForm.tsx`**: A form for existing users to sign in.
-- **`SignupForm.tsx`**: The initial form for new users to create an account.
-- **`MultiStepSignupForm.tsx`**: A component that guides new users through a comprehensive sign-up process, including profile information and password creation.
-- **`OAuthButtons.tsx`**: Provides options for users to sign in or sign up using third-party providers like Google or GitHub.
+## 📂 Internal Structure
 
-### Hooks
+All code for this feature is self-contained in `src/features/auth`.
 
-- **`useMultiStepSignupForm.ts`**: Manages the state, validation, and step transitions for the multi-step sign-up flow.
+```
+src/features/auth/
+├── actions/             # Server Actions (login, signup, logout)
+├── components/          # Auth forms and UI elements
+├── hooks/               # Logic for multi-step forms
+├── types/               # Auth-specific type definitions
+└── index.ts             # Public API (Barrel file)
+```
 
-### Actions
+## 🧩 Key Components
 
-- **`login.ts`**: A Server Action to handle user login.
-- **`signup.ts`**: A Server Action to handle new user registration.
-- **`logout.ts`**: A Server Action to terminate the user's session.
-- **`forgot-password.ts`**: A Server Action to initiate the password reset process.
-- **`reset-password.ts`**: A Server Action to finalize the password reset.
+### `LoginForm.tsx`
 
-### How to Use
+The primary sign-in interface.
 
-The authentication components are used on the application's public routes (e.g., `/login`, `/signup`). They use Server Actions to communicate with the authentication provider (Supabase) to create and manage user sessions. The application's middleware relies on this feature to protect routes and redirect unauthenticated users.
+- **Responsibility**: Captures email/password and calls the login Server Action.
+- **Props**: None.
 
-### Related Features
+### `MultiStepSignupForm.tsx`
 
-- **Account**: Once a user is authenticated, their profile and account settings are managed by the `account` feature.
-- **Middleware**: The application's `middleware.ts` uses the authentication state to control access to protected dashboard pages.
+The sophisticated onboarding wizard.
+
+- **Responsibility**: Guiding users through account creation, profile setup, and initial preferences.
+
+### `OAuthButtons.tsx`
+
+Social login options.
+
+- **Responsibility**: Renders buttons for Google/Github login flows.
+
+## 🎣 Hooks & State Management
+
+### `useMultiStepSignupForm.ts`
+
+**Purpose**: Manages the complex state of the multi-step registration wizard.
+**State**: Tracks current step index, form data validation, and accumulated user input.
+
+## 🛠️ Server Actions
+
+- **`login.ts`**: Validates credentials and creates a Supabase session.
+- **`signup.ts`**: Creates a new user record in Supabase and handles initial data insertion.
+- **`logout.ts`**: Invalidates the current session foundation.
+- **`forgot-password.ts` / `reset-password.ts`**: Handles recovery flows.
+
+## 🔗 Dependencies
+
+- **Supabase**: The core backend provider for Auth.
+- **Middleware**: `middleware.ts` relies on this feature's session handling to protect routes.
+- **Account**: Once authenticated, user data is managed by the `account` feature.

@@ -1,29 +1,73 @@
-# Contacts
+# Contacts Feature
 
-This feature allows users to view and manage their personal and business contacts. It provides the foundation for sending and receiving payments within the application.
+## 📌 Overview
 
-### Key Components
+The **Contacts** feature manages the user's network of personal and business relationships. This "rolodex" is the foundation for sending and receiving payments (Holler transactions). It supports searching, favoriting, and viewing contact details.
 
-- **`ContactsDrawer.tsx`**: The main drawer component that displays a searchable list of all contacts.
-- **`ContactList.tsx`**: Renders the alphabetized and searchable list of contacts within the drawer.
-- **`ContactItem.tsx`**: A single contact entry in the list.
-- **`ContactDetailsCard.tsx`**: A compact card used to display a selected contact's information, for example, in the transaction flow.
-- **`ContactModal.tsx`**: A modal that displays a detailed view of a contact's profile.
+## 📂 Internal Structure
 
-### Hooks & Contexts
+All code for this feature is self-contained in `src/features/contacts`.
 
-- **`useContacts.ts`**: A hook for fetching and managing the list of contacts.
-- **`FavoritesContext.tsx`**: Provides state management for starring and unstarring favorite contacts, which appear at the top of the contact list.
+```
+src/features/contacts/
+├── actions/             # Server Actions (Fetch, Create, Edit)
+├── components/          # Drawers, Lists, Cards
+├── contexts/            # FavoritesContext (UI State)
+├── types/               # Contact data interfaces
+├── utils/               # Search/sorting helpers
+└── index.ts             # Public API (Barrel file)
+```
 
-### Actions
+## 🧩 Key Components
 
-- **`get-contacts.ts`**: A Server Action that fetches all of the user's contacts from the database.
+### `ContactsDrawer.tsx`
 
-### How to Use
+The primary "Select a Person" interface.
 
-The contacts feature is primarily used within the `wallet` feature. When a user initiates a "Send" or "Request" action, the `ContactsDrawer` is opened, allowing them to select a recipient or sender.
+- **Responsibility**: Slides in to allow granular searching/picking of a contact, often triggered during a transaction flow.
 
-### Related Features
+### `ContactList.tsx`
 
-- **Wallet**: The contacts list is essential for initiating transactions to other users.
-- **Transactions**: Contacts are displayed as the sender or recipient in the transaction history details.
+The scrollable list.
+
+- **Responsibility**: Renders `ContactItem` rows. efficient re-rendering.
+
+### `ContactDetailsCard.tsx`
+
+Read-only view.
+
+- **Responsibility**: Shows small summary of a contact (Avatar, Name, Holler Handle) inside other flows.
+
+## 🎣 Hooks & State Management
+
+### `FavoritesContext` (`contexts/FavoritesContext.tsx`)
+
+**Scope**: Tracks which contacts are pinned to the top.
+**State**: List of favorite contact IDs.
+
+### `useContacts.ts` (if exists)
+
+**Purpose**: Abstraction over the fetch/cache query for the contacts list.
+
+## 🛠️ Server Actions
+
+- **`get-contacts.ts`**: Fetches the user's address book from Supabase.
+
+## 💾 Data Models (`types/contact.ts`)
+
+```typescript
+export interface Contact {
+  id: string;
+  user_id: string; // The Holler user ID if they are on the platform
+  first_name: string;
+  last_name: string;
+  email?: string;
+  phone?: string;
+  avatar_url?: string;
+}
+```
+
+## 🔗 Dependencies
+
+- **Wallet**: The #1 consumer of this feature. Sending money requires picking a contact.
+- **Transactions**: History shows names/avatars from the Contact record.

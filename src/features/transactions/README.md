@@ -1,25 +1,70 @@
-# Transactions
+# Transactions Feature
 
-This feature is responsible for displaying the user's entire transaction history. It provides robust filtering and sorting capabilities, allowing users to easily find specific transactions.
+## 📌 Overview
 
-### Key Components
+The **Transactions** feature is the historical record keeper of the application. It provides a robust, filterable, and sortable view of all financial activities (deposits, transfers, payments). It allows users to drill down into specific transaction details.
 
-- **`TransactionsTable.tsx`**: The primary component that renders the list of transactions in a sortable, filterable table.
-- **`TransactionItem.tsx`**: A single row in the `TransactionsTable`, representing one transaction.
-- **`TransactionDetailsDrawer.tsx`**: A drawer that slides in to display the complete details of a selected transaction, including its timeline and any associated documents.
-- **`filters/`**: A sub-directory containing all UI components used for filtering the transaction list, such as by date, amount, contact, status, and type.
+## 📂 Internal Structure
 
-### Hooks & Services
+All code for this feature is self-contained in `src/features/transactions`.
 
-- **`useTransactionFilters.ts`**: A hook that manages the state of all active filters and provides the logic for applying them to the transaction list.
-- **`get-transactions.ts`**: A service function (Server Action) responsible for fetching the transaction data from the backend based on the applied filters.
+```
+src/features/transactions/
+├── actions/             # Server Actions (data fetching)
+├── components/          # Tables, Drawers, Filters
+│   └── filters/         # Filter-specific UI sub-components
+├── hooks/               # State logic for filtering
+├── types/               # Transaction data interfaces
+└── index.ts             # Public API (Barrel file)
+```
 
-### How to Use
+## 🧩 Key Components
 
-This feature serves as the main transaction history page within the application. It is a top-level feature that users navigate to from the primary side navigation.
+### `TransactionsTable.tsx`
 
-### Related Features
+The main data grid.
 
-- **Wallet**: The wallet is the primary source of transaction creation. All payments made or received through the wallet are recorded here.
-- **Projects**: Transactions can be associated with specific projects, allowing for project-based financial tracking.
-- **Contacts**: Every transaction involves at least one contact (sender or recipient).
+- **Responsibility**: Renders the list of transactions. Handles sorting UI.
+- **Props**: Receives the raw list of transactions.
+
+### `TransactionDetailsDrawer.tsx`
+
+The "inspector" view.
+
+- **Responsibility**: Slides in to show granular details (timeline, metadata, documents) for a single transaction.
+
+### `filters/TransactionFilters.tsx`
+
+The control panel for the table.
+
+- **Responsibility**: Housing date pickers, status dropdowns, and search inputs.
+
+## 🎣 Hooks & State Management
+
+### `useTransactionFilters.ts`
+
+**Purpose**: Manages the complex state of active filters.
+**State**: serialized URL search params <-> local state synchronization.
+
+## 🛠️ Server Actions
+
+- **`get-transactions.ts`**: The primary data fetcher. It constructs a Supabase query based on the passed filter criteria (date range, status, amount, etc.).
+
+## 💾 Data Models (`types/transaction.ts`)
+
+```typescript
+export interface Transaction {
+  id: string;
+  amount: number;
+  status: "pending" | "completed" | "failed";
+  type: "deposit" | "withdrawal" | "transfer";
+  created_at: string;
+  // ... relationships (sender, receiver)
+}
+```
+
+## 🔗 Dependencies
+
+- **Wallet**: Transactions are created by wallet actions.
+- **Projects**: Transactions can be linked to projects.
+- **Contacts**: Transactions involve other users/contacts.

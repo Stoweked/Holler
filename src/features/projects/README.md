@@ -1,27 +1,71 @@
-# Projects
+# Projects Feature
 
-This feature allows users to create, manage, and organize their projects. Projects serve as a way to categorize transactions and other related items, providing a clear overview of work and finances.
+## 📌 Overview
 
-### Key Components
+The **Projects** feature allows users to organize their financial activities around specific jobs or construction sites. Projects act as containers for transactions and lien waivers, enabling job-costing and better financial organization.
 
-- **`ProjectsDrawer.tsx`**: The primary drawer component used for creating a new project or editing an existing one.
+## 📂 Internal Structure
 
-### Hooks & Contexts
+All code for this feature is self-contained in `src/features/projects`.
 
-- **`useProjectsDrawer.ts`**: A hook that manages the state and logic for the project creation and editing flow within the `ProjectsDrawer`.
-- **`ProjectsContext.tsx`**: Provides a list of all projects to its children and includes functions to open the project management drawer.
+```
+src/features/projects/
+├── actions/             # Server Actions (CRUD operations)
+├── components/          # Drawers, Lists, Forms
+├── contexts/            # ProjectsContext (Global state)
+├── hooks/               # Logic for drawer management
+├── types/               # Project data interfaces
+└── index.ts             # Public API (Barrel file)
+```
 
-### Actions
+## 🧩 Key Components
 
-- **`create-project.ts`**: A Server Action to create a new project.
-- **`update-project.ts`**: A Server Action to update the details of an existing project.
-- **`archive-project.ts`**: A Server Action to archive a project, removing it from active lists.
+### `ProjectsDrawer.tsx`
 
-### How to Use
+The creation/editing form.
 
-The projects feature can be accessed from the main application dashboard or navigation. When creating a transaction, users can optionally associate it with a project to better organize their finances.
+- **Responsibility**: Provides the UI for creating a new project (name, address, client) or editing an existing one.
 
-### Related Features
+### `ProjectList.tsx` (or similar)
 
-- **Transactions**: Transactions can be assigned to a specific project, allowing for project-based cost tracking.
-- **Waivers**: Lien waivers are often related to work completed for a specific project.
+The main view.
+
+- **Responsibility**: scannable list or grid of active projects.
+
+## 🎣 Hooks & State Management
+
+### `ProjectsContext` (`contexts/ProjectsContext.tsx`)
+
+**Scope**: Wraps parts of the app that need access to the project list.
+**State**:
+
+- `projects`: Array of fetched project objects.
+- `isDrawerOpen`: Visibility of the creation/edit drawer.
+
+### `useProjectsDrawer.ts`
+
+**Purpose**: Easy access to open/close the project drawer and set the "editing" state (i.e., which project is being modified).
+
+## 🛠️ Server Actions
+
+- **`create-project.ts`**: Inserts a new project record.
+- **`update-project.ts`**: Modifies project details.
+- **`archive-project.ts`**: Soft-deletes or hides a project from the active view.
+
+## 💾 Data Models (`types/projects.ts`)
+
+```typescript
+export interface Project {
+  id: string;
+  name: string;
+  client_name?: string;
+  address?: string;
+  status: "active" | "archived" | "completed";
+  created_at: string;
+}
+```
+
+## 🔗 Dependencies
+
+- **Transactions**: Transactions are often tagged with a `project_id`.
+- **Waivers**: Lien waivers are almost always generated in the context of a Project.

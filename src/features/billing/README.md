@@ -1,17 +1,34 @@
-# Billing
+# Billing Feature
 
-This feature is responsible for displaying the user's billing settings, payment methods, and history of past payments.
+## 📌 Overview
 
-### Key Components
+The **Billing** feature handles the monetization aspects of the platform itself (subscriptions, service fees) rather than the peer-to-peer wallet transactions. It allows users to view their subscription status and download invoices.
 
-- **`BillingSettings.tsx`**: The main component that acts as a container for all billing-related information and settings.
-- **`BillingTable.tsx`**: A table that displays the user's payment history in a clear, tabular format, showing details like date, amount, and status.
+## 📂 Internal Structure
 
-### How to Use
+All code for this feature is self-contained in `src/features/billing`.
 
-The billing feature is located within the user's account settings. Users can navigate to this section to review their payment history and manage their billing information.
+```
+src/features/billing/
+├── components/          # Tables, Invoices
+└── index.ts             # Public API
+```
 
-### Related Features
+## 🧩 Key Components
 
-- **Account**: Billing is a core part of the user's account management.
-- **Transactions**: While transactions show all money movement, the billing history specifically tracks payments made for the service or platform fees.
+### `BillingSettings.tsx`
+
+The dashboard view.
+
+- **Responsibility**: Container for payment methods and history.
+
+### `BillingTable.tsx`
+
+History of platform payments.
+
+- **Responsibility**: Shows monthly subscription charges or per-transaction service fees.
+- **Differs from Transactions**: This table is for what the user pays _us_ (Holler), not what they pay _others_.
+
+## 🔗 Dependencies
+
+- **Account**: Nested within the Account Settings area.
