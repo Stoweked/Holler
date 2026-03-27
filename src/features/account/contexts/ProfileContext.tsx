@@ -12,6 +12,13 @@ interface UserProfile {
   phone_number?: string;
   full_name?: string;
   avatar_url?: string;
+  dob?: string | Date | null;
+  gender?: string | null;
+  address1?: string;
+  address2?: string;
+  city?: string;
+  state?: string;
+  zip?: string;
   [key: string]: unknown;
 }
 
