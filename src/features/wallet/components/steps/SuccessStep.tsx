@@ -83,7 +83,6 @@ export default function SuccessStep({
   transactionType,
   transactionId,
   onDone,
-  onStartOver,
   fromParty,
   toParty,
 }: SuccessStepProps) {

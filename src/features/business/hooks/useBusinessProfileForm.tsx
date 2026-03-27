@@ -66,7 +66,7 @@ export function useBusinessProfileForm({
         avatarPreviewUrl: businessProfile.avatar_url || "",
       });
     }
-  }, [businessProfile]);
+  }, [businessProfile, form]);
 
   const handleSubmit = async (values: typeof form.values) => {
     setLoading(true);

@@ -30,7 +30,6 @@ interface WaiverInitialStepProps {
 
 export default function WaiverInitialStep({
   onNew,
-  onTemplate,
   onEditWaiver,
   waivers,
 }: WaiverInitialStepProps) {

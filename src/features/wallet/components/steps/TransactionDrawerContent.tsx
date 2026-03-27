@@ -42,7 +42,6 @@ export default function TransactionDrawerContent({
     transactionId,
     handleInviteNew,
     handleInvite,
-    handleBack,
   } = state;
 
   const [activeStep, setActiveStep] = useState(step);

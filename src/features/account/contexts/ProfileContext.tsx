@@ -7,8 +7,8 @@ import { useAuth } from "react-oidc-context";
 // We keep these interfaces roughly the same to not break consumers,
 // but map them to Cognito where possible.
 interface ProfileContextType {
-  user: any | null; 
-  profile: any | null;
+  user: unknown | null; 
+  profile: unknown | null;
   loading: boolean;
   fetchProfile: () => Promise<void>;
 }
