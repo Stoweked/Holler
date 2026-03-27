@@ -39,9 +39,8 @@ export default function ProfileCard() {
           onCancel={() => setIsEditing(false)}
         />
       ) : (
-        // @ts-ignore - Bypassing type error during Cognito migration
         <ProfileView
-          profile={profile}
+          profile={profile as any}
           emailPending={emailPending}
           onEdit={() => setIsEditing(true)}
         />
