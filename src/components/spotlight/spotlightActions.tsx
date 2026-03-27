@@ -30,7 +30,6 @@ import {
   ConnectIcon,
 } from "hugeicons-react";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
-import { logout } from "@/features/auth/actions/logout";
 import { TransactionActionType } from "@/features/wallet/types/wallet";
 
 type OpenActionDrawerFunc = (type: TransactionActionType) => void;
@@ -40,7 +39,8 @@ export const getSpotlightActions = (
   openActionDrawer: OpenActionDrawerFunc,
   openWaiversDrawer: () => void,
   openProjectsDrawer: () => void,
-  closeNav: () => void
+  closeNav: () => void,
+  logout: () => void
 ): (SpotlightActionGroupData | SpotlightActionData)[] => [
   {
     group: "Navigation",

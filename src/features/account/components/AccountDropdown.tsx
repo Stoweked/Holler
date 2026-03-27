@@ -9,7 +9,7 @@ import {
   UserCircleIcon,
 } from "hugeicons-react";
 import { ColorSchemeMenuItem } from "../../../components/layout/TopNav/ColorSchemeMenuItem";
-import { logout } from "@/features/auth/actions/logout";
+import { useAuth } from "react-oidc-context";
 import { useProfile } from "@/features/account/contexts/ProfileContext";
 import { useEffect } from "react";
 import { getInitials } from "@/lib/hooks/textUtils";
@@ -17,6 +17,7 @@ import SettingsDrawer from "@/features/settings/components/SettingsDrawer";
 import { useAppModals } from "@/contexts/AppModalsContext";
 
 export default function AccountDropdown() {
+  const auth = useAuth();
   const { profile, loading } = useProfile();
   const { openFeedback, openWhatsNew } = useAppModals();
 
@@ -110,7 +111,7 @@ export default function AccountDropdown() {
 
           <Menu.Item
             leftSection={<Logout02Icon size={16} />}
-            onClick={() => logout()}
+            onClick={() => auth.removeUser()}
             aria-label="Log out"
           >
             Log out

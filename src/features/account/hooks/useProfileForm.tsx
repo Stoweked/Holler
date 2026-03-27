@@ -8,7 +8,6 @@ import { rem } from "@mantine/core";
 import { CheckmarkCircle02Icon, AlertCircleIcon } from "hugeicons-react";
 import dayjs from "dayjs";
 import { useProfile } from "@/features/account/contexts/ProfileContext";
-import { checkUsernameExists } from "@/features/auth/actions/check-username";
 import { uploadAvatar } from "../actions/upload-avatar";
 import { updateProfile } from "../actions/update-profile";
 
@@ -79,7 +78,7 @@ export function useProfileForm() {
     setLoading(true);
     try {
       if (form.isDirty("formUsername") && values.formUsername) {
-        const usernameExists = await checkUsernameExists(values.formUsername);
+        const usernameExists = false; // TODO: Implement new username check API with backend
         if (usernameExists) {
           form.setFieldError("formUsername", "Username is already taken");
           setLoading(false);

@@ -6,6 +6,7 @@ import { Notifications } from "@mantine/notifications";
 import { theme } from "../styles/theme";
 import "../styles/globals.css";
 import { Inter } from "next/font/google";
+import { CognitoProvider } from "@/components/providers/CognitoProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -53,10 +54,12 @@ export default function RootLayout({
         />
       </head>
       <body className={inter.className}>
-        <MantineProvider theme={theme} defaultColorScheme="light">
-          <Notifications position="bottom-center" />
-          {children}
-        </MantineProvider>
+        <CognitoProvider>
+          <MantineProvider theme={theme} defaultColorScheme="light">
+            <Notifications position="bottom-center" />
+            {children}
+          </MantineProvider>
+        </CognitoProvider>
       </body>
     </html>
   );

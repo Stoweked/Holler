@@ -6,18 +6,18 @@ Holler provides secure and efficient mobile payments designed for construction t
 
 ## 📖 About This Project (Context for Developers & AI)
 
-This project is a **Next.js 15** application building a financial platform for construction. It uses **Supabase** for backend/auth and **Mantine UI** for the frontend component library.
+This project is a **Next.js 15** application building a financial platform for construction. It uses **AWS Cognito** for authentication and **Mantine UI** for the frontend component library.
 
 **Key Architectural Decisions:**
 
 - **App Router:** We use the Next.js App Router (`src/app`).
 - **Feature-Sliced Design:** Core business logic lives in `src/features`. Each feature folder is self-contained.
 - **Mantine UI:** We rely heavily on Mantine's core components and hooks.
-- **Supabase:** Used for Auth, Database (PostgreSQL), and Realtime subscriptions.
+- **Cognito:** Used for secure user Authentication via `react-oidc-context`.
 
 ## ✨ Features
 
-- **Authentication**: Secure user login, signup, and password recovery powered by Supabase.
+- **Authentication**: Secure user login, signup, and password recovery powered by AWS Cognito Hosted UI.
 - **Wallet Actions**: A unified, multi-step flow to easily send, request, deposit, and transfer funds.
 - **Transaction Management**: View a detailed history of your transactions with powerful filtering and sorting capabilities.
 - **Contact Management**: A simple interface to manage your business and personal contacts.
@@ -31,7 +31,7 @@ This project is a **Next.js 15** application building a financial platform for c
 - **Language**: TypeScript
 - **Styling**: [Mantine UI v7](https://mantine.dev/), CSS Modules (where necessary), PostCSS
 - **State Management**: React Context + Hooks (minimal global state, preferred feature-local state)
-- **Backend / Auth**: [Supabase](https://supabase.com/)
+- **Auth**: [AWS Cognito](https://aws.amazon.com/cognito/) & `react-oidc-context`
 - **Icons**: [HugeIcons React](https://hugeicons.com/)
 
 ## 📂 Project Structure
@@ -53,7 +53,7 @@ src/
 │   │   ├── components/   # Feature-specific components
 │   │   └── ...           # Feature-specific logic
 ├── lib/                  # Utilities, Supabase Clients, Helper functions
-│   ├── supabase/         # Supabase client configuration
+│   ├── providers/        # React Context Providers (CognitoProvider)
 │   └── hooks/            # Global hooks
 ├── styles/               # Global styles and theme configuration
 └── public/               # Static assets (images, fonts)
@@ -81,12 +81,12 @@ npm install
 
 ### 4. Set Up Environment Variables
 
-Create a `.env.local` file in the root of the project and add your Supabase credentials:
+Create a `.env.local` file in the root of the project and add your Cognito credentials:
 
 ```bash
 # .env.local
-NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
+NEXT_PUBLIC_COGNITO_AUTHORITY=your-cognito-authority
+NEXT_PUBLIC_COGNITO_CLIENT_ID=your-cognito-client-id
 ```
 
 ### 5. Run the Development Server

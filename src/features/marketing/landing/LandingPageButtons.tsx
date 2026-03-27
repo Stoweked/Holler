@@ -2,16 +2,14 @@
 "use client";
 
 import { Button, Group } from "@mantine/core";
-import { useRouter } from "next/navigation";
-import { useProfile } from "@/features/account/contexts/ProfileContext";
 import Link from "next/link";
+import { useAuth } from "react-oidc-context";
 
 export default function LandingPageButtons() {
-  const router = useRouter();
-  const { user, loading } = useProfile();
+  const auth = useAuth();
 
   // Only show the Dashboard button if loading is complete AND the user exists.
-  if (!loading && user) {
+  if (!auth.isLoading && auth.isAuthenticated) {
     return (
       <Button component={Link} href="/dashboard" size="lg" miw={120}>
         Dashboard
@@ -19,20 +17,11 @@ export default function LandingPageButtons() {
     );
   }
 
-  // In all other cases (including the loading state), show the login/signup buttons.
+  // In all other cases (including the loading state), show the unified login button.
   return (
     <Group gap="lg">
-      <Button size="lg" onClick={() => router.push("/signup")} miw={120}>
-        Sign up
-      </Button>
-
-      <Button
-        size="lg"
-        variant="outline"
-        onClick={() => router.push("/login")}
-        miw={120}
-      >
-        Log in
+      <Button size="lg" onClick={() => auth.signinRedirect()} miw={160}>
+        Get Started
       </Button>
     </Group>
   );

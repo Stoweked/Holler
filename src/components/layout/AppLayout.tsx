@@ -32,6 +32,7 @@ import dynamic from "next/dynamic";
 import { AppModalsProvider } from "@/contexts/AppModalsContext";
 import { ModalsProvider } from "@mantine/modals";
 import { ContactsProvider } from "@/features/contacts/contexts/ContactsContext";
+import { useAuth } from "react-oidc-context";
 
 const LienWaiversDrawer = dynamic(
   () => import("@/features/waivers/components/LienWaiversDrawer"),
@@ -51,6 +52,7 @@ const ProjectOverviewDrawer = dynamic(
 
 const AuthenticatedLayout = ({ children }: { children: React.ReactNode }) => {
   const { user, profile, loading } = useProfile();
+  const auth = useAuth();
   const [opened, { toggle, close }] = useDisclosure();
   const router = useRouter();
 
@@ -87,7 +89,8 @@ const AuthenticatedLayout = ({ children }: { children: React.ReactNode }) => {
     openActionDrawer,
     openWaiversDrawer,
     openListDrawer,
-    close
+    close,
+    () => auth.removeUser()
   );
 
   if (loading || !profile) {
