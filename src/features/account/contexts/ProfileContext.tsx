@@ -8,6 +8,7 @@ import { useAuth } from "react-oidc-context";
 // but map them to Cognito where possible.
 interface UserProfile {
   username?: string;
+  email?: string;
   phone_number?: string;
   full_name?: string;
   avatar_url?: string;
