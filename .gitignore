@@ -35,3 +35,5 @@ pnpm-debug.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+# Private-registry credentials — never commit (see SPEC 13 security note)
+.npmrc
