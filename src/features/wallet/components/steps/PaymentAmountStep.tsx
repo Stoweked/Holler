@@ -68,7 +68,7 @@ export default function PaymentAmountStep({
   }, []);
 
   const handleContinue = () => {
-    if (actionType === "send" && Number(amount) > balance) {
+    if (actionType === "send" && balance !== null && Number(amount) > balance) {
       notifications.show({
         title: "Insufficient funds",
         message: "The amount you entered exceeds your available balance.",

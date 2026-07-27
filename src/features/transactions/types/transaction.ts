@@ -2,7 +2,11 @@
 import { TransactionParty } from "./transactionParty";
 import { Project } from "@/features/projects/types/project"; // <-- Import Project type
 
-export type TransactionStatus = "Completed" | "Pending" | "Failed";
+export type TransactionStatus =
+  | "Completed"
+  | "Pending"
+  | "Failed"
+  | "Unknown";
 export type TransactionType = "Sent" | "Received" | "Deposited" | "Transferred";
 export type TransactionStatusFilter = TransactionStatus | "All";
 export type TransactionTypeFilter = TransactionType | "All";
@@ -20,7 +24,7 @@ export interface Transaction {
   type: TransactionType;
   from: TransactionParty;
   to: TransactionParty;
-  bankAccount: string;
+  bankAccount?: string;
   projectId?: string;
   project?: Project;
 }

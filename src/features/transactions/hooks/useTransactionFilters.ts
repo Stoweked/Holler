@@ -10,15 +10,25 @@ import {
   TransactionTypeFilter,
 } from "@/features/transactions/types/transaction";
 import { useRouter, useSearchParams } from "next/navigation";
-import { getTransactions } from "../actions/get-transactions";
 import { useProjects } from "@/features/projects/contexts/ProjectsContext";
+import { useMapleAccount } from "@/features/account/hooks/useMapleAccount";
+import { getAccountActivity } from "@/lib/maple/client";
+import { toTransactions } from "@/lib/maple/adapter";
+import { filterTransactions } from "../utils/filterTransactions";
 
 export const useTransactionFilters = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const { projects } = useProjects(); // <-- Fetch projects from context
+  const {
+    accountId,
+    accessToken,
+    loading: accountLoading,
+    error: accountError,
+  } = useMapleAccount();
 
   // Memoize all derived state from searchParams to prevent re-renders
   const {
@@ -76,42 +86,64 @@ export const useTransactionFilters = () => {
     [searchParams, router]
   );
 
-  // This effect fetches transactions whenever the filters change.
+  // maple's activity endpoint takes no filter params, so the account's activity
+  // is fetched once and every filter change is applied in memory below.
   useEffect(() => {
-    const fetchTransactions = async () => {
-      setLoading(true);
-      try {
-        const data = await getTransactions({
-          status: activeStatusFilter,
-          type: activeTypeFilter,
-          sortBy: sortOption,
-          dateFilter: dateFilter,
-          minAmount: amountRange[0],
-          maxAmount: amountRange[1],
-          contact: activeContactFilter,
-          project: activeProjectFilter,
-          search: searchQuery,
-        });
-        setTransactions(data);
-      } catch (error) {
-        console.error("Failed to fetch transactions:", error);
-        setTransactions([]);
-      } finally {
-        setLoading(false);
-      }
-    };
+    if (accountLoading) return;
 
-    fetchTransactions();
-  }, [
-    activeStatusFilter,
-    activeTypeFilter,
-    sortOption,
-    dateFilter,
-    amountRange,
-    activeContactFilter,
-    activeProjectFilter,
-    searchQuery,
-  ]);
+    if (!accountId) {
+      setTransactions([]);
+      setError(accountError);
+      setLoading(false);
+      return;
+    }
+
+    let cancelled = false;
+    setLoading(true);
+
+    getAccountActivity(accountId, accessToken).then((result) => {
+      if (cancelled) return;
+
+      if (result.ok) {
+        setTransactions(toTransactions(result.data));
+        setError(null);
+      } else {
+        setTransactions([]);
+        setError(result.message);
+      }
+      setLoading(false);
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [accountId, accessToken, accountLoading, accountError]);
+
+  const processedTransactions = useMemo(
+    () =>
+      filterTransactions(transactions, {
+        status: activeStatusFilter,
+        type: activeTypeFilter,
+        sortBy: sortOption,
+        dateFilter,
+        minAmount: amountRange[0],
+        maxAmount: amountRange[1],
+        contact: activeContactFilter,
+        project: activeProjectFilter,
+        search: searchQuery,
+      }),
+    [
+      transactions,
+      activeStatusFilter,
+      activeTypeFilter,
+      sortOption,
+      dateFilter,
+      amountRange,
+      activeContactFilter,
+      activeProjectFilter,
+      searchQuery,
+    ]
+  );
 
   const resetFilters = () => {
     router.push("?");
@@ -159,8 +191,9 @@ export const useTransactionFilters = () => {
     searchQuery: searchQuery.split(" ").filter(Boolean),
     setSearchQuery: (query: string[]) =>
       updateParams({ search: query.join(" ") }),
-    processedTransactions: transactions,
+    processedTransactions,
     resetFilters,
-    loading,
+    loading: loading || accountLoading,
+    error,
   };
 };

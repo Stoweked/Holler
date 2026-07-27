@@ -67,10 +67,13 @@ const PartyInfoCard = ({
       break;
     case "wallet":
       name = party.name;
-      details = ` ${balance.toLocaleString("en-US", {
-        style: "currency",
-        currency: "USD",
-      })}`;
+      details =
+        balance === null
+          ? " —"
+          : ` ${balance.toLocaleString("en-US", {
+              style: "currency",
+              currency: "USD",
+            })}`;
       isWallet = true;
       break;
     default:

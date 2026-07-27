@@ -16,7 +16,7 @@ export default function PrimaryActionsCard() {
   };
 
   // Determine font size based on the length of the balance
-  const balanceIntegerPart = Math.floor(balance);
+  const balanceIntegerPart = Math.floor(balance ?? 0);
   const balanceLength = String(balanceIntegerPart).length;
   let fontSize = "3rem"; // Default size (48px)
 
@@ -35,10 +35,12 @@ export default function PrimaryActionsCard() {
           {businessProfile || loading ? <AccountToggle /> : null}
           <Stack align="center" gap={4} py="xs">
             <Title order={1} style={{ fontSize, whiteSpace: "nowrap" }}>
-              {`$${balance.toLocaleString("en-US", {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              })}`}
+              {balance === null
+                ? "—"
+                : `$${balance.toLocaleString("en-US", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}`}
             </Title>
 
             <Text c="dimmed">Current balance</Text>

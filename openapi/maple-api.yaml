@@ -1,0 +1,1777 @@
+openapi: 3.0.0
+# TODO: list endpoints that wrap responses in { "data": [...] } should return bare arrays instead.
+# The envelope adds nesting with no benefit — only useful when returning metadata (pagination, totals, etc.).
+info:
+  title: Maple API
+  version: 1.0.0
+  description: Construction cashflow platform backend API
+
+servers:
+  - url: /api/v1
+    description: API v1
+
+components:
+  parameters:
+    AccountIDPath:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: Account ID
+
+    TransferIDPath:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: Transfer ID
+
+    DepositIDPath:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: Moov transfer ID for an external deposit
+
+    ContractRequirementIDPath:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: Contract Requirement ID
+
+    DocumentIDPath:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: Document ID
+
+    ContractIDPath:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: Contract ID
+
+    QuickBooksAccountIDPath:
+      name: accountId
+      in: path
+      required: true
+      schema:
+        type: string
+      description: Account ID
+
+  schemas:
+    # Error responses
+    ErrorResponse:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: string
+          description: Error message
+
+    MessageResponse:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          description: Success message
+
+    # Account schemas
+    MoovCapability:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          description: Status of the Moov capability
+
+    Account:
+      type: object
+      required:
+        - id
+        - moovAccountID
+        - capabilities
+        - ready
+      properties:
+        id:
+          type: string
+          description: Account ID
+        moovAccountID:
+          type: string
+          description: Associated Moov account ID
+        capabilities:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/MoovCapability'
+          description: Map of capability names to their status
+        ready:
+          type: boolean
+          description: Whether the account has all required capabilities enabled for payments
+
+    ListMyAccountsResponse:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Account'
+
+    CreateAccountRequest:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          description: Name of the account (company name)
+
+    CreateAccountResponse:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: string
+          description: Created account ID
+
+    # Balance schemas
+    GetMyBalancesResponse:
+      type: object
+      required:
+        - available
+        - pendingPayments
+      properties:
+        available:
+          type: number
+          format: double
+          description: Available balance
+        pendingPayments:
+          type: number
+          format: double
+          description: Pending payments amount
+
+    # Payment Method schemas
+    PaymentMethod:
+      type: object
+      required:
+        - id
+        - type
+      properties:
+        id:
+          type: string
+          description: Payment method ID
+        bankName:
+          type: string
+          description: Bank name
+        last4:
+          type: string
+          description: Last 4 digits of account number
+        type:
+          type: string
+          enum: [bank_account, platform_account]
+          description: Type of payment method
+        balance:
+          type: number
+          format: double
+          description: Current balance
+
+    GetMyPaymentMethodsResponse:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/PaymentMethod'
+
+    # Transfer schemas
+    Transfer:
+      type: object
+      required:
+        - id
+        - amount
+        - createdAt
+        - note
+        - status
+        - otherPartyName
+        - type
+      properties:
+        id:
+          type: string
+          description: Transfer ID
+        amount:
+          type: number
+          format: double
+          description: Transfer amount
+        createdAt:
+          type: string
+          format: date-time
+          description: Creation timestamp
+        note:
+          type: string
+          description: Transfer note
+        status:
+          type: string
+          description: Transfer status
+        otherPartyName:
+          type: string
+          description: Name of the other party in the transfer
+        type:
+          type: string
+          description: Transfer type (inbound/outbound)
+
+    CreateTransferRequest:
+      type: object
+      required:
+        - type
+        - amount
+      properties:
+        type:
+          type: string
+          enum: [direct, request]
+          description: |
+            Transfer type determines payment flow:
+            - "direct": Authenticated user pays immediately (push payment)
+              - User is the payer, must provide paymentMethodID
+              - Specify recipient via recipientPhone OR destinationAccountID
+            - "request": Authenticated user requests payment (pull payment)
+              - User is the recipient, creates a payment request
+              - Specify payer via payerPhone OR sourceAccountID
+              - Payer must later accept the request via /payment-requests/{id}/accept
+        recipientPhone:
+          type: string
+          description: Phone number of payment recipient (for type="direct" - alternative to destinationAccountID)
+        destinationAccountID:
+          type: string
+          description: Account ID that will receive the payment (for type="direct" - alternative to recipientPhone)
+        payerPhone:
+          type: string
+          description: Phone number of payer (for type="request" - alternative to sourceAccountID)
+        sourceAccountID:
+          type: string
+          description: Account ID that will send the payment (for type="request" - alternative to payerPhone)
+        paymentMethodID:
+          type: string
+          description: Payment method to use (required for type="direct", not used for type="request")
+        amount:
+          type: number
+          format: double
+          description: Amount to transfer
+        note:
+          type: string
+          description: Optional note for the transfer
+        documentIDs:
+          type: array
+          items:
+            type: string
+        contractID:
+          type: string
+          description: Optional contract ID if contract signature required
+
+    AcceptPaymentRequestRequest:
+      type: object
+      required:
+        - paymentMethodID
+      properties:
+        paymentMethodID:
+          type: string
+          description: Payment method to use for accepting the payment request
+
+    ContractAgreement:
+      type: object
+      nullable: true
+      required:
+        - agreedToAt
+        - agreedToByName
+      properties:
+        agreedToAt:
+          type: string
+          format: date-time
+          description: Timestamp when contract was agreed to
+        agreedToByName:
+          type: string
+          description: Name of person who agreed
+
+    ContractRequirement:
+      type: object
+      required:
+        - contractRequirementID
+        - contractID
+        - contractVersionID
+        - contractContent
+        - lastUpdatedAt
+      properties:
+        contractRequirementID:
+          type: string
+          description: Contract requirement ID
+        contractID:
+          type: string
+          description: Contract ID
+        contractVersionID:
+          type: string
+          description: Contract version ID
+        contractContent:
+          type: string
+          description: Contract content text
+        lastUpdatedAt:
+          type: string
+          format: date-time
+          description: Last update timestamp
+        contractAgreement:
+          $ref: '#/components/schemas/ContractAgreement'
+
+    GetMyTransactionResponse:
+      type: object
+      required:
+        - id
+        - amount
+        - createdAt
+        - note
+        - status
+        - otherPartyName
+        - type
+        - contractRequirements
+      properties:
+        id:
+          type: string
+          description: Transfer ID
+        amount:
+          type: number
+          format: double
+          description: Transfer amount
+        createdAt:
+          type: string
+          format: date-time
+          description: Creation timestamp
+        completedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: Completion timestamp
+        note:
+          type: string
+          description: Transfer note
+        status:
+          type: string
+          description: Transfer status
+        otherPartyName:
+          type: string
+          description: Name of the other party
+        type:
+          type: string
+          description: Transfer type
+        contractRequirements:
+          type: array
+          items:
+            $ref: '#/components/schemas/ContractRequirement'
+          description: Associated contract requirements
+        paymentMethod:
+          type: string
+          description: Payment method display name
+
+    # Contract schemas
+    Contract:
+      type: object
+      required:
+        - id
+        - title
+        - latest_version_id
+        - updated_at
+        - download_url
+      properties:
+        id:
+          type: string
+          description: Contract ID
+        title:
+          type: string
+          description: Contract title
+        latest_version_id:
+          type: string
+          description: ID of the latest contract version
+        updated_at:
+          type: string
+          format: date-time
+          description: Last update timestamp
+        download_url:
+          type: string
+          description: Presigned URL to download the contract content
+
+    GetAccountContractsResponse:
+      type: object
+      required:
+        - contracts
+      properties:
+        contracts:
+          type: array
+          items:
+            $ref: '#/components/schemas/Contract'
+
+    CreateContractRequest:
+      type: object
+      required:
+        - contractContent
+        - contractTitle
+      properties:
+        contractContent:
+          type: string
+          description: Contract content text
+        contractTitle:
+          type: string
+          description: Title of the contract
+
+    CreateContractResponse:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: string
+          description: Created contract ID
+
+    # Document schemas
+    Document:
+      type: object
+      required:
+        - id
+        - document_type
+        - title
+        - latest_version_id
+        - updated_at
+        - download_url
+      properties:
+        id:
+          type: string
+        document_type:
+          type: string
+          enum: [contract, invoice, photo, w9]
+        title:
+          type: string
+        latest_version_id:
+          type: string
+        updated_at:
+          type: string
+          format: date-time
+        download_url:
+          type: string
+
+    GetAccountDocumentsResponse:
+      type: object
+      required:
+        - documents
+      properties:
+        documents:
+          type: array
+          items:
+            $ref: '#/components/schemas/Document'
+
+    CreateDocumentRequest:
+      type: object
+      required:
+        - documentType
+        - title
+        - contentType
+        - content
+      properties:
+        documentType:
+          type: string
+          enum: [invoice, photo, w9]
+          description: Type of document (use POST /accounts/{id}/contracts for contracts)
+        title:
+          type: string
+        contentType:
+          type: string
+          description: MIME type (application/pdf, image/jpeg, image/png, etc.)
+        content:
+          type: string
+          description: Base64-encoded file content
+
+    CreateDocumentResponse:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: string
+          description: Created document ID
+
+
+    # Payment Link schemas
+    SpikeRequest:
+      type: object
+      required:
+        - amount
+        - note
+      properties:
+        amount:
+          type: number
+          format: double
+          description: Payment amount
+        note:
+          type: string
+          description: Payment note/description
+
+    GeneratePaymentLinkResponse:
+      type: object
+      required:
+        - link
+      properties:
+        link:
+          type: string
+          format: uri
+          description: Stripe checkout session URL
+
+    # Auth schemas
+    AuthConfigResponse:
+      type: object
+      required:
+        - clientId
+        - domain
+        - redirectUri
+        - tokenEndpoint
+        - authorizeEndpoint
+        - logoutEndpoint
+      properties:
+        clientId:
+          type: string
+          description: Cognito App Client ID
+        domain:
+          type: string
+          description: Cognito hosted UI base domain (e.g. https://myapp.auth.us-west-2.amazoncognito.com)
+        redirectUri:
+          type: string
+          description: OAuth2 redirect URI configured for this client
+        tokenEndpoint:
+          type: string
+          description: OAuth2 token exchange endpoint
+        authorizeEndpoint:
+          type: string
+          description: OAuth2 authorization endpoint
+        logoutEndpoint:
+          type: string
+          description: Cognito logout endpoint
+
+    RegisterRequest:
+      type: object
+      required:
+        - firstName
+        - lastName
+      properties:
+        firstName:
+          type: string
+          description: User's first name
+        lastName:
+          type: string
+          description: User's last name
+        inviteToken:
+          type: string
+          description: Single-use invite token from registration SMS link
+
+    RegisterResponse:
+      type: object
+      required:
+        - id
+        - firstName
+        - lastName
+        - phone
+      properties:
+        id:
+          type: string
+          description: User ID
+        firstName:
+          type: string
+          description: User's first name
+        lastName:
+          type: string
+          description: User's last name
+        phone:
+          type: string
+          description: User's phone number
+
+    InvitePreviewResponse:
+      type: object
+      required:
+        - senderName
+        - recipientPhone
+        - expiresAt
+        - expired
+      properties:
+        senderName:
+          type: string
+          description: Name of the account that sent the payment
+        recipientPhone:
+          type: string
+          description: Masked recipient phone — last 4 digits only (e.g. "****1234")
+        expiresAt:
+          type: string
+          format: date-time
+        expired:
+          type: boolean
+
+    # Moov schemas
+    CreateMoovAccountRequest:
+      type: object
+      required:
+        - legalBusinessName
+        - businessType
+        - email
+        - phone
+        - address
+        - industry
+        - taxId
+      properties:
+        legalBusinessName:
+          type: string
+          description: Legal name of the business as registered
+        businessType:
+          type: string
+          description: Moov business type (e.g. llc, soleProprietorship, corporation)
+        email:
+          type: string
+          format: email
+          description: Business contact email address
+        phone:
+          type: object
+          required:
+            - number
+          properties:
+            number:
+              type: string
+              description: Phone number digits (no formatting)
+            countryCode:
+              type: string
+              description: E.164 country code without the plus sign (e.g. "1")
+        address:
+          type: object
+          required:
+            - addressLine1
+            - city
+            - stateOrProvince
+            - postalCode
+            - country
+          properties:
+            addressLine1:
+              type: string
+            addressLine2:
+              type: string
+            city:
+              type: string
+            stateOrProvince:
+              type: string
+            postalCode:
+              type: string
+            country:
+              type: string
+        industry:
+          type: string
+          description: Moov industry slug (use GET /moov/industries to list options)
+        website:
+          type: string
+          format: uri
+          description: Business website URL (website or description required)
+        description:
+          type: string
+          description: Business description (website or description required)
+        taxId:
+          type: object
+          required:
+            - ein
+          properties:
+            ein:
+              type: object
+              required:
+                - number
+              properties:
+                number:
+                  type: string
+                  description: "EIN in format XX-XXXXXXX or XXXXXXXXX"
+        customerSupport:
+          type: object
+          description: Optional customer support contact information
+          properties:
+            phone:
+              type: object
+              properties:
+                number:
+                  type: string
+                countryCode:
+                  type: string
+            email:
+              type: string
+              format: email
+            website:
+              type: string
+              format: uri
+            address:
+              type: object
+              properties:
+                addressLine1:
+                  type: string
+                addressLine2:
+                  type: string
+                city:
+                  type: string
+                stateOrProvince:
+                  type: string
+                postalCode:
+                  type: string
+                country:
+                  type: string
+
+    CreateMoovAccountResponse:
+      type: object
+      required:
+        - moovAccountID
+      properties:
+        moovAccountID:
+          type: string
+          description: The Moov account ID that was created and linked to this account
+
+    MoovIndustry:
+      type: object
+      required:
+        - slug
+        - display
+        - defaultMcc
+      properties:
+        slug:
+          type: string
+          description: Moov industry slug identifier
+        display:
+          type: string
+          description: Human-readable display name for this industry
+        defaultMcc:
+          type: string
+          description: Default Merchant Category Code (MCC) for this industry
+
+    ListMoovIndustriesResponse:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/MoovIndustry'
+
+    MoovOnboardingContextResponse:
+      type: object
+      required:
+        - token
+        - expiresIn
+      properties:
+        token:
+          type: string
+          description: Short-lived Moov access token for client-side onboarding or Drop usage
+        expiresIn:
+          type: integer
+          description: Number of seconds until the token expires
+
+    # QuickBooks schemas
+    QuickBooksStatusResponse:
+      type: object
+      required:
+        - connected
+      properties:
+        connected:
+          type: boolean
+          description: Whether the account has an active QuickBooks connection
+        realm_id:
+          type: string
+          description: QuickBooks company/realm ID (present when connected=true)
+        refresh_token_expires_at:
+          type: string
+          format: date-time
+          nullable: true
+          description: When the refresh token expires (present when connected=true)
+
+paths:
+  /auth/config:
+    get:
+      operationId: AuthConfig
+      summary: Get OAuth2 configuration for client-side authentication
+      description: Returns the Cognito OAuth2 configuration values needed for the frontend to perform the PKCE authorization code flow.
+      tags:
+        - Auth
+      responses:
+        '200':
+          description: Auth configuration
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthConfigResponse'
+
+  /register:
+    post:
+      operationId: Register
+      summary: Register a new user
+      description: |
+        Creates an internal user record using the Cognito identity from the JWT.
+        If the phone number matches an existing shell user (no auth_subject), links the Cognito identity to that user.
+        The Authorization header must contain a valid JWT, but this endpoint is in the auth allowlist
+        so the standard auth middleware is skipped — the handler validates the JWT itself.
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '201':
+          description: User created or linked
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegisterResponse'
+        '400':
+          description: Missing required fields
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Missing or invalid JWT
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Phone number taken or auth subject already registered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /invites/{token}:
+    get:
+      operationId: GetInvite
+      summary: Preview an invite without consuming it
+      description: |
+        Returns invite metadata (sender name, masked recipient phone, expiry) for display
+        before the recipient completes Cognito signup. Does not consume the token.
+        Public endpoint — no authentication required.
+      tags:
+        - Auth
+      parameters:
+        - name: token
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Invite found and valid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvitePreviewResponse'
+        '404':
+          description: Invite not found or expired
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /me/accounts:
+    get:
+      operationId: ListMyAccounts
+      summary: List user's accounts
+      tags:
+        - Accounts
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListMyAccountsResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /accounts:
+    post:
+      operationId: CreateAccount
+      summary: Create a new account
+      description: Creates a new account and adds the authenticated user as a member.
+      tags:
+        - Accounts
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAccountRequest'
+      responses:
+        '201':
+          description: Account created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateAccountResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /accounts/{id}/wallet/balances:
+    get:
+      operationId: GetAccountWalletBalances
+      summary: Get account wallet balances
+      tags:
+        - Accounts
+      parameters:
+        - $ref: '#/components/parameters/AccountIDPath'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetMyBalancesResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Account not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /accounts/{id}/payment-methods:
+    get:
+      operationId: GetAccountPaymentMethods
+      summary: Get account payment methods
+      tags:
+        - Accounts
+      parameters:
+        - $ref: '#/components/parameters/AccountIDPath'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetMyPaymentMethodsResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /accounts/{id}/activity:
+    get:
+      operationId: GetAccountActivity
+      summary: Get account activity
+      tags:
+        - Accounts
+      parameters:
+        - $ref: '#/components/parameters/AccountIDPath'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Transfer'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /transfers:
+    post:
+      operationId: CreateTransfer
+      summary: Create a transfer or payment request
+      description: |
+        Creates either a direct payment (type=direct) or a payment request (type=request).
+
+        **Direct Payment Flow (type=direct):**
+        1. Authenticated user initiates payment
+        2. Payment executes immediately if no contract required
+        3. If contract required, creates pending payment awaiting signature
+
+        **Payment Request Flow (type=request):**
+        1. Authenticated user creates payment request
+        2. Creates pending payment with status=pending
+        3. Payer must later accept via /payment-requests/{id}/accept
+
+        **Authorization:**
+        - Direct: User must have access to source account (payer)
+        - Request: User must have access to destination account (recipient)
+      tags:
+        - Transfers
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTransferRequest'
+      responses:
+        '201':
+          description: Transfer or pending payment created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /transfers/{id}:
+    get:
+      operationId: GetTransferDetails
+      summary: Get transfer details
+      tags:
+        - Transfers
+      parameters:
+        - $ref: '#/components/parameters/TransferIDPath'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetMyTransactionResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Transfer not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /deposits/{id}:
+    get:
+      operationId: GetDepositDetails
+      summary: Get external deposit details
+      tags:
+        - Transfers
+      parameters:
+        - $ref: '#/components/parameters/DepositIDPath'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetMyTransactionResponse'
+        '404':
+          description: Deposit not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /payment-requests/{id}/accept:
+    post:
+      operationId: AcceptPaymentRequest
+      summary: Accept a payment request
+      description: Accepts a payment request and executes the transfer
+      tags:
+        - Transfers
+      parameters:
+        - $ref: '#/components/parameters/TransferIDPath'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AcceptPaymentRequestRequest'
+      responses:
+        '200':
+          description: Payment request accepted and transferred
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Transfer not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /accounts/{id}/contracts:
+    get:
+      operationId: GetAccountContracts
+      summary: Get contracts for an account
+      tags:
+        - Contracts
+      parameters:
+        - $ref: '#/components/parameters/AccountIDPath'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAccountContractsResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      operationId: CreateContract
+      summary: Create a contract
+      tags:
+        - Contracts
+      parameters:
+        - $ref: '#/components/parameters/AccountIDPath'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateContractRequest'
+      responses:
+        '201':
+          description: Contract created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateContractResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /accounts/{id}/documents:
+    get:
+      operationId: GetAccountDocuments
+      tags: [Documents]
+      parameters:
+        - $ref: '#/components/parameters/AccountIDPath'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAccountDocumentsResponse'
+        '404':
+          description: Account not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      operationId: CreateDocument
+      tags: [Documents]
+      parameters:
+        - $ref: '#/components/parameters/AccountIDPath'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateDocumentRequest'
+      responses:
+        '201':
+          description: Document created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateDocumentResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Account not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /documents/{id}:
+    get:
+      operationId: GetDocument
+      tags: [Documents]
+      parameters:
+        - $ref: '#/components/parameters/DocumentIDPath'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Document'
+        '404':
+          description: Document not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /contracts/{id}:
+    get:
+      operationId: GetContract
+      summary: Get a contract by ID
+      tags:
+        - Contracts
+      parameters:
+        - $ref: '#/components/parameters/ContractIDPath'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Contract'
+        '404':
+          description: Contract not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /contract-requirements/{id}/accept:
+    post:
+      operationId: AcceptContractRequirement
+      summary: Accept a contract requirement
+      description: Marks a contract requirement as accepted by the user
+      tags:
+        - Contracts
+      parameters:
+        - $ref: '#/components/parameters/ContractRequirementIDPath'
+      responses:
+        '200':
+          description: Contract requirement accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /me/wallet/payment-requests/link:
+    post:
+      operationId: GeneratePaymentLink
+      summary: Generate payment link
+      description: Creates a Stripe checkout session for payment requests
+      tags:
+        - Payments
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SpikeRequest'
+      responses:
+        '200':
+          description: Payment link generated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneratePaymentLinkResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /quickbooks/callback:
+    get:
+      operationId: QuickBooksCallback
+      summary: Handle QuickBooks OAuth2 callback
+      description: |
+        Handles the Intuit OAuth2 redirect. On success, stores the connection and redirects
+        to `<frontendBaseURL>/settings?qb_connected=true`. On failure, redirects to
+        `<frontendBaseURL>/settings?qb_error=<code>`.
+
+        This endpoint is in the auth allowlist — no JWT is required because it is
+        invoked by a browser redirect from Intuit, not by an authenticated API client.
+        The account is recovered from the CSRF state token, not from a path parameter.
+      tags:
+        - QuickBooks
+      parameters:
+        - name: error
+          in: query
+          schema:
+            type: string
+          description: Error code returned by Intuit (present when user denies consent)
+        - name: code
+          in: query
+          schema:
+            type: string
+          description: Authorization code from Intuit
+        - name: state
+          in: query
+          schema:
+            type: string
+          description: CSRF state token created by the connect endpoint
+        - name: realmId
+          in: query
+          schema:
+            type: string
+          description: QuickBooks company/realm ID
+      responses:
+        '302':
+          description: Redirect to frontend with success or error query params
+
+  /quickbooks/{accountId}/connect:
+    get:
+      operationId: QuickBooksConnect
+      summary: Initiate QuickBooks OAuth2 connection
+      description: |
+        Creates a CSRF state token and issues a 302 redirect to the Intuit authorization URL.
+
+        **Full OAuth2 flow:**
+        1. Frontend navigates the browser to this endpoint.
+        2. Server redirects to Intuit's authorization page.
+        3. User grants (or denies) consent on Intuit's site.
+        4. Intuit redirects the browser to `/api/v1/quickbooks/callback`.
+        5. On success, the server stores the connection and redirects to `<frontendBaseURL>/settings?qb_connected=true`.
+        6. On failure, the server redirects to `<frontendBaseURL>/settings?qb_error=<code>`.
+
+        **Possible `qb_error` codes the frontend may receive:**
+        - `access_denied` — user cancelled or denied consent on Intuit's page
+        - `state_expired` — the CSRF state token expired before the user completed the flow (>10 min); prompt to retry
+        - `invalid_state` — state token was not found or already used
+        - `invalid_callback` — the callback was missing required parameters
+        - `token_exchange_failed` — Intuit rejected the authorization code exchange
+        - `store_failed` — tokens were exchanged successfully but could not be saved
+        - `integration_disabled` — QuickBooks is not configured on this server
+        - `intuit_error` — Intuit returned an unrecognised error; see Intuit's OAuth2 docs
+      tags:
+        - QuickBooks
+      parameters:
+        - $ref: '#/components/parameters/QuickBooksAccountIDPath'
+      responses:
+        '302':
+          description: Redirect to Intuit authorization page
+        '404':
+          description: Account not found or user does not have access
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: QuickBooks integration not enabled
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /quickbooks/{accountId}/status:
+    get:
+      operationId: QuickBooksStatus
+      summary: Get QuickBooks connection status for an account
+      description: Returns whether the account has an active QuickBooks connection. Includes refresh token expiry so the frontend can warn the user before re-auth is required.
+      tags:
+        - QuickBooks
+      parameters:
+        - $ref: '#/components/parameters/QuickBooksAccountIDPath'
+      responses:
+        '200':
+          description: QuickBooks connection status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuickBooksStatusResponse'
+        '404':
+          description: Account not found or user does not have access
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /quickbooks/{accountId}/disconnect:
+    post:
+      operationId: QuickBooksDisconnect
+      summary: Disconnect QuickBooks from an account
+      description: Revokes the OAuth tokens with Intuit and soft-deletes the stored connection.
+      tags:
+        - QuickBooks
+      parameters:
+        - $ref: '#/components/parameters/QuickBooksAccountIDPath'
+      responses:
+        '200':
+          description: QuickBooks disconnected
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '404':
+          description: Account not found, user does not have access, or no active connection
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: QuickBooks integration not enabled
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /accounts/{id}/moov/onboarding-context:
+    post:
+      operationId: GetMoovOnboardingContext
+      summary: Issue a Moov onboarding context token for this account
+      description: |
+        Issues a short-lived Moov access token scoped for client-side onboarding or
+        Drops usage. If the account already has a linked Moov account ID, an access
+        token scoped to that account is returned. Otherwise an account-creation token
+        is returned so the client can create a new Moov account.
+        Token-issuance only — this endpoint never writes linkage or modifies account state.
+      tags:
+        - Accounts
+      parameters:
+        - $ref: '#/components/parameters/AccountIDPath'
+      responses:
+        '200':
+          description: Moov token issued successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoovOnboardingContextResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden — user is not a member of this account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Account not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /accounts/{id}/moov/account:
+    post:
+      operationId: CreateMoovAccount
+      summary: Create and link a Moov account for this account
+      description: |
+        Server-authoritative endpoint that calls Moov to create a new business account
+        using the backend's trusted facilitator credentials, then links the resulting
+        Moov account ID to the Maple account. No client-supplied Moov ID is required.
+        Idempotent — if the account already has a linked Moov account, returns 200 with
+        the existing Moov account ID.
+      tags:
+        - Accounts
+      parameters:
+        - $ref: '#/components/parameters/AccountIDPath'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateMoovAccountRequest'
+      responses:
+        '201':
+          description: Moov account created and linked
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateMoovAccountResponse'
+        '200':
+          description: Moov account already linked (idempotent)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateMoovAccountResponse'
+        '400':
+          description: Bad request — validation failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden — user is not a member of this account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Account not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /moov/industries:
+    get:
+      operationId: ListMoovIndustries
+      summary: List available Moov industry options
+      description: Returns the list of industry slugs, display names, and default MCCs that can be submitted via the CreateMoovAccount endpoint.
+      tags:
+        - Accounts
+      responses:
+        '200':
+          description: List of Moov industry options
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListMoovIndustriesResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'

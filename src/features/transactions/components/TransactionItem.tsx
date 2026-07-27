@@ -77,6 +77,7 @@ function TransactionItem({ transaction, onClick }: TransactionItemProps) {
     Completed: "lime",
     Pending: "yellow",
     Failed: "red",
+    Unknown: "gray",
   };
 
   const formattedDate = new Date(date).toLocaleDateString("en-US", {

@@ -1,6 +1,14 @@
 "use client";
 
-import { createContext, useContext, useState, ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
+import { useMapleAccount } from "@/features/account/hooks/useMapleAccount";
+import { getWalletBalances } from "@/lib/maple/client";
 import { TransactionParty } from "@/features/transactions/types/transactionParty";
 import { TransactionActionType } from "@/features/wallet/types/wallet";
 import { Transaction } from "@/features/transactions/types/transaction";
@@ -8,7 +16,7 @@ import { mockTransactions } from "@/mockData/mockTransactions";
 import { useDisclosure } from "@mantine/hooks";
 
 interface WalletContextType {
-  balance: number;
+  balance: number | null;
   isActionDrawerOpen: boolean;
   actionType: TransactionActionType | null;
   preselectedParty: TransactionParty | null;
@@ -28,7 +36,24 @@ interface WalletContextType {
 const WalletContext = createContext<WalletContextType | undefined>(undefined);
 
 export function WalletProvider({ children }: { children: ReactNode }) {
-  const [balance] = useState(32640.0);
+  const { accountId, accessToken, loading: accountLoading } = useMapleAccount();
+  const [balance, setBalance] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (accountLoading || !accountId) return;
+
+    let cancelled = false;
+    getWalletBalances(accountId, accessToken).then((result) => {
+      if (!cancelled) {
+        setBalance(result.ok ? result.data.available : null);
+      }
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [accountId, accessToken, accountLoading]);
+
   const [isActionDrawerOpen, setActionDrawerOpen] = useState(false);
   const [actionType, setActionType] = useState<TransactionActionType | null>(
     null

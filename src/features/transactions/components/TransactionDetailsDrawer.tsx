@@ -119,6 +119,7 @@ export default function TransactionDetailsDrawer({
     Completed: "lime",
     Pending: "yellow",
     Failed: "red",
+    Unknown: "gray",
   };
   const formattedDate = new Date(date).toLocaleString("en-US", {
     year: "numeric",

@@ -13,7 +13,7 @@ import { Alert02Icon, Cancel01Icon } from "hugeicons-react";
 interface AmountInputProps {
   amount: string | number;
   setAmount: (value: string | number) => void;
-  initialBalance: number;
+  initialBalance: number | null;
   flowType: "debit" | "credit";
 }
 
@@ -26,9 +26,11 @@ const AmountInput = forwardRef<HTMLInputElement, AmountInputProps>(
     const [error, setError] = useState<string | null>(null);
     const numericAmount = Number(amount) || 0;
     const newBalance =
-      flowType === "debit"
-        ? initialBalance - numericAmount
-        : initialBalance + numericAmount;
+      initialBalance === null
+        ? null
+        : flowType === "debit"
+          ? initialBalance - numericAmount
+          : initialBalance + numericAmount;
 
     // update font size dynamically
     const valueString = String(amount);
@@ -40,7 +42,11 @@ const AmountInput = forwardRef<HTMLInputElement, AmountInputProps>(
     const handleAmountChange = (value: string | number) => {
       setAmount(value);
       const numericValue = Number(value);
-      if (flowType === "debit" && numericValue > initialBalance) {
+      if (
+        flowType === "debit" &&
+        initialBalance !== null &&
+        numericValue > initialBalance
+      ) {
         const difference = numericValue - initialBalance;
         setError(
           `Exceeds balance by $${difference.toLocaleString("en-US", {
@@ -53,21 +59,20 @@ const AmountInput = forwardRef<HTMLInputElement, AmountInputProps>(
       }
     };
 
+    const currency = (value: number) =>
+      `$${value.toLocaleString("en-US", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      })}`;
+
     const balanceText =
-      flowType === "debit"
-        ? numericAmount > 0
-          ? `Remaining balance: $${newBalance.toLocaleString("en-US", {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })}`
-          : `Available balance: $${initialBalance.toLocaleString("en-US", {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })}`
-        : `New balance will be: $${newBalance.toLocaleString("en-US", {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-          })}`;
+      initialBalance === null || newBalance === null
+        ? "Balance unavailable"
+        : flowType === "debit"
+          ? numericAmount > 0
+            ? `Remaining balance: ${currency(newBalance)}`
+            : `Available balance: ${currency(initialBalance)}`
+          : `New balance will be: ${currency(newBalance)}`;
 
     return (
       <Stack align="center" gap="xs">
