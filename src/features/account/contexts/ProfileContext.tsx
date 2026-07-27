@@ -1,45 +1,48 @@
 // src/contexts/ProfileContext.tsx
 "use client";
 
-import { createContext, useContext } from "react";
+import { createContext, useContext, useMemo } from "react";
 import { useAuth } from "react-oidc-context";
-
-// We keep these interfaces roughly the same to not break consumers,
-// but map them to Cognito where possible.
-interface UserProfile {
-  username?: string;
-  email?: string;
-  phone_number?: string;
-  full_name?: string;
-  avatar_url?: string;
-  dob?: string | Date | null;
-  gender?: string | null;
-  address1?: string;
-  address2?: string;
-  city?: string;
-  state?: string;
-  zip?: string;
-  [key: string]: unknown;
-}
+import type { IdTokenClaims, User } from "oidc-client-ts";
+import { Profile } from "../types/account";
 
 interface ProfileContextType {
-  user: unknown | null; 
-  profile: UserProfile | null;
+  user: User | null;
+  profile: Profile | null;
   loading: boolean;
   fetchProfile: () => Promise<void>;
+}
+
+function toProfile(claims: IdTokenClaims | undefined): Profile | null {
+  if (!claims?.sub) return null;
+
+  return {
+    id: claims.sub,
+    email: claims.email ?? "",
+    full_name: claims.name,
+    first_name: claims.given_name,
+    last_name: claims.family_name,
+    username: claims.preferred_username,
+    avatar_url: claims.picture,
+    phone_number: claims.phone_number,
+    auth_provider: "cognito",
+  };
 }
 
 const ProfileContext = createContext<ProfileContextType | undefined>(undefined);
 
 export function ProfileProvider({ children }: { children: React.ReactNode }) {
   const auth = useAuth();
-  
-  const value = {
-    user: auth.user || null,
-    profile: auth.isAuthenticated ? auth.user?.profile : null,
-    loading: auth.isLoading,
-    fetchProfile: async () => {}, // No-op since we don't have a DB profile fetch yet.
-  };
+
+  const value = useMemo<ProfileContextType>(
+    () => ({
+      user: auth.user ?? null,
+      profile: auth.isAuthenticated ? toProfile(auth.user?.profile) : null,
+      loading: auth.isLoading,
+      fetchProfile: async () => {}, // No-op since we don't have a DB profile fetch yet.
+    }),
+    [auth.user, auth.isAuthenticated, auth.isLoading]
+  );
 
   return (
     <ProfileContext.Provider value={value}>{children}</ProfileContext.Provider>

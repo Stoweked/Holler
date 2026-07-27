@@ -11,14 +11,14 @@ import { BusinessRole } from "../types/businessRole";
 const supabase = createClient();
 
 export function useBusinessProfile() {
-  const { user } = useProfile();
+  const { profile } = useProfile();
   const [businessProfile, setBusinessProfile] = useState<Business | null>(null);
   const [userRole, setUserRole] = useState<BusinessRole | null>(null);
   const [loading, setLoading] = useState(true);
   const [initialLoad, setInitialLoad] = useState(true);
 
   const fetchBusinessProfile = useCallback(async () => {
-    if (!user) {
+    if (!profile) {
       setLoading(false);
       setBusinessProfile(null);
       setUserRole(null);
@@ -34,7 +34,7 @@ export function useBusinessProfile() {
       const { data: adminData, error: adminError } = await supabase
         .from("business_admins")
         .select("business_id, role")
-        .eq("user_id", user.id)
+        .eq("user_id", profile.id)
         .limit(1)
         .single();
 
@@ -74,7 +74,7 @@ export function useBusinessProfile() {
         setInitialLoad(false);
       }
     }
-  }, [user, initialLoad]);
+  }, [profile, initialLoad]);
 
   useEffect(() => {
     fetchBusinessProfile();
