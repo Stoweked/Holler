@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
-    "generate:api": "openapi-typescript openapi/maple-api.yaml -o src/lib/maple/schema.d.ts",
+    "generate:api": "openapi-typescript ${MAPLE_API_SPEC:-../maple/openapi/api.yaml} -o src/lib/maple/schema.d.ts",
     "verify:api-types": "npm run generate:api && git diff --exit-code src/lib/maple/schema.d.ts"
   },
   "dependencies": {
