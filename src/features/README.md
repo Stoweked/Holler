@@ -1,20 +1,26 @@
-# Features
+# Feature source
 
-This directory implements a feature-sliced architecture. Each subdirectory represents a distinct feature of the application and encapsulates all the necessary logic, UI components, hooks, and data types required for that feature to function. This approach makes the codebase more modular, scalable, and easier to maintain.
+Features group related views, types, and connected preview workflows. A feature's
+`index.ts` is an internal barrel; `src/ui/index.ts` defines the supported portable API.
+See the [integration guide](../../docs/react-integration.md) for the complete export list.
 
-### Feature Modules
+| Area | Current role |
+| --- | --- |
+| `transactions` | Exported table, row, details drawer, filters; connected preview wrappers |
+| `projects` | Exported project card/grid; connected management drawers/forms |
+| `banks` | Exported bank views; prototype bank selection/linking screens |
+| `contacts` | Exported details card; connected contact management |
+| `dashboard` | Connected preview screen used by Next routes |
+| `account`, `business`, `settings` | Preview profile/settings workflows |
+| `wallet`, `waivers` | Preview payment and waiver workflows |
+| `billing`, `integrations`, `notifications` | Prototype settings/history screens |
+| `marketing` | Retained marketing design; not the default route |
 
-- **/account**: Manages user profiles and application settings.
-- **/auth**: Handles all aspects of user authentication, including sign-up, login, and session management.
-- **/banks**: Manages the connection and display of user bank accounts.
-- **/billing**: Displays billing settings, payment methods, and history.
-- **/business**: Enables users to create and manage their business profiles.
-- **/contacts**: Allows users to view and manage their personal and business contacts.
-- **/integrations**: Third-party service integrations.
-- **/marketing**: Landing pages and public-facing marketing components.
-- **/notifications**: In-app notification system and preferences.
-- **/projects**: Allows users to create, manage, and organize their projects.
-- **/settings**: Global application settings and preferences.
-- **/transactions**: Displays the user's transaction history with robust filtering and sorting.
-- **/waivers**: Handles the creation, management, and editing of lien waivers.
-- **/wallet**: Provides core functionality for managing a user's wallet and handling payment actions.
+New handoff components receive data and loading/error state through props, and
+report actions through callbacks. Keep data loading, auth, navigation, persistence,
+and fixtures outside their dependency graph. Retain connected wrappers separately
+when needed by the preview. Account/business editors and wallet execution have
+not been converted into presentation-only exports.
+
+Use [the README template](FEATURE_README_TEMPLATE.md) when documenting a feature.
+Link to actual source types instead of maintaining duplicate example interfaces.

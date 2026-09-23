@@ -1,5 +1,7 @@
 # Notifications
 
+> Preview-only UI, excluded from the React handoff. NotificationDrawer renders local mock notifications; it is not connected to a live notification service.
+
 This feature handles the display of user notifications within the application.
 
 ### Key Components

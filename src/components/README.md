@@ -1,10 +1,14 @@
-# Components
+# Shared components
 
-This directory contains reusable UI components that are used across multiple features of the application.
+This directory contains both reusable views and connected preview components.
+Its contents are not automatically part of the React handoff: the curated exports
+in `src/ui/index.ts` define the supported public API.
 
-### Subdirectories
+- `layout/`: preview AppLayout, TopNav, and SideNav; these use application state.
+- `modals/`: preview dialogs, including feedback and policy content.
+- `spotlight/`: preview command palette and application actions.
+- `providers/`: retained host providers, including Cognito.
+- `shared/`: common UI and helpers; exported views must remain props/callback based.
 
-- **/layout**: Components that define the overall structure of the application, such as the main app layout, side navigation, and top navigation.
-- **/modals**: Reusable modal components, such as terms and conditions or privacy policy modals.
-- **/spotlight**: Global command palette/search functionality components.
-- **/shared**: Shared reusable components across the app.
+Portable shell/header/dashboard composition lives in `src/ui/`. Use the
+[React integration guide](../../docs/react-integration.md) when moving designs.

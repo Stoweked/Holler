@@ -1,33 +1,16 @@
-# Styles & Theme
+# Mantine theme and styles
 
-## 📌 Overview
+The UI uses Mantine 8, Mantine style props, and CSS Modules.
 
-This project uses **Mantine UI v7** as the primary styling solution, leveraging its theming engine and CSS modules for custom overrides. We avoid utility classes (like Tailwind) in favor of Mantine's style props and dedicated CSS modules.
+- `theme.ts`: theme exported publicly as `hollerTheme`; defines lime primary color
+  and component defaults/overrides. Font loading is the host's responsibility.
+- `holler.css`: shared shell/background styles, Mantine input overrides, and
+  sentence-case badge labels.
+- `globals.css`: preview host stylesheet, including Mantine package styles.
+- `assets.d.ts`: CSS Module type declarations for standalone TypeScript checks.
+- `../ui/styles.css`: handoff entry point for core/dates styles and shared CSS.
 
-## 📂 Internal Structure
-
-```
-src/styles/
-├── globals.css          # Global CSS resets & root variables
-├── theme.ts             # Mantine theme configuration object
-└── README.md            # Documentation
-```
-
-## 🎨 Theme Configuration (`theme.ts`)
-
-The `theme` object exports a `createTheme()` result that defines:
-
-- **Typography**: Font families (Inter, etc.) and heading sizes.
-- **Components**: Default props and styles for Mantine components (e.g., all Buttons have a specific radius).
-
-## 🖌️ CSS Modules
-
-For complex styles that cannot be achieved via Mantine props (like `mt="md"`), we use CSS Modules (`*.module.css`).
-
-- **Naming Convention**: `ComponentName.module.css`
-- **Usage**: `import classes from './ComponentName.module.css';`
-
-## 🔗 Resources
-
-- [Mantine Theming](https://mantine.dev/theming/mantine-provider/)
-- [CSS Modules with Next.js](https://nextjs.org/docs/app/building-your-application/styling/css-modules)
+In the destination React app, import the generated UI stylesheet once and use
+MantineProvider. Merge the theme and included PostCSS configuration with the
+host's existing setup. Review global overrides for conflicts with host components.
+See the [integration guide](../../docs/react-integration.md).

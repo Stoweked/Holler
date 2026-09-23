@@ -1,15 +1,10 @@
-# Feedback
+# Preview feedback form
 
-This feature allows users to submit feedback, including bug reports and feature requests.
+`components/FeedbackModal.tsx` is opened from the preview account dropdown. It
+submits through `useServices().submitFeedback`; the default read-only adapter
+reports that submission is unavailable.
 
-### Key Components
-
-- **`FeedbackModal.tsx`**: A modal component that provides a form for users to submit feedback.
-
-### Actions
-
-- **`submit-feedback.ts`**: A Server Action that handles the submission of feedback to the backend.
-
-### How to Use
-
-The feedback feature can be accessed from the user's account dropdown in the top navigation bar.
+The legacy server action is retained at
+`src/lib/adapters/supabase/actions/feedback/submit-feedback.ts`. Neither that action
+nor this connected form is part of the presentation-only React handoff. A future
+exported form should receive an explicit submission callback and request state.

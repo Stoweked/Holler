@@ -2,7 +2,7 @@
 "use client";
 
 import { Button, Group } from "@mantine/core";
-import Link from "next/link";
+import { AppLink as Link } from "@/components/shared/AppLink";
 import { useAuth } from "react-oidc-context";
 
 export default function LandingPageButtons() {

@@ -15,7 +15,15 @@ import classes from "./Projects.module.css";
 import { Project } from "../types/project";
 import React from "react";
 
-interface ProjectCardProps {
+export interface ProjectProgressSegment {
+  label: string;
+  value: number;
+  color: string;
+  description?: string;
+}
+
+export interface ProjectCardProps {
+  progress?: ProjectProgressSegment[];
   project: Project;
   onClick?: (project: Project) => void;
   isSelectionMode?: boolean;
@@ -25,6 +33,7 @@ function ProjectCard({
   project,
   onClick,
   isSelectionMode = false,
+  progress = [],
 }: ProjectCardProps) {
   const tooltipLabel = isSelectionMode ? "Select project" : "View project";
 
@@ -36,9 +45,9 @@ function ProjectCard({
             <House03Icon size={28} />
           </ThemeIcon>
           <Stack gap={8} style={{ overflow: "hidden" }}>
-            <Badge size="sm" variant="dot" color="lime">
-              Active
-            </Badge>
+            {project.status && <Badge size="sm" variant="dot" color={project.status === "completed" ? "gray" : project.status === "on hold" ? "yellow" : "lime"}>
+              {project.status}
+            </Badge>}
             <Title order={4} lineClamp={1} lh={1.2}>
               {project.name}
             </Title>
@@ -58,25 +67,15 @@ function ProjectCard({
         </Tooltip>
       </Group>
 
-      <Progress.Root size={20} radius={99}>
-        <Tooltip label="Received $3,534">
-          <Progress.Section value={42} color="green">
-            <Progress.Label>Received</Progress.Label>
-          </Progress.Section>
-        </Tooltip>
-
-        <Tooltip label="Sent $2,834">
-          <Progress.Section value={20} color="blue">
-            <Progress.Label>Sent</Progress.Label>
-          </Progress.Section>
-        </Tooltip>
-
-        <Tooltip label="Pending $1,234">
-          <Progress.Section value={24} color="pink">
-            <Progress.Label>Pending</Progress.Label>
-          </Progress.Section>
-        </Tooltip>
-      </Progress.Root>
+      {progress.length > 0 && <Progress.Root size={20} radius={99}>
+        {progress.map((segment) => (
+          <Tooltip key={segment.label} label={segment.description ?? segment.label}>
+            <Progress.Section value={segment.value} color={segment.color}>
+              <Progress.Label>{segment.label}</Progress.Label>
+            </Progress.Section>
+          </Tooltip>
+        ))}
+      </Progress.Root>}
     </Stack>
   );
 

@@ -5,7 +5,7 @@ import { useForm, isEmail, hasLength } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
 import { rem } from "@mantine/core";
 import { CheckmarkCircle02Icon, AlertCircleIcon } from "hugeicons-react";
-import { createClient } from "@/lib/supabase/client";
+import { useServices } from "@/lib/services/ServicesProvider";
 import { useBusinessProfile } from "./useBusinessProfile";
 
 export function useBusinessProfileForm({
@@ -16,7 +16,7 @@ export function useBusinessProfileForm({
   const { businessProfile, userRole, fetchBusinessProfile } =
     useBusinessProfile();
   const [loading, setLoading] = useState(false);
-  const supabase = createClient();
+  const { uploadAvatar, updateBusinessProfile } = useServices();
 
   const form = useForm({
     validateInputOnChange: true,
@@ -77,17 +77,7 @@ export function useBusinessProfileForm({
       formData.append("file", values.newAvatarFile);
 
       try {
-        const response = await fetch("/api/profile/avatar", {
-          method: "POST",
-          body: formData,
-        });
-
-        if (!response.ok) {
-          const { error } = await response.json();
-          throw new Error(error || "Failed to upload avatar");
-        }
-
-        const { publicUrl } = await response.json();
+        const { publicUrl } = await uploadAvatar(formData);
         finalAvatarUrl = publicUrl;
       } catch (error) {
         setLoading(false);
@@ -102,9 +92,9 @@ export function useBusinessProfileForm({
       }
     }
 
-    const { error: updateError } = await supabase
-      .from("businesses")
-      .update({
+    try {
+      if (!businessProfile) throw new Error("No business profile is available.");
+      await updateBusinessProfile(businessProfile.id, {
         business_name: values.formName,
         email: values.formEmail,
         phone_number: values.formPhone || null,
@@ -114,12 +104,7 @@ export function useBusinessProfileForm({
         state: values.formState || null,
         zip: values.formZip || null,
         avatar_url: finalAvatarUrl,
-      })
-      .eq("id", businessProfile?.id);
-
-    setLoading(false);
-
-    if (!updateError) {
+      });
       fetchBusinessProfile();
       onSaveSuccess();
       form.resetDirty();
@@ -130,13 +115,14 @@ export function useBusinessProfileForm({
           <CheckmarkCircle02Icon style={{ width: rem(18), height: rem(18) }} />
         ),
       });
-    } else {
+    } catch (error) {
       notifications.show({
         title: "Error",
-        message:
-          updateError.message || "Your business profile failed to update.",
+        message: error instanceof Error ? error.message : "Your business profile failed to update.",
         icon: <AlertCircleIcon style={{ width: rem(18), height: rem(18) }} />,
       });
+    } finally {
+      setLoading(false);
     }
   };
 

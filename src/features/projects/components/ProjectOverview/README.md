@@ -1,12 +1,11 @@
-# Project Overview Components
+# Connected project overview
 
-This directory contains components related to the project overview feature, which allows users to view and manage the details of a specific project.
+ProjectOverviewDrawer composes project details, contacts, and transactions for
+the preview. ProjectOverviewDetailsCard switches between ProjectDetailsView and
+ProjectDetailsForm; ProjectOverviewContacts and ProjectOverviewTransactions render
+the associated sections.
 
-### Key Components
-
-- **`ProjectOverviewDrawer.tsx`**: The main drawer component that displays a comprehensive overview of a selected project, including its details, associated contacts, and transaction statistics.
-- **`ProjectOverviewDetailsCard.tsx`**: A card component that displays the project's details and allows users to switch between viewing and editing mode.
-- **`ProjectDetailsView.tsx`**: A component for displaying the project's details in a read-only state.
-- **`ProjectDetailsForm.tsx`**: A form for editing the project's details.
-- **`ProjectOverviewStats.tsx`**: A component that displays a statistical overview of the project's transactions, including a pie chart.
-- **`ProjectOverviewContacts.tsx`**: A component that lists the contacts associated with the project and allows for searching and adding new contacts.
+These components use preview application state/services and are not public
+handoff exports. The default fixture adapter cannot save project edits. Use the
+portable ProjectCard and ProjectsGrid for current React integration; see the
+[project documentation](../../README.md).

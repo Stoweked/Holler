@@ -1,7 +1,7 @@
 "use server";
 
 import { createServer } from "@/lib/supabase/server";
-import { ContactType } from "../types/contact";
+import { ContactType } from "@/features/contacts/types/contact";
 import { revalidatePath } from "next/cache";
 
 export async function addContact(contactId: string, contactType: ContactType) {

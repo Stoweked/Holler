@@ -10,7 +10,7 @@ import {
   ReactNode,
   useMemo,
 } from "react";
-import { createClient } from "@/lib/supabase/client";
+import { useServices } from "@/lib/services/ServicesProvider";
 import { Waiver } from "@/features/waivers/types/waiver";
 import { useDisclosure } from "@mantine/hooks";
 
@@ -36,27 +36,21 @@ export function WaiversProvider({ children }: { children: ReactNode }) {
     null
   );
   const [source, setSource] = useState<string | undefined>();
-  const supabase = createClient();
+  const { getWaivers } = useServices();
 
   const fetchWaivers = useCallback(async () => {
     setLoading(true);
-    const { data, error } = await supabase
-      .from("lien_waivers")
-      .select("*")
-      .eq("archived", false)
-      .order("created_at", { ascending: false });
-
-    if (error) {
-      console.error("Error fetching waivers:", error);
-      setWaivers([]);
-      setLoading(false);
-      return null;
-    } else {
-      setWaivers(data || []);
-      setLoading(false);
+    try {
+      const data = await getWaivers();
+      setWaivers(data);
       return data;
+    } catch {
+      setWaivers([]);
+      return null;
+    } finally {
+      setLoading(false);
     }
-  }, [supabase]);
+  }, [getWaivers]);
 
   useEffect(() => {
     fetchWaivers();

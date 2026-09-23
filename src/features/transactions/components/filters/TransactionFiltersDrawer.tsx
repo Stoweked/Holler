@@ -31,9 +31,6 @@ import { Search01Icon } from "hugeicons-react";
 import { Contact, ContactType } from "@/features/contacts/types/contact";
 import { Project } from "@/features/projects/types/project";
 import { getInitials } from "@/lib/hooks/textUtils";
-// 1. Import the hooks for live data
-import { useContacts } from "@/features/contacts/contexts/ContactsContext";
-import { useProjects } from "@/features/projects/contexts/ProjectsContext";
 
 const statusFilters: TransactionStatusFilter[] = [
   "All",
@@ -49,7 +46,9 @@ const typeFilters: TransactionTypeFilter[] = [
   "Transferred",
 ];
 
-interface TransactionFiltersDrawerProps {
+export interface TransactionFiltersDrawerProps {
+  contacts: Contact[];
+  projects: Project[];
   opened: boolean;
   onClose: () => void;
   activeStatusFilter: TransactionStatusFilter;
@@ -71,6 +70,8 @@ interface TransactionFiltersDrawerProps {
 }
 
 export default function TransactionFiltersDrawer({
+  contacts,
+  projects,
   opened,
   onClose,
   activeStatusFilter,
@@ -102,9 +103,6 @@ export default function TransactionFiltersDrawer({
   const contactCombobox = useCombobox();
   const projectCombobox = useCombobox();
 
-  // 2. Get live data from the contexts
-  const { contacts } = useContacts();
-  const { projects } = useProjects();
 
   const handleDateChange = (value: [string | null, string | null]) => {
     const newRange: [Date | null, Date | null] = [

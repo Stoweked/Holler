@@ -1,3 +1,5 @@
+import type { Contact } from "@/features/contacts/types/contact";
+import type { Project } from "@/features/projects/types/project";
 // src/features/transactions/components/filters/TransactionFilters.tsx
 
 import {
@@ -38,7 +40,9 @@ const typeFilters: TransactionTypeFilter[] = [
   "Transferred",
 ];
 
-interface TransactionFiltersProps {
+export interface TransactionFiltersProps {
+  contacts: Contact[];
+  projects: Project[];
   activeStatusFilter: TransactionStatusFilter;
   onStatusFilterChange: (filter: TransactionStatusFilter) => void;
   activeTypeFilter: TransactionTypeFilter;
@@ -61,6 +65,8 @@ interface TransactionFiltersProps {
 }
 
 export default function TransactionFilters({
+  contacts,
+  projects,
   activeStatusFilter,
   onStatusFilterChange,
   activeTypeFilter,
@@ -181,10 +187,12 @@ export default function TransactionFilters({
                   onAmountFilterChange={onAmountFilterChange}
                 />
                 <Filters.Contact
+                  contacts={contacts}
                   activeContactFilter={activeContactFilter}
                   onContactFilterChange={onContactFilterChange}
                 />
                 <Filters.Project
+                  projects={projects}
                   activeProjectFilter={activeProjectFilter}
                   onProjectFilterChange={onProjectFilterChange}
                 />
@@ -293,6 +301,8 @@ export default function TransactionFilters({
       </Stack>
 
       <TransactionFiltersDrawer
+        contacts={contacts}
+        projects={projects}
         opened={drawerOpened}
         onClose={closeDrawer}
         activeStatusFilter={activeStatusFilter}

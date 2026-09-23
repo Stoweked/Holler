@@ -9,11 +9,12 @@ import {
   TransactionStatusFilter,
   TransactionTypeFilter,
 } from "@/features/transactions/types/transaction";
-import { useRouter, useSearchParams } from "next/navigation";
-import { getTransactions } from "../actions/get-transactions";
+import { useRouter, useSearchParams } from "@/lib/navigation/NavigationProvider";
+import { useServices } from "@/lib/services/ServicesProvider";
 import { useProjects } from "@/features/projects/contexts/ProjectsContext";
 
 export const useTransactionFilters = () => {
+  const { getTransactions } = useServices();
   const router = useRouter();
   const searchParams = useSearchParams();
   const [transactions, setTransactions] = useState<Transaction[]>([]);
@@ -103,6 +104,7 @@ export const useTransactionFilters = () => {
 
     fetchTransactions();
   }, [
+    getTransactions,
     activeStatusFilter,
     activeTypeFilter,
     sortOption,

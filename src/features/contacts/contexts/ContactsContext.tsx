@@ -1,4 +1,5 @@
 "use client";
+import { useServices } from "@/lib/services/ServicesProvider";
 
 import {
   createContext,
@@ -8,11 +9,8 @@ import {
   useCallback,
   ReactNode,
   useMemo,
-  useRef,
 } from "react";
 import { Contact, ContactType } from "../types/contact";
-import { getContacts } from "../actions/get-contacts";
-import { toggleFavorite as toggleFavoriteAction } from "../actions/toggle-favorite";
 import { notifications } from "@mantine/notifications";
 import { CheckIcon } from "@mantine/core";
 
@@ -28,9 +26,9 @@ const ContactsContext = createContext<ContactsContextType | undefined>(
 );
 
 export function ContactsProvider({ children }: { children: ReactNode }) {
+  const { getContacts, toggleFavorite: toggleFavoriteAction } = useServices();
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [loading, setLoading] = useState(true);
-  const hasFetched = useRef(false);
 
   const fetchContacts = useCallback(async () => {
     setLoading(true);
@@ -43,13 +41,10 @@ export function ContactsProvider({ children }: { children: ReactNode }) {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [getContacts]);
 
   useEffect(() => {
-    if (!hasFetched.current) {
-      fetchContacts();
-      hasFetched.current = true;
-    }
+    fetchContacts();
   }, [fetchContacts]);
 
   const toggleFavorite = useCallback(
@@ -83,7 +78,7 @@ export function ContactsProvider({ children }: { children: ReactNode }) {
         fetchContacts();
       }
     },
-    [fetchContacts]
+    [fetchContacts, toggleFavoriteAction]
   );
 
   const value = useMemo(

@@ -1,13 +1,14 @@
-# Transaction Filter Components
+# Controlled transaction filters
 
-This directory contains all components related to filtering and sorting the transaction history.
+`TransactionFilters.tsx` is exported through `src/ui/index.ts`. It receives all
+filter values and callbacks, result count, search terms, and explicit `contacts`
+and `projects` arrays. It keeps only visual state such as whether its mobile
+drawer is open. It does not fetch options, filter rows, or update the URL.
 
-### Key Components
+Individual controls include amount, contact, project, date, status, type, search,
+and sort. `TransactionFiltersDrawer.tsx` renders the compact layout with the same
+controlled inputs. See [TransactionFiltersProps](TransactionFilters.tsx) for the
+exact contract.
 
-- **`TransactionFilters.tsx`**: The main component that orchestrates all the individual filter components.
-- **`AmountFilter.tsx`**: A component for filtering transactions by a range of amounts.
-- **`ContactFilter.tsx`**: A component for filtering transactions by a specific contact.
-- **`DateFilter.tsx`**: A component for filtering transactions by a date or date range.
-- **`Sort.tsx`**: A component for sorting transactions by various criteria.
-- **`StatusFilter.tsx`**: A component for filtering transactions by their status (e.g., "Completed", "Pending").
-- **`TypeFilter.tsx`**: A component for filtering transactions by their type (e.g., "Sent", "Received").
+The connected preview's `useTransactionFilters` hook manages URL state outside
+these controls. The destination app decides how filter changes affect its data.

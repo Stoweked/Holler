@@ -1,58 +1,15 @@
-# Banks Feature
+# Bank designs
 
-## 📌 Overview
+`BankItem`, `BankDetailsCard`, and `BankProfileModal` are exported through
+`src/ui/index.ts` along with the [Bank display type](types/bank.ts). They receive
+bank data and interaction props. BankProfileModal requires an explicit
+`onDisconnect` callback to enable disconnection and accepts `disconnecting` state.
+The host performs and confirms the operation.
 
-The **Banks** feature manages the connection between the user's Holler account and their real-world bank accounts. It serves as the bridge for funding the wallet (Deposits) and cashing out (Withdrawals).
+BankList, ConnectedBanksDrawer, SelectBankStep, and ConnectBankDrawer remain
+prototype composition. ConnectBankDrawer has form fields and a button but no
+bank-linking implementation. Preview bank selection uses local sample data;
+these screens do not connect real accounts or move funds.
 
-## 📂 Internal Structure
-
-All code for this feature is self-contained in `src/features/banks`.
-
-```
-src/features/banks/
-├── components/          # Drawers, Lists, Cards
-├── types/               # Bank account interfaces
-└── index.ts             # Public API (Barrel file)
-```
-
-## 🧩 Key Components
-
-### `ConnectBankDrawer.tsx`
-
-The primary integration flow.
-
-- **Responsibility**: detailed form or Plaid integration (future?) to securely link a new bank account.
-
-### `ConnectedBanksDrawer.tsx`
-
-Management view.
-
-- **Responsibility**: Shows list of linked accounts and allows removing/unlinking.
-
-### `BankList.tsx`
-
-Reusable list component.
-
-- **Responsibility**: Displays `BankItem` components for selection screens (e.g., "Select funding source").
-
-## 🎣 Hooks & State Management
-
-State for banks is currently derived primarily from server state (fetched data) or passed down from the Wallet context when selecting a source.
-
-## 💾 Data Models (`types/bank.ts`)
-
-```typescript
-export interface BankAccount {
-  id: string;
-  user_id: string;
-  bank_name: string;
-  account_last4: string;
-  account_type: "checking" | "savings";
-  is_primary: boolean;
-}
-```
-
-## 🔗 Dependencies
-
-- **Wallet**: Cannot perform deposits/withdrawals without a linked bank.
-- **Account**: Users manage these links from their high-level account settings.
+See [React integration](../../../docs/react-integration.md) for the supported
+handoff. The destination app will supply banking data and operations separately.

@@ -10,18 +10,9 @@ import {
   ReactNode,
   useMemo,
 } from "react";
-import { createClient } from "@/lib/supabase/client";
+import { useServices } from "@/lib/services/ServicesProvider";
 import { Project } from "@/features/projects/types/project";
 import { useDisclosure } from "@mantine/hooks";
-import { Profile } from "@/features/account/types/account";
-import { Business } from "@/features/business/types/business";
-
-// Define an interface for the raw data structure from Supabase
-interface RawProjectData extends Omit<Project, "profiles" | "businesses"> {
-  profiles: { profiles: Profile }[];
-  businesses: { businesses: Business }[];
-}
-
 interface ProjectsContextType {
   projects: Project[];
   loading: boolean;
@@ -56,7 +47,7 @@ export function ProjectsProvider({ children }: { children: ReactNode }) {
     ((project: Project) => void) | undefined
   >(undefined);
 
-  const supabase = createClient();
+  const { getProjects } = useServices();
 
   const closeOverviewDrawer = useCallback(() => {
     setSelectedProject(null);
@@ -65,30 +56,8 @@ export function ProjectsProvider({ children }: { children: ReactNode }) {
 
   const fetchProjects = useCallback(async () => {
     setLoading(true);
-    const { data, error } = await supabase
-      .from("projects")
-      .select(
-        `
-        *,
-        profiles:project_profiles(profiles(*)),
-        businesses:project_businesses(businesses(*))
-      `
-      )
-      .eq("archived", false);
-
-    if (error) {
-      console.error("Error fetching projects:", error);
-      setProjects([]);
-    } else if (data) {
-      const formattedData = data.map((p: RawProjectData) => ({
-        ...p,
-        profiles: p.profiles.map(
-          (item: { profiles: Profile }) => item.profiles
-        ),
-        businesses: p.businesses.map(
-          (item: { businesses: Business }) => item.businesses
-        ),
-      }));
+    try {
+      const formattedData = await getProjects();
       setProjects(formattedData);
 
       setSelectedProject((currentSelectedProject) => {
@@ -107,9 +76,12 @@ export function ProjectsProvider({ children }: { children: ReactNode }) {
         closeOverviewDrawer();
         return null;
       });
+    } catch {
+      setProjects([]);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
-  }, [supabase, closeOverviewDrawer]);
+  }, [getProjects, closeOverviewDrawer]);
 
   useEffect(() => {
     fetchProjects();

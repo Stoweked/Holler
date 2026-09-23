@@ -2,7 +2,7 @@
 "use server";
 
 import { createServer } from "@/lib/supabase/server";
-import { Profile } from "../types/account";
+import { Profile } from "@/features/account/types/account";
 
 type UpdateProfileParams = Omit<Profile, "id" | "auth_provider">;
 

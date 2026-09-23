@@ -1,0 +1,41 @@
+{
+  "compilerOptions": {
+    "target": "ES2017",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "types": [
+      "react",
+      "react-dom"
+    ],
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    }
+  },
+  "include": [
+    "src/components/**/*",
+    "src/features/**/*",
+    "src/contexts/**/*",
+    "src/lib/services/**/*",
+    "src/lib/navigation/**/*",
+    "src/lib/hooks/**/*",
+    "src/lib/data/**/*",
+    "src/styles/**/*",
+    "src/mockData/**/*",
+    "src/ui/**/*"
+  ],
+  "exclude": [
+    "src/ui/preview.ts"
+  ]
+}

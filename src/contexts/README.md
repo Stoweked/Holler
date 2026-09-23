@@ -1,26 +1,11 @@
-# Global Contexts
+# Preview application context
 
-## 📌 Overview
+`AppModalsContext.tsx` supplies shared modal controls for the connected preview.
+`HollerFeatureProviders` in `src/ui/HollerFeatureProviders.tsx` mounts
+AppModalsProvider along with the feature contexts and Mantine ModalsProvider.
+Account state lives in `src/features/account/contexts/ProfileContext.tsx`.
 
-This directory contains React Context Providers that manage **global** application state.
-**Architectural Note:** We prefer _feature-local_ contexts (located in `src/features/<feature>/contexts`) over global contexts whenever possible to keep features decoupled. Only data that is truly "app-wide" belongs here.
-
-## 📂 Key Contexts
-
-### `ModalContext.tsx`
-
-- **Purpose**: A centralized system for managing modal dialogs.
-- **Why Global?**: Modals usually need to overlay the entire app (`z-index`), and triggering them can happen from deeply nested components that shouldn't need to know about the modal's internal state.
-
-### `UserContext` / `SessionContext` (if applicable)
-
-- **Purpose**: Holding the authenticated user's session.
-- **Why Global?**: Almost every component needs to know _who_ is logged in.
-
-## 🛠️ Usage
-
-Wrap the application in these providers in `src/app/layout.tsx`.
-
-```tsx
-<ModalProvider>{children}</ModalProvider>
-```
+These application contexts are excluded from the React UI handoff. Exported
+views use controlled props and callbacks for selection and open/close behavior;
+the destination app owns application state. See the
+[integration guide](../../docs/react-integration.md).

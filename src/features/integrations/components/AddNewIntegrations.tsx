@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Image from "next/image"; // Changed to Next.js Image component for optimization
+import { Image } from "@mantine/core";
 import OptionButton from "@/components/shared/OptionButton/OptionButton";
 import SectionHeader from "@/features/settings/components/SectionHeader";
 import {
@@ -17,21 +17,21 @@ import {
 import classes from "./Integrations.module.css";
 import { Search01Icon, Cancel01Icon } from "hugeicons-react";
 
-// Import logos from the new assets folder
-import autodeskLogo from "../assets/logos/autodesk-logo.svg";
-import autodeskLogoDark from "../assets/logos/autodesk-logo-dark.svg";
-import buildertrendLogo from "../assets/logos/buildertrend-logo.svg";
-import buildertrendLogoDark from "../assets/logos/buildertrend-logo-dark.svg";
-import fieldwireLogo from "../assets/logos/fieldwire-logo.svg";
-import fieldwireLogoDark from "../assets/logos/fieldwire-logo-dark.svg";
-import knowifyLogo from "../assets/logos/knowify-logo.svg";
-import knowifyLogoDark from "../assets/logos/knowify-logo-dark.svg";
-import procoreLogo from "../assets/logos/procore-logo.svg";
-import procoreLogoDark from "../assets/logos/procore-logo-dark.svg";
-import quickbooksLogo from "../assets/logos/quickbooks-logo.svg";
-import quickbooksLogoDark from "../assets/logos/quickbooks-logo-dark.svg";
-import sageLogo from "../assets/logos/sage-logo.svg";
-import xeroLogo from "../assets/logos/xero-logo.svg";
+// Ordinary public URLs work in any React host.
+const autodeskLogo = "/images/integrations/autodesk-logo.svg";
+const autodeskLogoDark = "/images/integrations/autodesk-logo-dark.svg";
+const buildertrendLogo = "/images/integrations/buildertrend-logo.svg";
+const buildertrendLogoDark = "/images/integrations/buildertrend-logo-dark.svg";
+const fieldwireLogo = "/images/integrations/fieldwire-logo.svg";
+const fieldwireLogoDark = "/images/integrations/fieldwire-logo-dark.svg";
+const knowifyLogo = "/images/integrations/knowify-logo.svg";
+const knowifyLogoDark = "/images/integrations/knowify-logo-dark.svg";
+const procoreLogo = "/images/integrations/procore-logo.svg";
+const procoreLogoDark = "/images/integrations/procore-logo-dark.svg";
+const quickbooksLogo = "/images/integrations/quickbooks-logo.svg";
+const quickbooksLogoDark = "/images/integrations/quickbooks-logo-dark.svg";
+const sageLogo = "/images/integrations/sage-logo.svg";
+const xeroLogo = "/images/integrations/xero-logo.svg";
 
 const allIntegrations = [
   {
@@ -138,8 +138,8 @@ export default function AddNewIntegrations() {
                       }
                       alt={integration.alt}
                       className={classes.integrationLogo}
-                      width={120} // Added width for Next.js Image
-                      height={40} // Added height for Next.js Image
+                      w={120}
+                      h={40}
                     />
                   }
                   minHeight={100}

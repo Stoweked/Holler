@@ -1,3 +1,4 @@
+import { useServices } from "@/lib/services/ServicesProvider";
 // src/features/projects/hooks/useProjectsDrawer.tsx
 import { useState } from "react";
 import { useForm } from "@mantine/form";
@@ -5,11 +6,11 @@ import { notifications } from "@mantine/notifications";
 import { CheckIcon } from "@mantine/core";
 import { AlertCircleIcon } from "hugeicons-react";
 import { useProjects } from "@/features/projects/contexts/ProjectsContext";
-import { createProject } from "../actions/create-project";
 
 type ProjectStep = "initial" | "editor";
 
 export function useProjectsDrawer(closeDrawer: () => void) {
+  const { createProject } = useServices();
   const [step, setStep] = useState<ProjectStep>("initial");
   const [isSaving, setIsSaving] = useState(false);
   const { projects, refetchProjects } = useProjects();

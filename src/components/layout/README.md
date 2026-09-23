@@ -1,9 +1,9 @@
-# Layout Components
+# Connected preview layout
 
-This directory contains components that define the overall structure and layout of the application.
+`AppLayout.tsx` composes the portable HollerLayout with TopNav, SideNav, Spotlight,
+feature providers, and lazy drawers. It does not require login or redirect to signup.
+TopNav and SideNav remain connected to preview application state.
 
-### Key Components
-
-- **`AppLayout.tsx`**: The main layout component that wraps the authenticated parts of the application, including the top navigation and side navigation.
-- **`SideNav/`**: A subdirectory containing components related to the side navigation menu.
-- **`TopNav/`**: A subdirectory containing components related to the top navigation bar, including the account avatar, notifications, and spotlight search.
+For the destination React app, use HollerLayout, HollerHeader, or HollerDashboard
+from `src/ui/index.ts` and supply navigation/actions through slots and callbacks.
+See [React integration](../../../docs/react-integration.md).

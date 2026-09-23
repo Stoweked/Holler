@@ -13,19 +13,19 @@ import {
 import { House03Icon, Search01Icon } from "hugeicons-react";
 import { useState } from "react";
 import { Project } from "@/features/projects/types/project";
-import { useProjects } from "@/features/projects/contexts/ProjectsContext"; // <-- Import useProjects
 
 interface ProjectFilterProps {
+  projects: Project[];
   activeProjectFilter: string;
   onProjectFilterChange: (project: string) => void;
 }
 
 export function ProjectFilter({
+  projects,
   activeProjectFilter,
   onProjectFilterChange,
 }: ProjectFilterProps) {
   const [searchValue, setSearchValue] = useState("");
-  const { projects } = useProjects(); // <-- Get projects from context
 
   const filteredProjects = projects
     .filter((project: Project) => {

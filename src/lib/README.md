@@ -1,36 +1,15 @@
-# Libraries & Utilities
+# Libraries and preview infrastructure
 
-## 📌 Overview
+- `hooks/`, `data/`: shared helpers and static reference data.
+- `services/`: operation contracts and service injection for connected preview code.
+- `navigation/`: navigation context for connected preview code.
+- `adapters/fixtures/`: read-only local services selected by RuntimeProviders.
+- `adapters/next/`: Next navigation and retained server-action composition.
+- `adapters/supabase/`: legacy queries/actions; not selected by the default preview.
+- `supabase/`: client factories used by the retained backend adapter.
 
-The `lib` directory is for **framework-agnostic** utilities, external library configurations, and shared helpers that don't fit into a specific UI component or feature.
-
-## 📂 Internal Structure
-
-```
-src/lib/
-├── supabase/            # Supabase Client & Server Client factories
-├── hooks/               # Generic (non-business) hooks (e.g., useMediaQuery)
-├── data/                # Static constants, country codes, enums
-└── utils.ts             # Small helper functions (date formatting, currency)
-```
-
-## 🧩 Key Submodules
-
-### `supabase/`
-
-Contains the setup for the singleton Supabase client.
-
-- `client.ts`: Browser-side client.
-- `server.ts`: Server-side client (for Actions/API routes).
-
-### `hooks/`
-
-Generic React hooks that are **not** tied to business logic.
-
-- ✅ `useDebounce`, `useWindowResize`
-- ❌ `useTransactions` (This belongs in `src/features/transactions/hooks`)
-
-## 📏 Guidelines
-
-- **Pure Functions**: Most code here should be pure functions (input -> output).
-- **No JSX**: Avoid UI code in `lib`. Keep it for logic and data processing.
+Only pure helpers needed by public UI exports belong in the handoff. Presentation
+components accept props and callbacks; they do not import services, navigation,
+implementation adapters, or backend SDKs. Connected preview wrappers may use the
+service/navigation contracts. See [preview architecture](../../docs/ui-decoupling.md)
+and [React integration](../../docs/react-integration.md).

@@ -2,7 +2,7 @@
 "use client";
 
 import { SegmentedControl } from "@mantine/core";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "@/lib/navigation/NavigationProvider";
 
 export function DashboardViewToggle() {
   const router = useRouter();

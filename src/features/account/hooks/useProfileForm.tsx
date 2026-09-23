@@ -1,5 +1,6 @@
-// src/features/account/hooks/useProfileForm.tsx
 "use client";
+import { useServices } from "@/lib/services/ServicesProvider";
+// src/features/account/hooks/useProfileForm.tsx
 
 import { useState, useEffect } from "react";
 import { useForm, isEmail, hasLength } from "@mantine/form";
@@ -8,10 +9,9 @@ import { rem } from "@mantine/core";
 import { CheckmarkCircle02Icon, AlertCircleIcon } from "hugeicons-react";
 import dayjs from "dayjs";
 import { useProfile } from "@/features/account/contexts/ProfileContext";
-import { uploadAvatar } from "../actions/upload-avatar";
-import { updateProfile } from "../actions/update-profile";
 
 export function useProfileForm() {
+  const { uploadAvatar, updateProfile } = useServices();
   const { profile, fetchProfile } = useProfile();
   const [loading, setLoading] = useState(false);
   const [emailPending, setEmailPending] = useState(false);

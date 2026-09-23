@@ -13,19 +13,19 @@ import {
 } from "@mantine/core";
 import classes from "./Transactions.module.css";
 import { getInitials } from "@/lib/hooks/textUtils";
-import { useProfile } from "@/features/account/contexts/ProfileContext";
+import type { Profile } from "@/features/account/types/account";
 import { getPartyName } from "../types/transactionParty";
 import { ContactType } from "@/features/contacts/types/contact";
 import { House03Icon } from "hugeicons-react";
 import React from "react";
 
-interface TransactionItemProps {
+export interface TransactionItemProps {
+  profile?: Pick<Profile, "full_name" | "avatar_url"> | null;
   transaction: Transaction;
   onClick: () => void;
 }
 
-function TransactionItem({ transaction, onClick }: TransactionItemProps) {
-  const { profile } = useProfile();
+function TransactionItem({ transaction, onClick, profile }: TransactionItemProps) {
   const { amount, date, status, type, from, to, project } = transaction;
   const isCredit = type === "Received" || type === "Deposited";
   const formattedAmount = `${isCredit ? "+" : "-"} $${amount.toLocaleString(

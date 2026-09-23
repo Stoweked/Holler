@@ -1,4 +1,5 @@
 "use client";
+import { useServices } from "@/lib/services/ServicesProvider";
 
 import {
   Stack,
@@ -18,8 +19,6 @@ import { TransactionParty } from "@/features/transactions/types/transactionParty
 import { useState } from "react";
 import { notifications } from "@mantine/notifications";
 import { useContacts } from "../contexts/ContactsContext";
-import { addContact } from "../actions/add-contact";
-import { removeContact } from "../actions/remove-contact";
 import { modals } from "@mantine/modals";
 
 interface ContactModalProps {
@@ -38,6 +37,7 @@ function ContactModalContent({
   showButtons,
   close,
 }: ContactModalContentProps) {
+  const { addContact, removeContact } = useServices();
   const { openActionDrawer } = useWallet();
   const { contacts, toggleFavorite, refetchContacts } = useContacts();
   const [isRemoving, setIsRemoving] = useState(false); // State for loading indicator

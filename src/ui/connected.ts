@@ -1,0 +1,24 @@
+// Legacy connected preview API. Excluded from the presentation-only handoff.
+export { HollerProvider, type HollerProviderProps } from "./HollerProvider";
+export { HollerFeatureProviders } from "./HollerFeatureProviders";
+export { HollerConnectedDashboard } from "./HollerConnectedDashboard";
+export { theme as hollerTheme } from "../styles/theme";
+export type { AppServices, MutationResult, ProjectInput, WaiverInput, BusinessInput, FeedbackInput, TransactionFilters } from "../lib/services/contracts";
+export type { AppRouter, Navigation } from "../lib/navigation/NavigationProvider";
+export type { ProfileContextType } from "../features/account/contexts/ProfileContext";
+export { useServices } from "../lib/services/ServicesProvider";
+export { useProfile } from "../features/account/contexts/ProfileContext";
+export { useRouter, usePathname, useSearchParams } from "../lib/navigation/NavigationProvider";
+export { default as TransactionsTable } from "../features/transactions/components/TransactionsTable";
+export { default as TransactionItem } from "../features/transactions/components/TransactionItem";
+export { default as TransactionDetailsDrawer } from "../features/transactions/components/TransactionDetailsDrawer";
+export { default as ProjectsGrid } from "../features/projects/components/ProjectsGrid";
+export { default as ProjectCard } from "../features/projects/components/ProjectCard";
+export { default as BankItem } from "../features/banks/components/BankItem";
+export { default as OptionButton } from "../components/shared/OptionButton/OptionButton";
+export type { Transaction } from "../features/transactions/types/transaction";
+export type { Project } from "../features/projects/types/project";
+export type { Profile } from "../features/account/types/account";
+export type { Bank } from "../features/banks/types/bank";
+export type { Waiver } from "../features/waivers/types/waiver";
+export { ContactType, type Contact } from "../features/contacts/types/contact";

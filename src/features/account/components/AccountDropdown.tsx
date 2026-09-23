@@ -9,7 +9,6 @@ import {
   UserCircleIcon,
 } from "hugeicons-react";
 import { ColorSchemeMenuItem } from "../../../components/layout/TopNav/ColorSchemeMenuItem";
-import { useAuth } from "react-oidc-context";
 import { useProfile } from "@/features/account/contexts/ProfileContext";
 import { useEffect } from "react";
 import { getInitials } from "@/lib/hooks/textUtils";
@@ -17,8 +16,7 @@ import SettingsDrawer from "@/features/settings/components/SettingsDrawer";
 import { useAppModals } from "@/contexts/AppModalsContext";
 
 export default function AccountDropdown() {
-  const auth = useAuth();
-  const { profile, loading } = useProfile();
+  const { profile, loading, signOut } = useProfile();
   const { openFeedback, openWhatsNew } = useAppModals();
 
   const [
@@ -107,15 +105,18 @@ export default function AccountDropdown() {
             Support
           </Menu.Item>
 
-          <Menu.Divider />
-
-          <Menu.Item
-            leftSection={<Logout02Icon size={16} />}
-            onClick={() => auth.removeUser()}
-            aria-label="Log out"
-          >
-            Log out
-          </Menu.Item>
+          {signOut && (
+            <>
+              <Menu.Divider />
+              <Menu.Item
+                leftSection={<Logout02Icon size={16} />}
+                onClick={signOut}
+                aria-label="Log out"
+              >
+                Log out
+              </Menu.Item>
+            </>
+          )}
         </Menu.Dropdown>
       </Menu>
 

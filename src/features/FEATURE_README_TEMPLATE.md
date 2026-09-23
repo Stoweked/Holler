@@ -1,56 +1,26 @@
-# [Feature Name] Feature
+# [Feature name]
 
-## 📌 Overview
+[Describe the visual purpose and current implementation scope.]
 
-[One or two sentences describing what business problem this feature solves.]
+## Public handoff
 
-## 📂 Internal Structure
+[List only components/types exported by src/ui/index.ts, or state that this feature
+is preview-only. Identify the corresponding source files, especially aliases.]
 
-All code for this feature is self-contained in `src/features/[feature-name]`.
+## Props and interactions
 
-```
-src/features/[feature-name]/
-├── components/          # Feature-specific UI components
-├── hooks/               # Logic and state handling hooks
-├── types/               # TypeScript definitions
-├── actions/             # (Optional) Server Actions
-└── index.ts             # Public API (Barrel file)
-```
+[Describe required display data, loading/error/empty states, callbacks, and local
+visual state. Link to source interfaces rather than duplicating them. State which
+operations require host handlers.]
 
-## 🧩 Key Components
+## Connected preview
 
-### `[ComponentName].tsx`
+[Identify wrappers, contexts, hooks, fixture use, and unavailable/simulated behavior.
+If relevant, point to retained implementations in src/lib/adapters. Do not place
+server actions or backend dependencies in the presentation layer.]
 
-[Brief description of what this component does]
+## Host responsibilities and validation
 
-- **Responsibility**: [e.g., Rendering the main list, handling the form]
-- **Props**: [Key props, if relevant]
-
-### `[ComponentName].tsx`
-
-...
-
-## 🎣 Hooks & State Management
-
-### `[HookName].ts`
-
-**Purpose**: [What logic does this encapsulate?]
-**State**: [What state does it manage?]
-
-## 🛠️ Server Actions (If applicable)
-
-- **`[actionName].ts`**: [Description of the server-side logic, inputs/outputs]
-
-## 💾 Data Models
-
-```typescript
-// Important types or interfaces
-export interface [InterfaceName] {
-  ...
-}
-```
-
-## 🔗 Dependencies
-
-- **[Other Feature]**: [Why is it needed?]
-- **[External Lib]**: [e.g., use of @mantine/form]
+[Describe data mapping, routing, auth, and persistence that the destination app owns.
+Document relevant checks and any remaining browser/integration validation. Update
+docs/react-integration.md when the public API changes.]

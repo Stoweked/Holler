@@ -1,7 +1,7 @@
 "use client";
 
 import { Button, Group, Paper, Stack, Text, Title } from "@mantine/core";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/lib/navigation/NavigationProvider";
 
 export default function ResetPasswordCard() {
   const router = useRouter();
