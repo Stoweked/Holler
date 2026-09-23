@@ -1,19 +1,22 @@
-import { useState } from "react";
-import { Button, Center, Stack, Text, Title } from "@mantine/core";
+import { lazy, useState } from "react";
 import { useDisclosure } from "@mantine/hooks";
 import TransactionFilters from "./filters/TransactionFilters";
-import TransactionItem from "./TransactionItem";
+import { TransactionsTableView } from "./TransactionsTableView";
+import { useProfile } from "@/features/account/contexts/ProfileContext";
+import { useContacts } from "@/features/contacts/contexts/ContactsContext";
+import { useProjects } from "@/features/projects/contexts/ProjectsContext";
 import { Transaction } from "@/features/transactions/types/transaction";
-import { Search01Icon } from "hugeicons-react";
-import dynamic from "next/dynamic";
+import { ClientOnly } from "@/components/shared/ClientOnly";
 import { useTransactionFilters } from "../hooks/useTransactionFilters";
 
-const TransactionDetailsDrawer = dynamic(
-  () => import("./TransactionDetailsDrawer"),
-  { ssr: false }
+const TransactionDetailsDrawer = lazy(
+  () => import("./TransactionDetailsDrawer")
 );
 
 export default function TransactionsTable() {
+  const { profile } = useProfile();
+  const { contacts } = useContacts();
+  const { projects } = useProjects();
   const [drawerOpened, { open: openDrawer, close: closeDrawer }] =
     useDisclosure(false);
   const [selectedTransaction, setSelectedTransaction] =
@@ -39,6 +42,7 @@ export default function TransactionsTable() {
     processedTransactions,
     resetFilters,
     activeProjectName,
+    loading,
   } = useTransactionFilters();
 
   const handleTransactionClick = (transaction: Transaction) => {
@@ -58,82 +62,47 @@ export default function TransactionsTable() {
 
   return (
     <>
-      <Stack gap={0}>
-        <TransactionFilters
-          activeStatusFilter={activeStatusFilter}
-          onStatusFilterChange={setActiveStatusFilter}
-          activeTypeFilter={activeTypeFilter}
-          onTypeFilterChange={setActiveTypeFilter}
-          activeSortOption={sortOption}
-          onSortChange={setSortOption}
-          activeDateFilter={dateFilter}
-          onDateChange={setDateFilter}
-          activeAmountFilter={amountRange}
-          onAmountFilterChange={setAmountRange}
-          activeContactFilter={activeContactFilter}
-          onContactFilterChange={setActiveContactFilter}
-          activeProjectFilter={activeProjectFilter}
-          activeProjectName={activeProjectName}
-          onProjectFilterChange={setActiveProjectFilter}
-          searchQuery={searchQuery}
-          onSearchQueryChange={setSearchQuery}
-          resetFilters={resetFilters}
-          total={processedTransactions.length}
-        />
-
-        {processedTransactions.length === 0 ? (
-          <Center>
-            <Stack align="center" py={60} gap="lg">
-              <Search01Icon size={40} color="grey" />
-              <Stack gap={0} align="center">
-                <Title order={3} ta="center">
-                  No transactions found
-                </Title>
-                <Text c="dimmed" ta="center">
-                  Try adjusting your transaction filters.
-                </Text>
-              </Stack>
-
-              <Button
-                size="md"
-                radius="xl"
-                variant="default"
-                onClick={resetFilters}
-              >
-                Reset all filters
-              </Button>
-            </Stack>
-          </Center>
-        ) : (
-          <Stack align="center" gap={0}>
-            {processedTransactions.map((transaction) => (
-              <TransactionItem
-                key={transaction.id}
-                transaction={transaction}
-                onClick={() => handleTransactionClick(transaction)}
-              />
-            ))}
-            {isAnyFilterActive ? (
-              <Button
-                mt="lg"
-                mb={4}
-                size="md"
-                radius="xl"
-                variant="default"
-                onClick={resetFilters}
-              >
-                Show all transactions
-              </Button>
-            ) : null}
-          </Stack>
-        )}
-      </Stack>
-
-      <TransactionDetailsDrawer
-        opened={drawerOpened}
-        close={closeDrawer}
-        transaction={selectedTransaction}
+      <TransactionsTableView
+        transactions={processedTransactions}
+        profile={profile}
+        loading={loading}
+        hasActiveFilters={isAnyFilterActive}
+        onResetFilters={resetFilters}
+        onTransactionClick={handleTransactionClick}
+        toolbar={
+          <TransactionFilters
+            contacts={contacts}
+            projects={projects}
+            activeStatusFilter={activeStatusFilter}
+            onStatusFilterChange={setActiveStatusFilter}
+            activeTypeFilter={activeTypeFilter}
+            onTypeFilterChange={setActiveTypeFilter}
+            activeSortOption={sortOption}
+            onSortChange={setSortOption}
+            activeDateFilter={dateFilter}
+            onDateChange={setDateFilter}
+            activeAmountFilter={amountRange}
+            onAmountFilterChange={setAmountRange}
+            activeContactFilter={activeContactFilter}
+            onContactFilterChange={setActiveContactFilter}
+            activeProjectFilter={activeProjectFilter}
+            activeProjectName={activeProjectName}
+            onProjectFilterChange={setActiveProjectFilter}
+            searchQuery={searchQuery}
+            onSearchQueryChange={setSearchQuery}
+            resetFilters={resetFilters}
+            total={processedTransactions.length}
+          />
+        }
       />
+
+      <ClientOnly>
+        <TransactionDetailsDrawer
+          opened={drawerOpened}
+          close={closeDrawer}
+          transaction={selectedTransaction}
+        />
+      </ClientOnly>
     </>
   );
 }

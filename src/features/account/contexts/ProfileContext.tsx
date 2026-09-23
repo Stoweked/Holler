@@ -1,49 +1,30 @@
-// src/contexts/ProfileContext.tsx
 "use client";
 
-import { createContext, useContext } from "react";
-import { useAuth } from "react-oidc-context";
+import { createContext, useContext, type ReactNode } from "react";
+import type { Profile } from "../types/account";
 
-// We keep these interfaces roughly the same to not break consumers,
-// but map them to Cognito where possible.
-interface UserProfile {
-  username?: string;
-  email?: string;
-  phone_number?: string;
-  full_name?: string;
-  avatar_url?: string;
-  dob?: string | Date | null;
-  gender?: string | null;
-  address1?: string;
-  address2?: string;
-  city?: string;
-  state?: string;
-  zip?: string;
-  [key: string]: unknown;
-}
-
-interface ProfileContextType {
-  user: unknown | null; 
-  profile: UserProfile | null;
+export interface ProfileContextType {
+  user: { id: string } | null;
+  profile: Profile | null;
   loading: boolean;
   fetchProfile: () => Promise<void>;
+  signOut?: () => void;
 }
 
+const anonymousProfile: ProfileContextType = {
+  user: null,
+  profile: null,
+  loading: false,
+  fetchProfile: async () => {},
+};
 const ProfileContext = createContext<ProfileContextType | undefined>(undefined);
 
-export function ProfileProvider({ children }: { children: React.ReactNode }) {
-  const auth = useAuth();
-  
-  const value = {
-    user: auth.user || null,
-    profile: auth.isAuthenticated ? auth.user?.profile : null,
-    loading: auth.isLoading,
-    fetchProfile: async () => {}, // No-op since we don't have a DB profile fetch yet.
-  };
-
-  return (
-    <ProfileContext.Provider value={value}>{children}</ProfileContext.Provider>
-  );
+/** The host supplies account state; rendering the UI does not require authentication. */
+export function ProfileProvider({ children, value = anonymousProfile }: {
+  children: ReactNode;
+  value?: ProfileContextType;
+}) {
+  return <ProfileContext.Provider value={value}>{children}</ProfileContext.Provider>;
 }
 
 export function useProfile() {

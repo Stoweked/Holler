@@ -1,12 +1,9 @@
-# Integrations
+# Integrations preview
 
-This feature allows users to connect their Holler account with third-party services.
+IntegrationSettings and AddNewIntegrations display prototype settings and a
+searchable service catalog. The catalog uses logos in `public/images/integrations/`.
+Its selection buttons are placeholders; no third-party connection is established.
+This feature is excluded from the presentation-only handoff.
 
-### Key Components
-
-- **`IntegrationSettings.tsx`**: The main component for managing integrations.
-- **`AddNewIntegrations.tsx`**: A component that displays a list of available integrations and allows users to add them.
-
-### How to Use
-
-The integrations feature is accessible from the user's account settings. It provides a simple interface for connecting and managing third-party services.
+Future exported views should receive connection state and action callbacks from
+the destination app. OAuth, credentials, and persistence belong to that app.

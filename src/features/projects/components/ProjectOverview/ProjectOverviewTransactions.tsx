@@ -13,7 +13,7 @@ import {
   Center,
 } from "@mantine/core";
 import { DonutChart } from "@mantine/charts";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/lib/navigation/NavigationProvider";
 import { Project } from "../../types/project";
 import { useProjects } from "../../contexts/ProjectsContext";
 import { useElementSize } from "@mantine/hooks";

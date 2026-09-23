@@ -1,5 +1,7 @@
 # (Auth)
 
+> Archived reference only. These files are outside src/app and are not active routes. Paths and behavior below describe the earlier authentication implementation. The current default page is the transactions dashboard without sign-in.
+
 This directory contains all authentication-related pages and functionality, including user login, signup, and password recovery.
 
 ### Subdirectories

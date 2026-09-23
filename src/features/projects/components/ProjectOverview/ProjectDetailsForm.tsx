@@ -1,12 +1,12 @@
-// src/features/projects/components/ProjectOverview/ProjectDetailsForm.tsx
 "use client";
+import { useServices } from "@/lib/services/ServicesProvider";
+// src/features/projects/components/ProjectOverview/ProjectDetailsForm.tsx
 
 import { Button, Stack, Title } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
 import { useState } from "react";
 import { Project } from "../../types/project";
-import { updateProject } from "../../actions";
 import { useProjects } from "../../contexts/ProjectsContext";
 import ProjectFormInputs from "../ProjectFormInputs";
 import dayjs from "dayjs";
@@ -22,6 +22,7 @@ export default function ProjectDetailsForm({
   onCancel,
   onSaveSuccess,
 }: ProjectDetailsFormProps) {
+  const { updateProject } = useServices();
   const [loading, setLoading] = useState(false);
   const { refetchProjects } = useProjects();
   const form = useForm({

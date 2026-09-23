@@ -1,10 +1,9 @@
-# Profile Components
+# Connected profile components
 
-This directory contains the refactored components for displaying and editing a user's profile information.
+ProfileCard uses `useProfileForm` and the preview's account/services contexts,
+then supplies props to ProfileView or ProfileForm. The shared avatar
+input lives at `src/features/settings/components/AvatarUpload.tsx`.
 
-### Components
-
-- **`ProfileCard.tsx`**: The main container component that manages the view and edit states, rendering either `ProfileView` or `ProfileForm`.
-- **`ProfileView.tsx`**: A display-only component that shows the user's current profile information.
-- **`ProfileForm.tsx`**: The form component used for editing profile details. It utilizes the `useProfileForm` hook to manage its state and submission logic.
-- **`AvatarUpload.tsx`**: A component that handles the selection and preview of a new avatar image.
+These editors are not part of the presentation-only handoff. The default preview
+uses demo account data and cannot persist profile changes. See the
+[account documentation](../../README.md) for the boundary.

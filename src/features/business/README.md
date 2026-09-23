@@ -1,47 +1,17 @@
-# Business Feature
+# Business profile preview
 
-## 📌 Overview
+BusinessSettings, BusinessProfileCard, BusinessProfileView, and BusinessProfileForm
+remain connected preview components, excluded from the presentation-only handoff.
 
-The **Business** feature represents the corporate entity behind a user. In Holler, users can transact as individuals or on behalf of a business. This feature handles the business profile metadata (Logo, Tax ID, Address).
+`useBusinessProfile` reads the current account context and calls the injected
+`getBusinessProfile` service using React state/effects. Without a user it clears
+the business state. `useBusinessProfileForm` handles editing through injected
+services. The default fixture adapter does not persist changes.
 
-## 📂 Internal Structure
+The legacy username-check action lives in
+`src/lib/adapters/supabase/actions/business/check-business-username.ts`.
+Display types live in `types/business.ts` and `types/businessRole.ts`.
 
-All code for this feature is self-contained in `src/features/business`.
-
-```
-src/features/business/
-├── actions/             # Server Actions (username checks)
-├── components/          # Profile Cards, Forms
-├── hooks/               # Logic for profile management
-└── index.ts             # Public API
-```
-
-## 🧩 Key Components
-
-### `BusinessSettings.tsx`
-
-The container page.
-
-- **Responsibility**: Displays the read-only view or the edit form depending on state.
-
-### `BusinessProfileForm.tsx`
-
-The editor.
-
-- **Responsibility**: Validating business specific fields like EIN or Company Name.
-
-## 🎣 Hooks & State Management
-
-### `useBusinessProfile.ts`
-
-**Purpose**: Fetches the business details associated with the current user.
-**State**: Uses SWR or React Query (implied) to keep business data fresh.
-
-## 🛠️ Server Actions
-
-- **`check-business-username.ts`**: Verifies uniqueness of the business handle (e.g. `@acme-construction`) before claiming it.
-
-## 🔗 Dependencies
-
-- **Account**: Business profiles are children of a User Account.
-- **Transactions**: Invoices are generated using Business profile data.
+Before exporting business editors, supply values and request state through props
+and report submissions through callbacks. The destination app will own AWS access
+and account authorization. See [React integration](../../../docs/react-integration.md).

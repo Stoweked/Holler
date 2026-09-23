@@ -1,5 +1,7 @@
 # SideNav Components
 
+> Connected preview navigation; excluded from the presentation-only handoff. Supply a sidebar slot to HollerLayout or HollerDashboard in the destination React app.
+
 This directory contains components related to the application's side navigation.
 
 ### **Components**

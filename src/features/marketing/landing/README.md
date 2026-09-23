@@ -1,8 +1,6 @@
-# Landing
+# Retained landing design
 
-This directory contains components for the marketing landing page.
-
-### Key Components
-
-- **`LandingPageButtons.tsx`**: Displays the main call-to-action buttons on the landing page.
-- **`TermsAndConditions.tsx`**: A component that displays the terms and conditions.
+`LandingPage.tsx`, LandingPageButtons, and TermsAndConditions retain the previous
+marketing composition. They are not rendered by the current `/` route.
+LandingPageButtons still uses the legacy OIDC context and preview AppLink, so it
+is not part of the presentation-only React handoff.

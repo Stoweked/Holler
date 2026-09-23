@@ -1,5 +1,7 @@
 # Settings
 
+> Connected preview composition, excluded from the presentation-only React handoff. Settings sections include prototype and unavailable operations; the destination app will supply persistence separately.
+
 This feature provides a centralized location for users to manage their account, profile, and application settings.
 
 ### Key Components

@@ -1,5 +1,6 @@
-// src/components/modals/FeedbackModal.tsx
 "use client";
+import { useServices } from "@/lib/services/ServicesProvider";
+// src/components/modals/FeedbackModal.tsx
 
 import { useEffect, useState } from "react";
 //mantine
@@ -20,7 +21,6 @@ import { useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
 import { useProfile } from "@/features/account/contexts/ProfileContext";
 import { AlertCircleIcon } from "hugeicons-react";
-import { submitFeedback as submitFeedbackAction } from "@/components/modals/feedback/actions/submit-feedback";
 
 export default function FeedbackModal({
   opened,
@@ -29,6 +29,7 @@ export default function FeedbackModal({
   opened: boolean;
   close: () => void;
 }) {
+  const { submitFeedback: submitFeedbackAction } = useServices();
   const { profile } = useProfile();
   const [loading, setLoading] = useState(false); //button loading state
 

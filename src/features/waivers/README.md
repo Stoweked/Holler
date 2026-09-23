@@ -1,5 +1,7 @@
 # Waivers
 
+> Preview-only workflow, excluded from the React UI handoff (only the Waiver display type is exported). Loading/saving uses injected services; the default fixture adapter cannot persist edits. The descriptions below refer to the design flow, not a live waiver service.
+
 This feature handles the creation, management, and editing of lien waivers. Users can create new waivers from scratch, use predefined templates, and attach them to relevant transactions.
 
 ### Key Components

@@ -9,37 +9,4 @@
 @import "@mantine/charts/styles.css";
 @import "@mantine/spotlight/styles.css";
 
-/* appShell */
-.appShell {
-  background: light-dark(
-    var(--mantine-color-gray-0),
-    var(--mantine-color-dark-8)
-  );
-}
-
-.pageBackground {
-  background-image: url("/images/background.png");
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center;
-}
-
-.mantine-Input-input {
-  transition: border-color 200ms;
-}
-.mantine-Input-input:hover {
-  border-color: light-dark(
-    var(--mantine-color-lime-5),
-    var(--mantine-color-lime-8)
-  );
-}
-
-/* Badge */
-.sentence-case-badge-label {
-  text-transform: lowercase; /* First, make everything lowercase */
-  letter-spacing: 0;
-}
-
-.sentence-case-badge-label::first-letter {
-  text-transform: uppercase; /* Then, make the first letter uppercase */
-}
+@import "./holler.css";

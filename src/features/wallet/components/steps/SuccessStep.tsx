@@ -12,7 +12,7 @@ import {
   Title,
   Transition,
 } from "@mantine/core";
-import Image from "next/image"; // Switched to Next.js Image component
+import { Image } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import classes from "./Actions.module.css";
 import { useEffect, useState } from "react";
@@ -23,7 +23,7 @@ import { ArrowRight02Icon, BankIcon } from "hugeicons-react";
 import { useWallet } from "@/features/wallet/contexts/WalletContext";
 
 // Import the image from the feature's assets folder
-import coinsImage from "../../assets/coins.png";
+
 import { TransactionParty } from "@/features/transactions/types/transactionParty";
 import { useProfile } from "@/features/account/contexts/ProfileContext";
 import { getInitials } from "@/lib/hooks/textUtils";
@@ -180,13 +180,12 @@ export default function SuccessStep({
           {(styles) => (
             <Box className={classes.coinContainer} style={styles}>
               <Image
-                src={coinsImage}
-                height={440}
-                width={440}
+                src="/images/coins.png"
+                h={440}
+                w={440}
                 alt="Coins graphic"
                 className={classes.coinImage}
-                priority
-                placeholder="blur"
+                fetchPriority="high"
               />
             </Box>
           )}

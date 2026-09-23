@@ -1,5 +1,7 @@
 # Authentication Feature
 
+> Archived reference only. The paths and dependencies below describe the earlier Supabase authentication implementation, not the current application architecture. This source is excluded from the React UI handoff.
+
 ## 📌 Overview
 
 The **Authentication** feature handles all aspects of user identity, including sign-up, login, session management, and password recovery. It integrates directly with Supabase Auth and provides the UI flows for onboarding new users.

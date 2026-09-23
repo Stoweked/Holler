@@ -1,4 +1,4 @@
-"use server";
+
 
 import { mockTransactions } from "@/mockData/mockTransactions";
 import dayjs from "dayjs";
@@ -10,7 +10,7 @@ import {
   TransactionTypeFilter,
   DateFilter,
   SortOption,
-} from "../types/transaction";
+} from "@/features/transactions/types/transaction";
 import { mockProjects } from "@/mockData/mockProjects";
 
 dayjs.extend(isBetween);

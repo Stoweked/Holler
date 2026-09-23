@@ -4,7 +4,7 @@ import { useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { Link } from "@mantine/tiptap";
 import { Waiver } from "../types/waiver";
-import { createClient } from "@/lib/supabase/client";
+import { useServices } from "@/lib/services/ServicesProvider";
 import Placeholder from "@tiptap/extension-placeholder";
 import { notifications } from "@mantine/notifications";
 import { CheckIcon } from "@mantine/core";
@@ -36,7 +36,7 @@ export function useWaiver(closeDrawer: () => void) {
     source,
     drawerOpened,
   } = useWaivers();
-  const supabase = createClient();
+  const { saveWaiver, archiveWaiver } = useServices();
 
   const editor = useEditor({
     extensions: [
@@ -113,45 +113,14 @@ export function useWaiver(closeDrawer: () => void) {
 
   const handleSave = async () => {
     setIsSaving(true);
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (!user) {
-      setIsSaving(false);
-      return;
-    }
-
     try {
-      let newWaiverId = null;
-      if (editorMode === "edit" && selectedWaiver) {
-        const { error } = await supabase
-          .from("lien_waivers")
-          .update({
-            title: waiverTitle,
-            content: editor?.getHTML(),
-            type: waiverType,
-            payment_type: waiverPayment_type,
-            updated_at: new Date().toISOString(),
-          })
-          .eq("id", selectedWaiver.id);
-        if (error) throw error;
-      } else {
-        const { data, error } = await supabase
-          .from("lien_waivers")
-          .insert([
-            {
-              user_id: user.id,
-              title: waiverTitle,
-              content: editor?.getHTML(),
-              type: waiverType,
-              payment_type: waiverPayment_type,
-            },
-          ])
-          .select("id")
-          .single();
-        if (error) throw error;
-        newWaiverId = data.id;
-      }
+      const savedId = await saveWaiver({
+        title: waiverTitle,
+        content: editor?.getHTML() ?? "",
+        type: waiverType,
+        payment_type: waiverPayment_type,
+      }, editorMode === "edit" ? selectedWaiver?.id : undefined);
+      const newWaiverId = editorMode === "edit" ? null : savedId;
 
       notifications.show({
         title: "Waiver Saved",
@@ -194,12 +163,7 @@ export function useWaiver(closeDrawer: () => void) {
     if (selectedWaiver) {
       setIsArchiving(true);
       try {
-        const { error } = await supabase
-          .from("lien_waivers")
-          .update({ archived: true })
-          .eq("id", selectedWaiver.id);
-
-        if (error) throw error;
+        await archiveWaiver(selectedWaiver.id);
 
         notifications.show({
           title: "Waiver Archived",

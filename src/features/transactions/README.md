@@ -1,70 +1,32 @@
-# Transactions Feature
+# Transactions
 
-## 📌 Overview
+Transaction history designs have both presentation-only views and connected
+preview wrappers. Import portable components through `src/ui/index.ts`.
 
-The **Transactions** feature is the historical record keeper of the application. It provides a robust, filterable, and sortable view of all financial activities (deposits, transfers, payments). It allows users to drill down into specific transaction details.
+## Public handoff
 
-## 📂 Internal Structure
+| Export | Source | Inputs and behavior |
+| --- | --- | --- |
+| `TransactionsTable` | `components/TransactionsTableView.tsx` | Rows, profile, loading/error state, retry/reset/selection callbacks, toolbar slot |
+| `TransactionDetailsDrawer` | `components/TransactionDetailsDrawerView.tsx` | Controlled open/close, transaction/profile, optional fee/timeline and action callbacks |
+| `TransactionItem` | `components/TransactionItem.tsx` | Transaction, optional profile, click handler |
+| `TransactionFilters` | `components/filters/TransactionFilters.tsx` | Controlled values/callbacks and explicit contacts/projects option arrays |
 
-All code for this feature is self-contained in `src/features/transactions`.
+The table displays supplied rows; the host handles filtering, sorting, pagination,
+and fetching. Loading, error, empty, and filtered-empty states are supported.
+The details view shows a dash for missing fees and disables print/download without
+handlers. It does not supply a fake timeline. Display types are defined in
+[transaction.ts](types/transaction.ts) and [transactionParty.ts](types/transactionParty.ts).
 
-```
-src/features/transactions/
-├── actions/             # Server Actions (data fetching)
-├── components/          # Tables, Drawers, Filters
-│   └── filters/         # Filter-specific UI sub-components
-├── hooks/               # State logic for filtering
-├── types/               # Transaction data interfaces
-└── index.ts             # Public API (Barrel file)
-```
+## Connected preview
 
-## 🧩 Key Components
+`components/TransactionsTable.tsx` obtains services, filter state, and selection
+state, then renders the pure table view. `hooks/useTransactionFilters.ts` connects
+filters to preview URL state. The current transaction service filters local
+fixtures in `src/lib/adapters/fixtures/get-transactions.ts`; it is not a server action.
+`components/TransactionDetailsDrawer.tsx` adds preview contact interactions and
+sample fee/timeline content around the pure drawer.
 
-### `TransactionsTable.tsx`
-
-The main data grid.
-
-- **Responsibility**: Renders the list of transactions. Handles sorting UI.
-- **Props**: Receives the raw list of transactions.
-
-### `TransactionDetailsDrawer.tsx`
-
-The "inspector" view.
-
-- **Responsibility**: Slides in to show granular details (timeline, metadata, documents) for a single transaction.
-
-### `filters/TransactionFilters.tsx`
-
-The control panel for the table.
-
-- **Responsibility**: Housing date pickers, status dropdowns, and search inputs.
-
-## 🎣 Hooks & State Management
-
-### `useTransactionFilters.ts`
-
-**Purpose**: Manages the complex state of active filters.
-**State**: serialized URL search params <-> local state synchronization.
-
-## 🛠️ Server Actions
-
-- **`get-transactions.ts`**: The primary data fetcher. It constructs a Supabase query based on the passed filter criteria (date range, status, amount, etc.).
-
-## 💾 Data Models (`types/transaction.ts`)
-
-```typescript
-export interface Transaction {
-  id: string;
-  amount: number;
-  status: "pending" | "completed" | "failed";
-  type: "deposit" | "withdrawal" | "transfer";
-  created_at: string;
-  // ... relationships (sender, receiver)
-}
-```
-
-## 🔗 Dependencies
-
-- **Wallet**: Transactions are created by wallet actions.
-- **Projects**: Transactions can be linked to projects.
-- **Contacts**: Transactions involve other users/contacts.
+See the [integration guide](../../../docs/react-integration.md) for standalone
+composition and validation. AWS data loading and action implementation belong to
+the destination app.

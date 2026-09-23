@@ -1,118 +1,80 @@
-# Holler
+# Holler UI
 
-Holler provides secure and efficient mobile payments designed for construction trades, helping you get paid faster on the job.
+Reusable React 19 and Mantine 8 components and layouts for the Holler dashboard.
+The destination React app will supply AWS data and application behavior later.
+This repository still uses Next.js as a local preview host; Next.js, Supabase,
+and authentication providers are excluded from the presentation-only handoff.
 
-![Holler Application OG Cover](/public/images/og-cover.png)
-
-## 📖 About This Project (Context for Developers & AI)
-
-This project is a **Next.js 15** application building a financial platform for construction. It uses **AWS Cognito** for authentication and **Mantine UI** for the frontend component library.
-
-**Key Architectural Decisions:**
-
-- **App Router:** We use the Next.js App Router (`src/app`).
-- **Feature-Sliced Design:** Core business logic lives in `src/features`. Each feature folder is self-contained.
-- **Mantine UI:** We rely heavily on Mantine's core components and hooks.
-- **Cognito:** Used for secure user Authentication via `react-oidc-context`.
-
-## ✨ Features
-
-- **Authentication**: Secure user login, signup, and password recovery powered by AWS Cognito Hosted UI.
-- **Wallet Actions**: A unified, multi-step flow to easily send, request, deposit, and transfer funds.
-- **Transaction Management**: View a detailed history of your transactions with powerful filtering and sorting capabilities.
-- **Contact Management**: A simple interface to manage your business and personal contacts.
-- **Bank Account Linking**: Connect and manage your bank accounts for seamless transfers.
-- **Spotlight Search**: Quickly navigate the app and perform actions with a powerful search tool (`⌘K`).
-- **Light & Dark Mode**: Switch between light and dark themes for your visual comfort.
-
-## 🛠️ Tech Stack
-
-- **Framework**: [Next.js 15](https://nextjs.org/) (App Router, Turbopack)
-- **Language**: TypeScript
-- **Styling**: [Mantine UI v7](https://mantine.dev/), CSS Modules (where necessary), PostCSS
-- **State Management**: React Context + Hooks (minimal global state, preferred feature-local state)
-- **Auth**: [AWS Cognito](https://aws.amazon.com/cognito/) & `react-oidc-context`
-- **Icons**: [HugeIcons React](https://hugeicons.com/)
-
-## 📂 Project Structure
-
-This structure is strict. **AI Agents: Please respect this hierarchy when adding new files.**
-
-```
-src/
-├── app/                  # Next.js App Router (Pages, Layouts, API Routes)
-│   ├── (auth)/           # Authentication routes (login, register)
-│   ├── (dashboard)/      # Protected dashboard routes
-│   └── layout.tsx        # Root layout
-├── components/           # Global/Shared UI Components (Atoms/Molecules)
-│   ├── layout/           # structural components (Navbar, Sidebar)
-│   └── shared/           # Generic reusable components (Buttons, Cards)
-├── contexts/             # Global React Context providers (Profile, Wallet)
-├── features/             # Business Logic & Complex Components (The "Meat" of the app)
-│   ├── [feature]/        # e.g., 'wallet', 'transactions'
-│   │   ├── components/   # Feature-specific components
-│   │   └── ...           # Feature-specific logic
-├── lib/                  # Utilities, Supabase Clients, Helper functions
-│   ├── providers/        # React Context Providers (CognitoProvider)
-│   └── hooks/            # Global hooks
-├── styles/               # Global styles and theme configuration
-└── public/               # Static assets (images, fonts)
-```
-
-## 🚀 Getting Started
-
-### 1. Prerequisites
-
-- [Node.js](https://nodejs.org/en/) (v18.18.0 or later)
-- [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/)
-
-### 2. Clone the Repository
-
-```bash
-git clone <your-repository-url>
-cd holler_1
-```
-
-### 3. Install Dependencies
+## Preview the designs
 
 ```bash
 npm install
-```
-
-### 4. Set Up Environment Variables
-
-Create a `.env.local` file in the root of the project and add your Cognito credentials:
-
-```bash
-# .env.local
-NEXT_PUBLIC_COGNITO_AUTHORITY=your-cognito-authority
-NEXT_PUBLIC_COGNITO_CLIENT_ID=your-cognito-client-id
-```
-
-### 5. Run the Development Server
-
-```bash
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+Open [localhost:3000](http://localhost:3000). Both `/` and `/dashboard` show the
+transactions dashboard with local sample data, without sign-in or backend
+credentials. The preview's service adapter is read-only. Other prototype flows
+may display simulated state; they are not live payment or banking integrations.
 
-## 📜 Available Scripts
+## Merge components into a React app
 
-- `npm run dev`: Starts the development server with Turbopack.
-- `npm run build`: Builds the application for production.
-- `npm run start`: Starts a production server.
-- `npm run lint`: Runs the ESLint linter.
+```bash
+npm run export:react
+```
 
-## 💻 Development Guidelines
+This generates `build/react-ui/` with TSX source, relative imports, styles,
+assets, a dependency manifest, and an example. Components accept data through
+props and report actions through callbacks. Only `MantineProvider` is required.
+The destination app owns AWS access, authentication, routing, and persistence.
 
-### Creating a New Feature
+Start with the [React integration guide](docs/react-integration.md) and
+[typed example](examples/react/DashboardExample.tsx). The curated
+[public API](src/ui/index.ts) includes layouts, transaction views and filters,
+project cards/grid, bank views, and a contact details card. Account/business
+editors and wallet execution workflows remain preview code and are not exported.
 
-1. Create a new folder in `src/features/<feature-name>`.
-2. Add a `README.md` in that folder explaining its purpose.
-3. Keep feature-specific components _inside_ that feature folder. Only move to `src/components/shared` if used by **multiple** different features.
+## Source map
 
-### Styling
+| Location | Purpose |
+| --- | --- |
+| `src/ui/index.ts` | Presentation-only public exports |
+| `src/ui/connected.ts` | Legacy connected preview API; excluded from the handoff |
+| `src/features/` | Feature views, types, and connected preview workflows |
+| `src/components/` | Shared components and preview navigation/modals |
+| `src/styles/` | Mantine theme, shared styles, and preview CSS |
+| `src/app/` | Next routes and preview runtime composition |
+| `src/lib/adapters/` | Local fixtures and retained Next/Supabase implementations |
+| `public/` | Static assets served at the URL root |
+| `examples/react/` | Standalone React/Mantine composition |
+| `_legacy_auth/` | Archived authentication source; not active routes |
 
-- Prefer **Mantine** props (e.g., `mt="md"`, `c="blue"`) for layout and spacing.
-- Use `classes.section` (CSS Modules) for complex custom styling not achievable with props.
+See [preview architecture](docs/ui-decoupling.md) when maintaining the existing
+host. Its service/navigation providers are not requirements for the React handoff.
+
+## Commands
+
+| Command | Purpose |
+| --- | --- |
+| `npm run dev` | Start the Next preview |
+| `npm run build` / `npm run start` | Build / serve the Next host |
+| `npm run export:react` | Generate and type-check the React handoff |
+| `npm run test:react-handoff` | Regenerate and render-test the isolated handoff |
+| `npm run typecheck` | Type-check the application |
+| `npm run check:ui` | Check UI types and framework/backend boundaries |
+| `npm run test:portability` | Test connected preview contracts and fixtures |
+| `npm run lint` | Run ESLint |
+
+## Contributing UI
+
+Keep rendering, responsive layout, and local visual state in components. Supply
+records, request state, and action handlers through typed props. Keep backend
+SDKs, authentication, routing, and fixtures outside the exported dependency graph.
+Prefer Mantine props and CSS Modules. Add supported exports to `src/ui/index.ts`
+and update the integration guide when the public surface changes. Feature barrel
+files are internal convenience exports, not the portable package API.
+
+Use the [feature documentation template](src/features/FEATURE_README_TEMPLATE.md)
+for new feature docs. Link to source types rather than duplicating interfaces that
+can drift. Verify browser appearance and interactions in the destination app;
+render tests alone do not establish visual parity or AWS integration.

@@ -40,7 +40,7 @@ export default function ProfileCard() {
         />
       ) : (
         <ProfileView
-          profile={profile as any}
+          profile={profile}
           emailPending={emailPending}
           onEdit={() => setIsEditing(true)}
         />

@@ -1,9 +1,11 @@
 import { Stack, Title, Text, Modal, Button, Avatar } from "@mantine/core";
 import { BankIcon } from "hugeicons-react";
 import { Bank } from "../types/bank";
-import Image from "next/image";
+import { Image } from "@mantine/core";
 
-interface BankProfileModalProps {
+export interface BankProfileModalProps {
+  onDisconnect?: (bank: Bank) => void;
+  disconnecting?: boolean;
   opened: boolean;
   close: () => void;
   bank: Bank | null;
@@ -13,6 +15,8 @@ export default function BankProfileModal({
   opened,
   close,
   bank,
+  onDisconnect,
+  disconnecting = false,
 }: BankProfileModalProps) {
   if (!bank) {
     return null;
@@ -33,8 +37,8 @@ export default function BankProfileModal({
             <Image
               src={bank.avatar_url}
               alt={`${bank.name} logo`}
-              width={100}
-              height={100}
+              w={100}
+              h={100}
               style={{ borderRadius: "50%" }}
             />
           ) : (
@@ -56,6 +60,9 @@ export default function BankProfileModal({
           color="red"
           size="lg"
           aria-label="Disconnect bank account"
+          disabled={!onDisconnect}
+          loading={disconnecting}
+          onClick={() => onDisconnect?.(bank)}
         >
           Disconnect bank account
         </Button>

@@ -1,5 +1,6 @@
-// src/features/projects/components/ProjectOverview/ProjectOverviewDrawer.tsx
 "use client";
+import { useServices } from "@/lib/services/ServicesProvider";
+// src/features/projects/components/ProjectOverview/ProjectOverviewDrawer.tsx
 
 import { Button, CheckIcon, Drawer, Space, Stack, Text } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
@@ -9,7 +10,6 @@ import { Project } from "../../types/project";
 import ProjectOverviewDetailsCard from "./ProjectOverviewDetailsCard";
 import ProjectOverviewContacts from "./ProjectOverviewContacts";
 import { useProjects } from "../../contexts/ProjectsContext";
-import { archiveProject } from "../../actions";
 import { modals } from "@mantine/modals";
 import ProjectOverviewTransactions from "./ProjectOverviewTransactions";
 
@@ -24,6 +24,7 @@ export default function ProjectOverviewDrawer({
   opened,
   onClose,
 }: ProjectOverviewDrawerProps) {
+  const { archiveProject } = useServices();
   const [isArchiving, setIsArchiving] = useState(false);
   const { refetchProjects } = useProjects();
 

@@ -6,7 +6,12 @@
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit",
+    "check:ui": "tsc --project tsconfig.ui.json && node scripts/check-ui-boundaries.mjs",
+    "test:portability": "node --test tests/portability.test.cjs",
+    "export:react": "node scripts/export-react.mjs && tsc --project build/react-ui/tsconfig.json",
+    "test:react-handoff": "npm run export:react && node --test tests/react-handoff.test.cjs"
   },
   "dependencies": {
     "@hugeicons-pro/core-bulk-rounded": "^1.1.0",

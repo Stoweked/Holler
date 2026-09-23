@@ -29,18 +29,18 @@ import {
   House03Icon,
   ConnectIcon,
 } from "hugeicons-react";
-import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
+import type { AppRouter } from "@/lib/navigation/NavigationProvider";
 import { TransactionActionType } from "@/features/wallet/types/wallet";
 
 type OpenActionDrawerFunc = (type: TransactionActionType) => void;
 
 export const getSpotlightActions = (
-  router: AppRouterInstance,
+  router: AppRouter,
   openActionDrawer: OpenActionDrawerFunc,
   openWaiversDrawer: () => void,
   openProjectsDrawer: () => void,
   closeNav: () => void,
-  logout: () => void
+  logout?: () => void
 ): (SpotlightActionGroupData | SpotlightActionData)[] => [
   {
     group: "Navigation",
@@ -361,7 +361,7 @@ export const getSpotlightActions = (
         },
         leftSection: <Message01Icon size={24} />,
       },
-      {
+      ...(logout ? [{
         id: "logout",
         label: "Logout",
         description: "Sign out of your account",
@@ -371,7 +371,7 @@ export const getSpotlightActions = (
           closeNav();
         },
         leftSection: <Logout02Icon size={24} />,
-      },
+      }] : []),
     ],
   },
 ];

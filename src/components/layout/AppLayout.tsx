@@ -1,58 +1,37 @@
 "use client";
 
 import "@mantine/core/styles.css";
-import React, { useEffect, useState } from "react";
-import { SpeedInsights } from "@vercel/speed-insights/next";
-import { Analytics } from "@vercel/analytics/next";
-import { AppShell, ScrollArea, Center, Loader } from "@mantine/core";
+import React, { lazy, useEffect, useState } from "react";
+import { HollerLayout } from "@/ui/HollerLayout";
 import { useDisclosure } from "@mantine/hooks";
 import { SideNav } from "@/components/layout/SideNav";
 import TopNav from "@/components/layout/TopNav/TopNav";
-import {
-  ProfileProvider,
-  useProfile,
-} from "@/features/account/contexts/ProfileContext";
+import { useProfile } from "@/features/account/contexts/ProfileContext";
 import { getSpotlightActions } from "@/components/spotlight/spotlightActions";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/lib/navigation/NavigationProvider";
 import { Spotlight } from "@mantine/spotlight";
 import { Search01Icon } from "hugeicons-react";
-import {
-  WalletProvider,
-  useWallet,
-} from "@/features/wallet/contexts/WalletContext";
-import {
-  useWaivers,
-  WaiversProvider,
-} from "@/features/waivers/contexts/WaiversContext";
-import {
-  ProjectsProvider,
-  useProjects,
-} from "@/features/projects/contexts/ProjectsContext";
-import dynamic from "next/dynamic";
-import { AppModalsProvider } from "@/contexts/AppModalsContext";
-import { ModalsProvider } from "@mantine/modals";
-import { ContactsProvider } from "@/features/contacts/contexts/ContactsContext";
-import { useAuth } from "react-oidc-context";
+import { useWallet } from "@/features/wallet/contexts/WalletContext";
+import { useWaivers } from "@/features/waivers/contexts/WaiversContext";
+import { useProjects } from "@/features/projects/contexts/ProjectsContext";
+import { ClientOnly } from "@/components/shared/ClientOnly";
+import { HollerFeatureProviders } from "@/ui/HollerFeatureProviders";
 
-const LienWaiversDrawer = dynamic(
-  () => import("@/features/waivers/components/LienWaiversDrawer"),
-  { ssr: false }
+const LienWaiversDrawer = lazy(
+  () => import("@/features/waivers/components/LienWaiversDrawer")
 );
-const ProjectsDrawer = dynamic(
-  () => import("@/features/projects/components/ProjectsDrawer"),
-  { ssr: false }
+const ProjectsDrawer = lazy(
+  () => import("@/features/projects/components/ProjectsDrawer")
 );
-const ProjectOverviewDrawer = dynamic(
+const ProjectOverviewDrawer = lazy(
   () =>
     import(
       "@/features/projects/components/ProjectOverview/ProjectOverviewDrawer"
-    ),
-  { ssr: false }
+    )
 );
 
-const AuthenticatedLayout = ({ children }: { children: React.ReactNode }) => {
-  const { user, profile, loading } = useProfile();
-  const auth = useAuth();
+const DashboardShell = ({ children }: { children: React.ReactNode }) => {
+  const { signOut } = useProfile();
   const [opened, { toggle, close }] = useDisclosure();
   const router = useRouter();
 
@@ -76,34 +55,14 @@ const AuthenticatedLayout = ({ children }: { children: React.ReactNode }) => {
     selectedProject,
   } = useProjects();
 
-  useEffect(() => {
-    if (!loading && user && profile) {
-      if (!profile.username || !profile.phone_number) {
-        router.push("/signup/multi-step");
-      }
-    }
-  }, [user, profile, loading, router]);
-
   const actions = getSpotlightActions(
     router,
     openActionDrawer,
     openWaiversDrawer,
     openListDrawer,
     close,
-    () => auth.removeUser()
+    signOut
   );
-
-  if (loading || !profile) {
-    return (
-      <Center style={{ height: "100vh" }}>
-        <Loader size="xl" />
-      </Center>
-    );
-  }
-
-  if (!user) {
-    return null;
-  }
 
   return (
     <>
@@ -119,38 +78,26 @@ const AuthenticatedLayout = ({ children }: { children: React.ReactNode }) => {
           placeholder: "Search...",
         }}
       />
-      <AppShell
-        header={{ height: 60 }}
-        navbar={{
-          width: 380,
-          breakpoint: "sm",
-          collapsed: { mobile: !opened },
-        }}
-        padding={0}
+      <HollerLayout
+        header={<TopNav opened={opened} toggle={toggle} />}
+        sidebar={<SideNav closeMobileNav={close} />}
+        navigationOpened={opened}
       >
-        <AppShell.Header>
-          <TopNav opened={opened} toggle={toggle} />
-        </AppShell.Header>
-        <AppShell.Navbar>
-          <ScrollArea type="never">
-            <SideNav closeMobileNav={close} />
-          </ScrollArea>
-        </AppShell.Navbar>
-        <AppShell.Main pt={60} className="appShell">
-          {children}
-        </AppShell.Main>
-      </AppShell>
+        {children}
+      </HollerLayout>
 
-      <LienWaiversDrawer
-        opened={waiversDrawerOpened}
-        close={closeWaiversDrawer}
-      />
-      <ProjectsDrawer opened={listDrawerOpened} close={closeListDrawer} />
-      <ProjectOverviewDrawer
-        opened={overviewDrawerOpened}
-        onClose={closeOverviewDrawer}
-        project={selectedProject}
-      />
+      <ClientOnly>
+        <LienWaiversDrawer
+          opened={waiversDrawerOpened}
+          close={closeWaiversDrawer}
+        />
+        <ProjectsDrawer opened={listDrawerOpened} close={closeListDrawer} />
+        <ProjectOverviewDrawer
+          opened={overviewDrawerOpened}
+          onClose={closeOverviewDrawer}
+          project={selectedProject}
+        />
+      </ClientOnly>
     </>
   );
 };
@@ -167,24 +114,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <ProfileProvider>
-      <WalletProvider>
-        <WaiversProvider>
-          <ProjectsProvider>
-            <ContactsProvider>
-              <ModalsProvider>
-                <AppModalsProvider>
-                  <AuthenticatedLayout>
-                    {children}
-                    <SpeedInsights />
-                    <Analytics />
-                  </AuthenticatedLayout>
-                </AppModalsProvider>
-              </ModalsProvider>
-            </ContactsProvider>
-          </ProjectsProvider>
-        </WaiversProvider>
-      </WalletProvider>
-    </ProfileProvider>
+    <HollerFeatureProviders>
+      <DashboardShell>{children}</DashboardShell>
+    </HollerFeatureProviders>
   );
 }

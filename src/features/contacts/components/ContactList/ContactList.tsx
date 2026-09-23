@@ -1,14 +1,12 @@
-// src/features/contacts/components/ContactList/ContactList.tsx
 "use client";
+import { useServices } from "@/lib/services/ServicesProvider";
+// src/features/contacts/components/ContactList/ContactList.tsx
 
 import { useState, useEffect } from "react";
 import { Stack, Button } from "@mantine/core";
 import { Contact } from "../../types/contact";
 // Import refetchContacts from the context hook
 import { useContacts } from "../../contexts/ContactsContext";
-import { addContact } from "../../actions/add-contact";
-import { searchGlobalContacts } from "../../actions/search-global-contacts";
-import { getSuggestedContacts } from "../../actions/get-suggested-contacts";
 import ContactListContent from "./ContactListContent";
 import ContactSearch from "./ContactSearch";
 
@@ -21,6 +19,7 @@ export default function ContactsList({
   onContactClick,
   onInviteNew,
 }: ContactsListProps) {
+  const { addContact, searchGlobalContacts, getSuggestedContacts } = useServices();
   const [searchValue, setSearchValue] = useState("");
   const [searchResults, setSearchResults] = useState<Contact[]>([]);
   const [isSearching, setIsSearching] = useState(false);
@@ -43,7 +42,7 @@ export default function ContactsList({
     return () => {
       clearTimeout(handler);
     };
-  }, [searchValue]);
+  }, [searchValue, searchGlobalContacts]);
 
   useEffect(() => {
     const fetchSuggestions = async () => {
@@ -59,7 +58,7 @@ export default function ContactsList({
     };
     // Re-fetch suggestions when the main contacts list changes
     fetchSuggestions();
-  }, [contacts]);
+  }, [contacts, getSuggestedContacts]);
 
   const handleContactClick = (contact: Contact) => {
     // 1. Immediately call the callback to open the modal and close the drawer

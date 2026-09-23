@@ -1,10 +1,19 @@
-// src/app/(dashboard)/layout.tsx
+import { Suspense, type ReactNode } from "react";
 import AppLayout from "@/components/layout/AppLayout";
+import { NextQueryNavigationProvider } from "@/lib/adapters/next/NextNavigationProvider";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Analytics } from "@vercel/analytics/next";
 
-export default function DashboardLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return <AppLayout>{children}</AppLayout>;
+export default function DashboardLayout({ children }: { children: ReactNode }) {
+  return (
+    <Suspense fallback={null}>
+      <NextQueryNavigationProvider>
+        <AppLayout>
+          {children}
+          <SpeedInsights />
+          <Analytics />
+        </AppLayout>
+      </NextQueryNavigationProvider>
+    </Suspense>
+  );
 }

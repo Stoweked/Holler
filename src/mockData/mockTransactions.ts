@@ -1,7 +1,7 @@
 import { Transaction } from "@/features/transactions/types/transaction";
 import { mockBanks } from "./mockBanks";
 import { mockProjects } from "./mockProjects";
-import { Contact, ContactType } from "@/features/contacts"; // Import the Contact type
+import { Contact, ContactType } from "@/features/contacts/types/contact"; // Import the Contact type
 
 // Create a local, self-contained array of contacts just for these mock transactions.
 const localMockContacts: Contact[] = [

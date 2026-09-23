@@ -1,34 +1,9 @@
-# Billing Feature
+# Billing preview
 
-## 📌 Overview
+BillingSettings composes BillingTable inside the preview settings UI. BillingTable
+renders `src/mockData/mockBilling.ts`; it does not fetch live subscriptions or
+billing records. This feature is excluded from the presentation-only handoff.
 
-The **Billing** feature handles the monetization aspects of the platform itself (subscriptions, service fees) rather than the peer-to-peer wallet transactions. It allows users to view their subscription status and download invoices.
-
-## 📂 Internal Structure
-
-All code for this feature is self-contained in `src/features/billing`.
-
-```
-src/features/billing/
-├── components/          # Tables, Invoices
-└── index.ts             # Public API
-```
-
-## 🧩 Key Components
-
-### `BillingSettings.tsx`
-
-The dashboard view.
-
-- **Responsibility**: Container for payment methods and history.
-
-### `BillingTable.tsx`
-
-History of platform payments.
-
-- **Responsibility**: Shows monthly subscription charges or per-transaction service fees.
-- **Differs from Transactions**: This table is for what the user pays _us_ (Holler), not what they pay _others_.
-
-## 🔗 Dependencies
-
-- **Account**: Nested within the Account Settings area.
+If needed in the destination app, extract rows and invoice actions into typed
+props/callbacks and let the host supply AWS-backed data. See
+[React integration](../../../docs/react-integration.md).

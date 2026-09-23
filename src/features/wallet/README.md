@@ -1,80 +1,20 @@
-# Wallet Feature
+# Wallet prototype
 
-## 📌 Overview
+The wallet is a design preview of deposit, transfer, send, and request flows.
+It is not an implemented payment backend and is excluded from the presentation-only
+React handoff. A success screen in this prototype is not confirmation of a transfer.
 
-The **Wallet** feature is the financial core of the application. It handles user balances and facilitates money movement (deposits, transfers, sending, requesting). It uses a wizard-like flow (`TransactionDrawer`) to guide users through complex multi-step payments.
+- `components/PrimaryActionsCard.tsx`: balance and action controls.
+- `components/steps/TransactionDrawer.tsx`: multi-step drawer composition.
+- `components/steps/PaymentAmountStep.tsx` and `ConfirmationStep.tsx`: amount and
+  confirmation designs.
+- `contexts/WalletContext.tsx`: fixed sample balance, drawer state, and selection
+  from mock transactions.
+- `hooks/useTransactionState.ts`: local step/party/bank/amount/note/waiver state;
+  starts with a sample bank and supports temporary contact selection.
+- [types/wallet.ts](types/wallet.ts): action and step types.
 
-## 📂 Internal Structure
-
-All code for this feature is self-contained in `src/features/wallet`.
-
-```
-src/features/wallet/
-├── components/          # GUI components (Drawers, Steps, Cards)
-│   └── icons/           # Feature-specific SVG icons
-├── contexts/            # WalletContext (Global state for this feature)
-├── hooks/               # Logic hooks (Step management, Submission)
-├── types/               # TypeScript definitions
-└── index.ts             # Public API (Barrel file)
-```
-
-## 🧩 Key Components
-
-### `PrimaryActionsCard.tsx`
-
-The main "Dashboard" widget.
-
-- **Responsibility**: Shows current balance and buttons for [Deposit, Send, Request, Transfer].
-- **Props**: None (consumes `WalletContext`)
-
-### `TransactionDrawer.tsx`
-
-The modal/drawer that orchestrates the payment flow.
-
-- **Responsibility**: Renders the correct step component based on the current state.
-- **Key Logic**: Switches usage of `PaymentAmountStep`, `ConfirmationStep`, etc.
-
-### `PaymentAmountStep.tsx`
-
-Input screen for money values.
-
-- **Features**: Currency masking, balance validation (cannot send more than you have).
-
-## 🎣 Hooks & State Management
-
-### `WalletContext` (`contexts/WalletContext.tsx`)
-
-**Scope**: Wraps the Feature/Dashboard.
-**State**:
-
-- `balance`: Current user balance.
-- `isDrawerOpen`: Visibility of the transaction drawer.
-- `actionType`: Current mode (`deposit` | `send` | `request` | `transfer`).
-
-### `useTransactionState` (`hooks/useTransactionState.ts`)
-
-**Purpose**: Manages the wizard state machine.
-**State**:
-
-- `currentStep`: `selectContact` -> `enterAmount` -> `confirm` -> `success`
-- `transactionData`: Partial data built up over the steps.
-
-## 💾 Data Models (`types/wallet.ts`)
-
-```typescript
-export type TransactionActionType = "deposit" | "send" | "request" | "transfer";
-
-export type TransactionStep =
-  | "selectContact"
-  | "inviteContact"
-  | "enterAmount"
-  | "confirm"
-  | "selectBank"
-  | "success";
-```
-
-## 🔗 Dependencies
-
-- **Auth**: Needs an authenticated user ID to fetch balances.
-- **Contacts**: "Send" and "Request" flows require selecting a contact from `features/contacts`.
-- **Banks**: "Deposit" and "Transfer" flows require bank accounts from `features/banks`.
+These flows depend on connected contact, bank, project, and waiver UI. Before
+exporting them, extract controlled views and move submission into host callbacks.
+The destination app must confirm real operation outcomes before showing success.
+See [React integration](../../../docs/react-integration.md).

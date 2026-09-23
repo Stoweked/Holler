@@ -14,19 +14,19 @@ import { UserMultiple02Icon, Search01Icon } from "hugeicons-react";
 import { useState } from "react";
 import { Contact, ContactType } from "@/features/contacts/types/contact";
 import { getInitials } from "@/lib/hooks/textUtils";
-import { useContacts } from "@/features/contacts";
 
 interface ContactFilterProps {
+  contacts: Contact[];
   activeContactFilter: string;
   onContactFilterChange: (contact: string) => void;
 }
 
 export function ContactFilter({
+  contacts,
   activeContactFilter,
   onContactFilterChange,
 }: ContactFilterProps) {
   const [searchValue, setSearchValue] = useState("");
-  const { contacts } = useContacts();
   const filteredContacts = contacts
     .filter((contact: Contact) => {
       const name =

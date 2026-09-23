@@ -1,73 +1,15 @@
-# Contacts Feature
+# Contacts
 
-## 📌 Overview
+`ContactDetailsCard` and the types in [types/contact.ts](types/contact.ts) are
+exported through `src/ui/index.ts`. The card receives display data; no contact
+provider or backend is required for the portable view.
 
-The **Contacts** feature manages the user's network of personal and business relationships. This "rolodex" is the foundation for sending and receiving payments (Holler transactions). It supports searching, favoriting, and viewing contact details.
+ContactsDrawer, ContactList, ContactModal, and contact-selection flows remain
+connected preview code. `contexts/ContactsContext.tsx` uses injected services for
+loading and operations such as favorites. The default adapter supplies local
+contacts and reports writes as unavailable.
 
-## 📂 Internal Structure
-
-All code for this feature is self-contained in `src/features/contacts`.
-
-```
-src/features/contacts/
-├── actions/             # Server Actions (Fetch, Create, Edit)
-├── components/          # Drawers, Lists, Cards
-├── contexts/            # FavoritesContext (UI State)
-├── types/               # Contact data interfaces
-├── utils/               # Search/sorting helpers
-└── index.ts             # Public API (Barrel file)
-```
-
-## 🧩 Key Components
-
-### `ContactsDrawer.tsx`
-
-The primary "Select a Person" interface.
-
-- **Responsibility**: Slides in to allow granular searching/picking of a contact, often triggered during a transaction flow.
-
-### `ContactList.tsx`
-
-The scrollable list.
-
-- **Responsibility**: Renders `ContactItem` rows. efficient re-rendering.
-
-### `ContactDetailsCard.tsx`
-
-Read-only view.
-
-- **Responsibility**: Shows small summary of a contact (Avatar, Name, Holler Handle) inside other flows.
-
-## 🎣 Hooks & State Management
-
-### `FavoritesContext` (`contexts/FavoritesContext.tsx`)
-
-**Scope**: Tracks which contacts are pinned to the top.
-**State**: List of favorite contact IDs.
-
-### `useContacts.ts` (if exists)
-
-**Purpose**: Abstraction over the fetch/cache query for the contacts list.
-
-## 🛠️ Server Actions
-
-- **`get-contacts.ts`**: Fetches the user's address book from Supabase.
-
-## 💾 Data Models (`types/contact.ts`)
-
-```typescript
-export interface Contact {
-  id: string;
-  user_id: string; // The Holler user ID if they are on the platform
-  first_name: string;
-  last_name: string;
-  email?: string;
-  phone?: string;
-  avatar_url?: string;
-}
-```
-
-## 🔗 Dependencies
-
-- **Wallet**: The #1 consumer of this feature. Sending money requires picking a contact.
-- **Transactions**: History shows names/avatars from the Contact record.
+Legacy operations live in `src/lib/adapters/supabase/actions/contacts/`, not in
+this feature's component tree. The destination app maps its AWS records to the
+exported display model and owns contact loading/persistence. See
+[React integration](../../../docs/react-integration.md).
