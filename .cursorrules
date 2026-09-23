@@ -1,58 +1,53 @@
-# Role and Persona
-You are an expert Full-Stack TypeScript Developer specializing in Next.js (App Router), React, and Supabase. You are tasked with maintaining and expanding the "Holler" application—a platform dealing with business management, projects, financial transactions, wallets, and lien waivers.
+# Project purpose
 
-# Core Tech Stack
-- Framework: Next.js (App Router)
-- Language: TypeScript (Strict mode)
-- Database & Auth: Supabase
-- Styling: CSS Modules (`.module.css`)
-- State Management: React Context API + Custom Hooks
+Maintain Holler as reusable React 19 and Mantine 8 components and layouts.
+The destination React app will supply AWS data and application behavior later.
+Next.js is the current preview host. Supabase adapters and archived auth source
+are retained for reference, not dependencies of the portable UI.
 
-# Architectural Rules (Strictly Enforced)
-The codebase uses a strict **Feature-Based Architecture**. You must respect this structure and NEVER leak feature-specific logic into the global scope.
+# Source boundaries
 
-1. **Feature Modules (`src/features/`)**:
-   - All domain logic lives in `src/features/` (e.g., `account`, `banks`, `billing`, `business`, `contacts`, `projects`, `transactions`, `waivers`, `wallet`).
-   - When adding a new feature, use the standard internal structure:
-     - `/actions`: Next.js Server Actions for database mutations and fetching.
-     - `/components`: React components specific to the feature.
-     - `/contexts`: React Context providers for local feature state.
-     - `/hooks`: Custom React hooks specific to the feature.
-     - `/types`: TypeScript interfaces and types.
-     - `/utils`: Helper functions.
+- `src/ui/index.ts` defines the presentation-only public API.
+- `src/features/` groups feature views, display types, and connected preview wrappers.
+- `src/components/` holds shared components and preview navigation/modals.
+- `src/styles/` holds the theme, CSS Modules declarations, and shared styles.
+- `src/app/` contains thin Next routes and preview runtime composition.
+- `src/lib/services/` and `src/lib/navigation/` support connected preview wrappers.
+- `src/lib/adapters/` contains fixture services and retained Next/Supabase implementations.
+- `src/ui/connected.ts` and `_legacy_auth/` are excluded from the public handoff.
 
-2. **Routing & Pages (`src/app/`)**:
-   - Keep page components (`page.tsx`) and layouts (`layout.tsx`) extremely thin.
-   - Pages should primarily act as Server Components that fetch initial data and pass it to Client Components imported from `src/features/`.
+# Portable components
 
-3. **Global Shared Assets (`src/components/`, `src/lib/`)**:
-   - Only place truly universal UI elements (Layouts, TopNav, Modals, generic buttons) in `src/components/`.
-   - Put generic utility functions and Supabase client/server initialization in `src/lib/`.
+Accept data, request state, and controlled values through typed props. Report user
+actions through callbacks. Keep only visual state locally. Do not import Next,
+backend/auth SDKs, application contexts, service/navigation providers, or fixtures
+into the exported dependency graph. The host owns fetching, routing, auth, caching,
+and persistence. No AWS service or router needs to be selected for the UI package.
 
-# Coding Standards & Best Practices
+Keep preview wrappers separate from presentation views. Retained server actions
+belong in the adapter layer, not feature component directories. Default routes `/`
+and `/dashboard` show transactions with local data and no sign-in requirement.
+Do not present simulated workflow outcomes as confirmed backend operations.
 
-## Data Fetching & Mutations
-- **Always use Server Actions** for data mutations. Place them in the relevant feature's `/actions` directory (e.g., `src/features/contacts/actions/add-contact.ts`).
-- Ensure Server Actions have the `"use server"` directive at the top of the file.
-- Use the centralized Supabase clients from `src/lib/supabase/client.ts` or `src/lib/supabase/server.ts` depending on the environment.
+# Styling and types
 
-## React & Components
-- Default to React Server Components (RSC) where possible. 
-- Only add `"use client"` when necessary (e.g., when using `useState`, `useEffect`, React Context, or handling user events like `onClick`).
-- Use React Context (`src/features/[feature]/contexts/`) for complex, feature-level state management (e.g., `WalletContext`, `ProjectsContext`).
-- Keep components small and single-purpose.
+Use Mantine props and CSS Modules. Reuse `src/styles/theme.ts` (exported as
+`hollerTheme`) and `src/ui/styles.css`. Merge theme/PostCSS settings with the host.
+Use explicit TypeScript interfaces rather than `any`; exported display models
+must not depend on a backend schema or generated SDK types.
 
-## Styling
-- Use **CSS Modules** (`[ComponentName].module.css`). 
-- Avoid inline styles.
-- Adhere to the design system variables defined in `src/styles/globals.css` and `src/styles/theme.ts`.
+# Workflow
 
-## TypeScript
-- Do not use `any`. Always define proper interfaces in the `/types` folder of the respective feature.
-- Leverage Supabase generated types if available, extending them for specific UI needs.
+Read the relevant source and docs before editing. Keep components focused and
+preserve unrelated changes. Do not modify hosted services, database schemas, or
+archived authentication unless the task requires it.
 
-# Workflow Protocol
-1. **Analyze First**: Before writing code, identify which feature module the task belongs to. If it spans multiple features, carefully consider where the source of truth should live.
-2. **Review Existing Patterns**: Look at `src/features/FEATURE_README_TEMPLATE.md` or existing directories like `wallet` or `projects` to mirror the established file structure.
-3. **No Destructive Changes**: Do not refactor core routing, auth (`_legacy_auth`), or database schemas (`supabase/full_backup.sql`) unless explicitly instructed.
-4. **Step-by-step**: Output code in logical chunks. Create types first, then Server Actions, then Context/Hooks, and finally UI Components.
+Use `src/features/FEATURE_README_TEMPLATE.md` for feature documentation. Update
+`docs/react-integration.md` when public exports change; `docs/ui-decoupling.md`
+describes the connected preview only.
+
+Run checks appropriate to the change: `npm run typecheck`, `npm run check:ui`,
+`npm run test:react-handoff`, `npm run test:portability`, and `npm run lint`.
+`npm run export:react` generates the ignored `build/react-ui/` handoff. Browser
+layout/interaction checks and real AWS integration checks remain separate from
+render tests. Do not commit generated output or credentials.
